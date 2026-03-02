@@ -3,6 +3,7 @@
 #include "Level3DRender/LevelRender.h"
 
 class Player;
+class Stage;
 
 class Game : public IGameObject
 {
@@ -17,6 +18,6 @@ private:
 	ModelRender m_modelRender;
 	Vector3 m_pos;
 
-	ModelRender m_stageModelRender;
+	Stage* m_stage;
 };
 
