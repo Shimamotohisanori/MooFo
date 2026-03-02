@@ -7,6 +7,18 @@
     <Filter Include="Source">
       <UniqueIdentifier>{3561e5c1-c23a-4cb9-906f-50f5e8c51c78}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Transform">
+      <UniqueIdentifier>{9cd3fd9d-5019-46e5-8792-50edad12c09b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Actor">
+      <UniqueIdentifier>{718810f5-4856-4cc2-a9e8-c0e0ed2ecc5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Actor\Player">
+      <UniqueIdentifier>{28556f4f-6c35-40f4-ba62-fb7ba9f802f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Actor\Stage">
+      <UniqueIdentifier>{6d455280-2f08-4607-b672-a170a48f6e84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -15,7 +27,15 @@
       <Filter>system</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="Transform\Transform.cpp">
+      <Filter>Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Actor.cpp">
+      <Filter>Source\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Stage\Stage.cpp">
+      <Filter>Source\Actor\Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -23,6 +43,14 @@
       <Filter>system</Filter>
     </ClInclude>
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Actor.h" />
+    <ClInclude Include="Transform\Transform.h">
+      <Filter>Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Actor.h">
+      <Filter>Source\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Stage\Stage.h">
+      <Filter>Source\Actor\Stage</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
