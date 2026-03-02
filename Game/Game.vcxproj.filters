@@ -4,6 +4,9 @@
     <Filter Include="system">
       <UniqueIdentifier>{22dd8095-74f9-46df-81a1-36675a040b1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{3561e5c1-c23a-4cb9-906f-50f5e8c51c78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -12,6 +15,7 @@
       <Filter>system</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Actor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -19,5 +23,6 @@
       <Filter>system</Filter>
     </ClInclude>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Actor.h" />
   </ItemGroup>
 </Project>
