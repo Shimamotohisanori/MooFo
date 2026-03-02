@@ -16,5 +16,7 @@ public:
 private:
 	ModelRender m_modelRender;
 	Vector3 m_pos;
+
+	ModelRender m_stageModelRender;
 };
 
