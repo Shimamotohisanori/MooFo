@@ -6,6 +6,7 @@ class Player;
 class Stage;
 class Cow;
 class GameCamera;
+class UFO;
 class Game : public IGameObject
 {
 public:
@@ -23,5 +24,6 @@ private:
 	Player* m_player;
 	Cow* m_cow;
 	GameCamera* m_gameCamera;
+	UFO* m_UFO;
 };
 

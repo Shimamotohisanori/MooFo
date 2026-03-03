@@ -55,6 +55,9 @@
       <Filter>Source\Actor\Character\Cow</Filter>
     </ClCompile>
     <ClCompile Include="GameCamera.cpp" />
+    <ClCompile Include="Source\Actor\Character\UFO\UFO.cpp">
+      <Filter>Source\Actor\Character\UFO</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system\system.h">
@@ -81,5 +84,8 @@
     </ClInclude>
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Source\Actor\Character\UFO\UFO.h">
+      <Filter>Source\Actor\Character\UFO</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

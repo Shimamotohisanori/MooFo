@@ -3,6 +3,7 @@
 #include"GameCamera.h"
 #include "Source/Actor/Stage/Stage.h"
 #include"Source/Actor/Character/Player/Player.h"
+#include"Source/Actor/Character/UFO/UFO.h"
 #include"Source/Actor/Character/Cow/Cow.h"
 
 bool Game::Start()
@@ -12,6 +13,7 @@ bool Game::Start()
 	m_stage = NewGO<Stage>(0, "stage");
 	m_cow = NewGO<Cow>(0, "cow");
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
+	m_UFO = NewGO<UFO>(0, "UFO");
 	return true;
 }
 
