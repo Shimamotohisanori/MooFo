@@ -4,7 +4,8 @@
 
 class Player;
 class Stage;
-
+class Cow;
+class GameCamera;
 class Game : public IGameObject
 {
 public:
@@ -19,5 +20,8 @@ private:
 	Vector3 m_pos;
 
 	Stage* m_stage;
+	Player* m_player;
+	Cow* m_cow;
+	GameCamera* m_gameCamera;
 };
 
