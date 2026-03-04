@@ -14,8 +14,8 @@ public:
 	void Update() override;
 	void Render(RenderContext& rc) override;
 
-	void Move()override;
-
+	void Move();
+	void Rotation();
 	Vector3 GetPosition()
 	{
 		return m_transform.GetPosition();
