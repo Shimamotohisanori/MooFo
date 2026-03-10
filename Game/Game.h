@@ -10,11 +10,12 @@ class UFO;
 class Game : public IGameObject
 {
 public:
-	Game() {}
-	~Game() {}
+	Game() {};
+	~Game() {};
 	bool Start();
 	void Update();
-	void Render(RenderContext& rc);
+	void Render(RenderContext& rc) {};
+	
 
 private:
 	ModelRender m_modelRender;

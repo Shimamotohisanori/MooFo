@@ -15,6 +15,11 @@ public:
 		void Rotation();
 		void PlayAnimation();
 		void ManageState();
+
+		void Setposition(const Vector3& pos)
+		{
+			m_transform.SetPosition(pos);
+		}
 public:
 	enum EnRotationState
 	{
@@ -25,7 +30,7 @@ public:
 	EnRotationState m_rotationState = EnRotationState_MoveDir;//回転ステート
 private:
 	ModelRender m_CowmodelRender;
-	uint8_t m_cowState;//プレイヤーステート
+	uint8_t m_cowState;//牛のステート
 
 	Vector3 m_moveDir = Vector3::Zero;//移動方向
 	float m_moveSpeed = 50.0f;//移動速度

@@ -65,9 +65,9 @@ void Cow::Move()
 		Vector3 dir
 		(
 			//(0,1,2,から-1を引いているので)-1,0,1の範囲でランダムな値を生成
-			rand() % 3 - 1,
-			0,
-			rand() % 3 - 1
+			rand() % 3 - 1,//x
+			0,             //yは常に0
+			rand() % 3 - 1//z
 		);
 
 		// 0,0,0になったら一秒休む
@@ -89,9 +89,8 @@ void Cow::Move()
 	pos += m_moveDir * m_moveSpeed * g_gameTime->GetFrameDeltaTime();
 	//ポジションを更新
 	m_transform.SetPosition(pos);
-
+	//モデルに位置を反映
 	m_CowmodelRender.SetPosition(m_transform.GetPosition());
-
 	//タイマーを減らす
 	m_moveTimer--;
 }
