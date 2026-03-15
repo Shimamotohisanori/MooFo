@@ -62,27 +62,34 @@ void Cow::Move()
 	//タイマーが0以上なら新しい方向を決める
 	if (m_moveTimer <= 0)
 	{
-		Vector3 dir
-		(
-			//(0,1,2,から-1を引いているので)-1,0,1の範囲でランダムな値を生成
-			rand() % 3 - 1,//x
-			0,             //yは常に0
-			rand() % 3 - 1//z
-		);
+		if (m_isMove)
+		{
+			Vector3 dir
+			(
+				//(0,1,2,から-1を引いているので)-1,0,1の範囲でランダムな値を生成
+				rand() % 3 - 1,//x
+				0,             //yは常に0
+				rand() % 3 - 1//z
+			);
 
-		// 0,0,0になったら一秒休む
-		if (dir.LengthSq() == 0) 
-		{
-			m_moveDir = Vector3::Zero;
-			m_moveTimer = 60.0f;//1秒休む
-		}
-		else
-		{
+			// 0,0,0になったら一秒休む
+			if (dir.LengthSq() == 0)
+			{
+				dir = Vector3(1, 0, 0);
+			}
 			dir.Normalize();
 			m_moveDir = dir;
 			m_moveTimer = 120.0f;//2秒ごとに方向を変える
+			m_isMove = false;
 		}
-	}
+		//移動した後に必ず休む
+			else
+			{
+				m_moveDir = Vector3::Zero;
+				m_moveTimer = 120.0f;//2秒休む
+				m_isMove = true;
+			}
+		}
 	//移動
 	Vector3 pos = m_transform.GetPosition();
 	//少しづつ位置を動かしている
