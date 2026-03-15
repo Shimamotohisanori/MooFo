@@ -18,7 +18,7 @@ UFO::~UFO()
 bool UFO::Start()
 {
 	srand(time(nullptr));
-	
+	m_UFOmodelRender.SetScale(Vector3(3.5f, 3.5f, 3.5f));
 	m_UFOmodelRender.Init(FILEPATH);
 	return true;
 }
