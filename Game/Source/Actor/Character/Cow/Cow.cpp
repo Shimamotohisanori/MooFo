@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "Cow.h"
 #include "Rope/Rope.h"
+#include "Source/Actor/Character/Player/Player.h"
 #include <time.h>
 namespace
 {
@@ -28,6 +29,10 @@ bool Cow::Start()
 	srand(time(nullptr));
 
 	m_CowmodelRender.Init(FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
+
+	m_player = FindGO<Player>("player");
+
+	m_rope = FindGO<Rope>("rope");
 	return true;
 }
 
@@ -48,6 +53,12 @@ void Cow::Update()
 	/*回転*/
 	Rotation();
 	
+	/** 牛がプレイヤーに引っ張られる処理*/
+	PulledByPlayer();
+
+	/** 牛がプレイヤーに捕獲される処理*/
+	CapturedByPlayer();
+
 	/*モデルの更新*/
 	m_CowmodelRender.Update();
 
@@ -60,7 +71,6 @@ void Cow::Update()
 
 void Cow::Move()
 {
-	m_rope = FindGO<Rope>("rope");
 
 	//ロープが牛に当たっているときは移動しない
 	if (m_rope->GetIsHitCow())
@@ -139,6 +149,58 @@ void Cow::ManageState()
 	else
 	{
 		m_cowState = 0;//待機
+	}
+}
+
+void Cow::PulledByPlayer()
+{
+	if (m_player->GetIsRightButton1() or m_player->GetIsLeftButton1())
+	{
+		//プレイヤーの位置を取得
+		Vector3 playerPos = m_player->GetPosition();
+
+		//牛の位置
+		Vector3 cowPos = m_transform.GetPosition();
+
+		//プレイヤーへの方向
+		Vector3 dir = playerPos - cowPos;
+
+		//正規化
+		dir.Normalize();
+
+		//牛をプレイヤーのいる位置まで徐々に移動
+		cowPos += dir * 5.0f;
+
+		m_transform.SetPosition(cowPos);
+
+		m_CowmodelRender.SetPosition(m_transform.GetPosition());
+
+		m_player->SetGetLeftButton1(false);
+		m_player->SetGetRightButton1(false);
+	}
+}
+
+void Cow::CapturedByPlayer()
+{
+	//ロープが牛に当たっているとき
+	if (m_rope->GetIsHitCow())
+	{
+		//牛とプレイヤーの間の距離を計算
+		Vector3 playerPos = m_player->GetPosition();
+		Vector3 cowPos = m_transform.GetPosition();
+
+		//プレイヤーへの方向
+		Vector3 dir = playerPos - cowPos;
+
+		//距離が一定以下なら捕獲される
+		if (dir.Length() < 10.0f)
+		{
+			//捕獲されたときの処理
+			m_rope->SetIsHitCow(false);
+
+			//牛を削除
+			DeleteGO(this);
+		}
 	}
 }
 

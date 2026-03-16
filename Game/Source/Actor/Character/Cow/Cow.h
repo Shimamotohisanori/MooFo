@@ -1,6 +1,7 @@
 #pragma once
 #include"Source/Actor/Character/Character.h"
 class Rope;
+class Player;
 class Cow : public Character
 {
 public:
@@ -26,9 +27,20 @@ public:
 		{
 			return m_transform.GetPosition();
 		}
+
+private:
+	//プレイヤーに引っ張られる関数
+	void PulledByPlayer();
+
+	//プレイヤーに捕獲される関数
+	void CapturedByPlayer();
+
 public:
 	//ロープ
 	Rope* m_rope;
+
+	//プレイヤー
+	Player* m_player;
 
 	enum EnRotationState
 	{

@@ -41,6 +41,8 @@ void Player::Update()
 
 	ThrowRope();
 
+	PullRope();
+
 	m_playerModelRender.Update();
 }
 
@@ -119,6 +121,25 @@ void Player::ThrowRope()
 	{
 		//ロープを投げる
 		m_rope->SetIsThrowRope(true);
+	}
+}
+
+void Player::PullRope()
+{
+	//ロープが牛に当たっているとき
+	if (m_rope->GetIsHitCow())
+	{
+		if (g_pad[0]->IsTrigger(enButtonRB1) && !m_isRightButton1)
+		{
+			m_isRightButton1 = true;
+			m_isLeftButton1 = false;
+		}
+
+		if (g_pad[0]->IsTrigger(enButtonLB1) && !m_isLeftButton1)
+		{
+			m_isLeftButton1 = true;
+			m_isRightButton1 = false;
+		}
 	}
 }
 
