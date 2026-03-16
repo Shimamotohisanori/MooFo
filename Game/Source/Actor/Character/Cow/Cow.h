@@ -1,5 +1,6 @@
 #pragma once
 #include"Source/Actor/Character/Character.h"
+class Rope;
 class Cow : public Character
 {
 public:
@@ -20,7 +21,15 @@ public:
 		{
 			m_transform.SetPosition(pos);
 		}
+
+		Vector3 GetPosition()
+		{
+			return m_transform.GetPosition();
+		}
 public:
+	//ロープ
+	Rope* m_rope;
+
 	enum EnRotationState
 	{
 		EnRotationState_MoveDir,

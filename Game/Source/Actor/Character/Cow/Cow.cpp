@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "Cow.h"
+#include "Rope/Rope.h"
 #include <time.h>
 namespace
 {
@@ -59,6 +60,14 @@ void Cow::Update()
 
 void Cow::Move()
 {
+	m_rope = FindGO<Rope>("rope");
+
+	//ロープが牛に当たっているときは移動しない
+	if (m_rope->GetIsHitCow())
+	{
+		return;
+	}
+
 	//タイマーが0以上なら新しい方向を決める
 	if (m_moveTimer <= 0)
 	{

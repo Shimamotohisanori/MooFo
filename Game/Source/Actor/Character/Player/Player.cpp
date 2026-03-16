@@ -46,9 +46,9 @@ void Player::Update()
 
 void Player::Move()
 {
-	if (m_rope->GetIsThrowRope())
+	if (m_rope->GetIsThrowRope() or m_rope->GetIsHitCow())
 	{
-		//ロープを投げているときは移動できないようにする
+		//ロープを投げているときとロープが牛に当たっているときは移動できないようにする
 		return;
 	}
 	//xzの移動速度を初期化
@@ -108,6 +108,12 @@ void Player::Rotation()
 
 void Player::ThrowRope()
 {
+	if (m_rope->GetIsHitCow())
+	{
+		//ロープが牛に当たっているときはロープを投げられないようにする
+		return;
+	}
+
 	//RB2ボタンが押されていて、ロープを投げていないとき
 	if (g_pad[0]->IsTrigger(enButtonRB2) && !m_rope->GetIsThrowRope())
 	{

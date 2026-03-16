@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameCamera.h"
 #include "Rope/Rope.h"
+#include "Source/Actor/Character/Cow/Cow.h"
 #include"Source/Actor/Character/Player/Player.h"
 
 GameCamera::GameCamera()
@@ -18,6 +19,8 @@ bool GameCamera::Start()
 
 	m_rope = FindGO<Rope>("rope");
 
+	m_cow = FindGO<Cow>("cow");
+
 	m_CameraPos.Set(0.0f, 125.0f, -250.0f);
 	//近平面を設定
 	g_camera3D->SetNear(1.0f);
@@ -30,6 +33,7 @@ void GameCamera::Update()
 {
 	Follow();
 	FollowRope();
+	HitCow();
 }
 
 
@@ -104,6 +108,7 @@ g_camera3D->SetPosition(pos);
 g_camera3D->Update();
 }
 
+
 void GameCamera::FollowRope()
 {
 
@@ -112,25 +117,47 @@ void GameCamera::FollowRope()
 	{
 		// --- カメラの forward を取得
 		Vector3 camForward = g_camera3D->GetForward();  // カメラの向き（3D方向）
-
-		
 		camForward.Normalize();
 
 		// カメラを forward 方向へ前進
 		m_CameraPos += camForward * 7.0f;
 
 		// ターゲットはプレイヤー
-		Vector3 target = m_player->GetPosition() + Vector3(0, 80, 0);
+		Vector3 target = m_player->GetPosition() + Vector3(0, 80, 0) + camForward * 500.0f;
 		g_camera3D->SetTarget(target);
 
 		// カメラ位置更新
-		g_camera3D->SetPosition(target + m_CameraPos);
+		g_camera3D->SetPosition(m_player->GetPosition() + Vector3(0, 80, 0) + m_CameraPos);
 		g_camera3D->Update();
+	}
+}
 
+
+void GameCamera::HitCow()
+{
+	/** カメラのワールド座標を計算*/
+	Vector3 cameraWorldPos = m_player->GetPosition() + Vector3(0, 80, 0) + m_CameraPos;
+
+	/** 牛とカメラの距離を計算する*/
+	Vector3 diff = cameraWorldPos - m_cow->GetPosition();
+	
+	/** 距離が近ければ*/
+	if (diff.LengthSq() < 100.0f * 100.0f)
+	{
+		// カメラ(縄の視点)が牛に近づいたら、牛に当たったと判断する
+		m_rope->SetIsHitCow(true);
 	}
 
-	
-
+	/** 牛に当たったら*/
+	if (m_rope->GetIsHitCow())
+	{
+		// ターゲットは牛
+		Vector3 target = m_cow->GetPosition() + Vector3(0, 80, 0);
+		g_camera3D->SetTarget(target);
+		// カメラ位置更新
+		g_camera3D->SetPosition(m_cow->GetPosition() + Vector3(0, 80, -200));
+		g_camera3D->Update();
+	}
 }
 
 

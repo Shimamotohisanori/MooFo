@@ -2,6 +2,7 @@
 
 class Player;
 class Rope;
+class Cow;
 class GameCamera : public IGameObject
 {
 
@@ -20,10 +21,12 @@ private:
 	/** ロープを追いかける関数*/
 	void FollowRope();
 
-
+	/** 牛がロープに当たったら*/
+	void HitCow();
 private:
 	Player* m_player;
 	Rope* m_rope;
+	Cow* m_cow;
 	Vector3 m_CameraPos;
 };
 

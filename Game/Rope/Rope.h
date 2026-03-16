@@ -24,7 +24,17 @@ public:
 		return m_isThrowRope;
 	}
 
+	/** 縄が牛に当たったかどうかのフラグを取得する関数 */
+	void SetIsHitCow(bool isHitCow)
+	{
+		m_isHitCow = isHitCow;
+	}
 
+	/** 縄が牛に当たったかどうかのフラグを取得する関数 */
+	bool GetIsHitCow()
+	{
+		return m_isHitCow;
+	}
 private:
 	/** プレイヤーが縄を投げた時の縄の処理関数*/
 	void PlayerThrowsRope();
@@ -44,6 +54,9 @@ private:
 
 	/** ロープアニメーションが始まったかどうかのフラグ*/
 	bool m_isStartRopeAnimation = false;
+
+	/** 縄が牛に当たったかどうかのフラグ*/
+	bool m_isHitCow = false;
 
 	/** ロープアニメーション時間*/
 	float m_ropeAnimationTime = 0.0f;
