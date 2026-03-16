@@ -18,8 +18,6 @@ Title::~Title()
 
 }
 
-
-
 bool Title::Start()
 {
 	m_TitleSpriteRender.Init(FILEPATH,WIDTH,HIGHT);

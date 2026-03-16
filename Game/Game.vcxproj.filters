@@ -59,6 +59,9 @@
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClCompile>
     <ClCompile Include="Title.cpp" />
+    <ClCompile Include="GameClear.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="GameOver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system\system.h">
@@ -89,5 +92,8 @@
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClInclude>
     <ClInclude Include="Title.h" />
+    <ClInclude Include="GameClear.h" />
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="GameOver.h" />
   </ItemGroup>
 </Project>
