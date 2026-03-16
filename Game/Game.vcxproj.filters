@@ -31,6 +31,9 @@
     <Filter Include="Pause">
       <UniqueIdentifier>{5ec71cc2-3938-4071-a2ed-9444ac9789ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SoundManager">
+      <UniqueIdentifier>{7df4d79d-9542-4756-812c-3af95136b8a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -64,6 +67,9 @@
     <ClCompile Include="Pause\Pause.cpp">
       <Filter>Pause</Filter>
     </ClCompile>
+    <ClCompile Include="SoundManager\SoundManager.cpp">
+      <Filter>SoundManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system\system.h">
@@ -95,6 +101,9 @@
     </ClInclude>
     <ClInclude Include="Pause\Pause.h">
       <Filter>Pause</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundManager\SoundManager.h">
+      <Filter>SoundManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
