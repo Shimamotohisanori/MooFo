@@ -5,6 +5,7 @@
 #include"Source/Actor/Character/Player/Player.h"
 #include"Source/Actor/Character/UFO/UFO.h"
 #include"Source/Actor/Character/Cow/Cow.h"
+#include"Pause/Pause.h"
 
 bool Game::Start()
 {
@@ -33,12 +34,20 @@ bool Game::Start()
 
 	//ゲームカメラの生成
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
-	
+
+	//ポーズ画面の生成をするが非アクティブにする
+	m_pause = NewGO<Pause>(0, "pause");
+	m_pause->Deactivate();
 	return true;
 }
 
 void Game::Update()
 {
-	
+	//セレクトボタンを押したら
+	if (g_pad[0]->IsTrigger(enButtonSelect))
+	{
+		/** ポーズ画面をアクティブにする */
+		m_pause->Activate();
+	}
 }
 

@@ -7,6 +7,7 @@ class Stage;
 class Cow;
 class GameCamera;
 class UFO;
+class Pause;
 class Game : public IGameObject
 {
 public:
@@ -26,5 +27,6 @@ private:
 	Cow* m_cow;
 	GameCamera* m_gameCamera;
 	UFO* m_UFO;
+	Pause* m_pause;
 };
 

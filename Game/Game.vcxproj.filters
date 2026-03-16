@@ -28,6 +28,9 @@
     <Filter Include="Source\Actor\Character\UFO">
       <UniqueIdentifier>{c8906236-0434-4dd1-8ac5-c515c166684c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pause">
+      <UniqueIdentifier>{5ec71cc2-3938-4071-a2ed-9444ac9789ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -58,6 +61,9 @@
     <ClCompile Include="Source\Actor\Character\UFO\UFO.cpp">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClCompile>
+    <ClCompile Include="Pause\Pause.cpp">
+      <Filter>Pause</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system\system.h">
@@ -86,6 +92,9 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Source\Actor\Character\UFO\UFO.h">
       <Filter>Source\Actor\Character\UFO</Filter>
+    </ClInclude>
+    <ClInclude Include="Pause\Pause.h">
+      <Filter>Pause</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
