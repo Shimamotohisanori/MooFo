@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "GameCamera.h"
-
+#include "Rope/Rope.h"
 #include"Source/Actor/Character/Player/Player.h"
 
 GameCamera::GameCamera()
@@ -16,6 +16,8 @@ bool GameCamera::Start()
 {
 	m_player = FindGO<Player>("player");
 
+	m_rope = FindGO<Rope>("rope");
+
 	m_CameraPos.Set(0.0f, 125.0f, -250.0f);
 	//近平面を設定
 	g_camera3D->SetNear(1.0f);
@@ -27,11 +29,18 @@ bool GameCamera::Start()
 void GameCamera::Update()
 {
 	Follow();
+	FollowRope();
 }
 
 
 void GameCamera::Follow()
 {
+
+	if (m_rope->GetIsThrowRope())
+	{
+		return;
+	}
+
 	Vector3 target;
 	//注視点をプレイヤーの座標に設定
 	target = m_player->GetPosition();
@@ -93,6 +102,35 @@ g_camera3D->SetTarget(target);
 g_camera3D->SetPosition(pos);
 //カメラの更新
 g_camera3D->Update();
+}
+
+void GameCamera::FollowRope()
+{
+
+	/** ロープが投げられたら*/
+	if (m_rope->GetIsThrowRope())
+	{
+		// --- カメラの forward を取得
+		Vector3 camForward = g_camera3D->GetForward();  // カメラの向き（3D方向）
+
+		
+		camForward.Normalize();
+
+		// カメラを forward 方向へ前進
+		m_CameraPos += camForward * 7.0f;
+
+		// ターゲットはプレイヤー
+		Vector3 target = m_player->GetPosition() + Vector3(0, 80, 0);
+		g_camera3D->SetTarget(target);
+
+		// カメラ位置更新
+		g_camera3D->SetPosition(target + m_CameraPos);
+		g_camera3D->Update();
+
+	}
+
+	
+
 }
 
 

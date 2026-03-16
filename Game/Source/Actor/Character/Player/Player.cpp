@@ -46,6 +46,11 @@ void Player::Update()
 
 void Player::Move()
 {
+	if (m_rope->GetIsThrowRope())
+	{
+		//ロープを投げているときは移動できないようにする
+		return;
+	}
 	//xzの移動速度を初期化
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
@@ -86,6 +91,11 @@ void Player::Move()
 
 void Player::Rotation()
 {
+	if (m_rope->GetIsThrowRope())
+	{
+		//ロープを投げているときは回転できないようにする
+		return;
+	}
 	if (fabsf(m_moveSpeed.x) >= 0.0001f || fabsf(m_moveSpeed.z) >= 0.0001f)
 	{
 		//キャラクターの方向を変える
