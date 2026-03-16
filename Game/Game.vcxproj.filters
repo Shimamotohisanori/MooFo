@@ -28,6 +28,9 @@
     <Filter Include="Source\Actor\Character\UFO">
       <UniqueIdentifier>{c8906236-0434-4dd1-8ac5-c515c166684c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Rope">
+      <UniqueIdentifier>{93adfd69-718c-4922-b9e1-3c859f1ff178}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -58,6 +61,9 @@
     <ClCompile Include="Source\Actor\Character\UFO\UFO.cpp">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClCompile>
+    <ClCompile Include="Rope\Rope.cpp">
+      <Filter>Rope</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system\system.h">
@@ -87,5 +93,12 @@
     <ClInclude Include="Source\Actor\Character\UFO\UFO.h">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Rope\Rope.h">
+      <Filter>Rope</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Game.rc" />
   </ItemGroup>
 </Project>

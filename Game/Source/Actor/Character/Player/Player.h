@@ -3,6 +3,7 @@
 /**
 *Playerクラス
 */
+class Rope;
 class Player : public Character
 {
 public:
@@ -21,6 +22,15 @@ public:
 		return m_transform.GetPosition();
 	};
 
+	Quaternion GetRotation()
+	{
+		return m_transform.GetRotation();
+	};
+
+private:
+	/** ロープを投げる関数*/
+	void ThrowRope();
+
 private:
 	ModelRender m_playerModelRender;
 
@@ -28,5 +38,7 @@ private:
 	CharacterController m_characterController;//キャラコン
 
 	Vector3 m_playerPos;//プレイヤーの座標
+
+	Rope* m_rope;//ロープクラス
 };
 

@@ -4,13 +4,13 @@
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/Cow/Model/Cow4.tkm"; //enModelUpAxis = enModelUpAxisZ;
-	const char* FILEPATH_IDLE = "Assets/modelData/Cow/Animation/Idle2.tka";
+	const char* THROW_ROPE_ANIMATION_FILE_PATH = "Assets/modelData/Cow/Animation/Idle2.tka";
 	const char* FILEPATH_WALK = "Assets/modelData/Cow/Animation/Walk.tka";
 }
 Cow::Cow()
 {
 	//Idle
-	animationClips[EnAnimation_Idle].Load(FILEPATH_IDLE);
+	animationClips[EnAnimation_Idle].Load(THROW_ROPE_ANIMATION_FILE_PATH);
 	animationClips[EnAnimation_Idle].SetLoopFlag(true);
 	//Walk
 	animationClips[EnAnimation_Walk].Load(FILEPATH_WALK);

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Player.h"
+#include "Rope/Rope.h"
 #include"Transform/Transform.h"
 
 namespace
@@ -26,6 +27,9 @@ bool Player::Start()
 
 	m_playerModelRender.SetPosition(m_transform.GetPosition());
 	m_characterController.Init(CHRACTER_CONTROLLER_WIDTH, CHRACTER_CONTROLLER_HIGHT, m_transform.GetPosition());
+
+	m_rope = NewGO<Rope>(0, "rope");
+
 	return true;
 }
 
@@ -34,6 +38,8 @@ void Player::Update()
 	Move();
 
 	Rotation();
+
+	ThrowRope();
 
 	m_playerModelRender.Update();
 }
@@ -87,6 +93,16 @@ void Player::Rotation()
 
 		//モデルの回転をキャラクターの回転に合わせる
 		m_playerModelRender.SetRotation(m_transform.GetRotation());
+	}
+}
+
+void Player::ThrowRope()
+{
+	//RB2ボタンが押されていて、ロープを投げていないとき
+	if (g_pad[0]->IsTrigger(enButtonRB2) && !m_rope->GetIsThrowRope())
+	{
+		//ロープを投げる
+		m_rope->SetIsThrowRope(true);
 	}
 }
 
