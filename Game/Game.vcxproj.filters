@@ -58,6 +58,7 @@
     <ClCompile Include="Source\Actor\Character\UFO\UFO.cpp">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClCompile>
+    <ClCompile Include="Title.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system\system.h">
@@ -87,5 +88,6 @@
     <ClInclude Include="Source\Actor\Character\UFO\UFO.h">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClInclude>
+    <ClInclude Include="Title.h" />
   </ItemGroup>
 </Project>
