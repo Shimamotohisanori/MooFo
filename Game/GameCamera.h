@@ -1,5 +1,4 @@
 #pragma once
-
 class Player;
 class Rope;
 class Cow;

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "GameCamera.h"
 #include "Rope/Rope.h"
 #include "Source/Actor/Character/Cow/Cow.h"
@@ -7,7 +7,7 @@
 GameCamera::GameCamera()
 {
 }
-	
+
 GameCamera::~GameCamera()
 {
 }
@@ -28,7 +28,7 @@ bool GameCamera::Start()
 	g_camera3D->SetFar(100000.0f);
 	return true;
 }
-			
+
 void GameCamera::Update()
 {
 	Follow();
@@ -94,18 +94,19 @@ void GameCamera::Follow()
 		m_CameraPos = toCameraPosOld;
 	}
 
-//視点の計算
-Vector3 pos = target + m_CameraPos;
+	//視点の計算
+	Vector3 pos = target + m_CameraPos;
 
-// ★ カメラ位置と注視点が一致しないようにする保険 ★
-if ((pos - target).LengthSq() < 0.0001f) {
-	pos = target + Vector3(0.0f, 0.0f, -50.0f); // 適当な距離を確保
-}
-//メインカメラに注視点と視点を設定
-g_camera3D->SetTarget(target);
-g_camera3D->SetPosition(pos);
-//カメラの更新
-g_camera3D->Update();
+	// ★ カメラ位置と注視点が一致しないようにする保険 ★
+	if ((pos - target).LengthSq() < 0.0001f)
+	{
+		pos = target + Vector3(0.0f, 0.0f, -50.0f); // 適当な距離を確保
+	}
+	//メインカメラに注視点と視点を設定
+	g_camera3D->SetTarget(target);
+	g_camera3D->SetPosition(pos);
+	//カメラの更新
+	g_camera3D->Update();
 }
 
 
@@ -128,7 +129,7 @@ void GameCamera::FollowRope()
 		{
 			camForward = Vector3(0, 0, 1); // 安全なデフォルト方向
 		}
-		
+
 		else
 		{
 			camForward.Normalize();
@@ -137,7 +138,7 @@ void GameCamera::FollowRope()
 		m_CameraPos += camForward * 7.0f;
 
 		Vector3 eye = m_player->GetPosition() + Vector3(0.0f, 80.0f, 0.0f) + m_CameraPos;
-		
+
 		// ターゲットはプレイヤー
 		Vector3 target = m_player->GetPosition() + Vector3(0.0f, 80.0f, 0.0f) + camForward * 500.0f;
 		g_camera3D->SetTarget(target);
@@ -149,19 +150,6 @@ void GameCamera::FollowRope()
 
 		// カメラ位置更新
 		g_camera3D->SetPosition(m_player->GetPosition() + Vector3(0.0f, 80.0f, 0.0f) + m_CameraPos);
-
-		camForward.Normalize();
-
-		// カメラを forward 方向へ前進
-		m_CameraPos += camForward * 7.0f;
-
-		// ターゲットはプレイヤー
-		Vector3 target = m_player->GetPosition() + Vector3(0, 80, 0) + camForward * 500.0f;
-		g_camera3D->SetTarget(target);
-
-		// カメラ位置更新
-		g_camera3D->SetPosition(m_player->GetPosition() + Vector3(0, 80, 0) + m_CameraPos);
-
 		g_camera3D->Update();
 	}
 }
@@ -172,18 +160,17 @@ void GameCamera::HitCow()
 
 	m_cow = FindGO<Cow>("cow");
 
-	if (m_rope == nullptr or m_cow == nullptr)
+	if (m_rope == nullptr || m_cow == nullptr)
 	{
 		return;
 	}
-
-
 	/** カメラのワールド座標を計算*/
-	Vector3 cameraWorldPos = m_player->GetPosition() + Vector3(0, 80, 0) + m_CameraPos;
+	Vector3 cameraWorldPos = m_player->GetPosition() + Vector3(0.0f, 80.0f, 0.0f) + m_CameraPos;
 
 	/** 牛とカメラの距離を計算する*/
-	Vector3 diff = cameraWorldPos - m_cow->GetPosition();
-	
+	Vector3 diff;
+	diff = cameraWorldPos - m_cow->GetPosition();
+
 	/** 距離が近ければ*/
 	if (diff.LengthSq() < 100.0f * 100.0f)
 	{
@@ -195,13 +182,12 @@ void GameCamera::HitCow()
 	if (m_rope->GetIsHitCow())
 	{
 		// ターゲットは牛
-		Vector3 target = m_cow->GetPosition() + Vector3(0, 80, 0);
+		Vector3 target = m_cow->GetPosition() + Vector3(0.0f, 80.0f, 0.0f);
 		g_camera3D->SetTarget(target);
 		// カメラ位置更新
-		g_camera3D->SetPosition(m_cow->GetPosition() + Vector3(0, 80, -200));
+		g_camera3D->SetPosition(m_cow->GetPosition() + Vector3(0.0f, 80.0f, -200.0f));
 		g_camera3D->Update();
 	}
 }
-
 
 
