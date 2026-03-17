@@ -228,6 +228,7 @@
     <ClCompile Include="GameClear.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Rope\Rope.cpp" />
     <ClCompile Include="Source\Actor\Actor.cpp" />
     <ClCompile Include="Source\Actor\Character\Character.cpp" />
     <ClCompile Include="Source\Actor\Character\Cow\Cow.cpp" />
@@ -247,8 +248,13 @@
   <ItemGroup>
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
+
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Rope\Rope.h" />
+
     <ClInclude Include="GameClear.h" />
     <ClInclude Include="GameOver.h" />
+
     <ClInclude Include="Source\Actor\Actor.h" />
     <ClInclude Include="Source\Actor\Character\Character.h" />
     <ClInclude Include="Source\Actor\Character\Cow\Cow.h" />
@@ -260,6 +266,9 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Transform\Transform.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Game.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

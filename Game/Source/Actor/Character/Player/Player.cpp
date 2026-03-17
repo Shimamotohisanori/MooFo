@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Player.h"
+#include "Rope/Rope.h"
 #include"Transform/Transform.h"
 
 namespace
@@ -26,6 +27,9 @@ bool Player::Start()
 
 	m_playerModelRender.SetPosition(m_transform.GetPosition());
 	m_characterController.Init(CHRACTER_CONTROLLER_WIDTH, CHRACTER_CONTROLLER_HIGHT, m_transform.GetPosition());
+
+	m_rope = NewGO<Rope>(0, "rope");
+
 	return true;
 }
 
@@ -35,11 +39,20 @@ void Player::Update()
 
 	Rotation();
 
+	ThrowRope();
+
+	PullRope();
+
 	m_playerModelRender.Update();
 }
 
 void Player::Move()
 {
+	if (m_rope->GetIsThrowRope() or m_rope->GetIsHitCow())
+	{
+		//ロープを投げているときとロープが牛に当たっているときは移動できないようにする
+		return;
+	}
 	//xzの移動速度を初期化
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
@@ -80,6 +93,11 @@ void Player::Move()
 
 void Player::Rotation()
 {
+	if (m_rope->GetIsThrowRope())
+	{
+		//ロープを投げているときは回転できないようにする
+		return;
+	}
 	if (fabsf(m_moveSpeed.x) >= 0.0001f || fabsf(m_moveSpeed.z) >= 0.0001f)
 	{
 		//キャラクターの方向を変える
@@ -87,6 +105,41 @@ void Player::Rotation()
 
 		//モデルの回転をキャラクターの回転に合わせる
 		m_playerModelRender.SetRotation(m_transform.GetRotation());
+	}
+}
+
+void Player::ThrowRope()
+{
+	if (m_rope->GetIsHitCow())
+	{
+		//ロープが牛に当たっているときはロープを投げられないようにする
+		return;
+	}
+
+	//RB2ボタンが押されていて、ロープを投げていないとき
+	if (g_pad[0]->IsTrigger(enButtonRB2) && !m_rope->GetIsThrowRope())
+	{
+		//ロープを投げる
+		m_rope->SetIsThrowRope(true);
+	}
+}
+
+void Player::PullRope()
+{
+	//ロープが牛に当たっているとき
+	if (m_rope->GetIsHitCow())
+	{
+		if (g_pad[0]->IsTrigger(enButtonRB1) && !m_isRightButton1)
+		{
+			m_isRightButton1 = true;
+			m_isLeftButton1 = false;
+		}
+
+		if (g_pad[0]->IsTrigger(enButtonLB1) && !m_isLeftButton1)
+		{
+			m_isLeftButton1 = true;
+			m_isRightButton1 = false;
+		}
 	}
 }
 
