@@ -22,9 +22,9 @@ bool GameCamera::Start()
 	m_cow = FindGO<Cow>("cow");
 
 	m_CameraPos.Set(0.0f, 125.0f, -250.0f);
-	//‹ß•½–Ê‚ğİ’è
+	//è¿‘å¹³é¢ã‚’è¨­å®š
 	g_camera3D->SetNear(1.0f);
-	//‰~•½–Ê‚ğİ’è
+	//å††å¹³é¢ã‚’è¨­å®š
 	g_camera3D->SetFar(100000.0f);
 	return true;
 }
@@ -46,65 +46,65 @@ void GameCamera::Follow()
 	}
 
 	Vector3 target;
-	//’‹“_‚ğƒvƒŒƒCƒ„[‚ÌÀ•W‚Éİ’è
+	//æ³¨è¦–ç‚¹ã‚’ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åº§æ¨™ã«è¨­å®š
 	target = m_player->GetPosition();
-	//ƒvƒŒƒCƒ„[‚Ì‘«Œ³‚æ‚è­‚µã‚É’‹“_‚ğİ’è
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¶³å…ƒã‚ˆã‚Šå°‘ã—ä¸Šã«æ³¨è¦–ç‚¹ã‚’è¨­å®š
 	target.y += 80.0f;
 
 	Vector3 toCameraPosOld = m_CameraPos;
 
-	//‰EƒXƒeƒBƒbƒN“ü—Íæ“¾‚ÅƒJƒƒ‰‚ğ‰ñ‚·
+	//å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯å…¥åŠ›å–å¾—ã§ã‚«ãƒ¡ãƒ©ã‚’å›ã™
 	float x = g_pad[0]->GetRStickXF();
 	float y = g_pad[0]->GetRStickYF();
-	//Y²ü‚è‚Ì‰ñ“]
+	//Yè»¸å‘¨ã‚Šã®å›è»¢
 	Quaternion rot;
 	rot.SetRotationDeg(Vector3::AxisY, 1.3f * x);
 	rot.Apply(m_CameraPos);
 
 
-	// --- ã‰º‰ñ“]C³”Å ---
-	//uƒJƒƒ‰‚Ì‰E•ûŒüv‚ğŒ»İ‚Ì m_CameraPos ‚©‚ç³‚µ‚­ŒvZ‚µA
-	//‚»‚ê‚ğg‚Á‚ÄX²‰ñ“]‚ğs‚Á‚Ä‚¢‚éB
+	// --- ä¸Šä¸‹å›è»¢ä¿®æ­£ç‰ˆ ---
+	//ã€Œã‚«ãƒ¡ãƒ©ã®å³æ–¹å‘ã€ã‚’ç¾åœ¨ã® m_CameraPos ã‹ã‚‰æ­£ã—ãè¨ˆç®—ã—ã€
+	//ãã‚Œã‚’ä½¿ã£ã¦Xè»¸å›è»¢ã‚’è¡Œã£ã¦ã„ã‚‹ã€‚
 	Vector3 forward = m_CameraPos;
 	if (forward.LengthSq() > 0.0001f)
 		forward.Normalize();
 	else
-		forward = Vector3(0, 0, 1);   // ˆÀ‘S‚ÈƒfƒtƒHƒ‹ƒg•ûŒü
+		forward = Vector3(0, 0, 1);   // å®‰å…¨ãªãƒ‡ãƒ•ã‚©ãƒ«ãƒˆæ–¹å‘
 	forward.Normalize();
 
-	// ƒ[ƒ‹ƒhã•ûŒü
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰ä¸Šæ–¹å‘
 	Vector3 up = Vector3::AxisY;
 
-	// ƒJƒƒ‰‚Ì‰E•ûŒü‚ğZo
+	// ã‚«ãƒ¡ãƒ©ã®å³æ–¹å‘ã‚’ç®—å‡º
 	Vector3 right;
 	right.Cross(up, forward);
 	right.Normalize();
 
-	// ã‰º‰ñ“]
+	// ä¸Šä¸‹å›è»¢
 	rot.SetRotationDeg(right, 1.3f * y);
 	rot.Apply(m_CameraPos);
 
 
 	Vector3 dir = m_CameraPos;
 	dir.Normalize();
-	float limit = 0.95f; // cosŠp“x‚É‚æ‚é§ŒÀ(= –ñ72‹)
+	float limit = 0.95f; // cosè§’åº¦ã«ã‚ˆã‚‹åˆ¶é™(= ç´„72Â°)
 	if (fabsf(dir.Dot(Vector3::AxisY)) > limit)
 	{
-		// ãŒü‚«‚·‚¬E‰ºŒü‚«‚·‚¬‚ğ–h~
+		// ä¸Šå‘ãã™ããƒ»ä¸‹å‘ãã™ãã‚’é˜²æ­¢
 		m_CameraPos = toCameraPosOld;
 	}
 
-//‹“_‚ÌŒvZ
+//è¦–ç‚¹ã®è¨ˆç®—
 Vector3 pos = target + m_CameraPos;
 
-// š ƒJƒƒ‰ˆÊ’u‚Æ’‹“_‚ªˆê’v‚µ‚È‚¢‚æ‚¤‚É‚·‚é•ÛŒ¯ š
+// â˜… ã‚«ãƒ¡ãƒ©ä½ç½®ã¨æ³¨è¦–ç‚¹ãŒä¸€è‡´ã—ãªã„ã‚ˆã†ã«ã™ã‚‹ä¿é™º â˜…
 if ((pos - target).LengthSq() < 0.0001f) {
-	pos = target + Vector3(0.0f, 0.0f, -50.0f); // “K“–‚È‹——£‚ğŠm•Û
+	pos = target + Vector3(0.0f, 0.0f, -50.0f); // é©å½“ãªè·é›¢ã‚’ç¢ºä¿
 }
-//ƒƒCƒ“ƒJƒƒ‰‚É’‹“_‚Æ‹“_‚ğİ’è
+//ãƒ¡ã‚¤ãƒ³ã‚«ãƒ¡ãƒ©ã«æ³¨è¦–ç‚¹ã¨è¦–ç‚¹ã‚’è¨­å®š
 g_camera3D->SetTarget(target);
 g_camera3D->SetPosition(pos);
-//ƒJƒƒ‰‚ÌXV
+//ã‚«ãƒ¡ãƒ©ã®æ›´æ–°
 g_camera3D->Update();
 }
 
@@ -112,22 +112,56 @@ g_camera3D->Update();
 void GameCamera::FollowRope()
 {
 
-	/** ƒ[ƒv‚ª“Š‚°‚ç‚ê‚½‚ç*/
+	if (m_rope == nullptr)
+	{
+		return;
+	}
+
+
+	/** ãƒ­ãƒ¼ãƒ—ãŒæŠ•ã’ã‚‰ã‚ŒãŸã‚‰*/
 	if (m_rope->GetIsThrowRope())
 	{
-		// --- ƒJƒƒ‰‚Ì forward ‚ğæ“¾
-		Vector3 camForward = g_camera3D->GetForward();  // ƒJƒƒ‰‚ÌŒü‚«i3D•ûŒüj
-		camForward.Normalize();
+		// --- ã‚«ãƒ¡ãƒ©ã® forward ã‚’å–å¾—
+		Vector3 camForward = g_camera3D->GetForward();  // ã‚«ãƒ¡ãƒ©ã®å‘ãï¼ˆ3Dæ–¹å‘ï¼‰
 
-		// ƒJƒƒ‰‚ğ forward •ûŒü‚Ö‘Oi
+		if (camForward.LengthSq() < 0.0001f)
+		{
+			camForward = Vector3(0, 0, 1); // å®‰å…¨ãªãƒ‡ãƒ•ã‚©ãƒ«ãƒˆæ–¹å‘
+		}
+		
+		else
+		{
+			camForward.Normalize();
+		}
+		// ã‚«ãƒ¡ãƒ©ã‚’ forward æ–¹å‘ã¸å‰é€²
 		m_CameraPos += camForward * 7.0f;
 
-		// ƒ^[ƒQƒbƒg‚ÍƒvƒŒƒCƒ„[
+		Vector3 eye = m_player->GetPosition() + Vector3(0.0f, 80.0f, 0.0f) + m_CameraPos;
+		
+		// ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¯ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
+		Vector3 target = m_player->GetPosition() + Vector3(0.0f, 80.0f, 0.0f) + camForward * 500.0f;
+		g_camera3D->SetTarget(target);
+
+		if ((eye - target).LengthSq() < 0.0001f)
+		{
+			target += Vector3(0.0f, 0.0f, -50.0f); // é©å½“ãªè·é›¢ã‚’ç¢ºä¿
+		}
+
+		// ã‚«ãƒ¡ãƒ©ä½ç½®æ›´æ–°
+		g_camera3D->SetPosition(m_player->GetPosition() + Vector3(0.0f, 80.0f, 0.0f) + m_CameraPos);
+
+		camForward.Normalize();
+
+		// ã‚«ãƒ¡ãƒ©ã‚’ forward æ–¹å‘ã¸å‰é€²
+		m_CameraPos += camForward * 7.0f;
+
+		// ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¯ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
 		Vector3 target = m_player->GetPosition() + Vector3(0, 80, 0) + camForward * 500.0f;
 		g_camera3D->SetTarget(target);
 
-		// ƒJƒƒ‰ˆÊ’uXV
+		// ã‚«ãƒ¡ãƒ©ä½ç½®æ›´æ–°
 		g_camera3D->SetPosition(m_player->GetPosition() + Vector3(0, 80, 0) + m_CameraPos);
+
 		g_camera3D->Update();
 	}
 }
@@ -135,26 +169,35 @@ void GameCamera::FollowRope()
 
 void GameCamera::HitCow()
 {
-	/** ƒJƒƒ‰‚Ìƒ[ƒ‹ƒhÀ•W‚ğŒvZ*/
+
+	m_cow = FindGO<Cow>("cow");
+
+	if (m_rope == nullptr or m_cow == nullptr)
+	{
+		return;
+	}
+
+
+	/** ã‚«ãƒ¡ãƒ©ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’è¨ˆç®—*/
 	Vector3 cameraWorldPos = m_player->GetPosition() + Vector3(0, 80, 0) + m_CameraPos;
 
-	/** ‹‚ÆƒJƒƒ‰‚Ì‹——£‚ğŒvZ‚·‚é*/
+	/** ç‰›ã¨ã‚«ãƒ¡ãƒ©ã®è·é›¢ã‚’è¨ˆç®—ã™ã‚‹*/
 	Vector3 diff = cameraWorldPos - m_cow->GetPosition();
 	
-	/** ‹——£‚ª‹ß‚¯‚ê‚Î*/
+	/** è·é›¢ãŒè¿‘ã‘ã‚Œã°*/
 	if (diff.LengthSq() < 100.0f * 100.0f)
 	{
-		// ƒJƒƒ‰(“ê‚Ì‹“_)‚ª‹‚É‹ß‚Ã‚¢‚½‚çA‹‚É“–‚½‚Á‚½‚Æ”»’f‚·‚é
+		// ã‚«ãƒ¡ãƒ©(ç¸„ã®è¦–ç‚¹)ãŒç‰›ã«è¿‘ã¥ã„ãŸã‚‰ã€ç‰›ã«å½“ãŸã£ãŸã¨åˆ¤æ–­ã™ã‚‹
 		m_rope->SetIsHitCow(true);
 	}
 
-	/** ‹‚É“–‚½‚Á‚½‚ç*/
+	/** ç‰›ã«å½“ãŸã£ãŸã‚‰*/
 	if (m_rope->GetIsHitCow())
 	{
-		// ƒ^[ƒQƒbƒg‚Í‹
+		// ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¯ç‰›
 		Vector3 target = m_cow->GetPosition() + Vector3(0, 80, 0);
 		g_camera3D->SetTarget(target);
-		// ƒJƒƒ‰ˆÊ’uXV
+		// ã‚«ãƒ¡ãƒ©ä½ç½®æ›´æ–°
 		g_camera3D->SetPosition(m_cow->GetPosition() + Vector3(0, 80, -200));
 		g_camera3D->Update();
 	}
