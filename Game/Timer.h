@@ -7,7 +7,7 @@ class Timer : public IGameObject
 	bool Start();
 	void Update();
 	void Render(RenderContext& rc);
-	const uint8_t GetTimer() const { return m_timer; }
+	const float GetTimer() const { return m_timer; }
 public:
 	//タイマーの処理
 	void TextTimer();
