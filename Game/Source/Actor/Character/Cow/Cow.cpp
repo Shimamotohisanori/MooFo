@@ -2,6 +2,7 @@
 #include "Cow.h"
 #include "Rope/Rope.h"
 #include "Source/Actor/Character/Player/Player.h"
+#include"CountDown.h"
 #include <time.h>
 namespace
 {
@@ -26,19 +27,24 @@ Cow::~Cow()
 
 bool Cow::Start()
 {
+	
 	srand(time(nullptr));
 
 	m_CowmodelRender.Init(FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
-
+	
 	m_player = FindGO<Player>("player");
-
+	m_countdown = FindGO<CountDown>("countdown");
 	m_rope = FindGO<Rope>("rope");
 	return true;
 }
 
 void Cow::Update()
 {
-
+	//カウントダウン中は動かないようにするため早期リターン
+	if (m_countdown->GetControlEnabled())
+	{
+		return;
+	}
 	/*アニメーション*/
 	PlayAnimation();
 

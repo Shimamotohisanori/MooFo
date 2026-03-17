@@ -45,6 +45,8 @@ void GameCamera::Follow()
 		return;
 	}
 
+																																																																																																																																																																																																																																																																																																																																																																		
+
 	Vector3 target;
 	//注視点をプレイヤーの座標に設定
 	target = m_player->GetPosition();

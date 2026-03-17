@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "Rope/Rope.h"
 #include"Transform/Transform.h"
-
+#include"CountDown.h"
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/CowBoy.tkm", enModelUpAxis = enModelUpAxisZ;
@@ -23,6 +23,7 @@ Player::~Player()
 
 bool Player::Start()
 {
+	m_countDown = FindGO<CountDown>("countdown");
 	m_playerModelRender.Init(FILEPATH);
 
 	m_playerModelRender.SetPosition(m_transform.GetPosition());
@@ -35,6 +36,12 @@ bool Player::Start()
 
 void Player::Update()
 {
+	//カウントダウン中は操作出来ないようにするため早期リターン
+	
+	if (m_countDown->GetControlEnabled())
+	{
+		return;
+	}
 	Move();
 
 	Rotation();
