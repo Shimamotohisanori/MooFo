@@ -229,7 +229,11 @@
     <ClCompile Include="GameClear.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="main.cpp" />
+
+    <ClCompile Include="Pause\Pause.cpp" />
+    <ClCompile Include="SoundManager\SoundManager.cpp" />
     <ClCompile Include="Rope\Rope.cpp" />
+    
     <ClCompile Include="Source\Actor\Actor.cpp" />
     <ClCompile Include="Source\Actor\Character\Character.cpp" />
     <ClCompile Include="Source\Actor\Character\Cow\Cow.cpp" />
@@ -250,10 +254,14 @@
     <ClInclude Include="CountDown.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
+
+    <ClInclude Include="Pause\Pause.h" />
+    <ClInclude Include="SoundManager\SoundManager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Rope\Rope.h" />
     <ClInclude Include="GameClear.h" />
     <ClInclude Include="GameOver.h" />
+
     <ClInclude Include="Source\Actor\Actor.h" />
     <ClInclude Include="Source\Actor\Character\Character.h" />
     <ClInclude Include="Source\Actor\Character\Cow\Cow.h" />

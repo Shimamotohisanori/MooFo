@@ -28,8 +28,15 @@
     <Filter Include="Source\Actor\Character\UFO">
       <UniqueIdentifier>{c8906236-0434-4dd1-8ac5-c515c166684c}</UniqueIdentifier>
     </Filter>
+
+    <Filter Include="Pause">
+      <UniqueIdentifier>{5ec71cc2-3938-4071-a2ed-9444ac9789ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundManager">
+      <UniqueIdentifier>{7df4d79d-9542-4756-812c-3af95136b8a9}</UniqueIdentifier>
     <Filter Include="Rope">
       <UniqueIdentifier>{93adfd69-718c-4922-b9e1-3c859f1ff178}</UniqueIdentifier>
+
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +68,14 @@
     <ClCompile Include="Source\Actor\Character\UFO\UFO.cpp">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClCompile>
+
+    <ClCompile Include="Pause\Pause.cpp">
+      <Filter>Pause</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundManager\SoundManager.cpp">
+      <Filter>SoundManager</Filter>
+    </ClCompile>
+
     <ClCompile Include="Rope\Rope.cpp">
       <Filter>Rope</Filter>
     </ClCompile>
@@ -69,6 +84,7 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="CountDown.cpp" />
+
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system\system.h">
@@ -98,6 +114,14 @@
     <ClInclude Include="Source\Actor\Character\UFO\UFO.h">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClInclude>
+
+    <ClInclude Include="Pause\Pause.h">
+      <Filter>Pause</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundManager\SoundManager.h">
+      <Filter>SoundManager</Filter>
+    </ClInclude>
+
     <ClInclude Include="resource.h" />
     <ClInclude Include="Rope\Rope.h">
       <Filter>Rope</Filter>
@@ -110,5 +134,6 @@
     <ClInclude Include="GameClear.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="GameOver.h" />
+
   </ItemGroup>
 </Project>

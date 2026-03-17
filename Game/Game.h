@@ -4,6 +4,7 @@ class Stage;
 class Cow;
 class GameCamera;
 class UFO;
+class Pause;
 class Timer;
 class GameClear;
 class GameOver;
@@ -36,12 +37,12 @@ private:
 	Cow* m_spincow;
 	GameCamera* m_gameCamera;
 	UFO* m_UFO;
+	Pause* m_pause;
 	//棒立ちのUFO
 	UFO* m_IdleUFO;
 	Timer* m_timer;
 	GameClear* m_gameClear;
 	GameOver* m_gameOver;
 	CountDown* m_countDown;
-
 };
 

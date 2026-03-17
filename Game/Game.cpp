@@ -5,6 +5,7 @@
 #include"Source/Actor/Character/Player/Player.h"
 #include"Source/Actor/Character/UFO/UFO.h"
 #include"Source/Actor/Character/Cow/Cow.h"
+#include"Pause/Pause.h"
 #include"Timer.h"
 #include"GameClear.h"
 #include"GameOver.h"
@@ -61,8 +62,14 @@ bool Game::Start()
 	//ゲームカメラの生成
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
 
+
+	//ポーズ画面の生成をするが非アクティブにする
+	m_pause = NewGO<Pause>(0, "pause");
+	m_pause->Deactivate();
+
 	m_countDown = NewGO<CountDown>(0, "countdown");
 	
+
 	return true;
 }
 
@@ -70,6 +77,18 @@ bool Game::Start()
 
 void Game::Update()
 {
+
+	//ポーズ中はゲーム処理をしない
+	if (m_pause->IsActive())
+	{
+		return;
+	}
+	//セレクトボタンを押したら
+	if (g_pad[0]->IsTrigger(enButtonSelect))
+	{
+		/** ポーズ画面をアクティブにする */
+		m_pause->Activate();
+  }
 	//クリア処理
 	Clear();
 	//ゲームオーバー処理
