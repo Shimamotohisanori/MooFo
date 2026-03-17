@@ -8,9 +8,7 @@
 #include"Timer.h"
 #include"GameClear.h"
 #include"GameOver.h"
-
-
-
+#include"CountDown.h"
 
 Game::~Game()
 {
@@ -62,6 +60,8 @@ bool Game::Start()
 
 	//ゲームカメラの生成
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
+
+	m_countDown = NewGO<CountDown>(0, "countdown");
 	
 	return true;
 }

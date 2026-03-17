@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "UFO.h"
 #include <time.h>
+#include"CountDown.h"
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/UFO/UFO2.tkm"; //enModelUpAxis = enModelUpAxisZ;
@@ -12,11 +13,13 @@ UFO::UFO()
 
 UFO::~UFO()
 {
+
 }
 
 
 bool UFO::Start()
 {
+	m_countdown = FindGO<CountDown>("countdown");
 	srand(time(nullptr));
 	m_UFOmodelRender.SetScale(Vector3(3.5f, 3.5f, 3.5f));
 	m_UFOmodelRender.Init(FILEPATH);
@@ -25,6 +28,12 @@ bool UFO::Start()
 
 void UFO::Update()
 {
+	//カウントダウン中は牛を動かさないようにするので早期リターン
+	if (m_countdown->GetControlEnabled())
+	{
+		return;
+	}
+
 	if (m_UFOState == EnUFOState_Move)
 	{
 		/*移動*/

@@ -7,6 +7,7 @@ class UFO;
 class Timer;
 class GameClear;
 class GameOver;
+class CountDown;
 class Game : public IGameObject
 {
 public:
@@ -40,6 +41,7 @@ private:
 	Timer* m_timer;
 	GameClear* m_gameClear;
 	GameOver* m_gameOver;
+	CountDown* m_countDown;
 
 };
 

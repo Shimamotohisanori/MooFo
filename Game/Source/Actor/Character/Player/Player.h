@@ -4,6 +4,7 @@
 *Playerクラス
 */
 class Rope;
+class CountDown;
 class Player : public Character
 {
 public:
@@ -68,10 +69,13 @@ private:
 
 	Rope* m_rope;//ロープクラス
 
+	CountDown* m_countDown;
+
 	//右ボタンが押されているかどうかのフラグ
 	bool m_isRightButton1 = false;
 
 	//左ボタンが押されているかどうかのフラグ
 	bool m_isLeftButton1 = false;
+
 };
 

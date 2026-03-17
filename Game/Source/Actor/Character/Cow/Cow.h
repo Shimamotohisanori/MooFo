@@ -2,6 +2,7 @@
 #include"Source/Actor/Character/Character.h"
 class Rope;
 class Player;
+class CountDown;
 class Cow : public Character
 {
 public:
@@ -41,6 +42,8 @@ public:
 
 	//プレイヤー
 	Player* m_player;
+	//カウントダウン
+	CountDown* m_countdown;
 
 	enum EnRotationState
 	{
