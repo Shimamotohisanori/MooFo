@@ -4,6 +4,7 @@
 namespace
 {
 	const Vector3 RETURNPOS = { 0.0f,-300.0f,0.0f };
+	const Vector3 BLACKPOS = { 0.0f,-295.0f,0.0f };
 	const Vector3 VOLUMEPOS = { 480.0f,75.0f,0.0f };
 	const Vector3 NOT_VOLUMEPOS = { -480.0f,75.0f,0.0f };
 	const Vector3 SE_VOLUMEPOS = { 480.0f,-120.0f,0.0f };
@@ -74,12 +75,29 @@ bool SoundManager::Start()
 	m_seBlownBarSprite.SetScale(BLOWNBARINITIALSCALE);
 	m_seBlownBarSprite.Update();
 
+	m_bgmBlackIcon.Init("Assets/blackIcon.dds", 290.0f, 240.0f);
+	m_bgmBlackIcon.SetPosition(SOUNDICONPOS);
+	m_bgmBlackIcon.Update();
+
+	m_seBlackIcon.Init("Assets/blackIcon.dds", 290.0f, 240.0f);
+	m_seBlackIcon.SetPosition(SE_ICONPOS);
+	m_seBlackIcon.Update();
+
+	m_blackSprite.Init("Assets/Black.dds", 430.0f, 240.0f);
+	m_blackSprite.SetPosition(BLACKPOS);
+	m_blackSprite.Update();
+
 	m_pause = FindGO<Pause>("pause");
 
 	return true;
 }
 
 void SoundManager::Update()
+{
+	ButtonCount();
+}
+
+void SoundManager::ButtonCount()
 {
 	if (g_pad[0]->IsTrigger(enButtonDown))
 	{
@@ -133,6 +151,8 @@ void SoundManager::Barbgm()
 			m_soundIconSprite.Update();
 			m_blownBarSprite.SetScale(Vector3(m_bgmVolume.x, 1.0f, 0.0f));
 			m_blownBarSprite.Update();
+			m_bgmBlackIcon.SetPosition(Vector3(-380.0f + m_bgmVolume.x * 750.0f, 75.0f, 0.0f));
+			m_bgmBlackIcon.Update();
 		}
 	}
 
@@ -145,6 +165,8 @@ void SoundManager::Barbgm()
 			m_soundIconSprite.Update();
 			m_blownBarSprite.SetScale(Vector3(m_bgmVolume.x, 1.0f, 0.0f));
 			m_blownBarSprite.Update();
+			m_bgmBlackIcon.SetPosition(Vector3(-380.0f + m_bgmVolume.x * 750.0f, 75.0f, 0.0f));
+			m_bgmBlackIcon.Update();
 		}
 	}
 }
@@ -160,6 +182,8 @@ void SoundManager::Barse()
 			m_seIconSprite.Update();
 			m_seBlownBarSprite.SetScale(Vector3(m_seVolume.x, 1.0f, 0.0f));
 			m_seBlownBarSprite.Update();
+			m_seBlackIcon.SetPosition(Vector3(-380.0f + m_seVolume.x * 750.0f, -120.0f, 0.0f));
+			m_seBlackIcon.Update();
 		}
 	}
 
@@ -172,6 +196,8 @@ void SoundManager::Barse()
 			m_seIconSprite.Update();
 			m_seBlownBarSprite.SetScale(Vector3(m_seVolume.x, 1.0f, 0.0f));
 			m_seBlownBarSprite.Update();
+			m_seBlackIcon.SetPosition(Vector3(-380.0f + m_seVolume.x * 750.0f, -120.0f, 0.0f));
+			m_seBlackIcon.Update();
 		}
 	}
 }
@@ -187,6 +213,7 @@ void SoundManager::Render(RenderContext& rc)
 	m_seNotVolumeSprite.Draw(rc);
 	m_bgmSprite.Draw(rc);
 	m_seSprite.Draw(rc);
+	
 	if (m_bgmVolume.x > 0.05f)
 	{
 		m_blownBarSprite.Draw(rc);
@@ -196,8 +223,50 @@ void SoundManager::Render(RenderContext& rc)
 	{
 		m_seBlownBarSprite.Draw(rc);
 	}
-	m_soundIconSprite.Draw(rc);
-	m_seIconSprite.Draw(rc);
 	
-	
+	if (m_Count == 0)
+	{
+		m_soundIconSprite.Draw(rc);
+	}
+	else
+	{
+		m_bgmBlackIcon.Draw(rc);
+	}
+
+	if (m_Count == 1)
+	{
+		m_seIconSprite.Draw(rc);
+	}
+	else
+	{
+		m_seBlackIcon.Draw(rc);
+	}
+
+	if (m_Count == 2)
+	{
+		m_blackSprite.SetMulColor
+		(
+			Vector4
+			(
+				1.0f,
+				1.0f,
+				1.0f,
+				0.0f
+			)
+		);
+	}
+	else
+	{
+		m_blackSprite.SetMulColor
+		(
+			Vector4
+			(
+				1.0f,
+				1.0f,
+				1.0f,
+				0.5f
+			)
+		);
+	}
+	m_blackSprite.Draw(rc);
 }

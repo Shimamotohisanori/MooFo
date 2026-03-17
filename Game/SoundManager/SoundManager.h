@@ -8,6 +8,7 @@ public:
 	~SoundManager(){}
 	bool Start();
 	void Update();
+	void ButtonCount();
 	void Barbgm();
 	void Barse();
 	void Render(RenderContext& rc);
@@ -39,6 +40,9 @@ private:
 	SpriteRender m_seIconSprite;
 	SpriteRender m_blownBarSprite;
 	SpriteRender m_seBlownBarSprite;
+	SpriteRender m_bgmBlackIcon;
+	SpriteRender m_seBlackIcon;
+	SpriteRender m_blackSprite;
 
 private:
 	Pause* m_pause;
