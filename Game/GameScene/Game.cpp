@@ -1,13 +1,13 @@
 ﻿#include "stdafx.h"
 #include "Game.h"
-#include"GameCamera.h"
+#include"Gamecamera/GameCamera.h"
 #include "Source/Actor/Stage/Stage.h"
 #include"Source/Actor/Character/Player/Player.h"
 #include"Source/Actor/Character/UFO/UFO.h"
 #include"Source/Actor/Character/Cow/Cow.h"
-#include"Timer.h"
-#include"GameClear.h"
-#include"GameOver.h"
+#include"GameTimer/Timer.h"
+#include"GameScene/GameClear.h"
+#include"GameScene/GameOver.h"
 
 
 

@@ -31,6 +31,15 @@
     <Filter Include="Rope">
       <UniqueIdentifier>{93adfd69-718c-4922-b9e1-3c859f1ff178}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameCamera">
+      <UniqueIdentifier>{1c520623-f6d1-4952-a849-848fc215458d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameScene">
+      <UniqueIdentifier>{dd7d0629-2022-4565-b543-a57b8c11c919}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameTimer">
+      <UniqueIdentifier>{7e4f609d-5a19-4688-a3cf-fd0ef53b854d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -38,7 +47,6 @@
     <ClCompile Include="system\system.cpp">
       <Filter>system</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Transform\Transform.cpp">
       <Filter>Transform</Filter>
     </ClCompile>
@@ -57,26 +65,35 @@
     <ClCompile Include="Source\Actor\Character\Cow\Cow.cpp">
       <Filter>Source\Actor\Character\Cow</Filter>
     </ClCompile>
-    <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="Source\Actor\Character\UFO\UFO.cpp">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClCompile>
-
     <ClCompile Include="Rope\Rope.cpp">
       <Filter>Rope</Filter>
     </ClCompile>
-
-    <ClCompile Include="Title.cpp" />
-    <ClCompile Include="GameClear.cpp" />
-    <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="GameOver.cpp" />
-
+    <ClCompile Include="GameCamera\GameCamera.cpp">
+      <Filter>GameCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene\GameOver.cpp">
+      <Filter>GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene\Title.cpp">
+      <Filter>GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene\GameClear.cpp">
+      <Filter>GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene\Game.cpp">
+      <Filter>GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTimer\Timer.cpp">
+      <Filter>GameTimer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system\system.h">
       <Filter>system</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h" />
     <ClInclude Include="Transform\Transform.h">
       <Filter>Transform</Filter>
     </ClInclude>
@@ -95,24 +112,34 @@
     <ClInclude Include="Source\Actor\Character\Cow\Cow.h">
       <Filter>Source\Actor\Character\Cow</Filter>
     </ClInclude>
-    <ClInclude Include="GameCamera.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Source\Actor\Character\UFO\UFO.h">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClInclude>
-
     <ClInclude Include="resource.h" />
     <ClInclude Include="Rope\Rope.h">
       <Filter>Rope</Filter>
     </ClInclude>
+    <ClInclude Include="GameCamera\GameCamera.h">
+      <Filter>GameCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene\GameClear.h">
+      <Filter>GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene\GameOver.h">
+      <Filter>GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene\Title.h">
+      <Filter>GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene\Game.h">
+      <Filter>GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTimer\Timer.h">
+      <Filter>GameTimer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
-
-    <ClInclude Include="Title.h" />
-    <ClInclude Include="GameClear.h" />
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="GameOver.h" />
-
   </ItemGroup>
 </Project>
