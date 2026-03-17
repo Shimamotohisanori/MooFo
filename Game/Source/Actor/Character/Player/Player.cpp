@@ -110,9 +110,9 @@ void Player::Rotation()
 
 void Player::ThrowRope()
 {
-	if (m_rope->GetIsHitCow())
+	if (m_rope->GetIsHitCow() && !m_rope)
 	{
-		//ロープが牛に当たっているときはロープを投げられないようにする
+		//ロープが存在しない、ロープが牛に当たっているときはロープを投げられないようにする
 		return;
 	}
 
@@ -126,19 +126,22 @@ void Player::ThrowRope()
 
 void Player::PullRope()
 {
-	//ロープが牛に当たっているとき
-	if (m_rope->GetIsHitCow())
+	if (!m_rope)
 	{
-		if (g_pad[0]->IsTrigger(enButtonRB1) && !m_isRightButton1)
+		//ロープが牛に当たっているとき
+		if (m_rope->GetIsHitCow())
 		{
-			m_isRightButton1 = true;
-			m_isLeftButton1 = false;
-		}
+			if (g_pad[0]->IsTrigger(enButtonRB1) && !m_isRightButton1)
+			{
+				m_isRightButton1 = true;
+				m_isLeftButton1 = false;
+			}
 
-		if (g_pad[0]->IsTrigger(enButtonLB1) && !m_isLeftButton1)
-		{
-			m_isLeftButton1 = true;
-			m_isRightButton1 = false;
+			if (g_pad[0]->IsTrigger(enButtonLB1) && !m_isLeftButton1)
+			{
+				m_isLeftButton1 = true;
+				m_isRightButton1 = false;
+			}
 		}
 	}
 }

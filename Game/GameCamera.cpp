@@ -111,6 +111,10 @@ g_camera3D->Update();
 
 void GameCamera::FollowRope()
 {
+	if (!m_rope)
+	{
+		return;
+	}
 
 	/** ロープが投げられたら*/
 	if (m_rope->GetIsThrowRope())
@@ -135,6 +139,11 @@ void GameCamera::FollowRope()
 
 void GameCamera::HitCow()
 {
+	if (!m_rope)
+	{
+		return;
+	}
+
 	/** カメラのワールド座標を計算*/
 	Vector3 cameraWorldPos = m_player->GetPosition() + Vector3(0, 80, 0) + m_CameraPos;
 
