@@ -223,11 +223,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CountDown.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
+    <ClCompile Include="GameClear.cpp" />
+    <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="main.cpp" />
+
     <ClCompile Include="Pause\Pause.cpp" />
     <ClCompile Include="SoundManager\SoundManager.cpp" />
+    <ClCompile Include="Rope\Rope.cpp" />
+    
     <ClCompile Include="Source\Actor\Actor.cpp" />
     <ClCompile Include="Source\Actor\Character\Character.cpp" />
     <ClCompile Include="Source\Actor\Character\Cow\Cow.cpp" />
@@ -240,13 +246,22 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Title.cpp" />
     <ClCompile Include="Transform\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CountDown.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
+
     <ClInclude Include="Pause\Pause.h" />
     <ClInclude Include="SoundManager\SoundManager.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Rope\Rope.h" />
+    <ClInclude Include="GameClear.h" />
+    <ClInclude Include="GameOver.h" />
+
     <ClInclude Include="Source\Actor\Actor.h" />
     <ClInclude Include="Source\Actor\Character\Character.h" />
     <ClInclude Include="Source\Actor\Character\Cow\Cow.h" />
@@ -255,7 +270,12 @@
     <ClInclude Include="Source\Actor\Stage\Stage.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="Title.h" />
     <ClInclude Include="Transform\Transform.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Game.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

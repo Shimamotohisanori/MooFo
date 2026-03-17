@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "Player.h"
+#include "Rope/Rope.h"
 #include"Transform/Transform.h"
-
+#include"CountDown.h"
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/CowBoy.tkm", enModelUpAxis = enModelUpAxisZ;
@@ -17,76 +18,142 @@ Player::Player()
 
 Player::~Player()
 {
-
+	DeleteGO(m_rope);
 }
 
 bool Player::Start()
 {
+	m_countDown = FindGO<CountDown>("countdown");
 	m_playerModelRender.Init(FILEPATH);
 
 	m_playerModelRender.SetPosition(m_transform.GetPosition());
 	m_characterController.Init(CHRACTER_CONTROLLER_WIDTH, CHRACTER_CONTROLLER_HIGHT, m_transform.GetPosition());
+
+	m_rope = NewGO<Rope>(0, "rope");
+
 	return true;
 }
 
 void Player::Update()
 {
+	//ã‚«ã‚¦ãƒ³ãƒˆãƒ€ã‚¦ãƒ³ä¸­ã¯æ“ä½œå‡ºæ¥ãªã„ã‚ˆã†ã«ã™ã‚‹ãŸã‚æ—©æœŸãƒªã‚¿ãƒ¼ãƒ³
+	
+	if (m_countDown->GetControlEnabled())
+	{
+		return;
+	}
 	Move();
 
 	Rotation();
+
+	ThrowRope();
+
+	PullRope();
 
 	m_playerModelRender.Update();
 }
 
 void Player::Move()
 {
-	//xz‚ÌˆÚ“®‘¬“x‚ð‰Šú‰»
+	if (m_rope->GetIsThrowRope() or m_rope->GetIsHitCow())
+	{
+		//ãƒ­ãƒ¼ãƒ—ã‚’æŠ•ã’ã¦ã„ã‚‹ã¨ãã¨ãƒ­ãƒ¼ãƒ—ãŒç‰›ã«å½“ãŸã£ã¦ã„ã‚‹ã¨ãã¯ç§»å‹•ã§ããªã„ã‚ˆã†ã«ã™ã‚‹
+		return;
+	}
+	//xzã®ç§»å‹•é€Ÿåº¦ã‚’åˆæœŸåŒ–
 	m_moveSpeed.x = 0.0f;
 	m_moveSpeed.z = 0.0f;
 
-	//¶ƒXƒeƒBƒbƒN‚Ì“ü—Í—Ê‚ðŽæ“¾
+	//å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å…¥åŠ›é‡ã‚’å–å¾—
 	Vector3 stickL;
 	stickL.x = g_pad[0]->GetLStickXF();
 	stickL.z = g_pad[0]->GetLStickYF();
 
-	//ƒJƒƒ‰‚Ì‘O•ûŒü‚Æ‰E•ûŒü‚ÌƒxƒNƒgƒ‹‚ðŽ‚Á‚Ä‚­‚é
+	//ã‚«ãƒ¡ãƒ©ã®å‰æ–¹å‘ã¨å³æ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’æŒã£ã¦ãã‚‹
 	Vector3 forward = g_camera3D->GetForward();
 	Vector3 right   = g_camera3D->GetRight();
 
-	//³‹K‰»
+	//æ­£è¦åŒ–
 	right.y = 0.0f;
 	forward.y = 0.0f;
 	forward.Normalize();
 	right.Normalize();
 
-	//“ü—Í—Ê‚ð”½‰f
+	//å…¥åŠ›é‡ã‚’åæ˜ 
 	Vector3 moveDir = forward * stickL.z* 150.0f + right * stickL.x * 150.0f;
 	m_moveSpeed.x = moveDir.x;
 	m_moveSpeed.z = moveDir.z;
 
-	//¶ƒXƒeƒBƒbƒN‚Ì“ü—Í—Ê‚Æ120.0f‚ðæŽZ
+	//å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®å…¥åŠ›é‡ã¨120.0fã‚’ä¹—ç®—
 	right*= stickL.x * 150.0f;
 	forward *= stickL.z * 150.0f;
 
-	//ˆÚ“®‘¬“x‚ÉƒJƒƒ‰‚Ì‘O•ûŒü‚Æ‰E•ûŒü‚ð‰ÁŽZ
+	//ç§»å‹•é€Ÿåº¦ã«ã‚«ãƒ¡ãƒ©ã®å‰æ–¹å‘ã¨å³æ–¹å‘ã‚’åŠ ç®—
 	m_moveSpeed += right + forward;
-	//ƒLƒƒƒ‰ƒNƒ^[ƒRƒ“ƒgƒ[ƒ‰[‚ðŽg‚Á‚ÄÀ•W‚ðˆÚ“®‚³‚¹‚é
+	//ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã‚’ä½¿ã£ã¦åº§æ¨™ã‚’ç§»å‹•ã•ã›ã‚‹
 	m_transform.GetPosition() = m_characterController.Execute(m_moveSpeed,g_gameTime->GetFrameDeltaTime());
 
-	//ƒ‚ƒfƒ‹‚ÌÀ•W‚ðƒLƒƒƒ‰ƒNƒ^[ƒRƒ“ƒgƒ[ƒ‰[‚ÌÀ•W‚É‡‚í‚¹‚é
+	//ãƒ¢ãƒ‡ãƒ«ã®åº§æ¨™ã‚’ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã®åº§æ¨™ã«åˆã‚ã›ã‚‹
 	m_playerModelRender.SetPosition(m_transform.GetPosition());
 
 }
 
 void Player::Rotation()
 {
+	if (m_rope->GetIsThrowRope())
+	{
+		//ãƒ­ãƒ¼ãƒ—ã‚’æŠ•ã’ã¦ã„ã‚‹ã¨ãã¯å›žè»¢ã§ããªã„ã‚ˆã†ã«ã™ã‚‹
+		return;
+	}
 	if (fabsf(m_moveSpeed.x) >= 0.0001f || fabsf(m_moveSpeed.z) >= 0.0001f)
 	{
-		//ƒLƒƒƒ‰ƒNƒ^[‚Ì•ûŒü‚ð•Ï‚¦‚é
+		//ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®æ–¹å‘ã‚’å¤‰ãˆã‚‹
 		m_transform.GetRotation().SetRotationYFromDirectionXZ(m_moveSpeed);
 
-		//ƒ‚ƒfƒ‹‚Ì‰ñ“]‚ðƒLƒƒƒ‰ƒNƒ^[‚Ì‰ñ“]‚É‡‚í‚¹‚é
+		//ãƒ¢ãƒ‡ãƒ«ã®å›žè»¢ã‚’ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®å›žè»¢ã«åˆã‚ã›ã‚‹
 		m_playerModelRender.SetRotation(m_transform.GetRotation());
+	}
+}
+
+void Player::ThrowRope()
+{
+
+	if (m_rope->GetIsHitCow() && !m_rope)
+	{
+		//ãƒ­ãƒ¼ãƒ—ãŒå­˜åœ¨ã—ãªã„ã€ãƒ­ãƒ¼ãƒ—ãŒç‰›ã«å½“ãŸã£ã¦ã„ã‚‹ã¨ãã¯ãƒ­ãƒ¼ãƒ—ã‚’æŠ•ã’ã‚‰ã‚Œãªã„ã‚ˆã†ã«ã™ã‚‹
+
+		return;
+	}
+
+	//RB2ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã¦ã€ãƒ­ãƒ¼ãƒ—ã‚’æŠ•ã’ã¦ã„ãªã„ã¨ã
+	if (g_pad[0]->IsTrigger(enButtonRB2) && !m_rope->GetIsThrowRope())
+	{
+		//ãƒ­ãƒ¼ãƒ—ã‚’æŠ•ã’ã‚‹
+		m_rope->SetIsThrowRope(true);
+	}
+}
+
+void Player::PullRope()
+{
+
+	if (m_rope)
+	{
+		//ãƒ­ãƒ¼ãƒ—ãŒç‰›ã«å½“ãŸã£ã¦ã„ã‚‹ã¨ã
+		if (m_rope->GetIsHitCow())
+		{
+			if (g_pad[0]->IsTrigger(enButtonRB1) && !m_isRightButton1)
+			{
+				m_isRightButton1 = true;
+				m_isLeftButton1 = false;
+			}
+
+			if (g_pad[0]->IsTrigger(enButtonLB1) && !m_isLeftButton1)
+			{
+				m_isLeftButton1 = true;
+				m_isRightButton1 = false;
+			}
+
+		}
 	}
 }
 

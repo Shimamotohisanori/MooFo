@@ -1,5 +1,8 @@
 #pragma once
 #include"Source/Actor/Character/Character.h"
+class Rope;
+class Player;
+class CountDown;
 class Cow : public Character
 {
 public:
@@ -20,7 +23,28 @@ public:
 		{
 			m_transform.SetPosition(pos);
 		}
+
+		Vector3 GetPosition()
+		{
+			return m_transform.GetPosition();
+		}
+
+private:
+	//プレイヤーに引っ張られる関数
+	void PulledByPlayer();
+
+	//プレイヤーに捕獲される関数
+	void CapturedByPlayer();
+
 public:
+	//ロープ
+	Rope* m_rope;
+
+	//プレイヤー
+	Player* m_player;
+	//カウントダウン
+	CountDown* m_countdown;
+
 	enum EnRotationState
 	{
 		EnRotationState_MoveDir,
@@ -35,6 +59,7 @@ private:
 	Vector3 m_moveDir = Vector3::Zero;//移動方向
 	float m_moveSpeed = 50.0f;//移動速度
 	int m_moveTimer = 0;//移動タイマー
+	bool m_isMove = false;//移動しているかどうか
 	enum EnAnimation
 	{
 		EnAnimation_Idle,
