@@ -43,6 +43,11 @@ bool Game::Start()
 
 void Game::Update()
 {
+	//ポーズ中はゲーム処理をしない
+	if (m_pause->IsActive())
+	{
+		return;
+	}
 	//セレクトボタンを押したら
 	if (g_pad[0]->IsTrigger(enButtonSelect))
 	{

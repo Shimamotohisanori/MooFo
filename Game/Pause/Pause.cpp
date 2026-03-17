@@ -40,6 +40,10 @@ bool Pause::Start()
 	//m_volumeSprite.Init("Assets/volume.dds",100.0f,100.0f);
 	//m_notVolumeSprite.Init("Assets/notVolume.dds",100.0f,100.0f);
 
+	m_soundManager = NewGO<SoundManager>(0, "soundmanager");
+	m_soundManager->Deactivate();
+
+	m_game = FindGO<Game>("game");
 	return true;
 }
 
@@ -51,11 +55,20 @@ void Pause::Update()
 	{
 		m_countNumber++;
 	}
+	if (g_pad[0]->IsTrigger(enButtonUp))
+	{
+		m_countNumber--;
+	}
 
 }
 
 void Pause::Choose()
 {
+	if (m_countNumber == -1)
+	{
+		m_countNumber = 2;
+	}
+
 	if (m_countNumber == 0)
 	{
 		m_arrowSprite.SetPosition(ARROWPOS);
@@ -64,6 +77,7 @@ void Pause::Choose()
 	else if (m_countNumber == 1)
 	{
 		m_arrowSprite.SetPosition(SECONDARROWPOS);
+		m_arrowSprite.SetScale(ARROWSCALE);
 	}
 	else if (m_countNumber == 2)
 	{
@@ -83,16 +97,17 @@ void Pause::Select()
 	{
 		if (m_countNumber == 0)
 		{
-
+			Deactivate();
 		}
-		if (m_countNumber == 1)
+		else if (m_countNumber == 1)
 		{
 
 		}
-		if (m_countNumber == 2)
+		else if (m_countNumber == 2)
 		{
-			NewGO<SoundManager>(0, "soundmanager");
-			DeleteGO(this);
+			m_soundManager->Activate();
+			m_soundManager->SetCount(0);
+			Deactivate();
 		}
 	}
 }

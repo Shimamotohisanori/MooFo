@@ -13,6 +13,17 @@ public:
 	void Select();
 	void Render(RenderContext& rc);
 
+	void SetCountNumber(int countNumber)
+	{
+		m_countNumber = countNumber;
+	}
+
+	int GetCountNumber()
+	{
+		return m_countNumber;
+	}
+
+private:
 	int m_countNumber = 0;
 
 	Game* m_game;
