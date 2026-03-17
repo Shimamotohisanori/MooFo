@@ -111,7 +111,7 @@ g_camera3D->Update();
 
 void GameCamera::FollowRope()
 {
-	if (!m_rope)
+	if (m_rope == nullptr)
 	{
 		return;
 	}
@@ -121,17 +121,31 @@ void GameCamera::FollowRope()
 	{
 		// --- カメラの forward を取得
 		Vector3 camForward = g_camera3D->GetForward();  // カメラの向き（3D方向）
-		camForward.Normalize();
-
+		if (camForward.LengthSq() < 0.0001f)
+		{
+			camForward = Vector3(0, 0, 1); // 安全なデフォルト方向
+		}
+		
+		else
+		{
+			camForward.Normalize();
+		}
 		// カメラを forward 方向へ前進
 		m_CameraPos += camForward * 7.0f;
 
+		Vector3 eye = m_player->GetPosition() + Vector3(0.0f, 80.0f, 0.0f) + m_CameraPos;
+		
 		// ターゲットはプレイヤー
-		Vector3 target = m_player->GetPosition() + Vector3(0, 80, 0) + camForward * 500.0f;
+		Vector3 target = m_player->GetPosition() + Vector3(0.0f, 80.0f, 0.0f) + camForward * 500.0f;
 		g_camera3D->SetTarget(target);
 
+		if ((eye - target).LengthSq() < 0.0001f)
+		{
+			target += Vector3(0.0f, 0.0f, -50.0f); // 適当な距離を確保
+		}
+
 		// カメラ位置更新
-		g_camera3D->SetPosition(m_player->GetPosition() + Vector3(0, 80, 0) + m_CameraPos);
+		g_camera3D->SetPosition(m_player->GetPosition() + Vector3(0.0f, 80.0f, 0.0f) + m_CameraPos);
 		g_camera3D->Update();
 	}
 }
@@ -139,7 +153,9 @@ void GameCamera::FollowRope()
 
 void GameCamera::HitCow()
 {
-	if (!m_rope)
+	m_cow = FindGO<Cow>("cow");
+
+	if (m_rope == nullptr or m_cow == nullptr)
 	{
 		return;
 	}

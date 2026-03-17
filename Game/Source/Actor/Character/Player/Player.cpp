@@ -126,7 +126,7 @@ void Player::ThrowRope()
 
 void Player::PullRope()
 {
-	if (!m_rope)
+	if (m_rope)
 	{
 		//ƒ[ƒv‚ª‹‚É“–‚½‚Á‚Ä‚¢‚é‚Æ‚«
 		if (m_rope->GetIsHitCow())
