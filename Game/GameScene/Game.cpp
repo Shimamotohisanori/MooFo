@@ -29,11 +29,16 @@ Game::~Game()
 	DeleteGO(m_timer);
 	//ゲームカメラを削除
 	DeleteGO(m_gameCamera);
-
+	//カウントダウンを削除
+	DeleteGO(m_countDown);
+	//Pauseを削除
+	DeleteGO(m_pause);
 
 }
 bool Game::Start()
 {
+
+	m_countDown = NewGO<CountDown>(0, "countdown");
 	//m_modelRender.Init("Assets/modelData/unityChan.tkm");
 	m_player = NewGO < Player>(0, "player");
 	//ステージの生成
@@ -57,18 +62,17 @@ bool Game::Start()
 	m_IdleUFO->m_UFOState = UFO::EnUFOState_Idle;
 	m_IdleUFO->SetPosition(Vector3(300.0f, 70.0f, 0.0f));
 
+	//タイマーを生成
 	m_timer = NewGO<Timer>(0, "timer");
-
-	//ゲームカメラの生成
-	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
-
 
 	//ポーズ画面の生成をするが非アクティブにする
 	m_pause = NewGO<Pause>(0, "pause");
 	m_pause->Deactivate();
 
-	m_countDown = NewGO<CountDown>(0, "countdown");
 	
+
+	//ゲームカメラの生成
+	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
 
 	return true;
 }
@@ -77,8 +81,7 @@ bool Game::Start()
 
 void Game::Update()
 {
-
-	//ポーズ中はゲーム処理をしない
+		//ポーズ中はゲーム処理をしない
 	if (m_pause->IsActive())
 	{
 		return;
@@ -88,6 +91,7 @@ void Game::Update()
 	{
 		/** ポーズ画面をアクティブにする */
 		m_pause->Activate();
+		m_pause->SetIsPause(true);
   }
 	//クリア処理
 	Clear();

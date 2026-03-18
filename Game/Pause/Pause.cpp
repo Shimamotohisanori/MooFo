@@ -97,6 +97,7 @@ void Pause::Select()
 	{
 		if (m_countNumber == 0)
 		{
+			m_isPause = false;
 			Deactivate();
 		}
 		else if (m_countNumber == 1)

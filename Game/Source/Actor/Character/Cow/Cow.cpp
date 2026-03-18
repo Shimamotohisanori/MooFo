@@ -30,18 +30,20 @@ bool Cow::Start()
 	
 	srand(time(nullptr));
 
-	m_CowmodelRender.Init(FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
+	m_cowmodelRender.Init(FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
 	
 	m_player = FindGO<Player>("player");
 	m_countdown = FindGO<CountDown>("countdown");
 	m_rope = FindGO<Rope>("rope");
+	m_cowmodelRender.SetPosition(m_transform.GetPosition());
+	m_cowmodelRender.Update();
 	return true;
 }
 
 void Cow::Update()
 {
-	//カウントダウン中は動かないようにするため早期リターン
-	if (m_countdown->GetControlEnabled())
+	//カウントダウン中は牛を動かさないようにするため早期リターン
+	if (m_countdown->GetCountDown())
 	{
 		return;
 	}
@@ -66,12 +68,12 @@ void Cow::Update()
 	CapturedByPlayer();
 
 	/*モデルの更新*/
-	m_CowmodelRender.Update();
+	m_cowmodelRender.Update();
 
 	/*モデルの位置を反映*/
-	m_CowmodelRender.SetPosition(m_transform.GetPosition());
+	m_cowmodelRender.SetPosition(m_transform.GetPosition());
 	/*モデルに回転を反映*/
-	m_CowmodelRender.SetRotation(m_transform.GetRotation());
+	m_cowmodelRender.SetRotation(m_transform.GetRotation());
 }
 
 
@@ -122,7 +124,7 @@ void Cow::Move()
 	//ポジションを更新
 	m_transform.SetPosition(pos);
 	//モデルに位置を反映
-	m_CowmodelRender.SetPosition(m_transform.GetPosition());
+	m_cowmodelRender.SetPosition(m_transform.GetPosition());
 	//タイマーを減らす
 	m_moveTimer--;
 }
@@ -179,7 +181,7 @@ void Cow::PulledByPlayer()
 
 		m_transform.SetPosition(cowPos);
 
-		m_CowmodelRender.SetPosition(m_transform.GetPosition());
+		m_cowmodelRender.SetPosition(m_transform.GetPosition());
 
 		m_player->SetGetLeftButton1(false);
 		m_player->SetGetRightButton1(false);
@@ -215,11 +217,11 @@ void Cow::PlayAnimation()
 	switch (m_cowState)
 	{
 	case 0 :
-			m_CowmodelRender.PlayAnimation(EnAnimation_Idle);
+			m_cowmodelRender.PlayAnimation(EnAnimation_Idle);
 			break;
 
 	case 1:
-			m_CowmodelRender.PlayAnimation(EnAnimation_Walk);
+			m_cowmodelRender.PlayAnimation(EnAnimation_Walk);
 			break;
 
 	default:
@@ -230,5 +232,5 @@ void Cow::PlayAnimation()
 
 void Cow::Render(RenderContext& rc)
 {
-	m_CowmodelRender.Draw(rc);
+	m_cowmodelRender.Draw(rc);
 }
