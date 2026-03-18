@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Pause/Pause.h"
-#include "Game.h"
+#include "GameScene/Game.h"
 #include "SoundManager/SoundManager.h"
 //#include "Title.h"
 namespace
@@ -17,22 +17,22 @@ namespace
 }
 bool Pause::Start()
 {
-	m_pauseBackGround.Init("Assets/pauseBackGround.dds",1980.0f,1080.0f);
+	m_pauseBackGround.Init("Assets/sprite/PauseUI/pauseBackGround.dds",1980.0f,1080.0f);
 	m_pauseBackGround.Update();
 
-	m_quiteSprite.Init("Assets/quiteGame.dds",750.0f,650.0f);
+	m_quiteSprite.Init("Assets/sprite/PauseUI/quiteGame.dds",750.0f,650.0f);
 	m_quiteSprite.SetPosition(QUITEPOS);
 	m_quiteSprite.Update();
 
-	m_resumeSprite.Init("Assets/resumeGame.dds",650.0f,550.0f);
+	m_resumeSprite.Init("Assets/sprite/PauseUI/resumeGame.dds",650.0f,550.0f);
 	m_resumeSprite.SetPosition(RESUMEPOS);
 	m_resumeSprite.Update();
 
-	m_soundSprite.Init("Assets/sound.dds",350.0f,250.0f);
+	m_soundSprite.Init("Assets/sprite/PauseUI/sound.dds",350.0f,250.0f);
 	m_soundSprite.SetPosition(SOUNDPOS);
 	m_soundSprite.Update();
 
-	m_arrowSprite.Init("Assets/Arrow.dds", 150.0f, 150.0f);
+	m_arrowSprite.Init("Assets/sprite/PauseUI/Arrow.dds", 150.0f, 150.0f);
 
 	//m_settingSprite.Init("Assets/setting.dds",300.0f,200.0f);
 	//m_bgmSprite.Init("Assets/BGM.dds",100.0f,150.0f);

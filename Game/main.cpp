@@ -2,8 +2,8 @@
 #include "system/system.h"
 #include<InitGUID.h>
 #include<dxgidebug.h>
-#include "Game.h"
-#include"Title.h"
+#include "GameScene/Game.h"
+#include"GameScene/Title.h"
 
 
 

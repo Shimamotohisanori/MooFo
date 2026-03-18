@@ -1,62 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="system">
-      <UniqueIdentifier>{22dd8095-74f9-46df-81a1-36675a040b1f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source">
-      <UniqueIdentifier>{3561e5c1-c23a-4cb9-906f-50f5e8c51c78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Transform">
-      <UniqueIdentifier>{9cd3fd9d-5019-46e5-8792-50edad12c09b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Actor">
-      <UniqueIdentifier>{718810f5-4856-4cc2-a9e8-c0e0ed2ecc5d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Actor\Stage">
-      <UniqueIdentifier>{6d455280-2f08-4607-b672-a170a48f6e84}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Actor\Character">
-      <UniqueIdentifier>{f5cea8a6-dbbf-4730-92b5-f667445b5f1b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Actor\Character\Player">
-      <UniqueIdentifier>{28556f4f-6c35-40f4-ba62-fb7ba9f802f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Actor\Character\Cow">
-      <UniqueIdentifier>{571807ca-c35d-4135-9889-36572330dc78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Actor\Character\UFO">
-      <UniqueIdentifier>{c8906236-0434-4dd1-8ac5-c515c166684c}</UniqueIdentifier>
-    </Filter>
-
-    <Filter Include="Pause">
-      <UniqueIdentifier>{5ec71cc2-3938-4071-a2ed-9444ac9789ad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SoundManager">
-      <UniqueIdentifier>{7df4d79d-9542-4756-812c-3af95136b8a9}</UniqueIdentifier>
-    <Filter Include="Rope">
-      <UniqueIdentifier>{93adfd69-718c-4922-b9e1-3c859f1ff178}</UniqueIdentifier>
-
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="system\system.cpp">
-      <Filter>system</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Transform\Transform.cpp">
-      <Filter>Transform</Filter>
-    </ClCompile>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="system\system.cpp" />
     <ClCompile Include="Source\Actor\Actor.cpp">
       <Filter>Source\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Actor\Stage\Stage.cpp">
-      <Filter>Source\Actor\Stage</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Actor\Character\Character.cpp">
       <Filter>Source\Actor\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Stage\Stage.cpp">
+      <Filter>Source\Actor\Stage</Filter>
     </ClCompile>
     <ClCompile Include="Source\Actor\Character\Player\Player.cpp">
       <Filter>Source\Actor\Character\Player</Filter>
@@ -64,44 +19,55 @@
     <ClCompile Include="Source\Actor\Character\Cow\Cow.cpp">
       <Filter>Source\Actor\Character\Cow</Filter>
     </ClCompile>
-    <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="Source\Actor\Character\UFO\UFO.cpp">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClCompile>
-
-    <ClCompile Include="Pause\Pause.cpp">
-      <Filter>Pause</Filter>
+    <ClCompile Include="Transform\Transform.cpp">
+      <Filter>Transform</Filter>
     </ClCompile>
     <ClCompile Include="SoundManager\SoundManager.cpp">
       <Filter>SoundManager</Filter>
     </ClCompile>
-
+    <ClCompile Include="GameScene\GameClear.cpp">
+      <Filter>GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene\GameOver.cpp">
+      <Filter>GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene\Title.cpp">
+      <Filter>GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Pause\Pause.cpp">
+      <Filter>Pause</Filter>
+    </ClCompile>
     <ClCompile Include="Rope\Rope.cpp">
       <Filter>Rope</Filter>
     </ClCompile>
-    <ClCompile Include="Title.cpp" />
-    <ClCompile Include="GameClear.cpp" />
-    <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="GameOver.cpp" />
-    <ClCompile Include="CountDown.cpp" />
-
+    <ClCompile Include="GameCamera\GameCamera.cpp">
+      <Filter>GameCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTimer\Timer.cpp">
+      <Filter>GameTimer</Filter>
+    </ClCompile>
+    <ClCompile Include="CountDown\CountDown.cpp">
+      <Filter>CountDown</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene\Game.cpp">
+      <Filter>GameScene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="system\system.h">
-      <Filter>system</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="Transform\Transform.h">
-      <Filter>Transform</Filter>
-    </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="system\system.h" />
     <ClInclude Include="Source\Actor\Actor.h">
       <Filter>Source\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Actor\Stage\Stage.h">
-      <Filter>Source\Actor\Stage</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Actor\Character\Character.h">
       <Filter>Source\Actor\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Stage\Stage.h">
+      <Filter>Source\Actor\Stage</Filter>
     </ClInclude>
     <ClInclude Include="Source\Actor\Character\Player\Player.h">
       <Filter>Source\Actor\Character\Player</Filter>
@@ -109,31 +75,91 @@
     <ClInclude Include="Source\Actor\Character\Cow\Cow.h">
       <Filter>Source\Actor\Character\Cow</Filter>
     </ClInclude>
-    <ClInclude Include="GameCamera.h" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="Source\Actor\Character\UFO\UFO.h">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClInclude>
-
-    <ClInclude Include="Pause\Pause.h">
-      <Filter>Pause</Filter>
+    <ClInclude Include="Transform\Transform.h">
+      <Filter>Transform</Filter>
     </ClInclude>
     <ClInclude Include="SoundManager\SoundManager.h">
       <Filter>SoundManager</Filter>
     </ClInclude>
-
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="GameScene\GameClear.h">
+      <Filter>GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene\GameOver.h">
+      <Filter>GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene\Title.h">
+      <Filter>GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Pause\Pause.h">
+      <Filter>Pause</Filter>
+    </ClInclude>
     <ClInclude Include="Rope\Rope.h">
       <Filter>Rope</Filter>
     </ClInclude>
-    <ClInclude Include="CountDown.h" />
+    <ClInclude Include="GameCamera\GameCamera.h">
+      <Filter>GameCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTimer\Timer.h">
+      <Filter>GameTimer</Filter>
+    </ClInclude>
+    <ClInclude Include="CountDown\CountDown.h">
+      <Filter>CountDown</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene\Game.h">
+      <Filter>GameScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
-    <ClInclude Include="Title.h" />
-    <ClInclude Include="GameClear.h" />
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="GameOver.h" />
-
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{ead204cf-4c6c-4298-959f-e56cd5cb3c3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Actor">
+      <UniqueIdentifier>{2daf5c04-3d79-4086-a363-7b8be75c613b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Actor\Character">
+      <UniqueIdentifier>{f2b9cfac-6ad7-482c-9252-ccd754488c53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Actor\Stage">
+      <UniqueIdentifier>{a0727671-2661-411e-96f6-338c0e2f508a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Actor\Character\Player">
+      <UniqueIdentifier>{eeb8fcb7-90a9-4b27-8068-802a19441b4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Actor\Character\Cow">
+      <UniqueIdentifier>{c57cc73c-6c52-4d5c-9ce6-1edbc4e541fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Actor\Character\UFO">
+      <UniqueIdentifier>{1f85aff7-f760-4d88-9aaf-024e4c9eb631}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Transform">
+      <UniqueIdentifier>{32375617-6201-4a93-80a8-7eaeb40c78f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundManager">
+      <UniqueIdentifier>{60bcdaa8-72eb-456b-b880-07925bedc356}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pause">
+      <UniqueIdentifier>{9b7ac956-103b-4fea-99ef-bf67e72cb95b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rope">
+      <UniqueIdentifier>{22315c8b-b607-4a6c-8220-b04e4db73ad0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameScene">
+      <UniqueIdentifier>{f7dfd5dd-70bb-4ce6-81bd-b19666f7d75d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameCamera">
+      <UniqueIdentifier>{daa18332-782d-4127-b90b-27e0077039dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameTimer">
+      <UniqueIdentifier>{cd2fcda1-3307-45a1-9671-15738559b2db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CountDown">
+      <UniqueIdentifier>{33aae1c8-b7b9-43cb-baba-04f99cdb856d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
