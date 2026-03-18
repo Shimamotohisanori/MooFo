@@ -1,7 +1,7 @@
 ﻿#include "stdafx.h"
 #include "UFO.h"
 #include <time.h>
-#include"CountDown.h"
+#include"CountDown/CountDown.h"
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/UFO/UFO2.tkm"; //enModelUpAxis = enModelUpAxisZ;

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Pause/Pause.h"
-#include "Game.h"
+#include "GameScene/Game.h"
 #include "SoundManager/SoundManager.h"
 //#include "Title.h"
 namespace
