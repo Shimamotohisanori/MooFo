@@ -21,69 +21,69 @@ namespace
 
 bool SoundManager::Start()
 {
-	m_backGroundSprite.Init("Assets/pauseBackGround.dds", 1980.0f, 1080.0f);
+	m_backGroundSprite.Init("Assets/sprite/PauseUI/pauseBackGround.dds", 1980.0f, 1080.0f);
 	m_backGroundSprite.Update();
 
-	m_settingSprite.Init("Assets/setting.dds", 1200.0f, 500.0f);
+	m_settingSprite.Init("Assets/sprite/PauseUI/setting.dds", 1200.0f, 500.0f);
 	m_settingSprite.Update();
 
-	m_buttonReturnSprite.Init("Assets/buttonReturn.dds", 450.0f, 200.0f);
+	m_buttonReturnSprite.Init("Assets/sprite/PauseUI/buttonReturn.dds", 450.0f, 200.0f);
 	m_buttonReturnSprite.SetPosition(RETURNPOS);
 	m_buttonReturnSprite.Update();
 
-	m_volumeSprite.Init("Assets/volume.dds", 230.0f, 230.0f);
+	m_volumeSprite.Init("Assets/sprite/PauseUI/volume.dds", 230.0f, 230.0f);
 	m_volumeSprite.SetPosition(VOLUMEPOS);
 	m_volumeSprite.Update();
 
-	m_notVolumeSprite.Init("Assets/notVolume.dds", 245.0f, 245.0f);
+	m_notVolumeSprite.Init("Assets/sprite/PauseUI/notVolume.dds", 245.0f, 245.0f);
 	m_notVolumeSprite.SetPosition(NOT_VOLUMEPOS);
 	m_notVolumeSprite.Update();
 
-	m_seVolumeSprite.Init("Assets/volume.dds", 230.0f, 230.0f);
+	m_seVolumeSprite.Init("Assets/sprite/PauseUI/volume.dds", 230.0f, 230.0f);
 	m_seVolumeSprite.SetPosition(SE_VOLUMEPOS);
 	m_seVolumeSprite.Update();
 
-	m_seNotVolumeSprite.Init("Assets/notVolume.dds", 245.0f, 245.0f);
+	m_seNotVolumeSprite.Init("Assets/sprite/PauseUI/notVolume.dds", 245.0f, 245.0f);
 	m_seNotVolumeSprite.SetPosition(SE_NOT_VOLUMEPOS);
 	m_seNotVolumeSprite.Update();
 
-	m_bgmSprite.Init("Assets/BGM.dds", 250.0f, 300.0f);
+	m_bgmSprite.Init("Assets/sprite/PauseUI/BGM.dds", 250.0f, 300.0f);
 	m_bgmSprite.SetPosition(BGMPOS);
 	m_bgmSprite.Update();
 
-	m_seSprite.Init("Assets/SE.dds", 250.0f, 300.0f);
+	m_seSprite.Init("Assets/sprite/PauseUI/SE.dds", 250.0f, 300.0f);
 	m_seSprite.SetPosition(SEPOS);
 	m_seSprite.Update();
 
-	m_soundIconSprite.Init("Assets/soundIcon.dds", 290.0f, 240.0f);
+	m_soundIconSprite.Init("Assets/sprite/PauseUI/soundIcon.dds", 290.0f, 240.0f);
 	m_soundIconSprite.SetPosition(SOUNDICONPOS);
 	m_soundIconSprite.Update();
 
-	m_seIconSprite.Init("Assets/seIcon.dds", 290.0f, 240.0f);
+	m_seIconSprite.Init("Assets/sprite/PauseUI/seIcon.dds", 290.0f, 240.0f);
 	m_seIconSprite.SetPosition(SE_ICONPOS);
 	m_seIconSprite.Update();
 
-	m_blownBarSprite.Init("Assets/BlownBar.dds", 790.0f, 220.0f);
+	m_blownBarSprite.Init("Assets/sprite/PauseUI/BlownBar.dds", 790.0f, 220.0f);
 	m_blownBarSprite.SetPosition(BLOWNBARPOS);
 	m_blownBarSprite.SetPivot(BLOWN_BAR);
 	m_blownBarSprite.SetScale(BLOWNBARINITIALSCALE);
 	m_blownBarSprite.Update();
 
-	m_seBlownBarSprite.Init("Assets/BlownBar.dds", 790.0f, 220.0f);
+	m_seBlownBarSprite.Init("Assets/sprite/PauseUI/BlownBar.dds", 790.0f, 220.0f);
 	m_seBlownBarSprite.SetPosition(SE_BLOWNBARPOS);
 	m_seBlownBarSprite.SetPivot(BLOWN_BAR);
 	m_seBlownBarSprite.SetScale(BLOWNBARINITIALSCALE);
 	m_seBlownBarSprite.Update();
 
-	m_bgmBlackIcon.Init("Assets/blackIcon.dds", 290.0f, 240.0f);
+	m_bgmBlackIcon.Init("Assets/sprite/PauseUI/blackIcon.dds", 290.0f, 240.0f);
 	m_bgmBlackIcon.SetPosition(SOUNDICONPOS);
 	m_bgmBlackIcon.Update();
 
-	m_seBlackIcon.Init("Assets/blackIcon.dds", 290.0f, 240.0f);
+	m_seBlackIcon.Init("Assets/sprite/PauseUI/blackIcon.dds", 290.0f, 240.0f);
 	m_seBlackIcon.SetPosition(SE_ICONPOS);
 	m_seBlackIcon.Update();
 
-	m_blackSprite.Init("Assets/Black.dds", 430.0f, 240.0f);
+	m_blackSprite.Init("Assets/sprite/PauseUI/Black.dds", 430.0f, 240.0f);
 	m_blackSprite.SetPosition(BLACKPOS);
 	m_blackSprite.Update();
 
