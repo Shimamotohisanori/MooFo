@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Timer.h"
-
-
+#include"CountDown/CountDown.h"
+#include"Pause/Pause.h"
 Timer::Timer()
 {
 
@@ -16,17 +16,31 @@ Timer::~Timer()
 
 bool Timer::Start()
 {
+	m_countdown = FindGO<CountDown>("countdown");
+
+	m_pause = FindGO<Pause>("pause");
 	return true;
 }
 
 void Timer::Update()
 {
+	if (m_pause->GetIsPause())
+	{
+		return;
+	}
+
+
 	TextTimer();
 }
 
 
 void Timer::TextTimer()
 {
+	//カウントダウン中は制限時間を減らさないようにするため早期リターンをする。
+	if (m_countdown->GetCountDown())
+	{
+		return;
+	}
 	m_timer -= g_gameTime->GetFrameDeltaTime();
 	//タイマーのテキスト
 	uint8_t second = (uint8_t)m_timer % 60;//1の位
@@ -47,6 +61,12 @@ void Timer::TextTimer()
 
 void Timer::Render(RenderContext& rc)
 {
+	//カウントダウン中は制限時間の描画を止めるために早期リターンをする。
+	if (m_countdown->GetCountDown())
+	{
+		return;
+	}
+
 	m_TimerFontRender.Draw(rc);
 }
 

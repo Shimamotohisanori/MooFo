@@ -12,7 +12,11 @@ bool CountDown::Start()
 
 void CountDown::Update()
 {
-	InCountDown();
+	if (m_isCountDown)
+	{
+		InCountDown();
+	}
+	
 }
 
 void CountDown::InCountDown()
@@ -21,6 +25,7 @@ void CountDown::InCountDown()
 
 	if (m_CountDownTime > 1.0f)
 	{
+		m_isCountDown = true;
 		int number = static_cast<int>(m_CountDownTime);
 		wchar_t countText[16];
 		//swprintf_sで文字列にして画面に表示している。
@@ -33,20 +38,19 @@ void CountDown::InCountDown()
 	//カウントダウンが1秒から0秒の間でSTARTを画面に表示する
 	else if (m_CountDownTime > 0.0f)
 	{
+		m_isCountDown = true;
 		m_CountDownFontRender.SetText(L"START!");
 		m_CountDownFontRender.SetScale(3.5f);
 		m_CountDownFontRender.SetPosition(-70.0f, 130.0f, 0.0f);
 	}
-	else
+	else 
 	{
 		//カウントダウン終了
 		m_isCountDown = false;
 		//表示をクリア
 		m_CountDownFontRender.SetText(L"");
-		if (m_CountDownTime)
-		{
-			m_isControlEnabled = false;
-		}
+		
+		
 	}
 }
 

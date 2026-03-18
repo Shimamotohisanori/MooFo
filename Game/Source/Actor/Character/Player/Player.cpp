@@ -28,17 +28,16 @@ bool Player::Start()
 
 	m_playerModelRender.SetPosition(m_transform.GetPosition());
 	m_characterController.Init(CHRACTER_CONTROLLER_WIDTH, CHRACTER_CONTROLLER_HIGHT, m_transform.GetPosition());
-
+	
 	m_rope = NewGO<Rope>(0, "rope");
 
+	m_playerModelRender.Update();
 	return true;
 }
 
 void Player::Update()
 {
-	//カウントダウン中は操作出来ないようにするため早期リターン
-	
-	if (m_countDown->GetControlEnabled())
+	if (m_countDown->GetCountDown())
 	{
 		return;
 	}
