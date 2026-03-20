@@ -27,6 +27,7 @@ bool GameOver::Start()
 
 	m_deathSound = FindGO<SoundManager>("soundmanager");
 	p_deathBGM = m_deathSound->PlayingBGM(SoundBGM::enGameOverBGM, false);
+
 	return true;
 }
 
@@ -55,7 +56,9 @@ void GameOver::InGameOver()
 		if (m_isDeleteRequest == true)
 	{
 		DeleteGO(this);
+
 		DeleteGO(p_deathBGM);
+
 	}
 }
 void GameOver::Render(RenderContext& rc)

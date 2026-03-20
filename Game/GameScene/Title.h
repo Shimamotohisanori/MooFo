@@ -12,6 +12,7 @@ public:
 
 private:
 	SpriteRender m_TitleSpriteRender;//タイトルのスプライトレンダー
+
 	SoundManager* m_soundManager;
 	SoundSource* p_titleBGM;
 

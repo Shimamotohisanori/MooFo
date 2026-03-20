@@ -31,7 +31,7 @@ private:
 	Vector3 m_pos;
 
 	bool m_isDead;
-	
+
 private:
 	Stage* m_stage;
 	Player* m_player;
@@ -50,5 +50,6 @@ private:
 
 	SoundManager* m_inGameSound;
 	SoundSource* p_inGameBGM;
+
 };
 

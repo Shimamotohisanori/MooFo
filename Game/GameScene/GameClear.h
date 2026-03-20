@@ -15,5 +15,6 @@ private:
 
 	SoundManager* m_clearSound;
 	SoundSource* p_clearBGM;
+
 };
 

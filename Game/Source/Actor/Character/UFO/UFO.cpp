@@ -21,15 +21,17 @@ bool UFO::Start()
 {
 	m_countdown = FindGO<CountDown>("countdown");
 	srand(time(nullptr));
-	m_UFOmodelRender.SetScale(Vector3(3.5f, 3.5f, 3.5f));
-	m_UFOmodelRender.Init(FILEPATH);
+	m_ufomodelRender.SetScale(Vector3(3.5f, 3.5f, 3.5f));
+	m_ufomodelRender.Init(FILEPATH);
+	m_ufomodelRender.SetPosition(m_transform.GetPosition());
+	m_ufomodelRender.Update();
 	return true;
 }
 
 void UFO::Update()
 {
 	//カウントダウン中は牛を動かさないようにするので早期リターン
-	if (m_countdown->GetControlEnabled())
+	if (m_countdown->GetCountDown())
 	{
 		return;
 	}
@@ -42,11 +44,11 @@ void UFO::Update()
 		Rotation();
 	}
 	/*モデルの位置を反映*/
-	m_UFOmodelRender.SetPosition(m_transform.GetPosition());
+	m_ufomodelRender.SetPosition(m_transform.GetPosition());
 	/*モデルの回転を反映*/
-	m_UFOmodelRender.SetRotation(m_transform.GetRotation());
+	m_ufomodelRender.SetRotation(m_transform.GetRotation());
 	/*モデルの更新*/
-	m_UFOmodelRender.Update();
+	m_ufomodelRender.Update();
 }
 		
 
@@ -82,7 +84,7 @@ void UFO::Move()
 	//ポジションを更新
 	m_transform.SetPosition(pos);
 	//モデルに位置を反映
-	m_UFOmodelRender.SetPosition(m_transform.GetPosition());
+	m_ufomodelRender.SetPosition(m_transform.GetPosition());
 
 	//タイマーを減らす。
 	m_moveTimer--;
@@ -105,6 +107,6 @@ void UFO::Rotation()
 
 void UFO::Render(RenderContext& rc)
 {
-	m_UFOmodelRender.Draw(rc);
+	m_ufomodelRender.Draw(rc);
 }
 

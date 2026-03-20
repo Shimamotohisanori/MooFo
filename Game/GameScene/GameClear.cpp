@@ -29,6 +29,7 @@ bool GameClear::Start()
 
 	m_clearSound = FindGO<SoundManager>("soundmanager");
 	p_clearBGM = m_clearSound->PlayingBGM(SoundBGM::enGameClearBGM, false);
+
 	return true;
 }
 
@@ -56,7 +57,9 @@ void GameClear::InGameClear()
 	if (m_isDeleteRequst == true)
 	{
 		DeleteGO(this);
+
 		DeleteGO(p_clearBGM);
+
 	}
 }
 void GameClear::Render(RenderContext& rc)

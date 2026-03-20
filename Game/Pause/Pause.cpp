@@ -1,4 +1,6 @@
 #include "stdafx.h"
+#include "Pause/Pause.h"
+#include "GameScene/Game.h"
 #include "SoundManager/SoundManager.h"
 #include "Pause/Pause.h"
 #include "GameScene/Game.h"
@@ -40,7 +42,7 @@ namespace
 	//m_volumeSprite.Init("Assets/volume.dds",100.0f,100.0f);
 	//m_notVolumeSprite.Init("Assets/notVolume.dds",100.0f,100.0f);
 
-	/** ƒTƒEƒ“ƒh‚Ìƒ|[ƒY‰æ–Ê‚ğo‚· */
+	/** ï¿½Tï¿½Eï¿½ï¿½ï¿½hï¿½Ìƒ|ï¿½[ï¿½Yï¿½ï¿½Ê‚ï¿½ï¿½oï¿½ï¿½ */
 	m_soundPause = NewGO<SoundPause>(0, "soundpause");
 
 	m_soundPause->Deactivate();
@@ -56,7 +58,7 @@ void Pause::Update()
 {
 	Choose();
 	Select();
-	/** ã‰ºƒ{ƒ^ƒ“‚ÅƒJƒEƒ“ƒg‚Ì”’l‚ğ•Ï‚¦‚ÄBGM‚âSE‚ğ‘I‘ğ‚Å‚«‚é‚æ‚¤‚É‚·‚é */
+	/** ï¿½ã‰ºï¿½{ï¿½^ï¿½ï¿½ï¿½ÅƒJï¿½Eï¿½ï¿½ï¿½gï¿½Ìï¿½ï¿½lï¿½ï¿½Ï‚ï¿½ï¿½ï¿½BGMï¿½ï¿½SEï¿½ï¿½Iï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½æ‚¤ï¿½É‚ï¿½ï¿½ï¿½ */
 	if (g_pad[0]->IsTrigger(enButtonDown))
 	{
 		m_countNumber++;
@@ -72,13 +74,13 @@ void Pause::Update()
 
 void Pause::Choose()
 {
-	/** ‘I‘ğˆˆÈŠO‚Ì”’l‚É•Ï‚í‚Á‚½‚çŒ³‚É–ß‚· */
+	/** ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ÈŠOï¿½Ìï¿½ï¿½lï¿½É•Ï‚ï¿½ï¿½ï¿½ï¿½ï¿½çŒ³ï¿½É–ß‚ï¿½ */
 	if (m_countNumber == -1)
 	{
 		m_countNumber = 2;
 	}
 
-	/** ”’l‚É“–‚Ä‚Í‚Ü‚éif•¶‚ª‚ ‚éê‡–îˆó‚Ìƒ|ƒWƒVƒ‡ƒ“‚ğİ’è‚µ‚Ä‘I‘ğ‚µ‚Ä‚¢‚é•¨‚ğ•\‚µ‚Ä‚¢‚é */
+	/** ï¿½ï¿½ï¿½lï¿½É“ï¿½ï¿½Ä‚Í‚Ü‚ï¿½ifï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½ï¿½ï¿½Ìƒ|ï¿½Wï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ’è‚µï¿½Ä‘Iï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é•¨ï¿½ï¿½\ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ */
 	if (m_countNumber == 0)
 	{
 		m_arrowSprite.SetPosition(ARROWPOS);
@@ -103,12 +105,13 @@ void Pause::Choose()
 
 void Pause::Select()
 {
-	/** ‚»‚ê‚¼‚ê‚Ì‘I‘ğ‚µ‚½Œ‹‰Ê‚ğif•¶‚Åˆ—‚µAÀs‚³‚¹‚é */
+	/** ï¿½ï¿½ï¿½ê‚¼ï¿½ï¿½Ì‘Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê‚ï¿½ifï¿½ï¿½ï¿½Åï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	if (g_pad[0]->IsTrigger(enButtonStart))
 	{
 		p_DecisionSE = m_choiceSound->PlayingSE(SoundSE::enDecisionSE, false);
 		if (m_countNumber == 0)
 		{
+			m_isPause = false;
 			Deactivate();
 			m_game->m_isSound = false;
 		}
@@ -129,10 +132,10 @@ void Pause::Select()
 
 //void Pause::StopBGM()
 //{
-//	/** ‚à‚µm_game‚ªƒAƒNƒeƒBƒu‚¶‚á‚È‚©‚Á‚½‚ç */
+//	/** ï¿½ï¿½ï¿½ï¿½m_gameï¿½ï¿½ï¿½Aï¿½Nï¿½eï¿½Bï¿½uï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 //	if (m_game->IsActive() == false)
 //	{
-//		/** ƒQ[ƒ€“à‚ÌBGM‚ğƒXƒgƒbƒv‚³‚¹‚é */
+//		/** ï¿½Qï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½BGMï¿½ï¿½ï¿½Xï¿½gï¿½bï¿½vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 //		SoundManager::
 //	}
 //}

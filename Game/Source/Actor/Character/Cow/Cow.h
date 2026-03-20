@@ -53,7 +53,7 @@ public:
 	};
 	EnRotationState m_rotationState = EnRotationState_MoveDir;//回転ステート
 private:
-	ModelRender m_CowmodelRender;
+	ModelRender m_cowmodelRender;
 	uint8_t m_cowState;//牛のステート
 
 	Vector3 m_moveDir = Vector3::Zero;//移動方向

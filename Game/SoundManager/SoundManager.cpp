@@ -4,7 +4,7 @@
 #include "Pause/SoundPause.h"
 namespace
 {
-	/** ƒtƒ@ƒCƒ‹ƒpƒX‚Ìnamespace‚ğì‚é */
+	/** ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½pï¿½Xï¿½ï¿½namespaceï¿½ï¿½ï¿½ï¿½ï¿½ */
 	const char* BGM_FILEPATH = "Assets/BGM/";
 	const char* SE_FILEPATH = "Assets/SE/";
 	const char* SOUND_FILE_FORMAT = ".wav";
@@ -31,6 +31,7 @@ namespace
 
 SoundManager::SoundManager()
 {
+
 	m_bgmCount = enBGMNum;
 	for (int i = 0; i < enBGMNum; i++)
 	{
