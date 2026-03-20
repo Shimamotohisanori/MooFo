@@ -52,6 +52,7 @@ public:
 		return m_isLeftButton1;
 	}
 
+
 private:
 	/** ƒ[ƒv‚ğ“Š‚°‚éŠÖ”*/
 	void ThrowRope();

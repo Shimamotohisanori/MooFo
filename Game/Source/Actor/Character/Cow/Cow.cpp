@@ -201,7 +201,7 @@ void Cow::CapturedByPlayer()
 		Vector3 dir = playerPos - cowPos;
 
 		//距離が一定以下なら捕獲される
-		if (dir.Length() < 10.0f)
+		if (dir.Length() < 50.0f)
 		{
 			//捕獲されたときの処理
 			m_rope->SetIsHitCow(false);
