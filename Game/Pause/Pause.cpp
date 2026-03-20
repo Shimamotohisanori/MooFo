@@ -2,7 +2,10 @@
 #include "Pause/Pause.h"
 #include "GameScene/Game.h"
 #include "SoundManager/SoundManager.h"
-//#include "Title.h"
+#include "Pause/Pause.h"
+#include "GameScene/Game.h"
+#include "SoundPause.h"
+#include "GameScene/Title.h"
 namespace
 {
 	//const std::string PAUSE_SPRITE_FILE_PASS = "Assets/sptite/";
@@ -14,8 +17,7 @@ namespace
 	const Vector3 THIRDARROWPOS = { -170.0f,-300.0f,0.0f };
 	const Vector3 ARROWSCALE = { 1.0f,1.0f,1.0f };
 	const Vector3 ARROWSOUNDSCALE = { 0.5f,0.5f,1.0f };
-}
-bool Pause::Start()
+}bool Pause::Start()
 {
 	m_pauseBackGround.Init("Assets/sprite/PauseUI/pauseBackGround.dds",1980.0f,1080.0f);
 	m_pauseBackGround.Update();
@@ -40,10 +42,15 @@ bool Pause::Start()
 	//m_volumeSprite.Init("Assets/volume.dds",100.0f,100.0f);
 	//m_notVolumeSprite.Init("Assets/notVolume.dds",100.0f,100.0f);
 
-	m_soundManager = NewGO<SoundManager>(0, "soundmanager");
-	m_soundManager->Deactivate();
+	/** �T�E���h�̃|�[�Y��ʂ��o�� */
+	m_soundPause = NewGO<SoundPause>(0, "soundpause");
+
+	m_soundPause->Deactivate();
+
 
 	m_game = FindGO<Game>("game");
+
+	m_choiceSound = FindGO<SoundManager>("soundmanager");
 	return true;
 }
 
@@ -51,24 +58,29 @@ void Pause::Update()
 {
 	Choose();
 	Select();
+	/** �㉺�{�^���ŃJ�E���g�̐��l��ς���BGM��SE��I���ł���悤�ɂ��� */
 	if (g_pad[0]->IsTrigger(enButtonDown))
 	{
 		m_countNumber++;
+		p_chiceSE = m_choiceSound->PlayingSE(SoundSE::enChoiceSE, false);
 	}
 	if (g_pad[0]->IsTrigger(enButtonUp))
 	{
 		m_countNumber--;
+		p_chiceSE = m_choiceSound->PlayingSE(SoundSE::enChoiceSE, false);
 	}
 
 }
 
 void Pause::Choose()
 {
+	/** �I�����ȊO�̐��l�ɕς�����猳�ɖ߂� */
 	if (m_countNumber == -1)
 	{
 		m_countNumber = 2;
 	}
 
+	/** ���l�ɓ��Ă͂܂�if��������ꍇ���̃|�W�V������ݒ肵�đI�����Ă��镨��\���Ă��� */
 	if (m_countNumber == 0)
 	{
 		m_arrowSprite.SetPosition(ARROWPOS);
@@ -93,25 +105,40 @@ void Pause::Choose()
 
 void Pause::Select()
 {
+	/** ���ꂼ��̑I���������ʂ�if���ŏ������A���s������ */
 	if (g_pad[0]->IsTrigger(enButtonStart))
 	{
+		p_DecisionSE = m_choiceSound->PlayingSE(SoundSE::enDecisionSE, false);
 		if (m_countNumber == 0)
 		{
 			m_isPause = false;
 			Deactivate();
+			m_game->m_isSound = false;
 		}
 		else if (m_countNumber == 1)
 		{
-
+			NewGO<Title>(0,"title");
+			DeleteGO(m_game);
+			DeleteGO(this);
 		}
 		else if (m_countNumber == 2)
 		{
-			m_soundManager->Activate();
-			m_soundManager->SetCount(0);
+			m_soundPause->Activate();
+			m_soundPause->SetCount(0);
 			Deactivate();
 		}
 	}
 }
+
+//void Pause::StopBGM()
+//{
+//	/** ����m_game���A�N�e�B�u����Ȃ������� */
+//	if (m_game->IsActive() == false)
+//	{
+//		/** �Q�[������BGM���X�g�b�v������ */
+//		SoundManager::
+//	}
+//}
 
 void Pause::Render(RenderContext& rc)
 {

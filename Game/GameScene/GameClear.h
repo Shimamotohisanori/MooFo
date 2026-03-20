@@ -13,5 +13,8 @@ private:
 	SpriteRender m_GameClearSpriteRender;//ゲームクリアのスプライトレンダー
 	bool m_isDeleteRequst = false;//削除要求フラグ
 
+	SoundManager* m_clearSound;
+	SoundSource* p_clearBGM;
+
 };
 

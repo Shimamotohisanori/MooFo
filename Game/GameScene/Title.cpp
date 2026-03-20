@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "SoundManager/SoundManager.h"
 #include "Title.h"
 #include"Game.h"
 namespace
@@ -21,6 +22,10 @@ Title::~Title()
 bool Title::Start()
 {
 	m_TitleSpriteRender.Init(FILEPATH,WIDTH,HIGHT);
+
+	m_soundManager = FindGO<SoundManager>("soundmanager");
+	p_titleBGM = m_soundManager->PlayingBGM(SoundBGM::enTitleBGM, false);
+
 	return true;
 }
 
@@ -39,6 +44,9 @@ void Title::InTitle()
 	{
 		NewGO<Game>(0, "game");
 		DeleteGO(this);
+
+		DeleteGO(p_titleBGM);
+
 	}
 }
 

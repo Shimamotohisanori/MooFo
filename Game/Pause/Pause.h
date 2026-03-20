@@ -1,7 +1,7 @@
 #pragma once
 class Game;
+class SoundPause;
 class SoundManager;
-//class Title;
 class Pause : public IGameObject
 {
 public:
@@ -11,6 +11,7 @@ public:
 	void Update();
 	void Choose();
 	void Select();
+	//void StopBGM();
 	void Render(RenderContext& rc);
 
 	/** ポーズ中に選んでいる場所の番号設定関数 */
@@ -41,11 +42,14 @@ public:
 private:
 	int m_countNumber = 0;
 
+	SoundManager* m_choiceSound;
+	SoundSource* p_chiceSE;
+	SoundSource* p_DecisionSE;
+
 	/** ポーズ中かどうかのフラグ*/
 	bool m_isPause = false;
 
 	Game* m_game;
-	//Title* m_title;
 	SpriteRender m_pauseBackGround;
 	SpriteRender m_quiteSprite;
 	SpriteRender m_resumeSprite;
@@ -57,6 +61,8 @@ private:
 	SpriteRender m_notVolumeSprite;
 	SpriteRender m_arrowSprite;
 
-	SoundManager* m_soundManager;
+	SoundPause* m_soundPause;
+
+	
 
 };

@@ -12,7 +12,6 @@ public:
 public:
 	bool Start() override;
 	void Update() override;
-
 	void  Follow();
 
 private:
@@ -22,11 +21,11 @@ private:
 	/** 牛がロープに当たったら*/
 	void HitCow();
 
-
 private:
 	Player* m_player;
 	Rope* m_rope;
 	Cow* m_cow;
+
 	Vector3 m_cameraPos;
 
 	/** ロープ追従開始前のカメラ位置を保存する変数 */

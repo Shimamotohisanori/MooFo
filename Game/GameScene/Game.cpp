@@ -10,6 +10,7 @@
 #include"GameClear.h"
 #include"GameOver.h"
 #include"CountDown/CountDown.h"
+#include "SoundManager/SoundManager.h"
 
 Game::~Game()
 {
@@ -29,6 +30,7 @@ Game::~Game()
 	DeleteGO(m_timer);
 	//ゲームカメラを削除
 	DeleteGO(m_gameCamera);
+
 	//カウントダウンを削除
 	DeleteGO(m_countDown);
 	//Pauseを削除
@@ -37,8 +39,8 @@ Game::~Game()
 }
 bool Game::Start()
 {
-
 	m_countDown = NewGO<CountDown>(0, "countdown");
+
 	//m_modelRender.Init("Assets/modelData/unityChan.tkm");
 	m_player = NewGO < Player>(0, "player");
 	//ステージの生成
@@ -62,14 +64,15 @@ bool Game::Start()
 	m_IdleUFO->m_UFOState = UFO::EnUFOState_Idle;
 	m_IdleUFO->SetPosition(Vector3(300.0f, 70.0f, 0.0f));
 
-	//タイマーを生成
 	m_timer = NewGO<Timer>(0, "timer");
 
 	//ポーズ画面の生成をするが非アクティブにする
 	m_pause = NewGO<Pause>(0, "pause");
 	m_pause->Deactivate();
 
+	m_countDown = NewGO<CountDown>(0, "countdown");
 	
+	m_inGameSound = FindGO<SoundManager>("soundmanager");	
 
 	//ゲームカメラの生成
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
@@ -81,7 +84,13 @@ bool Game::Start()
 
 void Game::Update()
 {
-		//ポーズ中はゲーム処理をしない
+
+	if (!m_isSound)
+	{
+		p_inGameBGM = m_inGameSound->PlayingBGM(SoundBGM::enInGameBGM, false);
+		m_isSound = true;
+	}
+	//ポーズ中はゲーム処理をしない
 	if (m_pause->IsActive())
 	{
 		return;
@@ -89,9 +98,13 @@ void Game::Update()
 	//セレクトボタンを押したら
 	if (g_pad[0]->IsTrigger(enButtonSelect))
 	{
+
+		DeleteGO(p_inGameBGM);
+    
 		/** ポーズ画面をアクティブにする */
 		m_pause->Activate();
 		m_pause->SetIsPause(true);
+
   }
 	//クリア処理
 	Clear();
@@ -108,6 +121,8 @@ void Game::Clear()
 		m_gameClear = NewGO<GameClear>(0, "gameClear");
 		DeleteGO(this);
 
+		DeleteGO(p_inGameBGM);
+
 	}
 }
 
@@ -119,6 +134,9 @@ void Game::Death()
 		m_isDead = true;
 		m_gameOver = NewGO<GameOver>(0, "gameover");
 		DeleteGO(this);
+
+		DeleteGO(p_inGameBGM);
+
 	}
 }
 

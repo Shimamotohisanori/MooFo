@@ -29,6 +29,7 @@ namespace
 	constexpr float MIN_CAMERA_HEIGHT = 5.0f;
 
 }
+
 GameCamera::GameCamera()
 {
 }
@@ -47,6 +48,7 @@ bool GameCamera::Start()
 	m_cow = FindGO<Cow>("cow");
 
 	m_cameraPos.Set(0.0f, 125.0f, -250.0f);
+
 	//近平面を設定
 	g_camera3D->SetNear(1.0f);
 	//円平面を設定
@@ -70,6 +72,7 @@ void GameCamera::Follow()
 		return;
 	}																																																																																																																																																																																																																																																																																																																																																													
 
+
 	Vector3 target;
 	//注視点をプレイヤーの座標に設定
 	target = m_player->GetPosition();
@@ -84,13 +87,14 @@ void GameCamera::Follow()
 	//Y軸周りの回転
 	Quaternion rot;
 	rot.SetRotationDeg(Vector3::AxisY, 1.3f * x);
-	rot.Apply(m_cameraPos);
 
+	rot.Apply(m_cameraPos);
 
 	// --- 上下回転修正版 ---
 	//「カメラの右方向」を現在の m_CameraPos から正しく計算し、
 	//それを使ってX軸回転を行っている。
 	Vector3 forward = m_cameraPos;
+  
 	if (forward.LengthSq() > 0.0001f)
 		forward.Normalize();
 	else
@@ -107,10 +111,12 @@ void GameCamera::Follow()
 
 	// 上下回転
 	rot.SetRotationDeg(right, 1.3f * y);
+
 	rot.Apply(m_cameraPos);
 
 
 	Vector3 dir = m_cameraPos;
+
 	dir.Normalize();
 	float limit = 0.95f; // cos角度による制限(= 約72°)
 	if (fabsf(dir.Dot(Vector3::AxisY)) > limit)
@@ -121,6 +127,7 @@ void GameCamera::Follow()
 
 	//視点の計算
 	Vector3 pos = target + m_cameraPos;
+
 
 	// ★ カメラ位置と注視点が一致しないようにする保険 ★
 	if ((pos - target).LengthSq() < 0.0001f)

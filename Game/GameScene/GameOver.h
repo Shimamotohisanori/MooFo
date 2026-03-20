@@ -15,5 +15,8 @@ private:
 	SpriteRender m_GameOverspriteRender;
 
 	bool m_isDeleteRequest = false;
+
+	SoundManager* m_deathSound;
+	SoundSource* p_deathBGM;
 };
 

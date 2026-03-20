@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "SoundManager/SoundManager.h"
 #include "GameOver.h"
 #include"Game.h";
 #include"Title.h";
@@ -23,6 +24,10 @@ bool GameOver::Start()
 {
 	//画像を読み込む
 	m_GameOverspriteRender.Init(FILEPATH, WIDTH, HIGHT);
+
+	m_deathSound = FindGO<SoundManager>("soundmanager");
+	p_deathBGM = m_deathSound->PlayingBGM(SoundBGM::enGameOverBGM, false);
+
 	return true;
 }
 
@@ -51,6 +56,9 @@ void GameOver::InGameOver()
 		if (m_isDeleteRequest == true)
 	{
 		DeleteGO(this);
+
+		DeleteGO(p_deathBGM);
+
 	}
 }
 void GameOver::Render(RenderContext& rc)

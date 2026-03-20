@@ -9,6 +9,7 @@ class Timer;
 class GameClear;
 class GameOver;
 class CountDown;
+class SoundManager;
 class Game : public IGameObject
 {
 public:
@@ -23,12 +24,14 @@ public:
 	void Clear();
 	void Death();
 
+	bool m_isSound;
 
 private:
 	ModelRender m_modelRender;
 	Vector3 m_pos;
 
 	bool m_isDead;
+
 private:
 	Stage* m_stage;
 	Player* m_player;
@@ -44,5 +47,9 @@ private:
 	GameClear* m_gameClear;
 	GameOver* m_gameOver;
 	CountDown* m_countDown;
+
+	SoundManager* m_inGameSound;
+	SoundSource* p_inGameBGM;
+
 };
 

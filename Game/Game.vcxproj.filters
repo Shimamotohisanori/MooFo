@@ -55,6 +55,11 @@
     <ClCompile Include="GameScene\Game.cpp">
       <Filter>GameScene</Filter>
     </ClCompile>
+
+    <ClCompile Include="Pause\SoundPause.cpp">
+      <Filter>Pause</Filter>
+    </ClCompile>
+
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -111,6 +116,11 @@
     <ClInclude Include="GameScene\Game.h">
       <Filter>GameScene</Filter>
     </ClInclude>
+
+    <ClInclude Include="Pause\SoundPause.h">
+      <Filter>Pause</Filter>
+    </ClInclude>
+
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
