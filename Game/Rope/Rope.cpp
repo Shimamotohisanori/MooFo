@@ -1,10 +1,21 @@
 #include "stdafx.h"
 #include "Rope.h"
+#include "Source/Actor/Character/Cow/Cow.h"
 #include "Source/Actor/Character/Player/Player.h"
 namespace
 {
-	const char* FILEPATH = "Assets/modelData/Rope/Rope.tkm";
+	const char* FILEPATH = "Assets/modelData/Rope/NewRope.tkm";
 	const char* THROW_ROPE_ANIMATION_FILE_PATH = "Assets/animData/Rope/ThrowRope.tka";
+
+	const Vector3 ROPE_INITIAL_SCALE = { 1.0f, 1.0f, 5.0f };
+
+	const float ROPE_OFFSET_RIGHT = 10.0f;
+	const float ROPE_OFFSET_FORWARD = 0.5f;
+	const float ROPE_OFFSET_UP = 30.0f;
+	const float ROPE_AIM_UP_OFFSET = 30.0f;
+	const float ROPE_SCALE_FACTOR = 0.05f;
+	const float ROPE_MIN_SCALE_Z = 0.002f;
+
 }
 Rope::Rope()
 {
@@ -20,24 +31,34 @@ bool Rope::Start()
 	m_ropeAnimationClips[EnRopeAnimation_Throw].Load(THROW_ROPE_ANIMATION_FILE_PATH);
 	m_ropeAnimationClips[EnRopeAnimation_Throw].SetLoopFlag(false);
 
-	m_ropeModelRender.Init(FILEPATH/*, m_ropeAnimationClips, EnRopeAnimation_Num, enModelUpAxisZ*/);
+	m_ropeModelRender.Init(FILEPATH);
 
 	m_player = FindGO<Player>("player");
 
-	/** ロープは常にプレイヤーの少し右前に付いてくる */
-	m_ropeModelRender.SetPosition(m_player->GetPosition().x + 5.0f, m_player->GetPosition().y + 5.0f, m_player->GetPosition().z + 5.0f);
+	m_ropeModelRender.SetScale(ROPE_INITIAL_SCALE);
 
 	return true;
 }
 
 void Rope::Update()
 {
-	/** ロープをプレイヤーの少し右前に付いてくるようにする */
-	m_ropeModelRender.SetPosition(m_player->GetPosition().x + 5.0f, m_player->GetPosition().y + 5.0f, m_player->GetPosition().z + 5.0f);
+	m_cow = FindGO<Cow>("cow");
 
 	/** プレイヤーがロープを投げる処理 */
 	PlayerThrowsRope();
 
+	/** プレイヤーの右手の位置のロープが常にある関数 */
+	FollowRightHand();
+
+	if (m_isHitCow && m_cow != nullptr)
+	{
+		/** 伸び縮みするロープの回転に関する関数 */
+		RotateStretchRope();
+		
+		/** ロープの伸び縮みに関する関数 */
+		StretchRope();
+	}
+	
 	m_ropeModelRender.Update();
 }
 
@@ -46,9 +67,6 @@ void Rope::PlayerThrowsRope()
 	/** ロープが投げられていたら */
 	if (m_isThrowRope)
 	{
-		/** ロープのアニメーションを再生する */
-		//m_ropeModelRender.PlayAnimation(EnRopeAnimation_Throw);
-
 		/** ロープアニメーション開始のフラグを立てる */
 		m_isStartRopeAnimation = true;
 
@@ -72,10 +90,82 @@ void Rope::PlayerThrowsRope()
 	}
 }
 
+void Rope::FollowRightHand()
+{
+	Vector3 playerPos = m_player->GetPosition();
+	Quaternion playerRot = m_player->GetRotation();
+
+	Vector3 right = Vector3::AxisX;
+	playerRot.Apply(right);
+
+	Vector3 forward = Vector3::AxisZ;
+	playerRot.Apply(forward);
+
+	Vector3 ropePos =
+		playerPos
+		+ right * ROPE_OFFSET_RIGHT
+		+ forward * ROPE_OFFSET_FORWARD
+		+ Vector3(0.0f, ROPE_OFFSET_UP, 0.0f);
+
+	m_ropePos = ropePos;
+	m_ropeModelRender.SetPosition(ropePos);
+
+}
+
+void Rope::StretchRope()
+{
+
+	if (!m_isHitCow || m_cow == nullptr) return;
+
+	/** ロープの位置と牛の位置から距離を求める */
+	Vector3 ropePos = m_ropePos;
+	Vector3 cowPos = m_cow->GetPosition();
+
+	float distance = (cowPos - ropePos).Length();
+
+	/** ロープの伸び縮みのスケールを求める */
+	/** ロープの伸び縮みのスケールは距離に
+	 * ROPE_SCALE_FACTORをかけた値とROPE_MIN_SCALE_Zのうち
+	 * 大きい方にする */
+	float ropeScaleZ = max(distance * ROPE_SCALE_FACTOR, ROPE_MIN_SCALE_Z);
+
+	// 伸び縮みだけ
+	m_ropeModelRender.SetScale(Vector3(1.0f, 1.0f, ropeScaleZ));
+
+}
+
+void Rope::RotateStretchRope()
+{
+	if (m_cow == nullptr) return;
+
+	/** ロープの位置から牛の位置へのベクトルを求める */
+	Vector3 start = m_ropePos;
+	Vector3 end = m_cow->GetPosition();
+	
+	/** 牛の位置の少し上を狙う */
+	end.y += ROPE_AIM_UP_OFFSET;
+
+	/** ベクトルを正規化する */
+	Vector3 dir = end - start;
+	dir.Normalize();
+
+	/** ロープの初期の向きはZ軸方向なので
+	 *Z軸をベクトルdirの方向に回転させるクォータニオンを求める
+	 */
+	Vector3 forward = Vector3::AxisZ;
+
+	Quaternion rot;
+	rot.SetRotation(forward, dir);
+
+	m_ropeModelRender.SetRotation(rot);
+
+}
+
 void Rope::Render(RenderContext& rc)
 {
-	/** ロープが投げられていたらロープを表示する */
-	if (m_isThrowRope)
+	/** ロープが投げられていて
+	 *牛に当たっていたらロープを表示する */
+	if (m_isThrowRope or m_isHitCow)
 	{
 		m_ropeModelRender.Draw(rc);
 	}

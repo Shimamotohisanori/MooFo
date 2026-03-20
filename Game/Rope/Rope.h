@@ -3,6 +3,7 @@
 * Ropeクラス
 */
 class Player;
+class Cow;
 class Rope : public IGameObject
 {
 public:
@@ -36,12 +37,25 @@ public:
 		return m_isHitCow;
 	}
 private:
-	/** プレイヤーが縄を投げた時の縄の処理関数*/
+	/** プレイヤーが縄を投げた時の縄の処理関数 */
 	void PlayerThrowsRope();
+
+	/** プレイヤーの右手の位置のロープが常にある関数 */
+	void FollowRightHand();
+
+	/** ロープの伸び縮みに関する関数 */
+	void StretchRope();
+
+	/** 伸び縮みするロープの回転に関する関数 */
+	void RotateStretchRope();
+
 
 private:
 	/** プレイヤー */
 	Player* m_player;
+
+	/** 牛 */
+	Cow* m_cow;
 
 	/** ロープモデルレンダー */
 	ModelRender m_ropeModelRender;
@@ -52,13 +66,13 @@ private:
 	/** ロープを投げたかどうかのフラグ */
 	bool m_isThrowRope = false;
 
-	/** ロープアニメーションが始まったかどうかのフラグ*/
+	/** ロープアニメーションが始まったかどうかのフラグ */
 	bool m_isStartRopeAnimation = false;
 
 	/** 縄が牛に当たったかどうかのフラグ*/
 	bool m_isHitCow = false;
 
-	/** ロープアニメーション時間*/
+	/** ロープアニメーション時間 */
 	float m_ropeAnimationTime = 0.0f;
 
 	/** ループのアニメーション */
