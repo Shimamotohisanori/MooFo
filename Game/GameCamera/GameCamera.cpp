@@ -3,7 +3,32 @@
 #include "Rope/Rope.h"
 #include "Source/Actor/Character/Cow/Cow.h"
 #include"Source/Actor/Character/Player/Player.h"
+namespace
+{
+	/** カメラ基本設定 */
+	constexpr float CAMERA_DEFAULT_Y = 125.0f;
+	constexpr float CAMERA_DEFAULT_Z = -250.0f;
 
+	/** プレイヤー注視点 */
+	constexpr float PLAYER_LOOK_OFFSET_Y = 80.0f;
+
+	/** ロープ視点 */
+	constexpr float ROPE_START_FORWARD_DIST = 80.0f;
+	constexpr float ROPE_START_UP_OFFSET = 40.0f;
+	constexpr float ROPE_FLY_SPEED = 5.0f;
+	constexpr float ROPE_TARGET_DISTANCE = 500.0f;
+
+	/** 牛判定 */
+	constexpr float COW_HIT_DISTANCE = 100.0f;
+
+	/** 牛視点 */
+	constexpr float COW_CAMERA_UP = 80.0f;
+	constexpr float COW_CAMERA_BACK = -200.0f;
+
+	/** カメラの最低高さ */
+	constexpr float MIN_CAMERA_HEIGHT = 5.0f;
+
+}
 GameCamera::GameCamera()
 {
 }
@@ -123,45 +148,47 @@ void GameCamera::FollowRope()
 		/** 現在のカメラ位置を保存 */
 		m_savedCameraPos = m_cameraPos;
 
-		/** プレイヤーのforwardをrotationから作る */
-		Quaternion rot = m_player->GetRotation();
-		Vector3 playerForward = Vector3::AxisZ;
-		rot.Apply(playerForward);
-		playerForward.Normalize();
-		
+		/** カメラの forward を保存（上下方向も含む）*/
+		Vector3 camForward = g_camera3D->GetTarget() - g_camera3D->GetPosition();
+		if (camForward.LengthSq() < 0.0001f) {
+			camForward = Vector3::AxisZ;
+		}
+		camForward.Normalize();
+		m_ropeForward = camForward;
+
 		/** プレイヤーの少し前からカメラが出てくるようにする */
-		m_cameraPos = playerForward * 80.0f + Vector3(0.0f, 40.0f, 0.0f);
+		m_cameraPos = camForward 
+			* ROPE_START_FORWARD_DIST
+			+ Vector3(0.0f, ROPE_START_UP_OFFSET, 0.0f);
 	}
 
 	/** ロープを投げている途中のカメラ処理 */
 	if(m_rope->GetIsThrowRope())
 	{
 		/** カメラforwardを計算 */
-		Vector3 camForward = g_camera3D->GetTarget() - g_camera3D->GetPosition();
-		if (camForward.LengthSq() < 0.0001f)
-		{
-			/** forwardベクトルがゼロに近い場合
-			 * 安全なデフォルト方向を設定 */
-			camForward = Vector3::AxisZ;
+		Vector3 camForward = m_ropeForward;
+
+		/** カメラを前進する */
+		m_cameraPos += camForward * ROPE_FLY_SPEED;
+
+		/** 地面に近すぎたら下に行かないようにする */
+		if (m_cameraPos.y < MIN_CAMERA_HEIGHT) {
+			m_cameraPos.y = MIN_CAMERA_HEIGHT;
 		}
 
-		else
-		{
-			/** forwardベクトルを正規化 */
-			camForward.Normalize();
-		}
+		Vector3 eye = m_player->GetPosition()
+			+ Vector3(0.0f, 0.0f, 0.0f)
+			+ m_cameraPos;
 
-		/** カメラを前進 */
-		m_cameraPos += camForward * 3.0f;
+		Vector3 target = eye + camForward * ROPE_TARGET_DISTANCE;
 
-		Vector3 eye = m_player->GetPosition() + Vector3(0.0f, 80.0f, 0.0f) + m_cameraPos;
-		Vector3 target = m_player->GetPosition() + Vector3(0, 80, 0) + camForward * 500.0f;
-
-		g_camera3D->SetTarget(target);
+		/** カメラの注視点と位置を設定 */
 		g_camera3D->SetPosition(eye);
+		g_camera3D->SetTarget(target);
+		
+		/** カメラの更新 */
 		g_camera3D->Update();
 		return;
-
 	}
 
 	/** ロープを投げ終わったらカメラ位置を元に戻す */
@@ -183,14 +210,16 @@ void GameCamera::HitCow()
 		return;
 	}
 	/** カメラのワールド座標を計算*/
-	Vector3 cameraWorldPos = m_player->GetPosition() + Vector3(0.0f, 80.0f, 0.0f) + m_cameraPos;
+	Vector3 cameraWorldPos = m_player->GetPosition()
+		+ Vector3(0.0f, 80.0f, 0.0f)
+		+ m_cameraPos;
 
 	/** 牛とカメラの距離を計算する*/
 	Vector3 diff;
 	diff = cameraWorldPos - m_cow->GetPosition();
 
 	/** 距離が近ければ*/
-	if (diff.LengthSq() < 100.0f * 100.0f)
+	if (diff.LengthSq() < COW_HIT_DISTANCE * COW_HIT_DISTANCE)
 	{
 		// カメラ(縄の視点)が牛に近づいたら、牛に当たったと判断する
 		m_rope->SetIsHitCow(true);
@@ -200,10 +229,13 @@ void GameCamera::HitCow()
 	if (m_rope->GetIsHitCow())
 	{
 		// ターゲットは牛
-		Vector3 target = m_cow->GetPosition() + Vector3(0.0f, 80.0f, 0.0f);
+		Vector3 target = m_cow->GetPosition() + Vector3(0.0f, 80.0, 0.0f);
 		g_camera3D->SetTarget(target);
 		// カメラ位置更新
-		g_camera3D->SetPosition(m_cow->GetPosition() + Vector3(0.0f, 80.0f, -200.0f));
+		g_camera3D->SetPosition(
+			m_cow->GetPosition() 
+			+ Vector3(0.0f, COW_CAMERA_UP, COW_CAMERA_BACK));
+
 		g_camera3D->Update();
 	}
 }

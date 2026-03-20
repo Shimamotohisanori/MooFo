@@ -32,6 +32,9 @@ private:
 	/** ロープ追従開始前のカメラ位置を保存する変数 */
 	Vector3 m_savedCameraPos; 
 
+	/** ロープを投げている間のforwardを固定する */
+	Vector3 m_ropeForward;
+
 	/** カメラがロープの事を追従し始めたかどうかのフラグ */
 	bool m_isRopeCameraStarted = false;
 };
