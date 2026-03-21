@@ -3,6 +3,7 @@
 #include "Rope/Rope.h"
 #include "Source/Actor/Character/Player/Player.h"
 #include"CountDown/CountDown.h"
+#include "GameCamera/GameCamera.h"
 #include <time.h>
 namespace
 {
@@ -162,6 +163,12 @@ void Cow::ManageState()
 
 void Cow::PulledByPlayer()
 {
+	/** 捕まってない牛は絶対に引っ張られない */
+	if (!m_isCaptured)
+	{
+		return;
+	}
+
 	if (m_player->GetIsRightButton1() or m_player->GetIsLeftButton1())
 	{
 		//プレイヤーの位置を取得
@@ -205,6 +212,12 @@ void Cow::CapturedByPlayer()
 		{
 			//捕獲されたときの処理
 			m_rope->SetIsHitCow(false);
+
+			GameCamera* camera = FindGO<GameCamera>("gameCamera");
+			if (camera)
+			{
+				camera->SetIsCowCaptured(false);
+			}
 
 			//牛を削除
 			DeleteGO(this);

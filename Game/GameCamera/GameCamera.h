@@ -9,10 +9,18 @@ public:
 	GameCamera();
 	~GameCamera();
 
+
 public:
 	bool Start() override;
 	void Update() override;
 	void  Follow();
+
+	/** 牛に当たったかどうかのフラグ */
+	void SetIsCowCaptured(bool isCowCaptured)
+	{
+		m_isCowCaptured = isCowCaptured;
+	}
+
 
 private:
 	/** ロープを追いかける関数*/
@@ -23,6 +31,7 @@ private:
 
 	/** 牛がロープに当たったら*/
 	void HitCow();
+
 
 private:
 	Player* m_player;
@@ -39,5 +48,8 @@ private:
 
 	/** カメラがロープの事を追従し始めたかどうかのフラグ */
 	bool m_isRopeCameraStarted = false;
+
+	/** 牛に当たったかどうかのフラグ */
+	bool m_isCowCaptured = false;
 };
 

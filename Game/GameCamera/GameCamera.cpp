@@ -209,6 +209,9 @@ void GameCamera::FollowRope()
 
 void GameCamera::CheckCameraHitCow()
 {
+	/** 牛を捕まえた後は牛に当たる処理を行わない */
+	if (m_isCowCaptured) return;
+
 	/** カメラ位置 */
 	Vector3 camPos = g_camera3D->GetPosition();
 
@@ -223,8 +226,11 @@ void GameCamera::CheckCameraHitCow()
 
 		if (dist < COW_HIT_DISTANCE)   // 100.0f でOK
 		{
-			// ロープが当たった扱いにする
+			/** ロープが当たった扱いにする */
 			m_rope->OnHitCow(cow);
+
+			/** 牛を捕まえたフラグを立てる */
+			m_isCowCaptured = true; 
 			return;
 		}
 	}
