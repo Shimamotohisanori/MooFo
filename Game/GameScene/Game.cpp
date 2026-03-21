@@ -10,6 +10,7 @@
 #include"GameClear.h"
 #include"GameOver.h"
 #include"CountDown/CountDown.h"
+#include "Rope/Rope.h"
 #include "SoundManager/SoundManager.h"
 
 Game::~Game()
@@ -18,22 +19,42 @@ Game::~Game()
 	DeleteGO(m_player);
 	//ステージを削除
 	DeleteGO(m_stage);
+
 	//牛を削除
-	DeleteGO(m_cow);
-	//回転牛を削除
-	DeleteGO(m_spincow);
-	//UFOを削除
-	DeleteGO(m_UFO);
-	//棒立ち状態のUFOを削除
-	DeleteGO(m_IdleUFO);
+	for (int i = 0; i < EnCow_Num; i++)
+	{
+		if (m_cow[i] != nullptr)
+		{
+			DeleteGO(m_cow[i]);
+		}
+	}
+
+	/** SpawnCow等で増えた牛も含めて生きている牛は全て削除 */
+	for (auto cow : m_aliveCows)
+	{
+		if (cow)
+		{
+			DeleteGO(cow);
+		}
+	}
+	m_aliveCows.clear();
+
+	/** UFOを削除 */
+	for (int i = 0; i < EnUFO_Num; i++)
+	{
+		if (m_UFO[i] != nullptr)
+		{
+			DeleteGO(m_UFO[i]);
+		}
+	}
+
 	//タイマーを削除
 	DeleteGO(m_timer);
 	//ゲームカメラを削除
 	DeleteGO(m_gameCamera);
-
-	//カウントダウンを削除
+	//カウントダウンの削除
 	DeleteGO(m_countDown);
-	//Pauseを削除
+	//Pauseの削除
 	DeleteGO(m_pause);
 
 }
@@ -41,36 +62,31 @@ bool Game::Start()
 {
 	m_countDown = NewGO<CountDown>(0, "countdown");
 
-	//m_modelRender.Init("Assets/modelData/unityChan.tkm");
-	m_player = NewGO < Player>(0, "player");
+	m_player = NewGO <Player>(0, "player");
 	//ステージの生成
 	m_stage = NewGO<Stage>(0, "stage");
-	//ランダムに移動する牛の生成
-	m_cow = NewGO<Cow>(0, "cow");
-	//座標を設定
-	m_cow->Setposition(Vector3(0.0f, 0.0f, 0.0f));
+	
+	//牛の生成
+	for (int i = 0; i < _countof(COW_INFOMATIONS); i++)
+	{
+		m_cow[i] = NewGO<Cow>(0, COW_INFOMATIONS[i].objectName.c_str());
+		m_cow[i]->Setposition(COW_INFOMATIONS[i].pos);
+		m_aliveCows.push_back(m_cow[i]);
+	}
 
-	//回転ステートがスピンの牛の生成
-	m_spincow = NewGO<Cow>(0, "spinCow");
-	m_spincow->m_rotationState = Cow::EnRotatitonState_Spin;
-	m_spincow->Setposition(Vector3(300.0f, 0.0f, 0.0f));
+	//UFOの生成
+	for (int i = 0; i < _countof(UFO_INFOMATIONS); i++)
+	{
+		m_UFO[i] = NewGO<UFO>(0, UFO_INFOMATIONS[i].objectName.c_str());
+		m_UFO[i]->SetPosition(UFO_INFOMATIONS[i].pos);
+	}
 
-	//ランダムに移動するUFOの生成
-	m_UFO = NewGO<UFO>(0, "UFO");
-	m_UFO->SetPosition(Vector3(0.0f, 70.0f, 0.0f));
-
-	//Idle状態のUFOの生成
-	m_IdleUFO = NewGO<UFO>(0, "idleUFO");
-	m_IdleUFO->m_UFOState = UFO::EnUFOState_Idle;
-	m_IdleUFO->SetPosition(Vector3(300.0f, 70.0f, 0.0f));
-
+	//タイマーの生成
 	m_timer = NewGO<Timer>(0, "timer");
 
 	//ポーズ画面の生成をするが非アクティブにする
 	m_pause = NewGO<Pause>(0, "pause");
 	m_pause->Deactivate();
-
-	m_countDown = NewGO<CountDown>(0, "countdown");
 	
 	m_inGameSound = FindGO<SoundManager>("soundmanager");	
 
@@ -110,6 +126,17 @@ void Game::Update()
 	Clear();
 	//ゲームオーバー処理
 	Death();
+
+	SpawnCow();
+
+	// 毎フレームロープに最新の牛リストを渡す
+	Rope* rope = FindGO<Rope>("rope");
+	if (rope)
+	{
+		rope->SetCowList(m_aliveCows);
+	}
+
+
 }
 
 
@@ -119,10 +146,8 @@ void Game::Clear()
 	{
 		//ゲームクリアの画像を呼び出す
 		m_gameClear = NewGO<GameClear>(0, "gameClear");
-		DeleteGO(this);
-
 		DeleteGO(p_inGameBGM);
-
+		DeleteGO(this);
 	}
 }
 
@@ -133,10 +158,43 @@ void Game::Death()
 	{
 		m_isDead = true;
 		m_gameOver = NewGO<GameOver>(0, "gameover");
-		DeleteGO(this);
-
 		DeleteGO(p_inGameBGM);
-
+		DeleteGO(this);
 	}
+}
+
+void Game::SpawnCow()
+{
+	if (m_timer->GetTimer() <= 4.0f)
+	{
+		//タイマーが4秒以下なら牛を補充しない
+		return;
+	}
+	// 現在の牛の数が10体未満なら補充
+	if (m_aliveCows.size() < _countof(COW_INFOMATIONS))
+	{
+		m_spawnTimer += g_gameTime->GetFrameDeltaTime();
+
+		// 3秒ごとに1体補充
+		if (m_spawnTimer >= 3.0f)
+		{
+			m_spawnTimer = 0.0f;
+
+			// 新しい牛を生成
+			Cow* newCow = NewGO<Cow>(0, "cow");
+
+			// スポーン位置（例：ランダム）
+			Vector3 pos;
+			pos.x = (rand() % 600) - 300; // -300〜300
+			pos.y = 0.0f;
+			pos.z = (rand() % 600) - 300; // -300〜300
+
+			newCow->Setposition(pos);
+
+			// 生きている牛リストに追加
+			m_aliveCows.push_back(newCow);
+		}
+	}
+
 }
 

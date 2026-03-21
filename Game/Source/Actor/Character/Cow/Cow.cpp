@@ -2,7 +2,9 @@
 #include "Cow.h"
 #include "Rope/Rope.h"
 #include "Source/Actor/Character/Player/Player.h"
-#include"CountDown/CountDown.h"
+#include "CountDown/CountDown.h"
+#include "GameCamera/GameCamera.h"
+#include "GameScene/Game.h"
 #include <time.h>
 namespace
 {
@@ -80,8 +82,8 @@ void Cow::Update()
 void Cow::Move()
 {
 
-	//ロープが牛に当たっているときは移動しない
-	if (m_rope->GetIsHitCow())
+	//ロープに捕まっているときは移動しない
+	if (m_isCaptured)
 	{
 		return;
 	}
@@ -162,6 +164,12 @@ void Cow::ManageState()
 
 void Cow::PulledByPlayer()
 {
+	/** 捕まってない牛は絶対に引っ張られない */
+	if (!m_isCaptured)
+	{
+		return;
+	}
+
 	if (m_player->GetIsRightButton1() or m_player->GetIsLeftButton1())
 	{
 		//プレイヤーの位置を取得
@@ -191,7 +199,7 @@ void Cow::PulledByPlayer()
 void Cow::CapturedByPlayer()
 {
 	//ロープが牛に当たっているとき
-	if (m_rope->GetIsHitCow())
+	if (m_isCaptured)
 	{
 		//牛とプレイヤーの間の距離を計算
 		Vector3 playerPos = m_player->GetPosition();
@@ -205,9 +213,23 @@ void Cow::CapturedByPlayer()
 		{
 			//捕獲されたときの処理
 			m_rope->SetIsHitCow(false);
+			m_rope->SetHitCow(nullptr);
+
+			GameCamera* camera = FindGO<GameCamera>("gameCamera");
+			if (camera)
+			{
+				camera->SetIsCowCaptured(false);
+			}
+
+			Game* game = FindGO<Game>("game");
+			if (game)
+			{
+				game->ReMoveCow(this);
+			}
 
 			//牛を削除
 			DeleteGO(this);
+			return;
 		}
 	}
 }

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Rope.h"
+#include <vector>
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "Source/Actor/Character/Player/Player.h"
 namespace
@@ -15,6 +16,8 @@ namespace
 	const float ROPE_AIM_UP_OFFSET = 30.0f;
 	const float ROPE_SCALE_FACTOR = 0.05f;
 	const float ROPE_MIN_SCALE_Z = 0.002f;
+
+	const float ROPE_HIT_DISTANCE = 50.0f;
 
 }
 Rope::Rope()
@@ -35,14 +38,18 @@ bool Rope::Start()
 
 	m_player = FindGO<Player>("player");
 
-	m_ropeModelRender.SetScale(ROPE_INITIAL_SCALE);
+	m_ropeScale = ROPE_INITIAL_SCALE;
+	m_ropeModelRender.SetScale(m_ropeScale);
+
+	m_ropeRot = Quaternion::Identity;
 
 	return true;
 }
 
 void Rope::Update()
 {
-	m_cow = FindGO<Cow>("cow");
+	/** プレイヤーが存在しないなら処理しない */
+	if (!m_player) return;
 
 	/** プレイヤーがロープを投げる処理 */
 	PlayerThrowsRope();
@@ -50,7 +57,7 @@ void Rope::Update()
 	/** プレイヤーの右手の位置のロープが常にある関数 */
 	FollowRightHand();
 
-	if (m_isHitCow && m_cow != nullptr)
+	if (m_isHitCow && m_hitCow != nullptr)
 	{
 		/** 伸び縮みするロープの回転に関する関数 */
 		RotateStretchRope();
@@ -62,16 +69,26 @@ void Rope::Update()
 	m_ropeModelRender.Update();
 }
 
+void Rope::OnHitCow(Cow* cow)
+{
+	m_isHitCow = true;
+	m_hitCow = cow;
+
+	cow->SetIsCaptured(true);
+}
+
 void Rope::PlayerThrowsRope()
 {
 	/** ロープが投げられていたら */
-	if (m_isThrowRope)
+	if (m_isThrowRope && !m_isStartRopeAnimation)
 	{
 		/** ロープアニメーション開始のフラグを立てる */
 		m_isStartRopeAnimation = true;
 
 		/** プレイヤーが向いている方向にロープを出す */
 		m_ropeModelRender.SetRotation(m_player->GetRotation());
+
+		m_ropeRot = m_player->GetRotation();
 	}
 
 	/** ロープアニメーションが開始していたら */
@@ -115,11 +132,11 @@ void Rope::FollowRightHand()
 void Rope::StretchRope()
 {
 
-	if (!m_isHitCow || m_cow == nullptr) return;
+	if (!m_isHitCow || m_hitCow == nullptr) return;
 
 	/** ロープの位置と牛の位置から距離を求める */
 	Vector3 ropePos = m_ropePos;
-	Vector3 cowPos = m_cow->GetPosition();
+	Vector3 cowPos = m_hitCow->GetPosition();
 
 	float distance = (cowPos - ropePos).Length();
 
@@ -129,18 +146,20 @@ void Rope::StretchRope()
 	 * 大きい方にする */
 	float ropeScaleZ = max(distance * ROPE_SCALE_FACTOR, ROPE_MIN_SCALE_Z);
 
+	m_ropeScale = Vector3(1.0f, 1.0f, ropeScaleZ);
+
 	// 伸び縮みだけ
-	m_ropeModelRender.SetScale(Vector3(1.0f, 1.0f, ropeScaleZ));
+	m_ropeModelRender.SetScale(m_ropeScale);
 
 }
 
 void Rope::RotateStretchRope()
 {
-	if (m_cow == nullptr) return;
+	if (m_hitCow == nullptr) return;
 
 	/** ロープの位置から牛の位置へのベクトルを求める */
 	Vector3 start = m_ropePos;
-	Vector3 end = m_cow->GetPosition();
+	Vector3 end = m_hitCow->GetPosition();
 	
 	/** 牛の位置の少し上を狙う */
 	end.y += ROPE_AIM_UP_OFFSET;
@@ -157,7 +176,8 @@ void Rope::RotateStretchRope()
 	Quaternion rot;
 	rot.SetRotation(forward, dir);
 
-	m_ropeModelRender.SetRotation(rot);
+	m_ropeRot = rot;
+	m_ropeModelRender.SetRotation(m_ropeRot);
 
 }
 
