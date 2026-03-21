@@ -66,7 +66,6 @@ bool Game::Start()
 	//ステージの生成
 	m_stage = NewGO<Stage>(0, "stage");
 	
-	
 	//牛の生成
 	for (int i = 0; i < _countof(COW_INFOMATIONS); i++)
 	{
@@ -128,6 +127,8 @@ void Game::Update()
 	//ゲームオーバー処理
 	Death();
 
+	SpawnCow();
+
 	// 毎フレームロープに最新の牛リストを渡す
 	Rope* rope = FindGO<Rope>("rope");
 	if (rope)
@@ -164,6 +165,11 @@ void Game::Death()
 
 void Game::SpawnCow()
 {
+	if (m_timer->GetTimer() <= 4.0f)
+	{
+		//タイマーが4秒以下なら牛を補充しない
+		return;
+	}
 	// 現在の牛の数が10体未満なら補充
 	if (m_aliveCows.size() < _countof(COW_INFOMATIONS))
 	{
@@ -181,7 +187,7 @@ void Game::SpawnCow()
 			Vector3 pos;
 			pos.x = (rand() % 600) - 300; // -300〜300
 			pos.y = 0.0f;
-			pos.z = 0.0f;
+			pos.z = (rand() % 600) - 300; // -300〜300
 
 			newCow->Setposition(pos);
 

@@ -4,6 +4,7 @@
 #include "Source/Actor/Character/Player/Player.h"
 #include "CountDown/CountDown.h"
 #include "GameCamera/GameCamera.h"
+#include "GameScene/Game.h"
 #include <time.h>
 namespace
 {
@@ -220,8 +221,15 @@ void Cow::CapturedByPlayer()
 				camera->SetIsCowCaptured(false);
 			}
 
+			Game* game = FindGO<Game>("game");
+			if (game)
+			{
+				game->ReMoveCow(this);
+			}
+
 			//牛を削除
 			DeleteGO(this);
+			return;
 		}
 	}
 }
