@@ -60,6 +60,7 @@ void GameCamera::Update()
 {
 	Follow();
 	FollowRope();
+	CheckCameraHitCow();
 	HitCow();
 }
 
@@ -206,45 +207,53 @@ void GameCamera::FollowRope()
 	}
 }
 
+void GameCamera::CheckCameraHitCow()
+{
+	/** カメラ位置 */
+	Vector3 camPos = g_camera3D->GetPosition();
+
+	/** 全ての牛を取得する */
+	auto cows = FindGOs<Cow>("cow");
+
+	for (auto cow : cows)
+	{
+		if (!cow) continue;
+
+		float dist = (cow->GetPosition() - camPos).Length();
+
+		if (dist < COW_HIT_DISTANCE)   // 100.0f でOK
+		{
+			// ロープが当たった扱いにする
+			m_rope->OnHitCow(cow);
+			return;
+		}
+	}
+}
+
 
 void GameCamera::HitCow()
 {
 
-	m_cow = FindGO<Cow>("cow");
-
-	if (m_rope == nullptr || m_cow == nullptr)
-	{
+	/** ロープが牛に当たっていなければ何もしない */
+	if (!m_rope->GetIsHitCow())
 		return;
-	}
-	/** カメラのワールド座標を計算*/
-	Vector3 cameraWorldPos = m_player->GetPosition()
-		+ Vector3(0.0f, 80.0f, 0.0f)
-		+ m_cameraPos;
 
-	/** 牛とカメラの距離を計算する*/
-	Vector3 diff;
-	diff = cameraWorldPos - m_cow->GetPosition();
+	Cow* hitCow = m_rope->GetHitCow();
+	if (!hitCow)
+		return;
 
-	/** 距離が近ければ*/
-	if (diff.LengthSq() < COW_HIT_DISTANCE * COW_HIT_DISTANCE)
-	{
-		// カメラ(縄の視点)が牛に近づいたら、牛に当たったと判断する
-		m_rope->SetIsHitCow(true);
-	}
+	/** ターゲットは牛 */
+	Vector3 target = hitCow->GetPosition() + Vector3(0.0f, 80.0f, 0.0f);
+	g_camera3D->SetTarget(target);
 
-	/** 牛に当たったら*/
-	if (m_rope->GetIsHitCow())
-	{
-		// ターゲットは牛
-		Vector3 target = m_cow->GetPosition() + Vector3(0.0f, 80.0, 0.0f);
-		g_camera3D->SetTarget(target);
-		// カメラ位置更新
-		g_camera3D->SetPosition(
-			m_cow->GetPosition() 
-			+ Vector3(0.0f, COW_CAMERA_UP, COW_CAMERA_BACK));
+	/** カメラ位置更新 */
+	g_camera3D->SetPosition(
+		hitCow->GetPosition() +
+		Vector3(0.0f, COW_CAMERA_UP, COW_CAMERA_BACK)
+	);
 
-		g_camera3D->Update();
-	}
+	g_camera3D->Update();
+
 }
 
 

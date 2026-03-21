@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "Rope/Rope.h"
+#include "GameScene/Game.h"
 #include"Transform/Transform.h"
 #include"CountDown/CountDown.h"
 namespace
@@ -18,7 +19,6 @@ Player::Player()
 
 Player::~Player()
 {
-	DeleteGO(m_rope);
 }
 
 bool Player::Start()
@@ -26,11 +26,13 @@ bool Player::Start()
 	m_countDown = FindGO<CountDown>("countdown");
 	m_playerModelRender.Init(FILEPATH);
 
+	m_game = FindGO<Game>("game");
+
+	m_rope = NewGO<Rope>(0, "rope");
+
 	m_playerModelRender.SetPosition(m_transform.GetPosition());
 	m_characterController.Init(CHRACTER_CONTROLLER_WIDTH, CHRACTER_CONTROLLER_HIGHT, m_transform.GetPosition());
 	
-	m_rope = NewGO<Rope>(0, "rope");
-
 	m_playerModelRender.Update();
 	return true;
 }
@@ -41,6 +43,7 @@ void Player::Update()
 	{
 		return;
 	}
+
 	Move();
 
 	Rotation();
@@ -117,7 +120,7 @@ void Player::Rotation()
 void Player::ThrowRope()
 {
 
-	if (m_rope->GetIsHitCow() && !m_rope)
+	if (m_rope->GetIsHitCow() or !m_rope)
 	{
 		//ロープが存在しない、ロープが牛に当たっているときはロープを投げられないようにする
 

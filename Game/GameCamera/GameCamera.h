@@ -18,6 +18,9 @@ private:
 	/** ロープを追いかける関数*/
 	void FollowRope();
 
+	/** 牛に当たったかどうかの判定関数*/
+	void CheckCameraHitCow();
+
 	/** 牛がロープに当たったら*/
 	void HitCow();
 

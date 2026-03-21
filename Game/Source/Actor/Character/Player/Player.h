@@ -5,6 +5,7 @@
 */
 class Rope;
 class CountDown;
+class Game;
 class Player : public Character
 {
 public:
@@ -64,11 +65,14 @@ private:
 	ModelRender m_playerModelRender;
 
 	Vector3 m_moveSpeed;//移動速度
+	
 	CharacterController m_characterController;//キャラコン
 
 	Vector3 m_playerPos;//プレイヤーの座標
 
 	Rope* m_rope;//ロープクラス
+
+	Game* m_game;//ゲームクラス
 
 	CountDown* m_countDown;
 

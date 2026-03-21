@@ -10,6 +10,7 @@
 #include"GameClear.h"
 #include"GameOver.h"
 #include"CountDown/CountDown.h"
+#include "Rope/Rope.h"
 #include "SoundManager/SoundManager.h"
 
 Game::~Game()
@@ -20,15 +21,15 @@ Game::~Game()
 	DeleteGO(m_stage);
 
 	//牛を削除
-	for (int i = 0; i < 14; i++)
+	for (int i = 0; i < _countof(COW_INFOMATIONS); i++)
 	{
-		DeleteGO(m_cow[i]);
+		DeleteGO(FindGO<Cow>(COW_INFOMATIONS[i].objectName.c_str()));
 	}
 
-	//牛を削除
-	for (int i = 0; i < 4; i++)
+	//UFOを削除
+	for (int i = 0; i < _countof(UFO_INFOMATIONS); i++)
 	{
-		DeleteGO(m_UFO[i]);
+		DeleteGO(FindGO<UFO>(UFO_INFOMATIONS[i].objectName.c_str()));
 	}
 
 	//タイマーを削除
@@ -45,23 +46,24 @@ bool Game::Start()
 {
 	m_countDown = NewGO<CountDown>(0, "countdown");
 
-	//m_modelRender.Init("Assets/modelData/unityChan.tkm");
-	m_player = NewGO < Player>(0, "player");
+	m_player = NewGO <Player>(0, "player");
 	//ステージの生成
 	m_stage = NewGO<Stage>(0, "stage");
 	
+	
 	//牛の生成
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < _countof(COW_INFOMATIONS); i++)
 	{
-		m_cow[i] = NewGO<Cow>(0, "cow");
-		m_cow[i]->Setposition(Vector3(-300.0f + i * 75.0f, 0.0f, 0.0f));
+		m_cow[i] = NewGO<Cow>(0, COW_INFOMATIONS[i].objectName.c_str());
+		m_cow[i]->Setposition(COW_INFOMATIONS[i].pos);
+		m_aliveCows.push_back(m_cow[i]);
 	}
 
 	//UFOの生成
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < _countof(UFO_INFOMATIONS); i++)
 	{
-		m_UFO[i] = NewGO<UFO>(0, "UFO");
-		m_UFO[i]->SetPosition(Vector3(-300.0f + i * 600.0f, 70.0f, 0.0f));
+		m_UFO[i] = NewGO<UFO>(0, UFO_INFOMATIONS[i].objectName.c_str());
+		m_UFO[i]->SetPosition(UFO_INFOMATIONS[i].pos);
 	}
 
 	//タイマーの生成
@@ -109,6 +111,15 @@ void Game::Update()
 	Clear();
 	//ゲームオーバー処理
 	Death();
+
+	// 毎フレームロープに最新の牛リストを渡す
+	Rope* rope = FindGO<Rope>("rope");
+	if (rope)
+	{
+		rope->SetCowList(m_aliveCows);
+	}
+
+
 }
 
 
@@ -133,5 +144,35 @@ void Game::Death()
 		DeleteGO(p_inGameBGM);
 		DeleteGO(this);
 	}
+}
+
+void Game::SpawnCow()
+{
+	// 現在の牛の数が10体未満なら補充
+	if (m_aliveCows.size() < _countof(COW_INFOMATIONS))
+	{
+		m_spawnTimer += g_gameTime->GetFrameDeltaTime();
+
+		// 3秒ごとに1体補充
+		if (m_spawnTimer >= 3.0f)
+		{
+			m_spawnTimer = 0.0f;
+
+			// 新しい牛を生成
+			Cow* newCow = NewGO<Cow>(0, "cow");
+
+			// スポーン位置（例：ランダム）
+			Vector3 pos;
+			pos.x = (rand() % 600) - 300; // -300〜300
+			pos.y = 0.0f;
+			pos.z = 0.0f;
+
+			newCow->Setposition(pos);
+
+			// 生きている牛リストに追加
+			m_aliveCows.push_back(newCow);
+		}
+	}
+
 }
 

@@ -80,8 +80,8 @@ void Cow::Update()
 void Cow::Move()
 {
 
-	//ロープが牛に当たっているときは移動しない
-	if (m_rope->GetIsHitCow())
+	//ロープに捕まっているときは移動しない
+	if (m_isCaptured)
 	{
 		return;
 	}
@@ -191,7 +191,7 @@ void Cow::PulledByPlayer()
 void Cow::CapturedByPlayer()
 {
 	//ロープが牛に当たっているとき
-	if (m_rope->GetIsHitCow())
+	if (m_isCaptured)
 	{
 		//牛とプレイヤーの間の距離を計算
 		Vector3 playerPos = m_player->GetPosition();

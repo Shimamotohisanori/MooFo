@@ -29,6 +29,11 @@ public:
 			return m_transform.GetPosition();
 		}
 
+		void SetIsCaptured(bool isCaptured)
+		{
+			m_isCaptured = isCaptured;
+		}
+
 private:
 	//プレイヤーに引っ張られる関数
 	void PulledByPlayer();
@@ -36,12 +41,13 @@ private:
 	//プレイヤーに捕獲される関数
 	void CapturedByPlayer();
 
-public:
+private:
 	//ロープ
 	Rope* m_rope;
 
 	//プレイヤー
 	Player* m_player;
+
 	//カウントダウン
 	CountDown* m_countdown;
 
@@ -52,7 +58,6 @@ public:
 		EnRotationState_Num
 	};
 	EnRotationState m_rotationState = EnRotationState_MoveDir;//回転ステート
-private:
 	ModelRender m_cowmodelRender;
 	uint8_t m_cowState;//牛のステート
 
@@ -60,6 +65,9 @@ private:
 	float m_moveSpeed = 50.0f;//移動速度
 	int m_moveTimer = 0;//移動タイマー
 	bool m_isMove = false;//移動しているかどうか
+
+	bool m_isCaptured = false;//自身がロープに捕まったかどうかのフラグ
+
 	enum EnAnimation
 	{
 		EnAnimation_Idle,
