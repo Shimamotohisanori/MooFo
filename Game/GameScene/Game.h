@@ -35,14 +35,14 @@ private:
 private:
 	Stage* m_stage;
 	Player* m_player;
-	Cow* m_cow;
+	Cow* m_cow[15];
 	//回転している牛
-	Cow* m_spincow;
+	//Cow* m_spincow;
 	GameCamera* m_gameCamera;
-	UFO* m_UFO;
+	UFO* m_UFO[4];
 	Pause* m_pause;
 	//棒立ちのUFO
-	UFO* m_IdleUFO;
+	//UFO* m_IdleUFO;
 	Timer* m_timer;
 	GameClear* m_gameClear;
 	GameOver* m_gameOver;

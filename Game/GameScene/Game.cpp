@@ -18,22 +18,26 @@ Game::~Game()
 	DeleteGO(m_player);
 	//ステージを削除
 	DeleteGO(m_stage);
+
 	//牛を削除
-	DeleteGO(m_cow);
-	//回転牛を削除
-	DeleteGO(m_spincow);
-	//UFOを削除
-	DeleteGO(m_UFO);
-	//棒立ち状態のUFOを削除
-	DeleteGO(m_IdleUFO);
+	for (int i = 0; i < 14; i++)
+	{
+		DeleteGO(m_cow[i]);
+	}
+
+	//牛を削除
+	for (int i = 0; i < 4; i++)
+	{
+		DeleteGO(m_UFO[i]);
+	}
+
 	//タイマーを削除
 	DeleteGO(m_timer);
 	//ゲームカメラを削除
 	DeleteGO(m_gameCamera);
-
-	//カウントダウンを削除
+	//カウントダウンの削除
 	DeleteGO(m_countDown);
-	//Pauseを削除
+	//Pauseの削除
 	DeleteGO(m_pause);
 
 }
@@ -45,32 +49,27 @@ bool Game::Start()
 	m_player = NewGO < Player>(0, "player");
 	//ステージの生成
 	m_stage = NewGO<Stage>(0, "stage");
-	//ランダムに移動する牛の生成
-	m_cow = NewGO<Cow>(0, "cow");
-	//座標を設定
-	m_cow->Setposition(Vector3(0.0f, 0.0f, 0.0f));
+	
+	//牛の生成
+	for (int i = 0; i < 15; i++)
+	{
+		m_cow[i] = NewGO<Cow>(0, "cow");
+		m_cow[i]->Setposition(Vector3(-300.0f + i * 75.0f, 0.0f, 0.0f));
+	}
 
-	//回転ステートがスピンの牛の生成
-	m_spincow = NewGO<Cow>(0, "spinCow");
-	m_spincow->m_rotationState = Cow::EnRotatitonState_Spin;
-	m_spincow->Setposition(Vector3(300.0f, 0.0f, 0.0f));
+	//UFOの生成
+	for (int i = 0; i < 4; i++)
+	{
+		m_UFO[i] = NewGO<UFO>(0, "UFO");
+		m_UFO[i]->SetPosition(Vector3(-300.0f + i * 600.0f, 70.0f, 0.0f));
+	}
 
-	//ランダムに移動するUFOの生成
-	m_UFO = NewGO<UFO>(0, "UFO");
-	m_UFO->SetPosition(Vector3(0.0f, 70.0f, 0.0f));
-
-	//Idle状態のUFOの生成
-	m_IdleUFO = NewGO<UFO>(0, "idleUFO");
-	m_IdleUFO->m_UFOState = UFO::EnUFOState_Idle;
-	m_IdleUFO->SetPosition(Vector3(300.0f, 70.0f, 0.0f));
-
+	//タイマーの生成
 	m_timer = NewGO<Timer>(0, "timer");
 
 	//ポーズ画面の生成をするが非アクティブにする
 	m_pause = NewGO<Pause>(0, "pause");
 	m_pause->Deactivate();
-
-	m_countDown = NewGO<CountDown>(0, "countdown");
 	
 	m_inGameSound = FindGO<SoundManager>("soundmanager");	
 
@@ -119,10 +118,8 @@ void Game::Clear()
 	{
 		//ゲームクリアの画像を呼び出す
 		m_gameClear = NewGO<GameClear>(0, "gameClear");
-		DeleteGO(this);
-
 		DeleteGO(p_inGameBGM);
-
+		DeleteGO(this);
 	}
 }
 
@@ -133,10 +130,8 @@ void Game::Death()
 	{
 		m_isDead = true;
 		m_gameOver = NewGO<GameOver>(0, "gameover");
-		DeleteGO(this);
-
 		DeleteGO(p_inGameBGM);
-
+		DeleteGO(this);
 	}
 }
 
