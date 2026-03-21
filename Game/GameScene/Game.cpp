@@ -21,15 +21,31 @@ Game::~Game()
 	DeleteGO(m_stage);
 
 	//牛を削除
-	for (int i = 0; i < _countof(COW_INFOMATIONS); i++)
+	for (int i = 0; i < EnCow_Num; i++)
 	{
-		DeleteGO(FindGO<Cow>(COW_INFOMATIONS[i].objectName.c_str()));
+		if (m_cow[i] != nullptr)
+		{
+			DeleteGO(m_cow[i]);
+		}
 	}
 
-	//UFOを削除
-	for (int i = 0; i < _countof(UFO_INFOMATIONS); i++)
+	/** SpawnCow等で増えた牛も含めて生きている牛は全て削除 */
+	for (auto cow : m_aliveCows)
 	{
-		DeleteGO(FindGO<UFO>(UFO_INFOMATIONS[i].objectName.c_str()));
+		if (cow)
+		{
+			DeleteGO(cow);
+		}
+	}
+	m_aliveCows.clear();
+
+	/** UFOを削除 */
+	for (int i = 0; i < EnUFO_Num; i++)
+	{
+		if (m_UFO[i] != nullptr)
+		{
+			DeleteGO(m_UFO[i]);
+		}
 	}
 
 	//タイマーを削除

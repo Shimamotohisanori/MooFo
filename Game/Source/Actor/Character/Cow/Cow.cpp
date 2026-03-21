@@ -2,7 +2,7 @@
 #include "Cow.h"
 #include "Rope/Rope.h"
 #include "Source/Actor/Character/Player/Player.h"
-#include"CountDown/CountDown.h"
+#include "CountDown/CountDown.h"
 #include "GameCamera/GameCamera.h"
 #include <time.h>
 namespace
@@ -212,6 +212,7 @@ void Cow::CapturedByPlayer()
 		{
 			//捕獲されたときの処理
 			m_rope->SetIsHitCow(false);
+			m_rope->SetHitCow(nullptr);
 
 			GameCamera* camera = FindGO<GameCamera>("gameCamera");
 			if (camera)

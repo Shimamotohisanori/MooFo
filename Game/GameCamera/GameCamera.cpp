@@ -253,11 +253,18 @@ void GameCamera::HitCow()
 	g_camera3D->SetTarget(target);
 
 	/** カメラ位置更新 */
-	g_camera3D->SetPosition(
+	Vector3 pos =
 		hitCow->GetPosition() +
-		Vector3(0.0f, COW_CAMERA_UP, COW_CAMERA_BACK)
-	);
+		Vector3(0.0f, COW_CAMERA_UP, COW_CAMERA_BACK);
 
+	/** カメラ位置と注視点が一致しないようにする保険 */
+	if ((pos - target).LengthSq() < 0.0001f)
+	{
+		pos.z -= 50.0f;
+	}
+
+	g_camera3D->SetTarget(target);
+	g_camera3D->SetPosition(pos);
 	g_camera3D->Update();
 
 }

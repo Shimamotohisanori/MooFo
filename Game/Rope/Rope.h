@@ -30,6 +30,10 @@ public:
 	void SetIsHitCow(bool isHitCow)
 	{
 		m_isHitCow = isHitCow;
+		if (!isHitCow)
+		{
+			m_hitCow = nullptr;
+		}
 	}
 
 	/** 縄が牛に当たったかどうかのフラグを取得する関数 */
@@ -38,8 +42,14 @@ public:
 		return m_isHitCow;
 	}
 
-	/** 当たった牛をセットする関数 */
+	/** 牛に当たったときの処理関数 */
 	void OnHitCow(Cow* cow);
+
+	/** 当たった牛をセットする関数 */
+	void SetHitCow(Cow* cow) 
+	{
+		m_hitCow = cow;
+	}
 
 	/** 当たった牛を取得する関数 */
 	Cow* GetHitCow()

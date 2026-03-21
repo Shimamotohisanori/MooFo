@@ -19,6 +19,7 @@ Player::Player()
 
 Player::~Player()
 {
+	DeleteGO(m_rope);
 }
 
 bool Player::Start()

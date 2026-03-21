@@ -48,6 +48,8 @@ bool Rope::Start()
 
 void Rope::Update()
 {
+	/** プレイヤーが存在しないなら処理しない */
+	if (!m_player) return;
 
 	/** プレイヤーがロープを投げる処理 */
 	PlayerThrowsRope();
