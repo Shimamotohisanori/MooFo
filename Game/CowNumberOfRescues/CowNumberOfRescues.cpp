@@ -24,10 +24,10 @@ namespace
 	const Vector2 NUMBER_SPRITE_SIZE = Vector2(100.0f, 120.0f);
 	const Vector2 RESCUE_SPRITE_SIZE = Vector2(350.0f, 320.0f);
 
-	const Vector3 RESCUE_SPRITE_POSITION = Vector3(-780.0f, -400.0f, 0.0f);
-	const Vector3 NUMBER_SPRITE_TENS_POSITION = Vector3(-560.0f, -400.0f, 0.0f);
-	const Vector3 NUMBER_SPRITE_ONES_POSITION = Vector3(-480.0f, -400.0f, 0.0f);
-	const Vector3 NUMBER_SPRITE_ONES_BELOW_POSITION = Vector3(-560.0f, -400.0f, 0.0f);
+	const Vector3 RESCUE_SPRITE_POSITION = Vector3(-780.0f, -360.0f, 0.0f);
+	const Vector3 NUMBER_SPRITE_TENS_POSITION = Vector3(-560.0f, -360.0f, 0.0f);
+	const Vector3 NUMBER_SPRITE_ONES_POSITION = Vector3(-480.0f, -360.0f, 0.0f);
+	const Vector3 NUMBER_SPRITE_ONES_BELOW_POSITION = Vector3(-560.0f, -360.0f, 0.0f);
 }
 
 bool CowNumberOfRescues::Start()
