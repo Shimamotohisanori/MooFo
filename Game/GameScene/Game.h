@@ -86,8 +86,10 @@ public:
 	}
 
 	bool m_isSound;
-	
-
+	/*コンボ加算用関数*/
+	void AddCombo();
+	/*コンボしたかどうか判定するフラグ*/
+	bool IsCombo()const;
 private:
 	//牛が生まれる関数
 	void SpawnCow();
@@ -139,6 +141,11 @@ private:
 	float m_spawnTimer = 0.0f;
 
 	bool m_isDead;
+
+	/*コンボの変数*/
+	int m_combo = 0;
+	/*コンボするごとに制限時間をプラスする変数*/
+	float m_comboTimer = 0.0f;
 
 };
 
