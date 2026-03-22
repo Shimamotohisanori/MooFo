@@ -39,5 +39,14 @@ private:
 
 	/** 救出画像 */
 	SpriteRender m_rescueSprite;
+
+	/**「/」のUI画像 */
+	SpriteRender m_slashSprite;
+
+	/** 1の画像 */
+	SpriteRender m_oneSprite;
+
+	/** 5の画像 */
+	SpriteRender m_fiveSprite;
 };
 
