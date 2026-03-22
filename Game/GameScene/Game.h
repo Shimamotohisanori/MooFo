@@ -10,6 +10,7 @@ class GameClear;
 class GameOver;
 class CountDown;
 class SoundManager;
+class CowNumberOfRescues;
 
 /** 牛の情報をまとめる構造体 */
 struct Cowinfo
@@ -100,6 +101,7 @@ private:
 	GameClear* m_gameClear;
 	GameOver* m_gameOver;
 	CountDown* m_countDown;
+	CowNumberOfRescues* m_cowNumberOfRescues;
 
 	enum EnCow
 	{

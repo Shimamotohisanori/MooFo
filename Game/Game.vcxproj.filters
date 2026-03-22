@@ -55,11 +55,12 @@
     <ClCompile Include="GameScene\Game.cpp">
       <Filter>GameScene</Filter>
     </ClCompile>
-
     <ClCompile Include="Pause\SoundPause.cpp">
       <Filter>Pause</Filter>
     </ClCompile>
-
+    <ClCompile Include="CowNumberOfRescues\CowNumberOfRescues.cpp">
+      <Filter>CowNumberOfRescues</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -116,11 +117,12 @@
     <ClInclude Include="GameScene\Game.h">
       <Filter>GameScene</Filter>
     </ClInclude>
-
     <ClInclude Include="Pause\SoundPause.h">
       <Filter>Pause</Filter>
     </ClInclude>
-
+    <ClInclude Include="CowNumberOfRescues\CowNumberOfRescues.h">
+      <Filter>CowNumberOfRescues</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
@@ -170,6 +172,9 @@
     </Filter>
     <Filter Include="CountDown">
       <UniqueIdentifier>{33aae1c8-b7b9-43cb-baba-04f99cdb856d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CowNumberOfRescues">
+      <UniqueIdentifier>{72968903-b3bc-4aa0-ba0d-1de545a786bc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
