@@ -35,9 +35,10 @@ bool CowNumberOfRescues::Start()
 	/** 数のUIを左右全てに読み込む */
 	for (int i = 0; i < 10; i++)
     {
-			std::string filePath = std::string(COUNT_NUMBER_FILEPATH) + COUNT_NUMBER_FILENAME_LIST[i] + COUNT_NUMBER_FORMAT;
-			const char* countFilePath = filePath.c_str();
-            m_numberSprite[i].Init(countFilePath,NUMBER_SPRITE_SIZE.x,NUMBER_SPRITE_SIZE.y);
+		m_filePath[i] = std::string(COUNT_NUMBER_FILEPATH) + COUNT_NUMBER_FILENAME_LIST[i] + COUNT_NUMBER_FORMAT;
+
+		m_tensSprite[i].Init(m_filePath[i].c_str(), NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
+		m_onesSprite[i].Init(m_filePath[i].c_str(), NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
     }
 
 	m_rescueSprite.Init(RESCUE_FILEPATH, RESCUE_SPRITE_SIZE.x,RESCUE_SPRITE_SIZE.y);
@@ -61,24 +62,22 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
 	if (m_numberOfRescues >= 10)
 	{
 		/** 10の位の描画 */	
-		m_numberSprite[tens].SetPosition(NUMBER_SPRITE_TENS_POSITION);
-		m_numberSprite[tens].Update();
-		m_numberSprite[tens].Draw(renderContext);
+		m_tensSprite[tens].SetPosition(NUMBER_SPRITE_TENS_POSITION);
+		m_tensSprite[tens].Update();
+		m_tensSprite[tens].Draw(renderContext);
 
 		/** 1の位の描画 */
-		m_numberSprite[ones].SetPosition(NUMBER_SPRITE_ONES_POSITION);
-		m_numberSprite[ones].Update();
-		m_numberSprite[ones].Draw(renderContext);
+		m_onesSprite[ones].SetPosition(NUMBER_SPRITE_ONES_POSITION);
+		m_onesSprite[ones].Update();
+		m_onesSprite[ones].Draw(renderContext);
 	}
 
-	/** 救出数が10未満なら */
-	if (m_numberOfRescues < 10)
+	else
 	{
 		/** 1の位の描画 */
-		m_numberSprite[ones].SetPosition(NUMBER_SPRITE_ONES_BELOW_POSITION);
-		m_numberSprite[ones].Update();
-		m_numberSprite[ones].Draw(renderContext);
+		m_onesSprite[ones].SetPosition(NUMBER_SPRITE_ONES_BELOW_POSITION);
+		m_onesSprite[ones].Update();
+		m_onesSprite[ones].Draw(renderContext);
 	}
-	
 	
 }

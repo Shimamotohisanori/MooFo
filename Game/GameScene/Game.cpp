@@ -97,7 +97,7 @@ bool Game::Start()
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
 
 	//牛の救出数の生成
-	m_cowNumberOfRescues = NewGO<CowNumberOfRescues>(0, "cowNumberOfRescues");
+	m_cowNumberOfRescues = NewGO<CowNumberOfRescues>(0, "cownumberofrescues");
 
 	return true;
 }

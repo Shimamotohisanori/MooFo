@@ -4,12 +4,18 @@
  */
 class CowNumberOfRescues : public IGameObject
 {
-	public:
+public:
     CowNumberOfRescues() {};
 	~CowNumberOfRescues() {};
 	bool Start();
 	void Update();
 	void Render(RenderContext& renderContext);
+
+	/** 救出数を加算する関数 */
+	void AddRescue()
+	{
+		m_numberOfRescues++;
+	}
 
 
 private:
@@ -22,8 +28,14 @@ private:
 	/** 一の位 */
 	int ones = 0;
 
-	/** 数画像 */
-	SpriteRender m_numberSprite[10];
+	/** ファイルパス */
+	std::string m_filePath[10];
+
+	/** 十の位専用数字画像 */
+	SpriteRender m_tensSprite[10];
+
+	/** 一の位専用数字画像 */
+	SpriteRender m_onesSprite[10];
 
 	/** 救出画像 */
 	SpriteRender m_rescueSprite;
