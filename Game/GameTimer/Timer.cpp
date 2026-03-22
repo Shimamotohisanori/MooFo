@@ -16,9 +16,7 @@ Timer::~Timer()
 
 bool Timer::Start()
 {
-
 	m_countdown = FindGO<CountDown>("countdown");
-
 	m_pause = FindGO<Pause>("pause");
 
 	return true;
@@ -62,9 +60,13 @@ void Timer::TextTimer()
 	m_TimerFontRender.SetColor(g_vec4White);
 }
 
+
+void Timer::AddTimer(float time)
+{
+	m_timer += time;
+}
 void Timer::Render(RenderContext& rc)
 {
-
 	//カウントダウン中は制限時間の描画を止めるために早期リターンをする。
 	if (m_countdown->GetCountDown())
 	{

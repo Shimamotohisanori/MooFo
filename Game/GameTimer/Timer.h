@@ -9,6 +9,9 @@ class Timer : public IGameObject
 	bool Start();
 	void Update();
 	void Render(RenderContext& rc);
+	public:
+		//コンボで時間を増やす処理
+	void AddTimer(float time);
 	const float GetTimer() const { return m_timer; }
 public:
 	//タイマーの処理

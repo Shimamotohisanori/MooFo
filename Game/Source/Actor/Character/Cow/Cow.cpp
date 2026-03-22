@@ -224,6 +224,7 @@ void Cow::CapturedByPlayer()
 			Game* game = FindGO<Game>("game");
 			if (game)
 			{
+				game->AddCombo();
 				game->ReMoveCow(this);
 			}
 

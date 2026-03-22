@@ -118,7 +118,14 @@ void GameCamera::Follow()
 
 	Vector3 dir = m_cameraPos;
 
-	dir.Normalize();
+	if (dir.LengthSq() > 0.00001f)
+	{
+		dir.Normalize();
+	}
+	else
+	{
+		dir = Vector3(0, 0, -1);
+	}
 	float limit = 0.95f; // cos角度による制限(= 約72°)
 	if (fabsf(dir.Dot(Vector3::AxisY)) > limit)
 	{
