@@ -5,6 +5,7 @@
 #include "CountDown/CountDown.h"
 #include "GameCamera/GameCamera.h"
 #include "GameScene/Game.h"
+#include "CowNumberOfRescues/CowNumberOfRescues.h"
 #include <time.h>
 namespace
 {
@@ -214,17 +215,26 @@ void Cow::CapturedByPlayer()
 			//捕獲されたときの処理
 			m_rope->SetIsHitCow(false);
 			m_rope->SetHitCow(nullptr);
-
+			
+			//カメラの牛捕獲フラグを下ろす
 			GameCamera* camera = FindGO<GameCamera>("gameCamera");
 			if (camera)
 			{
 				camera->SetIsCowCaptured(false);
 			}
 
+			//牛の救出数を増やす
 			Game* game = FindGO<Game>("game");
 			if (game)
 			{
 				game->ReMoveCow(this);
+			}
+
+			//牛の救出数を増やす
+			CowNumberOfRescues* cowNumberOfRescues = FindGO<CowNumberOfRescues>("cownumberofrescues");
+			if (cowNumberOfRescues)
+			{
+				cowNumberOfRescues->AddRescue();
 			}
 
 			//牛を削除

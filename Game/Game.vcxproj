@@ -224,6 +224,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CountDown\CountDown.cpp" />
+    <ClCompile Include="CowNumberOfRescues\CowNumberOfRescues.cpp" />
     <ClCompile Include="GameCamera\GameCamera.cpp" />
     <ClCompile Include="GameScene\Game.cpp" />
     <ClCompile Include="GameScene\GameClear.cpp" />
@@ -232,9 +233,7 @@
     <ClCompile Include="GameTimer\Timer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pause\Pause.cpp" />
-
     <ClCompile Include="Pause\SoundPause.cpp" />
-
     <ClCompile Include="Rope\Rope.cpp" />
     <ClCompile Include="SoundManager\SoundManager.cpp" />
     <ClCompile Include="Source\Actor\Actor.cpp" />
@@ -253,6 +252,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CountDown\CountDown.h" />
+    <ClInclude Include="CowNumberOfRescues\CowNumberOfRescues.h" />
     <ClInclude Include="GameCamera\GameCamera.h" />
     <ClInclude Include="GameScene\Game.h" />
     <ClInclude Include="GameScene\GameClear.h" />
@@ -260,9 +260,7 @@
     <ClInclude Include="GameScene\Title.h" />
     <ClInclude Include="GameTimer\Timer.h" />
     <ClInclude Include="Pause\Pause.h" />
-
     <ClInclude Include="Pause\SoundPause.h" />
-
     <ClInclude Include="resource.h" />
     <ClInclude Include="Rope\Rope.h" />
     <ClInclude Include="SoundManager\SoundManager.h" />

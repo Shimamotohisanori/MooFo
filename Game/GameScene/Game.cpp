@@ -11,6 +11,7 @@
 #include"GameOver.h"
 #include"CountDown/CountDown.h"
 #include "Rope/Rope.h"
+#include "CowNumberOfRescues/CowNumberOfRescues.h"
 #include "SoundManager/SoundManager.h"
 
 Game::~Game()
@@ -56,6 +57,8 @@ Game::~Game()
 	DeleteGO(m_countDown);
 	//Pauseの削除
 	DeleteGO(m_pause);
+	//牛の救出数の削除
+	DeleteGO(m_cowNumberOfRescues);
 
 }
 bool Game::Start()
@@ -92,6 +95,9 @@ bool Game::Start()
 
 	//ゲームカメラの生成
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
+
+	//牛の救出数の生成
+	m_cowNumberOfRescues = NewGO<CowNumberOfRescues>(0, "cownumberofrescues");
 
 	return true;
 }
