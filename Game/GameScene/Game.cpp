@@ -87,6 +87,9 @@ bool Game::Start()
 	//タイマーの生成
 	m_timer = NewGO<Timer>(0, "timer");
 
+	//牛の救出数の生成
+	m_cowNumberOfRescues = NewGO<CowNumberOfRescues>(0, "cownumberofrescues");
+
 	//ポーズ画面の生成をするが非アクティブにする
 	m_pause = NewGO<Pause>(0, "pause");
 	m_pause->Deactivate();
@@ -95,9 +98,6 @@ bool Game::Start()
 
 	//ゲームカメラの生成
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
-
-	//牛の救出数の生成
-	m_cowNumberOfRescues = NewGO<CowNumberOfRescues>(0, "cownumberofrescues");
 
 	return true;
 }
