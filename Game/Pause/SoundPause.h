@@ -10,6 +10,8 @@ public:
 	void ButtonCount();
 	void Barbgm();
 	void Barse();
+	void UpdateBGMUI();
+	void UpdateSEUI();
 	void Render(RenderContext& rc);
 
 	void SetCount(int count)
@@ -46,8 +48,8 @@ public:
 private:
 	int m_Count = 0;
 
-	float m_bgmVolume = 0.0f;
-	float m_seVolume = 0.0f;
+	float m_bgmVolume = 0.4f;
+	float m_seVolume  = 0.6f;
 
 	SpriteRender m_backGroundSprite;
 	SpriteRender m_settingSprite;

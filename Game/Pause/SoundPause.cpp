@@ -92,6 +92,14 @@ bool SoundPause::Start()
 
 	m_choiceSound = FindGO<SoundManager>("soundmanager");
 
+	// ★追加（超重要）
+	m_bgmVolume = GetBGMVolume();
+	m_seVolume = GetSEVolume();
+
+	// ★UIに反映
+	UpdateBGMUI();
+	UpdateSEUI();
+
 	return true;
 }
 
@@ -102,44 +110,53 @@ void SoundPause::Update()
 
 void SoundPause::ButtonCount()
 {
+	// ↓下キーで選択項目を進める
 	if (g_pad[0]->IsTrigger(enButtonDown))
 	{
-		m_Count++;
-		p_chiceSE = m_choiceSound->PlayingSE(SoundSE::enChoiceSE, false);
+		m_Count++; // 選択番号を増やす
+		p_chiceSE = m_choiceSound->PlayingSE(SoundSE::enChoiceSE, false); // カーソル移動音
 	}
 
+	// ↓上キーで選択項目を戻す
 	if (g_pad[0]->IsTrigger(enButtonUp))
 	{
-		m_Count--;
+		m_Count--; // 選択番号を減らす
 		p_chiceSE = m_choiceSound->PlayingSE(SoundSE::enChoiceSE, false);
 	}
 
+	// ↓範囲外（下限）に行ったら一番下へループ
 	if (m_Count == -1)
 	{
 		m_Count = 2;
 	}
 
+	// ↓BGM音量調整モード
 	if (m_Count == 0)
 	{
 		Barbgm();
 	}
 
+	// ↓SE音量調整モード
 	if (m_Count == 1)
 	{
 		Barse();
 	}
 
+	// ↓「戻る」選択中
 	if (m_Count == 2)
 	{
+		// スタートボタンでポーズ画面へ戻る
 		if (g_pad[0]->IsTrigger(enButtonStart))
 		{
 			p_decisionSE = m_choiceSound->PlayingSE(SoundSE::enDecisionSE, false);
-			m_pause->Activate();
-			m_pause->SetCountNumber(0);
-			Deactivate();
+
+			m_pause->Activate();          // ポーズ画面を有効化
+			m_pause->SetCountNumber(0);   // カーソル初期化
+			Deactivate();                // この画面を無効化
 		}
 	}
 
+	// ↓範囲外（上限）に行ったら先頭へループ
 	if (m_Count == 3)
 	{
 		m_Count = 0;
@@ -148,64 +165,96 @@ void SoundPause::ButtonCount()
 
 void SoundPause::Barbgm()
 {
+	// 右キーで音量アップ（最大1.0まで）
 	if (m_bgmVolume < 1.0f)
 	{
 		if (g_pad[0]->IsPress(enButtonRight))
 		{
 			m_bgmVolume += 0.01f;
-			m_soundIconSprite.SetPosition(Vector3(-380.0f + m_bgmVolume * 750.0f, 75.0f, 0.0f));
-			m_soundIconSprite.Update();
-			m_blownBarSprite.SetScale(Vector3(m_bgmVolume, 1.0f, 0.0f));
-			m_blownBarSprite.Update();
-			m_bgmBlackIcon.SetPosition(Vector3(-380.0f + m_bgmVolume * 750.0f, 75.0f, 0.0f));
-			m_bgmBlackIcon.Update();
 		}
 	}
 
+	// 左キーで音量ダウン（最小0.0まで）
 	if (m_bgmVolume > 0.001f)
 	{
 		if (g_pad[0]->IsPress(enButtonLeft))
 		{
 			m_bgmVolume -= 0.01f;
-			m_soundIconSprite.SetPosition(Vector3(-380.0f + m_bgmVolume * 750.0f, 75.0f, 0.0f));
-			m_soundIconSprite.Update();
-			m_blownBarSprite.SetScale(Vector3(m_bgmVolume, 1.0f, 0.0f));
-			m_blownBarSprite.Update();
-			m_bgmBlackIcon.SetPosition(Vector3(-380.0f + m_bgmVolume * 750.0f, 75.0f, 0.0f));
-			m_bgmBlackIcon.Update();
 		}
 	}
+	// UI更新
+	UpdateBGMUI();
 }
 
 void SoundPause::Barse()
 {
+	// 右キーでSE音量アップ
 	if (m_seVolume < 1.0f)
 	{
 		if (g_pad[0]->IsPress(enButtonRight))
 		{
 			m_seVolume += 0.01f;
+
+			// アイコン位置更新
 			m_seIconSprite.SetPosition(Vector3(-380.0f + m_seVolume * 750.0f, -120.0f, 0.0f));
 			m_seIconSprite.Update();
+
+			// バー更新
 			m_seBlownBarSprite.SetScale(Vector3(m_seVolume, 1.0f, 0.0f));
 			m_seBlownBarSprite.Update();
+
+			// 黒アイコン更新
 			m_seBlackIcon.SetPosition(Vector3(-380.0f + m_seVolume * 750.0f, -120.0f, 0.0f));
 			m_seBlackIcon.Update();
 		}
 	}
 
+	// 左キーでSE音量ダウン
 	if (m_seVolume > 0.001f)
 	{
 		if (g_pad[0]->IsPress(enButtonLeft))
 		{
 			m_seVolume -= 0.01f;
+
+			// 同様にUI更新
 			m_seIconSprite.SetPosition(Vector3(-380.0f + m_seVolume * 750.0f, -120.0f, 0.0f));
 			m_seIconSprite.Update();
+
 			m_seBlownBarSprite.SetScale(Vector3(m_seVolume, 1.0f, 0.0f));
 			m_seBlownBarSprite.Update();
+
 			m_seBlackIcon.SetPosition(Vector3(-380.0f + m_seVolume * 750.0f, -120.0f, 0.0f));
 			m_seBlackIcon.Update();
 		}
 	}
+}
+
+void SoundPause::UpdateBGMUI()
+{
+	float posX = -380.0f + m_bgmVolume * 750.0f;
+
+	m_soundIconSprite.SetPosition(Vector3(posX, 75.0f, 0.0f));
+	m_soundIconSprite.Update();
+
+	m_blownBarSprite.SetScale(Vector3(m_bgmVolume, 1.0f, 0.0f));
+	m_blownBarSprite.Update();
+
+	m_bgmBlackIcon.SetPosition(Vector3(posX, 75.0f, 0.0f));
+	m_bgmBlackIcon.Update();
+}
+
+void SoundPause::UpdateSEUI()
+{
+	float posX = -380.0f + m_seVolume * 750.0f;
+
+	m_seIconSprite.SetPosition(Vector3(posX, -120.0f, 0.0f));
+	m_seIconSprite.Update();
+
+	m_seBlownBarSprite.SetScale(Vector3(m_seVolume, 1.0f, 0.0f));
+	m_seBlownBarSprite.Update();
+
+	m_seBlackIcon.SetPosition(Vector3(posX, -120.0f, 0.0f));
+	m_seBlackIcon.Update();
 }
 
 void SoundPause::Render(RenderContext& rc)
