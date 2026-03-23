@@ -44,7 +44,7 @@ void Timer::TextTimer()
   
 	m_timer -= g_gameTime->GetFrameDeltaTime();
 	//タイマーのテキスト
-	uint8_t second = (uint8_t)m_timer % 60;//1の位
+	int second = (int)m_timer;
 	wchar_t timerText[256];
 	swprintf_s(timerText, 256, L"%03d",second);
 	//タイマーのテキストをFontRenderにセット

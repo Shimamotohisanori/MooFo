@@ -11,20 +11,24 @@ public:
 	void Render(RenderContext& rc);
 	//カウントダウン処理
 	void InCountDown();
-
-	///*プレイヤーの操作ができるかできないかを決める関数*/
-	//void SetControlEnabled(bool enabled) { m_isControlEnabled = enabled; }
-	///*プレイヤーの操作ができるかできないかを決める関数*/
-	//bool GetControlEnabled()const  { return m_isControlEnabled;}
 	/*カウントダウンの変数を取りたいときに使う関数*/
 	bool GetCountDown()const { return m_isCountDown;};
 
 private:
-	FontRender m_CountDownFontRender;
+	SpriteRender m_countDown3;
+	SpriteRender m_countDown2;
+	SpriteRender m_countDown1;
+	SpriteRender m_countDownStart;
 	//カウントダウン(3秒) + START(1秒)の文字の出力を行う
 	float m_CountDownTime = 4.0f;
 	//trueの間だけカウントダウンが進む
 	bool m_isCountDown = true;
+
+	//カウントダウン中に出す数字のUIを決めるフラグ
+	bool m_Show1 = false;
+	bool m_Show2 = false;
+	bool m_Show3 = false;
+	bool m_ShowStart = false;
 
 };
 
