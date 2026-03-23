@@ -252,9 +252,17 @@ void GameCamera::HitCow()
 	if (!m_rope->GetIsHitCow())
 		return;
 
+	/** 当たった牛を取得 */
 	Cow* hitCow = m_rope->GetHitCow();
+
+	/** 牛が存在しない場合は
+	 * 牛を捕まえたフラグを下ろして
+	 * 処理を終える */
 	if (!hitCow)
+	{
+		m_isCowCaptured = false;
 		return;
+	}
 
 	/** ターゲットは牛 */
 	Vector3 target = hitCow->GetPosition() + Vector3(0.0f, 80.0f, 0.0f);

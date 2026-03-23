@@ -5,6 +5,8 @@
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "GameScene/Game.h"
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
+#include "Rope/Rope.h"
+#include "GameCamera/GameCamera.h"
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/UFO/UFO2.tkm"; //enModelUpAxis = enModelUpAxisZ;
@@ -186,7 +188,18 @@ void UFO::TakeAwayTheCow()
 
 		/** 牛を削除 */
 		DeleteGO(m_targetCow);
-		
+
+		if (auto rope = FindGO<Rope>("rope"))
+		{
+			rope->SetIsHitCow(false);
+			rope->SetHitCow(nullptr);
+		}
+
+		if (auto camera = FindGO<GameCamera>("gameCamera"))
+		{
+			camera->SetIsCowCaptured(false);
+		}
+
 		/** 状態をリセットする */
 		m_targetCow = nullptr;
 		m_isCowTakeAwayed = false;

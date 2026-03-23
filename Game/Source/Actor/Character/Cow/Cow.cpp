@@ -26,7 +26,25 @@ Cow::Cow()
 
 Cow::~Cow()
 {
+	/** ロープに当たった牛が消えるときの処理 */
+	if (m_rope && m_rope->GetHitCow() == this)
+	{
+		/** ロープの牛に当たったフラグをリセット */
+		m_rope->SetIsHitCow(false);
+		/** ロープの当たった牛をリセット */
+		m_rope->SetHitCow(nullptr);
+	}
 
+	/** プレイヤーに引っ張られている牛が
+	 * 消えるときの処理 */
+	if (m_isCaptured)
+	{
+		GameCamera* camera = FindGO<GameCamera>("gameCamera");
+		if (camera)
+		{
+			camera->SetIsCowCaptured(false);
+		}
+	}
 }
 
 bool Cow::Start()
