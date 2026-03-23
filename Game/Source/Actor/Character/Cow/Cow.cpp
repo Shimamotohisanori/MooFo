@@ -143,7 +143,7 @@ void Cow::Rotation()
 			m_transform.SetRotation(m_transform.GetRotation());
 		}
 	}
-	else if (m_rotationState == EnRotatitonState_Spin)
+	else if (m_rotationState == EnRotationState_Spin)
 	{
 		//回転ステートがスピンのときは常に回転する。
 		m_transform.GetRotation().AddRotationDegY(3.0f);

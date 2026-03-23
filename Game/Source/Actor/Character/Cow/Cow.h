@@ -34,6 +34,11 @@ public:
 			m_isCaptured = isCaptured;
 		}
 
+		void ChangeRotationState()
+		{
+			m_rotationState = EnRotationState_Spin;
+		}
+
 private:
 	//プレイヤーに引っ張られる関数
 	void PulledByPlayer();
@@ -54,7 +59,7 @@ private:
 	enum EnRotationState
 	{
 		EnRotationState_MoveDir,
-		EnRotatitonState_Spin,
+		EnRotationState_Spin,
 		EnRotationState_Num
 	};
 	EnRotationState m_rotationState = EnRotationState_MoveDir;//回転ステート
@@ -73,8 +78,6 @@ private:
 		EnAnimation_Idle,
 	    EnAnimation_Walk,
 		EnAnimation_Num
-		//EnAnimation_Run,
-		//EnAnimation_Jump,
 	};
 	AnimationClip animationClips[EnAnimation_Num];
 };

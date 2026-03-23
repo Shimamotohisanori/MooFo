@@ -2,9 +2,11 @@
 #include "UFO.h"
 #include <time.h>
 #include"CountDown/CountDown.h"
+#include "Source/Actor/Character/Cow/Cow.h"
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/UFO/UFO2.tkm"; //enModelUpAxis = enModelUpAxisZ;
+
 }
 UFO::UFO()
 {
@@ -21,7 +23,7 @@ bool UFO::Start()
 {
 	m_countdown = FindGO<CountDown>("countdown");
 	srand(time(nullptr));
-	m_ufomodelRender.SetScale(Vector3(3.5f, 3.5f, 3.5f));
+	m_ufomodelRender.SetScale(Vector3{3.5f,3.5f,3.5f});
 	m_ufomodelRender.Init(FILEPATH);
 	m_ufomodelRender.SetPosition(m_transform.GetPosition());
 	m_ufomodelRender.Update();
@@ -30,7 +32,7 @@ bool UFO::Start()
 
 void UFO::Update()
 {
-	//カウントダウン中は牛を動かさないようにするので早期リターン
+	/** カウントダウン中はUFOを動かさない */
 	if (m_countdown->GetCountDown())
 	{
 		return;
@@ -38,23 +40,32 @@ void UFO::Update()
 
 	if (m_UFOState == EnUFOState_Move)
 	{
-		/*移動*/
+		/** 移動 */
 		Move();
-		/*回転*/
+		/** 回転 */
 		Rotation();
 	}
-	/*モデルの位置を反映*/
+
+	/** 牛を見つける関数 */
+	FindTheCow();
+
+	/** モデルの位置を反映 */
 	m_ufomodelRender.SetPosition(m_transform.GetPosition());
-	/*モデルの回転を反映*/
+	/** モデルの回転を反映 */
 	m_ufomodelRender.SetRotation(m_transform.GetRotation());
-	/*モデルの更新*/
+	/** モデルの更新 */
 	m_ufomodelRender.Update();
 }
 		
 
 void UFO::Move()
 {
-	
+	/** 牛を連れていってる最中は移動させない */
+	if(m_isCowTakeAwayed)
+	{
+		return;
+	}
+
 	if (m_moveTimer <= 0)
 	{
 		Vector3 dir
@@ -93,16 +104,50 @@ void UFO::Move()
 	
 void UFO::Rotation()
 {
+	/** 牛を連れていってる最中は回転させない */
+	if(m_isCowTakeAwayed)
+	{
+		return;
+	}
 
-	//少しでも動いたら移動方向に向きを回転させる。
+	/** 少しでも動いたら移動方向に向きを回転させる */
 	if (fabsf(m_moveDir.x) >= 0.0001f || fabsf(m_moveDir.z) >= 0.0001f)
 	{
 		//移動方向に回転させる
 		m_transform.GetRotation().SetRotationYFromDirectionXZ(m_moveDir);
 		m_transform.SetRotation(m_transform.GetRotation());
 	}
+}
 
+void UFO::TakeAwayTheCow()
+{
+	/** 牛を連れていけるかどうかのフラグが立っていたら処理をする */
+	if (m_isCowTakeAwayed)
+	{
+		/** 牛を回転させる */
+		auto cow = FindGOs<Cow>("cow");
+		for (auto c : cow)
+		{
+			c->
+		}
+	}
+}
 
+void UFO::FindTheCow()
+{
+	/** 牛を連れていけるかどうかのフラグが立っていたら処理しない */
+	if (m_isCowTakeAwayed) return;
+
+	auto cow = FindGOs<Cow>("cow");
+	for (auto c : cow)
+	{
+		/** 牛とUFOの距離が100未満だったら牛を連れていく */
+		if ((c->GetPosition() - m_transform.GetPosition()).LengthSq() < 10000.0f)
+		{
+			/** 連れていける */
+			m_isCowTakeAwayed = true;
+		}
+	}
 }
 
 void UFO::Render(RenderContext& rc)

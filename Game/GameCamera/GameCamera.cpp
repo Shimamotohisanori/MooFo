@@ -231,7 +231,7 @@ void GameCamera::CheckCameraHitCow()
 
 		float dist = (cow->GetPosition() - camPos).Length();
 
-		if (dist < COW_HIT_DISTANCE)   // 100.0f でOK
+		if (dist < COW_HIT_DISTANCE)
 		{
 			/** ロープが当たった扱いにする */
 			m_rope->OnHitCow(cow);
