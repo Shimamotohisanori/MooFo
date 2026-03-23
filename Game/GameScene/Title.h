@@ -15,6 +15,7 @@ private:
 
 	SoundManager* m_soundManager;
 	SoundSource* p_titleBGM;
+	SoundSource* p_titleSE;
 
 };
 

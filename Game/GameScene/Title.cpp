@@ -44,7 +44,7 @@ void Title::InTitle()
 	{
 		NewGO<Game>(0, "game");
 		DeleteGO(this);
-
+		p_titleSE = m_soundManager->PlayingSE(SoundSE::enDecisionSE, false);
 		DeleteGO(p_titleBGM);
 
 	}
