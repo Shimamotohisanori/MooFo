@@ -18,8 +18,9 @@ public:
 	void TextTimer();
 
 private:
-	FontRender m_TimerFontRender;//タイマーのフォントレンダー
-	float m_timer = 9990.0f;//制限時間
+	//制限時間スプライト
+	FontRender m_TimerFontRender;
+	float m_timer = 300.0f;//制限時間
 
 	CountDown* m_countdown;//カウントダウン
 	Pause* m_pause;//ポーズ
