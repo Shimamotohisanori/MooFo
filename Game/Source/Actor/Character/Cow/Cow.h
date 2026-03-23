@@ -3,6 +3,7 @@
 class Rope;
 class Player;
 class CountDown;
+class UFO;
 class Cow : public Character
 {
 public:
@@ -19,7 +20,7 @@ public:
 		void PlayAnimation();
 		void ManageState();
 
-		void Setposition(const Vector3& pos)
+		void SetPosition(const Vector3& pos)
 		{
 			m_transform.SetPosition(pos);
 		}
@@ -32,6 +33,31 @@ public:
 		void SetIsCaptured(bool isCaptured)
 		{
 			m_isCaptured = isCaptured;
+		}
+
+		void ChangeRotationState()
+		{
+			m_rotationState = EnRotationState_Spin;
+		}
+
+		bool GetIsTakeAwayed()
+		{
+			return m_isTakeAwayed;
+		}
+
+		void SetIsTakeAwayed(bool isTakeAwayed)
+		{
+			m_isTakeAwayed = isTakeAwayed;
+		}
+
+		void SetTakingUFO(UFO* takingUFO)
+		{
+			m_takingUFO = takingUFO;
+		}
+
+		UFO* GetTakingUFO()
+		{
+			return m_takingUFO;
 		}
 
 private:
@@ -51,10 +77,13 @@ private:
 	//カウントダウン
 	CountDown* m_countdown;
 
+	//UFO
+	UFO* m_takingUFO = nullptr;
+
 	enum EnRotationState
 	{
 		EnRotationState_MoveDir,
-		EnRotatitonState_Spin,
+		EnRotationState_Spin,
 		EnRotationState_Num
 	};
 	EnRotationState m_rotationState = EnRotationState_MoveDir;//回転ステート
@@ -68,13 +97,13 @@ private:
 
 	bool m_isCaptured = false;//自身がロープに捕まったかどうかのフラグ
 
+	bool m_isTakeAwayed = false;//UFOに連れて行かれたかどうかのフラグ
+
 	enum EnAnimation
 	{
 		EnAnimation_Idle,
 	    EnAnimation_Walk,
 		EnAnimation_Num
-		//EnAnimation_Run,
-		//EnAnimation_Jump,
 	};
 	AnimationClip animationClips[EnAnimation_Num];
 };

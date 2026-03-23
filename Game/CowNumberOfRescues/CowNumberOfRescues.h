@@ -17,6 +17,19 @@ public:
 		m_numberOfRescues++;
 	}
 
+	/** 救出数を減算する関数 */
+	void SubRescue()
+	{
+		/** 0以下にはしない */
+		if (m_numberOfRescues == 0)
+		{
+			m_numberOfRescues = 0;
+			return;
+		}
+
+		m_numberOfRescues--;
+	}
+
 
 private:
 	/** 救出数 */

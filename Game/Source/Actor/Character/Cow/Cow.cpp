@@ -6,6 +6,7 @@
 #include "GameCamera/GameCamera.h"
 #include "GameScene/Game.h"
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
+#include "Source/Actor/Character/UFO/UFO.h"
 #include <time.h>
 namespace
 {
@@ -143,7 +144,7 @@ void Cow::Rotation()
 			m_transform.SetRotation(m_transform.GetRotation());
 		}
 	}
-	else if (m_rotationState == EnRotatitonState_Spin)
+	else if (m_rotationState == EnRotationState_Spin)
 	{
 		//回転ステートがスピンのときは常に回転する。
 		m_transform.GetRotation().AddRotationDegY(3.0f);
@@ -215,7 +216,13 @@ void Cow::CapturedByPlayer()
 			//捕獲されたときの処理
 			m_rope->SetIsHitCow(false);
 			m_rope->SetHitCow(nullptr);
-			
+
+			if (m_takingUFO)
+			{
+				m_takingUFO->SetIsCowTakeAwayed(false);
+				m_takingUFO->ReMoveTargetCow();
+			}
+
 			//カメラの牛捕獲フラグを下ろす
 			GameCamera* camera = FindGO<GameCamera>("gameCamera");
 			if (camera)
@@ -223,7 +230,7 @@ void Cow::CapturedByPlayer()
 				camera->SetIsCowCaptured(false);
 			}
 
-			//牛の救出数を増やす
+			//コンボを増やす
 			Game* game = FindGO<Game>("game");
 			if (game)
 			{
@@ -237,6 +244,9 @@ void Cow::CapturedByPlayer()
 			{
 				cowNumberOfRescues->AddRescue();
 			}
+
+			//状態をリセットする
+			m_isTakeAwayed = false;
 
 			//牛を削除
 			DeleteGO(this);
