@@ -223,7 +223,7 @@ void Cow::CapturedByPlayer()
 				camera->SetIsCowCaptured(false);
 			}
 
-			//牛の救出数を増やす
+			//コンボを増やす
 			Game* game = FindGO<Game>("game");
 			if (game)
 			{

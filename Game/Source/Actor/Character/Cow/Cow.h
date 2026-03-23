@@ -19,7 +19,7 @@ public:
 		void PlayAnimation();
 		void ManageState();
 
-		void Setposition(const Vector3& pos)
+		void SetPosition(const Vector3& pos)
 		{
 			m_transform.SetPosition(pos);
 		}

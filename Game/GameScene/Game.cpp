@@ -73,7 +73,7 @@ bool Game::Start()
 	for (int i = 0; i < _countof(COW_INFOMATIONS); i++)
 	{
 		m_cow[i] = NewGO<Cow>(0, COW_INFOMATIONS[i].objectName.c_str());
-		m_cow[i]->Setposition(COW_INFOMATIONS[i].pos);
+		m_cow[i]->SetPosition(COW_INFOMATIONS[i].pos);
 		m_aliveCows.push_back(m_cow[i]);
 	}
 
@@ -207,7 +207,7 @@ void Game::SpawnCow()
 			pos.y = 0.0f;
 			pos.z = (rand() % 600) - 300; // -300〜300
 
-			newCow->Setposition(pos);
+			newCow->SetPosition(pos);
 
 			// 生きている牛リストに追加
 			m_aliveCows.push_back(newCow);

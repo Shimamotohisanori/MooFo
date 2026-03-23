@@ -1,6 +1,7 @@
 #pragma once
 #include"Source/Actor/Character/Character.h"
 class CountDown;
+class Cow;
 class UFO : public Character
 {
 public:
@@ -41,6 +42,9 @@ private:
 	float m_moveSpeed = 50.0f;//移動速度
 	int m_moveTimer = 0;//移動タイマー
 	CountDown* m_countdown;
+
+	/** UFOに見つかった牛 */
+	Cow* m_targetCow = nullptr;
 
 	/** 牛を連れて行けるかどうかのフラグ */
 	bool m_isCowTakeAwayed = false;
