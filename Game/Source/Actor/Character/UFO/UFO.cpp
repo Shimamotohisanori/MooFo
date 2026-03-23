@@ -27,7 +27,7 @@ namespace
 	constexpr float CAPTURE_SPEED = 0.5f;
 
 	/** 牛を見つけるときの距離の二乗 */
-	constexpr float CAPTURE_RANGE_SQ = 150.0f;
+	constexpr float CAPTURE_RANGE_SQ = 200.0f;
 
 }
 UFO::UFO()
@@ -174,6 +174,9 @@ void UFO::TakeAwayTheCow()
 		CowNumberOfRescues* cowNumberOfRescues = FindGO<CowNumberOfRescues>("cownumberofrescues");
 		cowNumberOfRescues->SubRescue();
 
+		/* 牛の状態を連れていかれる前の状態に戻す */
+		m_targetCow->SetIsTakeAwayed(false);
+
 		/** Gameに通知してaliveCowsから外す */
 		Game* game = FindGO<Game>("game");
 		if (game)
@@ -206,13 +209,17 @@ void UFO::FindTheCow()
 		Vector3 diff = c->GetPosition() - m_transform.GetPosition();
 		diff.y = 0.0f;
 
-		/** 牛とUFOの距離が150未満だったら牛を連れていく */
+		/** 牛とUFOの距離が200未満だったら牛を連れていく */
 		if (diff.LengthSq() < CAPTURE_RANGE_SQ)
 		{
 			/** 連れていける */
 			m_isCowTakeAwayed = true;
 			/** 最初の一匹だけ */
 			m_targetCow = c;
+			m_targetCow->SetTakingUFO(this);
+
+			/** 牛の状態を連れていかれる状態にする */
+			m_targetCow->SetIsTakeAwayed(true);
 			break;
 		}
 	}

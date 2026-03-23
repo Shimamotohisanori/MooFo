@@ -6,6 +6,7 @@
 #include "GameCamera/GameCamera.h"
 #include "GameScene/Game.h"
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
+#include "Source/Actor/Character/UFO/UFO.h"
 #include <time.h>
 namespace
 {
@@ -215,7 +216,13 @@ void Cow::CapturedByPlayer()
 			//捕獲されたときの処理
 			m_rope->SetIsHitCow(false);
 			m_rope->SetHitCow(nullptr);
-			
+
+			if (m_takingUFO)
+			{
+				m_takingUFO->SetIsCowTakeAwayed(false);
+				m_takingUFO->ReMoveTargetCow();
+			}
+
 			//カメラの牛捕獲フラグを下ろす
 			GameCamera* camera = FindGO<GameCamera>("gameCamera");
 			if (camera)
@@ -237,6 +244,9 @@ void Cow::CapturedByPlayer()
 			{
 				cowNumberOfRescues->AddRescue();
 			}
+
+			//状態をリセットする
+			m_isTakeAwayed = false;
 
 			//牛を削除
 			DeleteGO(this);

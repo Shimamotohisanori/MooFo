@@ -231,7 +231,8 @@ void GameCamera::CheckCameraHitCow()
 
 		float dist = (cow->GetPosition() - camPos).Length();
 
-		if (dist < COW_HIT_DISTANCE)
+		/** 牛とカメラの距離が一定以下で牛がUFOに連れて行かれた状態ならロープが当たった扱いにする */
+		if (dist < COW_HIT_DISTANCE && cow->GetIsTakeAwayed())
 		{
 			/** ロープが当たった扱いにする */
 			m_rope->OnHitCow(cow);

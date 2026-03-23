@@ -19,7 +19,7 @@ public:
 
 private:
 	FontRender m_TimerFontRender;//タイマーのフォントレンダー
-	float m_timer = 30.0f;//制限時間
+	float m_timer = 9990.0f;//制限時間
 
 	CountDown* m_countdown;//カウントダウン
 	Pause* m_pause;//ポーズ

@@ -3,6 +3,7 @@
 class Rope;
 class Player;
 class CountDown;
+class UFO;
 class Cow : public Character
 {
 public:
@@ -39,6 +40,26 @@ public:
 			m_rotationState = EnRotationState_Spin;
 		}
 
+		bool GetIsTakeAwayed()
+		{
+			return m_isTakeAwayed;
+		}
+
+		void SetIsTakeAwayed(bool isTakeAwayed)
+		{
+			m_isTakeAwayed = isTakeAwayed;
+		}
+
+		void SetTakingUFO(UFO* takingUFO)
+		{
+			m_takingUFO = takingUFO;
+		}
+
+		UFO* GetTakingUFO()
+		{
+			return m_takingUFO;
+		}
+
 private:
 	//プレイヤーに引っ張られる関数
 	void PulledByPlayer();
@@ -56,6 +77,9 @@ private:
 	//カウントダウン
 	CountDown* m_countdown;
 
+	//UFO
+	UFO* m_takingUFO = nullptr;
+
 	enum EnRotationState
 	{
 		EnRotationState_MoveDir,
@@ -72,6 +96,8 @@ private:
 	bool m_isMove = false;//移動しているかどうか
 
 	bool m_isCaptured = false;//自身がロープに捕まったかどうかのフラグ
+
+	bool m_isTakeAwayed = false;//UFOに連れて行かれたかどうかのフラグ
 
 	enum EnAnimation
 	{

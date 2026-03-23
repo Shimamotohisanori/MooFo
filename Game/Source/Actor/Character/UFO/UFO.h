@@ -19,6 +19,18 @@ public:
 		m_transform.SetPosition(pos);
 	}
 
+	/** 牛を連れて行けるかどうかのフラグを設定する関数 */
+	void SetIsCowTakeAwayed(bool isCowTakeAwayed)
+	{
+		m_isCowTakeAwayed = isCowTakeAwayed;
+	}
+
+	/** 目標にしている牛を消す関数 */
+	void ReMoveTargetCow()
+	{
+		m_targetCow = nullptr;
+	}
+
 	enum EnUFOState
 	{
 		EnUFOState_Move,
