@@ -191,8 +191,11 @@ void UFO::TakeAwayTheCow()
 
 		if (auto rope = FindGO<Rope>("rope"))
 		{
-			rope->SetIsHitCow(false);
-			rope->SetHitCow(nullptr);
+			if (rope->GetHitCow() == m_targetCow)
+			{
+				rope->SetIsHitCow(false);
+				rope->SetHitCow(nullptr);
+			}
 		}
 
 		if (auto camera = FindGO<GameCamera>("gameCamera"))

@@ -53,12 +53,14 @@ bool Cow::Start()
 	srand(time(nullptr));
 
 	m_cowmodelRender.Init(FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
-	
+	m_cowmodelRender.SetPosition(m_transform.GetPosition());
+	m_cowmodelRender.Update();
+
 	m_player = FindGO<Player>("player");
 	m_countdown = FindGO<CountDown>("countdown");
 	m_rope = FindGO<Rope>("rope");
-	m_cowmodelRender.SetPosition(m_transform.GetPosition());
-	m_cowmodelRender.Update();
+
+	
 	return true;
 }
 
@@ -89,13 +91,14 @@ void Cow::Update()
 	/** 牛がプレイヤーに捕獲される処理*/
 	CapturedByPlayer();
 
-	/*モデルの更新*/
-	m_cowmodelRender.Update();
-
 	/*モデルの位置を反映*/
 	m_cowmodelRender.SetPosition(m_transform.GetPosition());
 	/*モデルに回転を反映*/
 	m_cowmodelRender.SetRotation(m_transform.GetRotation());
+
+	/*モデルの更新*/
+	m_cowmodelRender.Update();
+
 }
 
 
@@ -172,6 +175,12 @@ void Cow::Rotation()
 
 void Cow::ManageState()
 {
+	/** ロープに捕まっているときは状態を変えない */
+	if (m_isCaptured)
+	{
+		return;
+	}
+
 	if (fabsf(m_moveDir.x) >= 0.0001f || fabsf(m_moveDir.z) >= 0.0001f)
 	{
 		m_cowState = 1;//歩き
@@ -231,9 +240,12 @@ void Cow::CapturedByPlayer()
 		//距離が一定以下なら捕獲される
 		if (dir.Length() < 50.0f)
 		{
-			//捕獲されたときの処理
-			m_rope->SetIsHitCow(false);
-			m_rope->SetHitCow(nullptr);
+			/** 自分がロープに紐づいてる時だけフラグをおろす */
+			if (m_rope && m_rope->GetHitCow() == this)
+			{
+				m_rope->SetIsHitCow(false);
+				m_rope->SetHitCow(nullptr);
+			}
 
 			if (m_takingUFO)
 			{
@@ -275,6 +287,12 @@ void Cow::CapturedByPlayer()
 
 void Cow::PlayAnimation()
 {
+	/** ロープに捕まっているときはアニメーションを変えない */
+	if (m_isCaptured)
+	{
+		return;
+	}
+
 	switch (m_cowState)
 	{
 	case 0 :
@@ -293,5 +311,6 @@ void Cow::PlayAnimation()
 
 void Cow::Render(RenderContext& rc)
 {
+	/** 普通の牛のモデルを描画する */
 	m_cowmodelRender.Draw(rc);
 }

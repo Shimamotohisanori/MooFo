@@ -1,12 +1,10 @@
 #include "stdafx.h"
 #include "Rope.h"
-#include <vector>
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "Source/Actor/Character/Player/Player.h"
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/Rope/NewRope.tkm";
-	const char* THROW_ROPE_ANIMATION_FILE_PATH = "Assets/animData/Rope/ThrowRope.tka";
 
 	const Vector3 ROPE_INITIAL_SCALE = { 1.0f, 1.0f, 5.0f };
 
@@ -31,10 +29,9 @@ Rope::~Rope()
 bool Rope::Start()
 {
 
-	m_ropeAnimationClips[EnRopeAnimation_Throw].Load(THROW_ROPE_ANIMATION_FILE_PATH);
-	m_ropeAnimationClips[EnRopeAnimation_Throw].SetLoopFlag(false);
-
 	m_ropeModelRender.Init(FILEPATH);
+
+	m_ropeCapturedCowModelRender.Init("Assets/modelData/Rope/CapturedCowRope.tkm");
 
 	m_player = FindGO<Player>("player");
 
@@ -64,6 +61,18 @@ void Rope::Update()
 		
 		/** ロープの伸び縮みに関する関数 */
 		StretchRope();
+
+		/** 牛の位置と回転を取得 */
+		Vector3 cowPos = m_hitCow->GetPosition();
+		cowPos.y += 30.0f;
+		Quaternion cowRot = m_hitCow->GetRotation();
+
+		/** 捕まった牛用のロープモデルに反映 */
+		m_ropeCapturedCowModelRender.SetPosition(cowPos);
+		m_ropeCapturedCowModelRender.SetRotation(cowRot);
+
+		m_ropeCapturedCowModelRender.Update();
+
 	}
 	
 	m_ropeModelRender.Update();
@@ -188,7 +197,9 @@ void Rope::Render(RenderContext& rc)
 	if (m_isThrowRope or m_isHitCow)
 	{
 		m_ropeModelRender.Draw(rc);
+		m_ropeCapturedCowModelRender.Draw(rc);
 	}
 }
+
 
 
