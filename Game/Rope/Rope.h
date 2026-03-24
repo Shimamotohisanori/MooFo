@@ -63,6 +63,18 @@ public:
 		m_cowList = cows;
 	}
 
+	/** 牛を捕まえた時のロープモデルの位置設定 */
+	void SetRopeModelPos(Vector3 pos)
+	{
+		m_ropeCapturedCowModelRender.SetPosition(pos);
+	}
+
+	/** 牛を捕まえた時のロープモデルの回転設定 */
+	void SetRopeModelRot(Quaternion rot)
+	{
+		m_ropeCapturedCowModelRender.SetRotation(rot);
+	}
+
 private:
 	/** プレイヤーが縄を投げた時の縄の処理関数 */
 	void PlayerThrowsRope();
@@ -89,6 +101,9 @@ private:
 	/** ロープモデルレンダー */
 	ModelRender m_ropeModelRender;
 
+	/** 牛を捕まえた時のロープモデルレンダー */
+	ModelRender m_ropeCapturedCowModelRender;
+
 	/** ロープの位置*/
 	Vector3 m_ropePos;
 
@@ -109,13 +124,5 @@ private:
 
 	/** ロープアニメーション時間 */
 	float m_ropeAnimationTime = 0.0f;
-
-	/** ループのアニメーション */
-	enum EnRopeAnimation
-	{
-		EnRopeAnimation_Throw,
-		EnRopeAnimation_Num,
-	};
-	AnimationClip m_ropeAnimationClips[EnRopeAnimation_Num];
 };
 
