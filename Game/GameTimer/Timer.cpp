@@ -18,7 +18,17 @@ bool Timer::Start()
 {
 	m_countdown = FindGO<CountDown>("countdown");
 	m_pause = FindGO<Pause>("pause");
-
+	//全ての画像スプライト(30個)を初期化
+	for (int j = 0; j < 10; j++)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			m_digitSprite[i][j].Init(m_digitPaths[j], 128, 128);
+			// 非表示
+			m_digitSprite[i][j].SetScale({ 0,0,0 });
+		}
+		
+	}
 	return true;
 }
 
@@ -31,6 +41,15 @@ void Timer::Update()
 	}
 
 	TextTimer();
+
+	//Update() を呼ばないとDrawしても正しく表示されない
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			m_digitSprite[i][j].Update();
+		}
+	}
 }
 
 
@@ -41,23 +60,40 @@ void Timer::TextTimer()
 	{
 		return;
 	}
-  
+	//フレームごとに時間を減らす
 	m_timer -= g_gameTime->GetFrameDeltaTime();
-	//タイマーのテキスト
-	int second = (int)m_timer;
-	wchar_t timerText[256];
-	swprintf_s(timerText, 256, L"%03d",second);
-	//タイマーのテキストをFontRenderにセット
-	m_TimerFontRender.SetText(timerText);
+	//小数点の切り捨て
+	int time = (int)m_timer;
+	//0以下にならないようにする
+	if (time < 0)
+	{
+		time = 0;
+	}
+	//秒数が変わっていなければ何もしない
+	if (time != m_prevTime)
+	{
+		m_prevTime = time;
+		//桁分解
+		int hundreds = time / 100;//(例)123÷100 = 1
+		int tens = (time / 10) % 10;//(例)(123÷10) %10 = 12 %10 =1あまり2 
+		int ones = time % 10;//(例)123÷10 = 12あまり3
+		//全部非表示
+		for (int i = 0; i < 10; i++)
+		{
+			m_digitSprite[0][i].SetScale({ 0,0,0, });
+			m_digitSprite[1][i].SetScale({ 0,0,0, });
+			m_digitSprite[2][i].SetScale({ 0,0,0, });
+		}
 
-	//座標を設定
-	m_TimerFontRender.SetPosition({-100.0f,530.0f,0.0f });
-
-	//文字の大きさ
-	m_TimerFontRender.SetScale(2.5f);
-
-	//文字の色
-	m_TimerFontRender.SetColor(g_vec4White);
+		// 必要な数字だけ表示 該当する数字だけON
+		m_digitSprite[0][hundreds].SetScale({ 1,1,1 });
+		m_digitSprite[1][tens].SetScale({ 1,1,1 });
+		m_digitSprite[2][ones].SetScale({ 1,1,1 });
+		//位置設定
+		m_digitSprite[0][hundreds].SetPosition({ -100.0f,480.0f,0.0f });
+		m_digitSprite[1][tens].SetPosition({ 0.0f,480.0f,0.0f });
+		m_digitSprite[2][ones].SetPosition({ 100.0f,480.0f,0.0f });
+	}
 }
 
 
@@ -73,7 +109,14 @@ void Timer::Render(RenderContext& rc)
 		return;
 	}
 
-	m_TimerFontRender.Draw(rc);
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			m_digitSprite[i][j].Draw(rc);
+		}
+	}
+	
 }
 
 
