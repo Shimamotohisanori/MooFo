@@ -9,8 +9,7 @@ class Timer : public IGameObject
 	bool Start();
 	void Update();
 	void Render(RenderContext& rc);
-	public:
-		//コンボで時間を増やす処理
+	//コンボで時間を増やす処理
 	void AddTimer(float time);
 	const float GetTimer() const { return m_timer; }
 public:
@@ -19,8 +18,26 @@ public:
 
 private:
 	//制限時間スプライト
-	FontRender m_TimerFontRender;
+	//FontRender m_TimerFontRender;
 	float m_timer = 300.0f;//制限時間
+
+	int m_prevTime = -1;
+	//三桁(百・十・一)を描画するスプライト
+	SpriteRender m_digitSprite[3][10];
+	//数字の画像をロード
+	const char* m_digitPaths[10] =
+	{
+		"Assets/sprite/NumberUI/MooFoNumberUI0.dds",
+		"Assets/sprite/NumberUI/MooFoNumberUI1.dds",
+		"Assets/sprite/NumberUI/MooFoNumberUI2.dds",
+		"Assets/sprite/NumberUI/MooFoNumberUI3.dds",
+		"Assets/sprite/NumberUI/MooFoNumberUI4.dds",
+		"Assets/sprite/NumberUI/MooFoNumberUI5.dds",
+		"Assets/sprite/NumberUI/MooFoNumberUI6.dds",
+		"Assets/sprite/NumberUI/MooFoNumberUI7.dds",
+		"Assets/sprite/NumberUI/MooFoNumberUI8.dds",
+		"Assets/sprite/NumberUI/MooFoNumberUI9.dds",
+	};
 
 	CountDown* m_countdown;//カウントダウン
 	Pause* m_pause;//ポーズ
