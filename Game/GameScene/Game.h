@@ -10,6 +10,7 @@ class GameClear;
 class GameOver;
 class CountDown;
 class SoundManager;
+class Score;
 class CowNumberOfRescues;
 
 /** 牛の情報をまとめる構造体 */
@@ -136,7 +137,7 @@ private:
 
 	SoundManager* m_inGameSound;
 	SoundSource* p_inGameBGM;
-
+	Score* m_score;
 	/** 牛が生まれる時間 */
 	float m_spawnTimer = 0.0f;
 

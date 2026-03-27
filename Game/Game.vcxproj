@@ -235,6 +235,7 @@
     <ClCompile Include="Pause\Pause.cpp" />
     <ClCompile Include="Pause\SoundPause.cpp" />
     <ClCompile Include="Rope\Rope.cpp" />
+    <ClCompile Include="Score.cpp" />
     <ClCompile Include="SoundManager\SoundManager.cpp" />
     <ClCompile Include="Source\Actor\Actor.cpp" />
     <ClCompile Include="Source\Actor\Character\Character.cpp" />
@@ -263,6 +264,7 @@
     <ClInclude Include="Pause\SoundPause.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Rope\Rope.h" />
+    <ClInclude Include="Score.h" />
     <ClInclude Include="SoundManager\SoundManager.h" />
     <ClInclude Include="Source\Actor\Actor.h" />
     <ClInclude Include="Source\Actor\Character\Character.h" />

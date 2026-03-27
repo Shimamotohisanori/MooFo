@@ -61,6 +61,7 @@
     <ClCompile Include="CowNumberOfRescues\CowNumberOfRescues.cpp">
       <Filter>CowNumberOfRescues</Filter>
     </ClCompile>
+    <ClCompile Include="Score.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -123,6 +124,7 @@
     <ClInclude Include="CowNumberOfRescues\CowNumberOfRescues.h">
       <Filter>CowNumberOfRescues</Filter>
     </ClInclude>
+    <ClInclude Include="Score.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
