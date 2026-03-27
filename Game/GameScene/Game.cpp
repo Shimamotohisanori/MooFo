@@ -13,7 +13,7 @@
 #include "Rope/Rope.h"
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
 #include "SoundManager/SoundManager.h"
-
+#include"Score.h"
 Game::~Game()
 {
 	//プレイヤーを削除
@@ -51,6 +51,9 @@ Game::~Game()
 
 	//タイマーを削除
 	DeleteGO(m_timer);
+
+	//スコアを削除
+	DeleteGO(m_score);
 	//ゲームカメラを削除
 	DeleteGO(m_gameCamera);
 	//カウントダウンの削除
@@ -87,6 +90,8 @@ bool Game::Start()
 	//タイマーの生成
 	m_timer = NewGO<Timer>(0, "timer");
 
+	//スコアの生成
+	m_score = NewGO<Score>(0, "score");
 	//牛の救出数の生成
 	m_cowNumberOfRescues = NewGO<CowNumberOfRescues>(0, "cownumberofrescues");
 

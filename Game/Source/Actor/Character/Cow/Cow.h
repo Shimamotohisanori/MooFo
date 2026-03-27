@@ -107,6 +107,7 @@ private:
 
 	bool m_isTakeAwayed = false;//UFOに連れて行かれたかどうかのフラグ
 
+	
 	enum EnAnimation
 	{
 		EnAnimation_Idle,

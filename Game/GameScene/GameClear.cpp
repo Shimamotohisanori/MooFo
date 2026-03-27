@@ -8,7 +8,7 @@ namespace
 {
 	const char* FILEPATH = "Assets/sprite/GameTransition/GameClear.dds";
 	const int WIDTH = 1920;
-	const int HIGHT = 1080;
+	const int HEIGHT = 1080;
 }
 
 GameClear::GameClear()
@@ -25,7 +25,7 @@ GameClear::~GameClear()
 
 bool GameClear::Start()
 {
-	m_GameClearSpriteRender.Init(FILEPATH, WIDTH, HIGHT);
+	m_GameClearSpriteRender.Init(FILEPATH, WIDTH, HEIGHT);
 
 	m_clearSound = FindGO<SoundManager>("soundmanager");
 	p_clearBGM = m_clearSound->PlayingBGM(SoundBGM::enGameClearBGM, false);
