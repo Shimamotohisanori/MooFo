@@ -29,7 +29,7 @@ namespace
 	constexpr float CAPTURE_SPEED = 0.5f;
 
 	/** 牛を見つけるときの距離の二乗 */
-	constexpr float CAPTURE_RANGE_SQ = 200.0f;
+	constexpr float CAPTURE_RANGE_SQ = 400.0f;
 
 }
 UFO::UFO()
