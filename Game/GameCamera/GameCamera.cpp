@@ -137,11 +137,17 @@ void GameCamera::Follow()
 	Vector3 pos = target + m_cameraPos;
 
 
-	// ★ カメラ位置と注視点が一致しないようにする保険 ★
+	// カメラ位置と注視点が一致しないようにする保険
 	if ((pos - target).LengthSq() < 0.0001f)
 	{
 		pos = target + Vector3(0.0f, 0.0f, -50.0f); // 適当な距離を確保
 	}
+
+	// 地面付近にカメラがあった場合はそれ以上下に行かないようにする
+	if (pos.y < MIN_CAMERA_HEIGHT) {
+		pos.y = MIN_CAMERA_HEIGHT;
+	}
+
 	//メインカメラに注視点と視点を設定
 	g_camera3D->SetTarget(target);
 	g_camera3D->SetPosition(pos);
