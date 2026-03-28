@@ -7,6 +7,7 @@
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
 #include "Rope/Rope.h"
 #include "GameCamera/GameCamera.h"
+#include"Score.h"
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/UFO/UFO2.tkm"; //enModelUpAxis = enModelUpAxisZ;
@@ -46,6 +47,7 @@ UFO::~UFO()
 bool UFO::Start()
 {
 	m_countdown = FindGO<CountDown>("countdown");
+	m_score = FindGO<Score>("score");
 	srand(time(nullptr));
 	m_ufomodelRender.SetScale(UFO_SCALE,UFO_SCALE,UFO_SCALE);
 	m_ufomodelRender.Init(FILEPATH);
@@ -176,6 +178,8 @@ void UFO::TakeAwayTheCow()
 		CowNumberOfRescues* cowNumberOfRescues = FindGO<CowNumberOfRescues>("cownumberofrescues");
 		cowNumberOfRescues->SubRescue();
 
+		/*牛が連れ去られたらスコアを減らす処理*/
+		m_score->DecreaseScore(100);
 		/* 牛の状態を連れていかれる前の状態に戻す */
 		m_targetCow->SetIsTakeAwayed(false);
 

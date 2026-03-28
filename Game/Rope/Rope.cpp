@@ -14,7 +14,6 @@ namespace
 	const float ROPE_AIM_UP_OFFSET = 30.0f;
 	const float ROPE_SCALE_FACTOR = 0.05f;
 	const float ROPE_MIN_SCALE_Z = 0.002f;
-
 	const float ROPE_HIT_DISTANCE = 50.0f;
 
 }
@@ -30,11 +29,8 @@ bool Rope::Start()
 {
 
 	m_ropeModelRender.Init(FILEPATH);
-
 	m_ropeCapturedCowModelRender.Init("Assets/modelData/Rope/CapturedCowRope.tkm");
-
 	m_player = FindGO<Player>("player");
-
 	m_ropeScale = ROPE_INITIAL_SCALE;
 	m_ropeModelRender.SetScale(m_ropeScale);
 

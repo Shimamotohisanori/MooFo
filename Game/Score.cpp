@@ -20,6 +20,9 @@ Score::~Score()
 bool Score::Start()
 {
 	m_score = 0;
+	//if (m_score == m_prevScore){return;}
+	// このコードが値が同じなら早期リターンで画像が表示されなくなるから
+	//最初は絶対更新するためここを-1する
 	m_prevScore = -1;
 	//全ての画像スプライト(50個)を初期化
 	for (int j = 0; j < 10; j++)
@@ -28,7 +31,8 @@ bool Score::Start()
 		{
 			//画像の読み込みと大きさ調整
 			m_digitSprite[i][j].Init(m_digitPaths[j], WIDTH,HEIGHT);
-			//非表示
+
+			//非表示にしないと前のスコアが残ってしまいバグってしまう。
 			m_digitSprite[i][j].SetScale({ 0,0,0, });
 		}
 	}
@@ -58,7 +62,7 @@ void Score::TextScore()
 	{
 		return;
 	}
-
+	//スコアを保存
 	m_prevScore = m_score;
 	int score = m_score;
 
@@ -83,6 +87,7 @@ void Score::TextScore()
 	for (int i = 0; i < 5; i++)
 	{
 		int d = digit[i];
+		//右→左に変換
 		m_digitSprite[4 - i][d].SetScale({ 1,1,1 });
 
 		//位置調整(横並び)
@@ -96,6 +101,16 @@ void Score::TextScore()
 void Score::AddScore(int value)
 {
 	m_score += value;
+}
+
+void Score::DecreaseScore(int value)
+{
+	m_score -= value;
+	//スコアがマイナスにならないようにする
+	if (m_score < 0)
+	{
+		m_score = 0;
+	}
 }
 void Score::Render(RenderContext& rc)
 {

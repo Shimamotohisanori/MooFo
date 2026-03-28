@@ -2,6 +2,7 @@
 #include"Source/Actor/Character/Character.h"
 class CountDown;
 class Cow;
+class Score;
 class UFO : public Character
 {
 public:
@@ -57,7 +58,8 @@ private:
 
 	/** UFOに見つかった牛 */
 	Cow* m_targetCow = nullptr;
-
+	/*スコア*/
+	Score* m_score;
 	/** 牛を連れて行けるかどうかのフラグ */
 	bool m_isCowTakeAwayed = false;
 };

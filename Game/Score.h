@@ -11,12 +11,12 @@ public:
 
 	//牛を救出した時にスコアを取得する関数
 	void AddScore(int Value);
-
+	//牛を救出できなかった時にスコアを減少させる関数
+	void DecreaseScore(int Value);
 	//スコアの描画処理
 	void TextScore();
 private:
 	int m_score = 0;
-
 	int m_prevScore = -1;
 //５桁(万・千・百・十・一)の五桁を描画するスプライト
 	SpriteRender m_digitSprite[5][10];
