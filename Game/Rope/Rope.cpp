@@ -1,10 +1,12 @@
 #include "stdafx.h"
 #include "Rope.h"
 #include "Source/Actor/Character/Cow/Cow.h"
+#include "GameCamera/GameCamera.h"
 #include "Source/Actor/Character/Player/Player.h"
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/Rope/NewRope.tkm";
+	const char* CAPTURED_COW_FILEPATH = "Assets/modelData/Rope/CapturedCowRope.tkm";
 
 	const Vector3 ROPE_INITIAL_SCALE = { 1.0f, 1.0f, 5.0f };
 
@@ -29,9 +31,12 @@ bool Rope::Start()
 {
 
 	m_ropeModelRender.Init(FILEPATH);
-	m_ropeCapturedCowModelRender.Init("Assets/modelData/Rope/CapturedCowRope.tkm");
+	m_ropeCapturedCowModelRender.Init(CAPTURED_COW_FILEPATH);
+
 	m_player = FindGO<Player>("player");
+	
 	m_ropeScale = ROPE_INITIAL_SCALE;
+	
 	m_ropeModelRender.SetScale(m_ropeScale);
 
 	m_ropeRot = Quaternion::Identity;
@@ -47,8 +52,15 @@ void Rope::Update()
 	/** プレイヤーがロープを投げる処理 */
 	PlayerThrowsRope();
 
-	/** プレイヤーの右手の位置のロープが常にある関数 */
-	FollowRightHand();
+	/** ロープアニメーション(ロープを投げた時のフラグ)がfalseなら */
+	if (!m_isThrowRope)
+	{
+		/** プレイヤーの右手の位置のロープが常にある関数 */
+		FollowRightHand();
+	}
+
+	/** ロープの回転に関する関数 */
+	RotateRope();
 
 	if (m_isHitCow && m_hitCow != nullptr)
 	{
@@ -67,10 +79,8 @@ void Rope::Update()
 		m_ropeCapturedCowModelRender.SetPosition(cowPos);
 		m_ropeCapturedCowModelRender.SetRotation(cowRot);
 
-		m_ropeCapturedCowModelRender.Update();
-
 	}
-	
+	m_ropeCapturedCowModelRender.Update();
 	m_ropeModelRender.Update();
 }
 
@@ -153,7 +163,7 @@ void Rope::StretchRope()
 
 	m_ropeScale = Vector3(1.0f, 1.0f, ropeScaleZ);
 
-	// 伸び縮みだけ
+	/** 伸び縮みだけ */
 	m_ropeModelRender.SetScale(m_ropeScale);
 
 }
@@ -186,10 +196,46 @@ void Rope::RotateStretchRope()
 
 }
 
+void Rope::RotateRope()
+{
+	/** ロープを投げている最中なら */
+	if (m_isThrowRope)
+	{
+		/** カメラの前にモデルを出す */
+		GameCamera* gameCamera = FindGO<GameCamera>("gameCamera");
+		
+		/** カメラの前方向を取得 */
+		Vector3 camForward = gameCamera->GetCameraForward();
+
+		/** カメラの前にロープを出す */
+		Vector3 camPos = gameCamera->GetCameraPosition();
+		Vector3 ropePos = camPos + camForward * 50.0f;
+		m_ropeCapturedCowModelRender.SetPosition(ropePos);
+
+		/** モデルの回転補正90度回転 */
+		Quaternion fixRot;
+		fixRot.SetRotation(Vector3::AxisX, 90.0f);
+
+		/** forwardから回転を作る */
+		Quaternion camRot;
+		camRot.SetRotation(Vector3::AxisZ, camForward);
+
+		m_ropeRot = camRot;
+
+		/** ロープをスピンさせるための回転 */
+		Quaternion spinRot;
+		spinRot.SetRotation(Vector3::AxisY, m_ropeAnimationTime * 10.0f);
+		m_ropeRot *= spinRot * fixRot;
+
+		m_ropeCapturedCowModelRender.SetRotation(m_ropeRot);
+	}
+}
+
 void Rope::Render(RenderContext& rc)
 {
-	/** ロープが投げられていて
-	 *牛に当たっていたらロープを表示する */
+	
+	/** ロープが投げられていたらモデルを表示する
+	 * 牛に当たっていたらロープを表示する */
 	if (m_isThrowRope or m_isHitCow)
 	{
 		m_ropeModelRender.Draw(rc);

@@ -88,6 +88,9 @@ private:
 	/** 伸び縮みするロープの回転に関する関数 */
 	void RotateStretchRope();
 
+	/** ロープの回転に関する関数 */
+	void RotateRope();
+
 private:
 	/** プレイヤー */
 	Player* m_player;
