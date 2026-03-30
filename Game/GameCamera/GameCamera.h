@@ -21,6 +21,18 @@ public:
 		m_isCowCaptured = isCowCaptured;
 	}
 
+	/** カメラの位置取得関数 */
+	Vector3 GetCameraPosition()
+	{
+		return g_camera3D->GetPosition();
+	}
+
+	/** カメラの前方向の取得 */
+	Vector3 GetCameraForward()
+	{
+		return g_camera3D->GetForward();
+	}
+
 
 private:
 	/** ロープを追いかける関数*/
