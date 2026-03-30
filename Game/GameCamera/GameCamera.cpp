@@ -52,7 +52,7 @@ bool GameCamera::Start()
 	//近平面を設定
 	g_camera3D->SetNear(1.0f);
 	//円平面を設定
-	g_camera3D->SetFar(100000.0f);
+	g_camera3D->SetFar(1000000.0f);
 	return true;
 }
 
