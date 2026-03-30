@@ -14,6 +14,7 @@
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
 #include "SoundManager/SoundManager.h"
 #include"Score.h"
+#include "nature/SkyCube.h"
 Game::~Game()
 {
 	//プレイヤーを削除
@@ -103,6 +104,8 @@ bool Game::Start()
 
 	//ゲームカメラの生成
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
+
+	InitSkyCube();
 
 	return true;
 }
@@ -219,6 +222,27 @@ void Game::SpawnCow()
 		}
 	}
 
+}
+
+void Game::InitSkyCube()
+{
+	/** 現在の空を破棄*/
+	DeleteGO(m_skyCube);
+
+	/** 空を出す*/
+	m_skyCube = NewGO<SkyCube>(0, "skyCube");
+
+	/** 空の種類を先ほど破棄した空の変数に代入する*/
+	m_skyCube->SetType((EnSkyCubeType)m_skyCubeType);
+
+	/** 空の大きさを調整*/
+	m_skyCube->SetScale(10000.0f);
+
+	/** 環境光のためのIBLテクスチャをセットする*/
+	/** このコードは、要するにg_renderingEngineのクラスの中にある
+	 *SetAmbientByIBLTextureていう関数の中にある
+	 *光の色が建物に反映される値を変更してる*/
+	g_renderingEngine->SetAmbientByIBLTexture(m_skyCube->GetTextureFilePath(), 0.6f);
 }
 
 

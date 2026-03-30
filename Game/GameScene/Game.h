@@ -92,8 +92,11 @@ public:
 	/*コンボしたかどうか判定するフラグ*/
 	bool IsCombo()const;
 private:
-	//牛が生まれる関数
+	/** 牛が生まれる関数 */
 	void SpawnCow();
+
+	/** 空出力関数 */
+	void InitSkyCube();
 
 private:
 	Stage* m_stage;
@@ -138,6 +141,13 @@ private:
 	SoundManager* m_inGameSound;
 	SoundSource* p_inGameBGM;
 	Score* m_score;
+
+	/** スカイキューブ */
+	SkyCube* m_skyCube = nullptr;
+
+	/** スカイキューブのタイプ */
+	int m_skyCubeType = enSkyCubeType_Night;
+
 	/** 牛が生まれる時間 */
 	float m_spawnTimer = 0.0f;
 
