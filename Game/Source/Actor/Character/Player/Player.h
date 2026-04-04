@@ -16,9 +16,13 @@ public:
     bool Start() override;
 	void Update() override;
 	void Render(RenderContext& rc) override;
-
+public:
 	void Move();
 	void Rotation();
+	/*ステート管理*/
+	void ManageState();
+	/*アニメーション*/
+	void PlayAnimation();
 	Vector3 GetPosition()
 	{
 		return m_transform.GetPosition();
@@ -65,10 +69,10 @@ private:
 	ModelRender m_playerModelRender;
 
 	Vector3 m_moveSpeed;//移動速度
-	
-	CharacterController m_characterController;//キャラコン
 
-	Vector3 m_playerPos;//プレイヤーの座標
+	int m_playerState = 0;//プレイヤーの状態
+	int m_prevPlayerState = -1;//プレイヤーの状態
+	CharacterController m_characterController;//キャラコン
 
 	Rope* m_rope;//ロープクラス
 
@@ -82,5 +86,13 @@ private:
 	//左ボタンが押されているかどうかのフラグ
 	bool m_isLeftButton1 = false;
 
+	//アニメーション
+	enum EnPlayAnimation
+	{
+		enAnimationClip_Idle,
+		enAnimationClip_Run,
+		enAnimationClip_Num,
+	};
+	AnimationClip animationClips[enAnimationClip_Num];
 };
 

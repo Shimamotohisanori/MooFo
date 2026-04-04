@@ -6,14 +6,22 @@
 #include"CountDown/CountDown.h"
 namespace
 {
-	const char* FILEPATH = "Assets/modelData/CowBoy.tkm", enModelUpAxis = enModelUpAxisZ;
-
-	uint8_t CHRACTER_CONTROLLER_WIDTH = 25.0f;
-	uint8_t CHRACTER_CONTROLLER_HIGHT = 75.0f;
+	const char* FILEPATH = "Assets/modelData/CowBoy/CowBoy3.tkm";
+	const char* ANIMATION_IDLEFILEPATH = "Assets/modelData/CowBoy/Idle3.tka";
+	const char* ANIMATION_RUNFILEPATH = "Assets/modelData/CowBoy/Run3.tka";
+	const float CHRACTER_CONTROLLER_WIDTH = 25.0f;
+	const float CHRACTER_CONTROLLER_HIGHT = 75.0f;
 
 }
 Player::Player()
 {
+	//アニメーションクリップの再生
+	animationClips[enAnimationClip_Idle].Load(ANIMATION_IDLEFILEPATH);
+	animationClips[enAnimationClip_Idle].SetLoopFlag(true);
+	animationClips[enAnimationClip_Run].Load(ANIMATION_RUNFILEPATH);
+	animationClips[enAnimationClip_Run].SetLoopFlag(true);
+	m_playerModelRender.Init(FILEPATH, animationClips, enAnimationClip_Num, enModelUpAxisZ);
+
 
 }
 
@@ -25,15 +33,11 @@ Player::~Player()
 bool Player::Start()
 {
 	m_countDown = FindGO<CountDown>("countdown");
-	m_playerModelRender.Init(FILEPATH);
-
 	m_game = FindGO<Game>("game");
-
 	m_rope = NewGO<Rope>(0, "rope");
 
+    m_characterController.Init(CHRACTER_CONTROLLER_WIDTH, CHRACTER_CONTROLLER_HIGHT, m_transform.GetPosition());
 	m_playerModelRender.SetPosition(m_transform.GetPosition());
-	m_characterController.Init(CHRACTER_CONTROLLER_WIDTH, CHRACTER_CONTROLLER_HIGHT, m_transform.GetPosition());
-	
 	m_playerModelRender.Update();
 	return true;
 }
@@ -44,28 +48,32 @@ void Player::Update()
 	{
 		return;
 	}
-
+	/*移動*/
 	Move();
-
+	/*回転*/
 	Rotation();
-
+	/*ロープを投げる処理*/
 	ThrowRope();
-
+	/*ロープを引っ張る処理*/
 	PullRope();
+	/*ステート管理*/
+	ManageState();
 
+	/*アニメーション*/
+	PlayAnimation();
 	m_playerModelRender.Update();
 }
 
 void Player::Move()
 {
+
 	if (m_rope->GetIsThrowRope() or m_rope->GetIsHitCow())
 	{
+		m_moveSpeed = Vector3::Zero;
 		//ロープを投げているときとロープが牛に当たっているときは移動できないようにする
 		return;
 	}
-	//xzの移動速度を初期化
-	m_moveSpeed.x = 0.0f;
-	m_moveSpeed.z = 0.0f;
+	
 
 	//左スティックの入力量を取得
 	Vector3 stickL;
@@ -83,9 +91,9 @@ void Player::Move()
 	right.Normalize();
 
 	//入力量を反映
-	Vector3 moveDir = forward * stickL.z* 150.0f + right * stickL.x * 150.0f;
-	m_moveSpeed.x = moveDir.x;
-	m_moveSpeed.z = moveDir.z;
+	Vector3 moveDir = forward * stickL.z + right * stickL.x;
+	moveDir *= 150.0f;
+	m_moveSpeed = moveDir;
 
 	//左スティックの入力量と120.0fを乗算
 	right*= stickL.x * 150.0f;
@@ -124,7 +132,6 @@ void Player::ThrowRope()
 	if (m_rope->GetIsHitCow() or !m_rope)
 	{
 		//ロープが存在しない、ロープが牛に当たっているときはロープを投げられないようにする
-
 		return;
 	}
 
@@ -160,6 +167,43 @@ void Player::PullRope()
 	}
 }
 
+
+void Player::ManageState()
+{
+	if (fabsf(m_moveSpeed.x) >= 0.01f || fabsf(m_moveSpeed.z) >= 0.01f)
+	{
+		//移動しているときは走るアニメーションにする
+		m_playerState = 1;
+	}
+	else
+	{
+		//移動していないときは待機アニメーションにする
+		m_playerState = 0;
+	}
+
+}
+
+
+void Player::PlayAnimation()
+{
+	//前の状態と同じ状態だったらアニメーションを切り替えない
+	if (m_playerState == m_prevPlayerState)
+	{
+		return;
+	}
+	m_prevPlayerState = m_playerState;
+	switch (m_playerState)
+	{
+	case 0:
+		//待機アニメーション
+		m_playerModelRender.PlayAnimation(enAnimationClip_Idle);
+		break;
+	case 1:
+		//走るアニメーション
+		m_playerModelRender.PlayAnimation(enAnimationClip_Run);
+		break;
+	}
+}
 void Player::Render(RenderContext& rc)
 {
 	m_playerModelRender.Draw(rc);
