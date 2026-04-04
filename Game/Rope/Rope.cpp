@@ -21,26 +21,23 @@ namespace
 }
 Rope::Rope()
 {
+	
+
 }
 
 Rope::~Rope()
 {
+
 }
 
 bool Rope::Start()
 {
-
 	m_ropeModelRender.Init(FILEPATH);
 	m_ropeCapturedCowModelRender.Init(CAPTURED_COW_FILEPATH);
-
 	m_player = FindGO<Player>("player");
-	
 	m_ropeScale = ROPE_INITIAL_SCALE;
-	
 	m_ropeModelRender.SetScale(m_ropeScale);
-
 	m_ropeRot = Quaternion::Identity;
-
 	return true;
 }
 
