@@ -80,6 +80,7 @@ void Score::TextScore()
 		for (int j = 0; j < 10; j++)
 		{
 			m_digitSprite[i][j].SetScale({ 0,0,0, });
+
 		}
 	}
 
@@ -87,12 +88,14 @@ void Score::TextScore()
 	for (int i = 0; i < 5; i++)
 	{
 		int d = digit[i];
+
+		int index = 4 - i;
 		//右→左に変換
-		m_digitSprite[4 - i][d].SetScale({ 1,1,1 });
+		m_digitSprite[index][d].SetScale({1,1,1});
 
 		//位置調整(横並び)
-		m_digitSprite[4 - i][d].SetPosition({
-			-900.0f + i * 100,//左寄り
+		m_digitSprite[index][d].SetPosition({
+			-900.0f + index * 100,//
 			-450.0f,//下側
 			0.0f });
 	}
@@ -102,7 +105,6 @@ void Score::AddScore(int value)
 {
 	m_score += value;
 }
-
 void Score::DecreaseScore(int value)
 {
 	m_score -= value;

@@ -60,7 +60,7 @@ bool Cow::Start()
 	m_player = FindGO<Player>("player");
 	m_countdown = FindGO<CountDown>("countdown");
 	m_rope = FindGO<Rope>("rope");
-
+	Score* score = FindGO<Score>("score");
 	
 	return true;
 }
@@ -266,15 +266,15 @@ void Cow::CapturedByPlayer()
 			if (game)
 			{
 				game->AddCombo();
+				game->AddScore(100);
 				game->ReMoveCow(this);
 			}
 			//牛を救出することが出来たらスコアを増やす
 				m_isCaptured = true;
-				Score* score = FindGO<Score>("score");
-				if (score != nullptr)
+			/*	if (score != nullptr)
 				{
 					score->AddScore(100);
-				}
+				}*/
 			//牛の救出数を増やす
 			CowNumberOfRescues* cowNumberOfRescues = FindGO<CowNumberOfRescues>("cownumberofrescues");
 			if (cowNumberOfRescues)

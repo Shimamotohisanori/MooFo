@@ -187,6 +187,7 @@ void UFO::TakeAwayTheCow()
 		Game* game = FindGO<Game>("game");
 		if (game)
 		{
+			game->ResetCombo();
 			game->ReMoveCow(m_targetCow);
 		}
 

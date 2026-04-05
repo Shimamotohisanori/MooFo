@@ -89,6 +89,11 @@ public:
 	bool m_isSound;
 	/*コンボ加算用関数*/
 	void AddCombo();
+
+	/*スコア加算関数*/
+	void AddScore(int score);
+	/*牛が連れ去られた時に読んでコンボをリセットする関数*/
+	void ResetCombo();
 	/*コンボしたかどうか判定するフラグ*/
 	bool IsCombo()const;
 private:
@@ -157,6 +162,8 @@ private:
 	int m_combo = 0;
 	/*コンボするごとに制限時間をプラスする変数*/
 	float m_comboTimer = 0.0f;
+	//スコアの倍率
+	int m_scoreMagnification = 1;
 
 };
 
