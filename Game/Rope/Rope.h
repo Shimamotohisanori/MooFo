@@ -30,6 +30,9 @@ public:
 	void SetIsHitCow(bool isHitCow)
 	{
 		m_isHitCow = isHitCow;
+		
+		/** 縄が牛に当たっていない場合は
+		 * 当たった牛の情報をリセットする */
 		if (!isHitCow)
 		{
 			m_hitCow = nullptr;

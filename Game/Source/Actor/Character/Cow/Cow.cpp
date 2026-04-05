@@ -14,6 +14,10 @@ namespace
 	const char* FILEPATH = "Assets/modelData/Cow/Model/Cow4.tkm"; //enModelUpAxis = enModelUpAxisZ;
 	const char* THROW_ROPE_ANIMATION_FILE_PATH = "Assets/modelData/Cow/Animation/Idle2.tka";
 	const char* FILEPATH_WALK = "Assets/modelData/Cow/Animation/Walk.tka";
+
+	/** プレイヤーに引っ張られるときの力 */
+	constexpr float PULL_POWER = 8.0f;
+
 }
 Cow::Cow()
 {
@@ -27,13 +31,13 @@ Cow::Cow()
 
 Cow::~Cow()
 {
+	Rope* rope = FindGO<Rope>("rope");
+
 	/** ロープに当たった牛が消えるときの処理 */
-	if (m_rope && m_rope->GetHitCow() == this)
+	if (rope && rope->GetHitCow() == this)
 	{
 		/** ロープの牛に当たったフラグをリセット */
-		m_rope->SetIsHitCow(false);
-		/** ロープの当たった牛をリセット */
-		m_rope->SetHitCow(nullptr);
+		rope->SetIsHitCow(false);
 	}
 
 	/** プレイヤーに引っ張られている牛が
@@ -215,7 +219,7 @@ void Cow::PulledByPlayer()
 		dir.Normalize();
 
 		//牛をプレイヤーのいる位置まで徐々に移動
-		cowPos += dir * 5.0f;
+		cowPos += dir * PULL_POWER;
 
 		m_transform.SetPosition(cowPos);
 
