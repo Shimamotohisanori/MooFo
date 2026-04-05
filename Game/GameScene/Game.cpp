@@ -158,11 +158,9 @@ void Game::Update()
 	else
 	{
 		m_combo = 0;
+		//コンボが途切れたらスコアの倍率を1倍に戻す
+		m_scoreMagnification = 1;
 	}
-
-
-
-
 }
 
 
@@ -250,9 +248,12 @@ void Game::AddCombo()
 {
 	m_combo++;
 	//5秒以内に牛を救出出来ればコンボ継続
-	m_comboTimer = 300.0f;
-
-
+	m_comboTimer = 6000.0f;
+	////3コンボするごとにスコアの獲得量を２倍にする
+	//if (m_combo % 3 == 0&&m_combo>0)
+	//{
+	//	m_scoreMagnification = 2;
+	//}
 	//コンボの時だけ制限時間を増やす
 	if (m_combo >= 2)
 	{
@@ -266,6 +267,26 @@ void Game::AddCombo()
 }
 
 
+void Game::ResetCombo()
+{
+	m_combo = 0;
+	m_scoreMagnification = 1;
+	m_comboTimer = 0.0f;
+}
+void Game:: AddScore(int score)
+{
+	int multiplier = 1;
+	//3コンボするごとにスコアの獲得量を２倍
+	if (m_combo % 5 == 0 && m_combo > 0)
+	{
+		multiplier = 2;
+	}
+	if (m_score)
+	{
+		m_score->AddScore(score *multiplier);
+	}
+	
+}
 bool Game::IsCombo()const
 {
 	return m_combo >= 2;
