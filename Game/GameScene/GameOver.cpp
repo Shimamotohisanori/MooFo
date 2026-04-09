@@ -3,7 +3,7 @@
 #include "GameOver.h"
 #include"Game.h";
 #include"Title.h";
-#include"Score.h"
+#include "Score/Score.h"
 #include"CowNumberOfRescues/CowNumberOfRescues.h"
 namespace
 {

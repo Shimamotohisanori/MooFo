@@ -7,7 +7,7 @@
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
 #include "Rope/Rope.h"
 #include "GameCamera/GameCamera.h"
-#include"Score.h"
+#include "Score/Score.h"
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/UFO/UFO2.tkm"; //enModelUpAxis = enModelUpAxisZ;

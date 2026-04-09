@@ -13,7 +13,7 @@
 #include "Rope/Rope.h"
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
 #include "SoundManager/SoundManager.h"
-#include"Score.h"
+#include "Score/Score.h"
 #include "nature/SkyCube.h"
 Game::~Game()
 {

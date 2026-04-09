@@ -156,7 +156,6 @@ int Score::GetScore() const
 	return m_score;
 }
 
-
 void Score::Render(RenderContext& rc)
 {
 	for (int i = 0; i < 5; i++)
