@@ -148,6 +148,10 @@ void Score::SetResult(bool isResult)
 }
 
 
+void Score::SetScore(int score)
+{
+	m_score = score;
+}
 
 
 
