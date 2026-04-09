@@ -68,49 +68,98 @@ void CowNumberOfRescues::Update()
 	ones = m_numberOfRescues % 10;
 }
 
+int CowNumberOfRescues::GetNumberOfRescues() const
+{
+	return m_numberOfRescues;
+}
+
+void CowNumberOfRescues::SetResult(bool isResult)
+{
+	m_isResult = isResult;
+}
+
 void CowNumberOfRescues::Render(RenderContext& renderContext)
 {
-	/** 救出画像の描画 */
-	m_rescueSprite.SetPosition(RESCUE_SPRITE_POSITION);
-	m_rescueSprite.Update();
-	m_rescueSprite.Draw(renderContext);
+    Vector3 rescuePos;
+    Vector3 tensPos;
+    Vector3 onesPos;
+    Vector3 slashPos;
+    Vector3 onePos;
+    Vector3 fivePos;
 
-	/** 1の画像の描画 */
-	m_oneSprite.Draw(renderContext);
+    if (m_isResult)
+    {
+		if (m_resultType == ResultType::GameClear)
+        {
+            //ゲームクリア
+            rescuePos = Vector3(-520.0f,-10.0f, 0.0f);
+            tensPos = Vector3(-420.0f, -10.0f, 0.0f);
+            onesPos = Vector3(-370.0f, -10.0f, 0.0f);
+            slashPos = Vector3(-320.0f, -10.0f, 0.0f);
+            onePos = Vector3(-270.0f, -10.0f, 0.0f);
+            fivePos = Vector3(-230.0f, -10.0f, 0.0f);
+        }
+        else
+        {
+            //ゲームオーバー
+            rescuePos = Vector3(-600.0f, 50.0f, 0.0f);
+            tensPos = Vector3(-500.0f, 50.0f, 0.0f);
+            onesPos = Vector3(-450.0f, 50.0f, 0.0f);
+            slashPos = Vector3(-400.0f, 50.0f, 0.0f);
+            onePos = Vector3(-350.0f, 50.0f, 0.0f);
+            fivePos = Vector3(-310.0f, 50.0f, 0.0f);
+        }
+       
+    }
+    else
+    {
+        //ゲーム中
+        rescuePos = RESCUE_SPRITE_POSITION;
+        tensPos = NUMBER_SPRITE_TENS_POSITION;
+        onesPos = NUMBER_SPRITE_ONES_POSITION;
+        slashPos = SLASH_SPRITE_POSITION;
+        onePos = ONE_SPRITE_POSITION;
+        fivePos = FIVE_SPRITE_POSITION;
+    }
 
-	/** 5の画像の描画 */
-	m_fiveSprite.Draw(renderContext);
+    // ------------------------
+    // 救出アイコン
+    // ------------------------
+    m_rescueSprite.SetPosition(rescuePos);
+    m_rescueSprite.Update();
+    m_rescueSprite.Draw(renderContext);
 
-	/** 救出数が10を超えていたら */
-	if (m_numberOfRescues >= 10)
-	{
-		/** 10の位の描画 */	
-		m_tensSprite[tens].SetPosition(NUMBER_SPRITE_TENS_POSITION);
-		m_tensSprite[tens].Update();
-		m_tensSprite[tens].Draw(renderContext);
+    // ------------------------
+    // 現在の救出数
+    // ------------------------
+    if (m_numberOfRescues >= 10)
+    {
+        // 十の位
+        m_tensSprite[tens].SetPosition(tensPos);
+        m_tensSprite[tens].Update();
+        m_tensSprite[tens].Draw(renderContext);
+    }
 
-		/** 1の位の描画 */
-		m_onesSprite[ones].SetPosition(NUMBER_SPRITE_ONES_POSITION);
-		m_onesSprite[ones].Update();
-		m_onesSprite[ones].Draw(renderContext);
+    // 一の位
+    m_onesSprite[ones].SetPosition(onesPos);
+    m_onesSprite[ones].Update();
+    m_onesSprite[ones].Draw(renderContext);
+    //「/」
+    m_slashSprite.SetPosition(slashPos);
+    m_slashSprite.Update();
+    m_slashSprite.Draw(renderContext);
 
-		/**「/」のUI画像の描画 */
-		m_slashSprite.SetPosition(SLASH_SPRITE_POSITION);
-		m_slashSprite.Update();
-		m_slashSprite.Draw(renderContext);
-	}
+    // 最大値（1 / 5）
+    m_oneSprite.SetPosition(onePos);
+    m_oneSprite.Update();
+    m_oneSprite.Draw(renderContext);
 
-	else
-	{
-		/** 1の位の描画 */
-		m_onesSprite[ones].SetPosition(NUMBER_SPRITE_ONES_TENBELOW_POSITION);
-		m_onesSprite[ones].Update();
-		m_onesSprite[ones].Draw(renderContext);
-
-		/**「/」のUI画像の描画 */
-		m_slashSprite.SetPosition(SLASH_SPRITE_TENBELOW_POSITION);
-		m_slashSprite.Update();
-		m_slashSprite.Draw(renderContext);
-	}
-	
+    m_fiveSprite.SetPosition(fivePos);
+    m_fiveSprite.Update();
+    m_fiveSprite.Draw(renderContext);
 }
+
+
+
+
+

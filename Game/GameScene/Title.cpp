@@ -4,7 +4,7 @@
 #include"Game.h"
 namespace
 {
-	const char* FILEPATH = "Assets/sprite/GameTransition/Title.dds";
+	const char* FILEPATH = "Assets/sprite/GameTransition/GameTitle.dds";
 	const int WIDTH = 1920;
 	const int HIGHT = 1080;
 }

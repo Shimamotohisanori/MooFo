@@ -18,7 +18,6 @@ public:
 
 private:
 	//制限時間スプライト
-	//FontRender m_TimerFontRender;
 	float m_timer = 300.0f;//制限時間
 
 	int m_prevTime = -1;

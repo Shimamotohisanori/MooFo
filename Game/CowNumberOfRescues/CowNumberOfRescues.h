@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /**
  * 牛の救出数クラス
  */
@@ -30,6 +30,28 @@ public:
 		m_numberOfRescues--;
 	}
 
+	/*牛の救出数をゲームオーバーとゲームクリアに反映*/
+	int GetNumberOfRescues() const;
+	/*セット関数*/
+	void SetNumber(int number)
+	{
+		m_numberOfRescues = number;
+	}
+	
+	void SetResult(bool isResult);
+
+	enum class ResultType
+	{
+		GameClear,
+		GameOver,
+	};
+
+	void SetResultType(ResultType type)
+	{
+		m_resultType = type;
+	}
+
+	ResultType m_resultType = ResultType::GameClear;
 
 private:
 	/** 救出数 */
@@ -61,5 +83,8 @@ private:
 
 	/** 5の画像 */
 	SpriteRender m_fiveSprite;
+	/*リザルト*/
+	bool m_isResult = false;
+
 };
 
