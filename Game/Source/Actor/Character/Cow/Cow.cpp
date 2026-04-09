@@ -8,7 +8,7 @@
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
 #include "Source/Actor/Character/UFO/UFO.h"
 #include <time.h>
-#include"Score.h"
+#include "Score/Score.h"
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/Cow/Model/Cow4.tkm"; //enModelUpAxis = enModelUpAxisZ;

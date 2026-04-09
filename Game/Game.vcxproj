@@ -223,7 +223,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Users\01254010\Downloads\Score.cpp" />
     <ClCompile Include="CountDown\CountDown.cpp" />
     <ClCompile Include="CowNumberOfRescues\CowNumberOfRescues.cpp" />
     <ClCompile Include="GameCamera\GameCamera.cpp" />
@@ -236,6 +235,7 @@
     <ClCompile Include="Pause\Pause.cpp" />
     <ClCompile Include="Pause\SoundPause.cpp" />
     <ClCompile Include="Rope\Rope.cpp" />
+    <ClCompile Include="Score\Score.cpp" />
     <ClCompile Include="SoundManager\SoundManager.cpp" />
     <ClCompile Include="Source\Actor\Actor.cpp" />
     <ClCompile Include="Source\Actor\Character\Character.cpp" />
@@ -252,7 +252,6 @@
     <ClCompile Include="Transform\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Users\01254010\Downloads\Score.h" />
     <ClInclude Include="CountDown\CountDown.h" />
     <ClInclude Include="CowNumberOfRescues\CowNumberOfRescues.h" />
     <ClInclude Include="GameCamera\GameCamera.h" />
@@ -265,6 +264,7 @@
     <ClInclude Include="Pause\SoundPause.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Rope\Rope.h" />
+    <ClInclude Include="Score\Score.h" />
     <ClInclude Include="SoundManager\SoundManager.h" />
     <ClInclude Include="Source\Actor\Actor.h" />
     <ClInclude Include="Source\Actor\Character\Character.h" />
