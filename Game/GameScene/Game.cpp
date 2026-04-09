@@ -308,7 +308,7 @@ void Game::ResetCombo()
 void Game:: AddScore(int score)
 {
 	int multiplier = 1;
-	//3コンボするごとにスコアの獲得量を２倍
+	//5コンボするごとにスコアの獲得量を２倍
 	if (m_combo % 5 == 0 && m_combo > 0)
 	{
 		multiplier = 2;

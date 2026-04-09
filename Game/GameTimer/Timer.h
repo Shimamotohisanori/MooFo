@@ -18,7 +18,7 @@ public:
 
 private:
 	//制限時間スプライト
-	float m_timer = 10.0f;//制限時間
+	float m_timer = 300.0f;//制限時間
 
 	int m_prevTime = -1;
 	//三桁(百・十・一)を描画するスプライト
