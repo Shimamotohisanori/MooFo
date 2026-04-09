@@ -11,6 +11,7 @@ namespace
 	const char* ANIMATION_RUNFILEPATH = "Assets/modelData/CowBoy/Run3.tka";
 	const float CHRACTER_CONTROLLER_WIDTH = 25.0f;
 	const float CHRACTER_CONTROLLER_HIGHT = 75.0f;
+	const float LIMIT_RADIUS = 1450.0f;
 
 }
 Player::Player()
@@ -103,6 +104,31 @@ void Player::Move()
 	m_moveSpeed += right + forward;
 	//キャラクターコントローラーを使って座標を移動させる
 	m_transform.GetPosition() = m_characterController.Execute(m_moveSpeed,g_gameTime->GetFrameDeltaTime());
+
+	Vector3 position = m_transform.GetPosition();
+
+	/** XZ平面の距離計算 */
+	Vector3 posXZ = position;
+	posXZ.y = 0.0f;
+	float distsance = posXZ.Length();
+
+	/** 半径を超えたら円周上に戻す */
+	if (distsance > LIMIT_RADIUS)
+	{
+		/** XZ平面の正規化 */
+		posXZ.Normalize();
+
+		/** 半径を掛ける */
+		posXZ *= LIMIT_RADIUS;
+
+		/** Y座標はそのまま */
+		/** XZ平面の座標を更新 */
+		position.x = posXZ.x;
+		position.z = posXZ.z;
+
+		m_transform.SetPosition(position);
+	}
+
 
 	//モデルの座標をキャラクターコントローラーの座標に合わせる
 	m_playerModelRender.SetPosition(m_transform.GetPosition());

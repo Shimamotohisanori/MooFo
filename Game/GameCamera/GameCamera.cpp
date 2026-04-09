@@ -222,6 +222,9 @@ void GameCamera::FollowRope()
 
 void GameCamera::CheckCameraHitCow()
 {
+	/** ロープが投げられていない場合は牛に当たる処理を行わない */
+	if (!m_rope->GetIsThrowRope()) return;
+
 	/** 牛を捕まえた後は牛に当たる処理を行わない */
 	if (m_isCowCaptured) return;
 
