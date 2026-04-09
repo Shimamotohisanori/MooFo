@@ -20,6 +20,10 @@ public:
 	//スコアをゲットする関数
 	int GetScore() const;
 
+	//スコアをセットする関数（GameClear等から最終スコアを直接反映するため)
+	void SetScore(int score);
+
+
 	/** リザルトの種類 */
 	enum class ResultType
 	{

@@ -61,7 +61,7 @@
     <ClCompile Include="CowNumberOfRescues\CowNumberOfRescues.cpp">
       <Filter>CowNumberOfRescues</Filter>
     </ClCompile>
-    <ClCompile Include="Score.cpp" />
+    <ClCompile Include="..\..\..\Users\01254010\Downloads\Score.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -124,7 +124,7 @@
     <ClInclude Include="CowNumberOfRescues\CowNumberOfRescues.h">
       <Filter>CowNumberOfRescues</Filter>
     </ClInclude>
-    <ClInclude Include="Score.h" />
+    <ClInclude Include="..\..\..\Users\01254010\Downloads\Score.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
@@ -177,6 +177,9 @@
     </Filter>
     <Filter Include="CowNumberOfRescues">
       <UniqueIdentifier>{72968903-b3bc-4aa0-ba0d-1de545a786bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Score">
+      <UniqueIdentifier>{9b3de319-b501-4fc4-969d-59f2fb8fb033}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
