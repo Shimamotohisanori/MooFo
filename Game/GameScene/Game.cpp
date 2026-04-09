@@ -130,7 +130,11 @@ void Game::Update()
 	//セレクトボタンを押したら
 	if (g_pad[0]->IsTrigger(enButtonSelect))
 	{
-
+		//カウントダウン中はPauseの処理をしない
+		if (m_countDown->GetCountDown())
+		{
+			return;
+		}
 		DeleteGO(p_inGameBGM);
     
 		/** ポーズ画面をアクティブにする */

@@ -49,13 +49,13 @@ namespace
 
 
 	m_game = FindGO<Game>("game");
-
 	m_choiceSound = FindGO<SoundManager>("soundmanager");
 	return true;
 }
 
 void Pause::Update()
 {
+	
 	Choose();
 	Select();
 	/** �㉺�{�^���ŃJ�E���g�̐��l��ς���BGM��SE��I���ł���悤�ɂ��� */
