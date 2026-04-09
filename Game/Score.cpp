@@ -85,6 +85,32 @@ void Score::TextScore()
 	}
 
 //表示(右から並べる)
+	float baseX;
+	float baseY;
+
+	if (m_isResult)
+	{
+		baseY = -100.0f;
+		//ゲームクリアならスコアを-580の位置に表示する
+		if (m_resultType == ResultType::GameClear)
+		{
+			baseX = -580.0f;
+			baseY = -150.0f;
+		}
+		//ゲームオーバーならスコアを-680の位置に表示する
+		else if (m_resultType == ResultType::GameOver)
+		{
+			baseX = -680.0f;
+			baseY = -70.0f;
+		}
+	}
+	else
+	{
+		//ゲーム中なら
+		baseX = -900.0f;
+		baseY = -450.0f;
+	}
+
 	for (int i = 0; i < 5; i++)
 	{
 		int d = digit[i];
@@ -95,8 +121,8 @@ void Score::TextScore()
 
 		//位置調整(横並び)
 		m_digitSprite[index][d].SetPosition({
-			-900.0f + index * 100,//
-			-450.0f,//下側
+			baseX + index * 80,//
+			baseY,//下側
 			0.0f });
 	}
 	
@@ -114,6 +140,23 @@ void Score::DecreaseScore(int value)
 		m_score = 0;
 	}
 }
+
+
+void Score::SetResult(bool isResult)
+{
+	m_isResult = isResult;
+}
+
+
+
+
+
+int Score::GetScore() const
+{
+	return m_score;
+}
+
+
 void Score::Render(RenderContext& rc)
 {
 	for (int i = 0; i < 5; i++)

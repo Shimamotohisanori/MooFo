@@ -166,22 +166,59 @@ void Game::Update()
 
 void Game::Clear()
 {
+	//ゲームクリアの画像にスコアを渡すための変数
+	int ClearfinalScore = 0;
+	if (m_score)
+	{
+		ClearfinalScore = m_score->GetScore();
+	}
+	//ゲームクリアの画像に牛の救出数を渡すための変数
+	int ClearfinalRescue = 0;
+	if (m_cowNumberOfRescues)
+	{
+		ClearfinalRescue = m_cowNumberOfRescues->GetNumberOfRescues();
+	}
 	if (m_timer->GetTimer() <= 0.0f)
 	{
 		//ゲームクリアの画像を呼び出す
 		m_gameClear = NewGO<GameClear>(0, "gameClear");
+		//ゲームクリアの画像にスコアを渡す
+		m_gameClear->SetFinalClearScore(ClearfinalScore);
+		//ゲームクリアの画像に牛の救出数を渡す
+		m_gameClear->SetFinalClearRescue(ClearfinalRescue);
+
 		DeleteGO(p_inGameBGM);
 		DeleteGO(this);
 	}
+
+
 }
 
 void Game::Death()
 {
 	if (m_isDead)return;
+	//ここでスコアを取得
+	int finalScore = 0;
+	if (m_score)
+	{
+		finalScore = m_score->GetScore();
+	}
+	//牛の救出数を取得する変数
+	int finalRescue= 0;
+	if (m_cowNumberOfRescues)
+	{
+		finalRescue = m_cowNumberOfRescues->GetNumberOfRescues();
+	}
+
 	if (g_pad[0]->IsTrigger(enButtonA))
 	{
 		m_isDead = true;
+		//ゲームオーバーの画像を呼び出す
 		m_gameOver = NewGO<GameOver>(0, "gameover");
+		//ゲームオーバーの画像にスコアを渡す
+		m_gameOver->SetFinalScore(finalScore);
+		//ゲームオーバーの画像に牛の救出数を渡す
+		m_gameOver->SetFinalRescue(finalRescue);
 		DeleteGO(p_inGameBGM);
 		DeleteGO(this);
 	}
@@ -249,11 +286,6 @@ void Game::AddCombo()
 	m_combo++;
 	//5秒以内に牛を救出出来ればコンボ継続
 	m_comboTimer = 6000.0f;
-	////3コンボするごとにスコアの獲得量を２倍にする
-	//if (m_combo % 3 == 0&&m_combo>0)
-	//{
-	//	m_scoreMagnification = 2;
-	//}
 	//コンボの時だけ制限時間を増やす
 	if (m_combo >= 2)
 	{

@@ -3,10 +3,12 @@
 #include "GameClear.h"
 #include"Game.h"
 #include"Title.h"
+#include"Score.h"
+#include"CowNumberOfRescues/CowNumberOfRescues.h"
 
 namespace
 {
-	const char* FILEPATH = "Assets/sprite/GameTransition/GameClear.dds";
+	const char* FILEPATH = "Assets/sprite/GameTransition/GameClear2.dds";
 	const int WIDTH = 1920;
 	const int HEIGHT = 1080;
 }
@@ -19,14 +21,19 @@ GameClear::GameClear()
 
 GameClear::~GameClear()
 {
-
+	DeleteGO(m_score);
+	DeleteGO(m_cowNumberOfRescues);
 }
 
 
 bool GameClear::Start()
 {
 	m_GameClearSpriteRender.Init(FILEPATH, WIDTH, HEIGHT);
+	//スコアを表示するためのスコアクラスを生成
+	m_score = NewGO<Score>(0, "score");
 
+	//救出数を表示するためにクラスを生成
+	m_cowNumberOfRescues = NewGO<CowNumberOfRescues>(0, "cownumberofrescues");
 	m_clearSound = FindGO<SoundManager>("soundmanager");
 	p_clearBGM = m_clearSound->PlayingBGM(SoundBGM::enGameClearBGM, false);
 
@@ -35,7 +42,27 @@ bool GameClear::Start()
 
 void GameClear::Update()
 {
+	//まだスコアをセットしていないならスコアをセットする
+	if(!m_isScoreSet&& m_score)
+	{
+		m_score->SetResult(true);
+		m_score->SetResultType(Score::ResultType::GameClear);
+		m_isScoreSet = true;
+	}
+
+	//まだ救出数をセットしていないなら救出数をセットする
+	if (!m_isRescueSet && m_cowNumberOfRescues)
+	{
+		m_cowNumberOfRescues->SetResult(true);
+		m_cowNumberOfRescues->SetResultType(CowNumberOfRescues::ResultType::GameClear);
+		m_isRescueSet = true;
+	}
+
 	InGameClear();
+	if (m_score)
+	{
+		m_score->Update();
+	}
 }
 
 
@@ -62,7 +89,21 @@ void GameClear::InGameClear()
 
 	}
 }
+
+void GameClear::SetFinalClearScore(int score)
+{
+	m_finalScore = score;
+}
+
+void GameClear::SetFinalClearRescue(int rescue)
+{
+	m_finalRescue = rescue;
+}
 void GameClear::Render(RenderContext& rc)
 {
 	m_GameClearSpriteRender.Draw(rc);
+	if(m_score)
+	{
+		m_score->Render(rc);
+	}
 }
