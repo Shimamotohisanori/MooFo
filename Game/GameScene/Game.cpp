@@ -17,8 +17,7 @@
 #include "nature/SkyCube.h"
 Game::~Game()
 {
-	//プレイヤーを削除
-	DeleteGO(m_player);
+	
 	//ステージを削除
 	DeleteGO(m_stage);
 
@@ -49,6 +48,9 @@ Game::~Game()
 			DeleteGO(m_UFO[i]);
 		}
 	}
+
+	//プレイヤーを削除
+	DeleteGO(m_player);
 
 	//タイマーを削除
 	DeleteGO(m_timer);
