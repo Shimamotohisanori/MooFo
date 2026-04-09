@@ -48,6 +48,7 @@ void GameOver::Update()
 	{
 		m_score->SetResult(true);
 		m_score->SetResultType(Score::ResultType::GameOver);
+		m_score->SetScore(m_finalScore);
 		m_isScoreSet = true;
 	}
 
@@ -56,6 +57,7 @@ void GameOver::Update()
 	{
 		m_cowNumberOfRescues->SetResult(true);
 		m_cowNumberOfRescues->SetResultType(CowNumberOfRescues::ResultType::GameOver);
+		m_cowNumberOfRescues->SetNumber(m_finalRescue);
 		m_isRescueSet = true;
 	}
 	//GameOver時に行う処理

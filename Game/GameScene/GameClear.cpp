@@ -47,6 +47,8 @@ void GameClear::Update()
 	{
 		m_score->SetResult(true);
 		m_score->SetResultType(Score::ResultType::GameClear);
+		m_score->SetScore(m_finalScore);
+		
 		m_isScoreSet = true;
 	}
 
@@ -55,6 +57,7 @@ void GameClear::Update()
 	{
 		m_cowNumberOfRescues->SetResult(true);
 		m_cowNumberOfRescues->SetResultType(CowNumberOfRescues::ResultType::GameClear);
+		m_cowNumberOfRescues->SetNumber(m_finalRescue);
 		m_isRescueSet = true;
 	}
 

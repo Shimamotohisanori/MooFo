@@ -178,7 +178,7 @@ void Game::Clear()
 	{
 		ClearfinalRescue = m_cowNumberOfRescues->GetNumberOfRescues();
 	}
-	if (m_timer->GetTimer() <= 0.0f)
+	if (m_timer->GetTimer() <= 0.0f && m_cowNumberOfRescues->GetNumberOfRescues() >=  15)
 	{
 		//ゲームクリアの画像を呼び出す
 		m_gameClear = NewGO<GameClear>(0, "gameClear");
@@ -210,7 +210,7 @@ void Game::Death()
 		finalRescue = m_cowNumberOfRescues->GetNumberOfRescues();
 	}
 
-	if (g_pad[0]->IsTrigger(enButtonA))
+	if (m_timer->GetTimer() <=0.0f &&m_cowNumberOfRescues->GetNumberOfRescues( ) < 15)
 	{
 		m_isDead = true;
 		//ゲームオーバーの画像を呼び出す
