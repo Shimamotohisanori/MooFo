@@ -32,6 +32,11 @@ namespace
 	/** 牛を見つけるときの距離の二乗 */
 	constexpr float CAPTURE_RANGE_SQ = 600.0f;
 
+	/**移動可能エリア（柵の内側）*/
+	constexpr float AREA_MIN_X = -1400.0f;
+	constexpr float AREA_MAX_X = 1400.0f;
+	constexpr float AREA_MIN_Z = -1100.0f;
+	constexpr float AREA_MAX_Z = 1100.0f;
 }
 UFO::UFO()
 {
@@ -46,6 +51,8 @@ UFO::~UFO()
 
 bool UFO::Start()
 {
+	//// ★ 強制的に +X 方向へ移動（テスト用）
+	//m_moveDir = Vector3(0.0f, 0.0f, 1.0f);
 	m_countdown = FindGO<CountDown>("countdown");
 	m_score = FindGO<Score>("score");
 	srand(time(nullptr));
@@ -121,6 +128,28 @@ void UFO::Move()
 	Vector3 pos = m_transform.GetPosition();
 	//少しづつ位置を動かす
 	pos += m_moveDir * m_moveSpeed * g_gameTime->GetFrameDeltaTime();
+	//四方の柵に当たったら反転させる
+	if (pos.x < AREA_MIN_X)
+	{
+		pos.x = AREA_MIN_X;
+		m_moveDir.x *= -1;//壁に当たったら反転させる
+	}
+	else if(pos.x > AREA_MAX_X)
+	{
+		pos.x = AREA_MAX_X;
+		m_moveDir.x *= -1;//壁に当たったら反転させる
+	}
+
+	if (pos.z < AREA_MIN_Z)
+	{
+		pos.z = AREA_MIN_Z;
+		m_moveDir.z *= -1;//壁に当たったら反転させる
+	}
+	else if (pos.z > AREA_MAX_Z)
+	{
+		pos.z = AREA_MAX_Z;
+		m_moveDir.z *= -1;//壁に当たったら反転させる
+	}
 	//ポジションを更新
 	m_transform.SetPosition(pos);
 	//モデルに位置を反映

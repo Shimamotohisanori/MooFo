@@ -50,6 +50,8 @@ private:
 	bool m_isPause = false;
 
 	Game* m_game;
+	SoundPause* m_soundPause;
+	
 	SpriteRender m_pauseBackGround;
 	SpriteRender m_quiteSprite;
 	SpriteRender m_resumeSprite;
@@ -61,7 +63,7 @@ private:
 	SpriteRender m_notVolumeSprite;
 	SpriteRender m_arrowSprite;
 
-	SoundPause* m_soundPause;
+	
 
 	
 
