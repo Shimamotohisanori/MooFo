@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "SoundManager/SoundManager.h"
 #include "GameOver.h"
-#include"Game.h";
-#include"Title.h";
+#include "Game.h"
+#include "Title.h"
 #include "Score/Score.h"
-#include"CowNumberOfRescues/CowNumberOfRescues.h"
+#include "CowNumberOfRescues/CowNumberOfRescues.h"
+
 namespace
 {
 	const char* FILEPATH = "Assets/sprite/GameTransition/GameOver2.dds";
@@ -83,13 +84,12 @@ void GameOver::InGameOver()
 		NewGO<Title>(0, "title");
 		m_isDeleteRequest = true;
 	}
+	
 	//削除リクエストが来ているときに削除する
-		if (m_isDeleteRequest == true)
+	if (m_isDeleteRequest == true)
 	{
-		DeleteGO(this);
-
 		DeleteGO(p_deathBGM);
-
+		DeleteGO(this);
 	}
 }
 

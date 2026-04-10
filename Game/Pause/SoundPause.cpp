@@ -2,6 +2,7 @@
 #include "SoundManager/SoundManager.h"
 #include "SoundPause.h"
 #include "Pause/Pause.h"
+
 namespace
 {
 	const Vector3 RETURNPOS = { 0.0f,-300.0f,0.0f };

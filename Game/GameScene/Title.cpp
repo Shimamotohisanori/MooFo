@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "SoundManager/SoundManager.h"
 #include "Title.h"
-#include"Game.h"
+#include "Game.h"
+
 namespace
 {
 	const char* FILEPATH = "Assets/sprite/GameTransition/GameTitle.dds";
@@ -43,10 +44,9 @@ void Title::InTitle()
 	if (g_pad[0]->IsTrigger(enButtonA))
 	{
 		NewGO<Game>(0, "game");
-		DeleteGO(this);
 		p_titleSE = m_soundManager->PlayingSE(SoundSE::enDecisionSE, false);
 		DeleteGO(p_titleBGM);
-
+		DeleteGO(this);
 	}
 }
 

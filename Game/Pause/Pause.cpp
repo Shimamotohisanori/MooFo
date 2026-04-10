@@ -2,10 +2,9 @@
 #include "Pause/Pause.h"
 #include "GameScene/Game.h"
 #include "SoundManager/SoundManager.h"
-#include "Pause/Pause.h"
-#include "GameScene/Game.h"
 #include "SoundPause.h"
 #include "GameScene/Title.h"
+
 namespace
 {
 	//const std::string PAUSE_SPRITE_FILE_PASS = "Assets/sptite/";
@@ -42,7 +41,7 @@ namespace
 	//m_volumeSprite.Init("Assets/volume.dds",100.0f,100.0f);
 	//m_notVolumeSprite.Init("Assets/notVolume.dds",100.0f,100.0f);
 
-	/** �T�E���h�̃|�[�Y��ʂ��o�� */
+	/** ポーズ画面の音量設定クラスを生成 */
 	m_soundPause = NewGO<SoundPause>(0, "soundpause");
 
 	m_soundPause->Deactivate();
@@ -58,7 +57,8 @@ void Pause::Update()
 	
 	Choose();
 	Select();
-	/** �㉺�{�^���ŃJ�E���g�̐��l��ς���BGM��SE��I���ł���悤�ɂ��� */
+
+	/** 上下の入力で選択している場所の番号を変える */
 	if (g_pad[0]->IsTrigger(enButtonDown))
 	{
 		m_countNumber++;
@@ -74,28 +74,34 @@ void Pause::Update()
 
 void Pause::Choose()
 {
-	/** �I�����ȊO�̐��l�ɕς�����猳�ɖ߂� */
+	// ** 選択している場所の番号が-1になったら2にする */
 	if (m_countNumber == -1)
 	{
 		m_countNumber = 2;
 	}
 
-	/** ���l�ɓ��Ă͂܂�if��������ꍇ���̃|�W�V������ݒ肵�đI�����Ă��镨��\���Ă��� */
+	/** 選択している場所の番号が3になったら0にする */
 	if (m_countNumber == 0)
 	{
 		m_arrowSprite.SetPosition(ARROWPOS);
 		m_arrowSprite.SetScale(ARROWSCALE);
 	}
+
+	/** 選択している場所の番号が1になったら矢印の位置を変える */
 	else if (m_countNumber == 1)
 	{
 		m_arrowSprite.SetPosition(SECONDARROWPOS);
 		m_arrowSprite.SetScale(ARROWSCALE);
 	}
+
+	/** 選択している場所の番号が2になったら矢印の位置を変える */
 	else if (m_countNumber == 2)
 	{
 		m_arrowSprite.SetPosition(THIRDARROWPOS);
 		m_arrowSprite.SetScale(ARROWSOUNDSCALE);
 	}
+	
+	/** 選択している場所の番号が3になったら0にする */
 	else if (m_countNumber == 3)
 	{
 		m_countNumber = 0;
@@ -105,22 +111,29 @@ void Pause::Choose()
 
 void Pause::Select()
 {
-	/** ���ꂼ��̑I���������ʂ�if���ŏ������A���s������ */
+	/** 決定ボタンが押された場合の処理 */
 	if (g_pad[0]->IsTrigger(enButtonStart))
 	{
+		/** 決定SEを鳴らす */
 		p_DecisionSE = m_choiceSound->PlayingSE(SoundSE::enDecisionSE, false);
+		
+		/** 選択している場所の番号が0のときはゲームを終了する */
 		if (m_countNumber == 0)
 		{
 			m_isPause = false;
 			Deactivate();
 			m_game->m_isSound = false;
 		}
+
+		/** 選択している場所の番号が1のときはタイトルに戻る */
 		else if (m_countNumber == 1)
 		{
 			NewGO<Title>(0,"title");
 			DeleteGO(m_game);
 			DeleteGO(this);
 		}
+
+		/** 選択している場所の番号が2のときは音量設定画面に行く */
 		else if (m_countNumber == 2)
 		{
 			m_soundPause->Activate();
@@ -129,16 +142,6 @@ void Pause::Select()
 		}
 	}
 }
-
-//void Pause::StopBGM()
-//{
-//	/** ����m_game���A�N�e�B�u����Ȃ������� */
-//	if (m_game->IsActive() == false)
-//	{
-//		/** �Q�[������BGM���X�g�b�v������ */
-//		SoundManager::
-//	}
-//}
 
 void Pause::Render(RenderContext& rc)
 {

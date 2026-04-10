@@ -1,18 +1,23 @@
 #include "stdafx.h"
 #include "Timer.h"
-#include"CountDown/CountDown.h"
-#include"Pause/Pause.h"
+#include "CountDown/CountDown.h"
+#include "Pause/Pause.h"
+
+namespace
+{
+	/** 三桁を描画する画像の大きさ */
+	const Vector3 DIGIT_SCALE = {0.0f,0.0f, 0.0f};
+}
+
 Timer::Timer()
 {
 
 }
 
-
 Timer::~Timer()
 {
 
 }
-
 
 bool Timer::Start()
 {
@@ -25,7 +30,7 @@ bool Timer::Start()
 		{
 			m_digitSprite[i][j].Init(m_digitPaths[j], 128, 128);
 			// 非表示
-			m_digitSprite[i][j].SetScale({ 0,0,0 });
+			m_digitSprite[i][j].SetScale(DIGIT_SCALE);
 		}
 		
 	}
