@@ -213,17 +213,6 @@ void UFO::TakeAwayTheCow()
 		/* 牛の状態を連れていかれる前の状態に戻す */
 		m_targetCow->SetIsTakeAwayed(false);
 
-		/** Gameに通知してaliveCowsから外す */
-		Game* game = FindGO<Game>("game");
-		if (game)
-		{
-			game->ResetCombo();
-			game->ReMoveCow(m_targetCow);
-		}
-
-		/** 牛を削除 */
-		DeleteGO(m_targetCow);
-
 		if (auto rope = FindGO<Rope>("rope"))
 		{
 			if (rope->GetHitCow() == m_targetCow)
@@ -237,6 +226,17 @@ void UFO::TakeAwayTheCow()
 		{
 			camera->SetIsCowCaptured(false);
 		}
+		
+		/** Gameに通知してaliveCowsから外す */
+		Game* game = FindGO<Game>("game");
+		if (game)
+		{
+			game->ResetCombo();
+			game->ReMoveCow(m_targetCow);
+		}
+
+		/** 牛を削除 */
+		DeleteGO(m_targetCow);
 
 		/** 状態をリセットする */
 		m_targetCow = nullptr;

@@ -23,13 +23,13 @@ Game::~Game()
 	DeleteGO(m_stage);
 
 	//牛を削除
-	for (int i = 0; i < EnCow_Num; i++)
+	/*for (int i = 0; i < EnCow_Num; i++)
 	{
 		if (m_cow[i] != nullptr)
 		{
 			DeleteGO(m_cow[i]);
 		}
-	}
+	}*/
 
 	/** SpawnCow等で増えた牛も含めて生きている牛は全て削除 */
 	for (auto cow : m_aliveCows)
