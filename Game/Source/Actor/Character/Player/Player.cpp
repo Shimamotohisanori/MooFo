@@ -11,7 +11,7 @@ namespace
 	const char* ANIMATION_RUNFILEPATH = "Assets/modelData/CowBoy/Run3.tka";
 	const float CHRACTER_CONTROLLER_WIDTH = 25.0f;
 	const float CHRACTER_CONTROLLER_HIGHT = 75.0f;
-	const float LIMIT_RADIUS = 1450.0f;
+	const float PLAYER_MOVE_LIMIT_RADIUS = 1450.0f;
 
 }
 Player::Player()
@@ -113,13 +113,13 @@ void Player::Move()
 	float distsance = posXZ.Length();
 
 	/** 半径を超えたら円周上に戻す */
-	if (distsance > LIMIT_RADIUS)
+	if (distsance > PLAYER_MOVE_LIMIT_RADIUS)
 	{
 		/** XZ平面の正規化 */
 		posXZ.Normalize();
 
 		/** 半径を掛ける */
-		posXZ *= LIMIT_RADIUS;
+		posXZ *= PLAYER_MOVE_LIMIT_RADIUS;
 
 		/** Y座標はそのまま */
 		/** XZ平面の座標を更新 */

@@ -18,6 +18,7 @@ namespace
 	/** プレイヤーに引っ張られるときの力 */
 	constexpr float PULL_POWER = 8.0f;
 
+	constexpr float COW_MOVE_LIMIT_RADIUS = 1450.0f;
 }
 Cow::Cow()
 {
@@ -138,6 +139,30 @@ void Cow::Move()
 	m_cowmodelRender.SetPosition(m_transform.GetPosition());
 	//タイマーを減らす
 	m_moveTimer--;
+
+	/** 移動できる範囲を制限する */
+	/** 牛の移動範囲の中心 */
+	Vector3 center = Vector3::Zero;
+
+	/** 牛の位置から中心を引いてXZ平面上のベクトルを作る */
+	Vector3 posXZ = pos - center;
+
+	/** Y成分を0にしてXZ平面上のベクトルにする */
+	posXZ.y = 0.0f;
+
+	/** XZ平面上のベクトルの長さを求める */
+	float distance = posXZ.Length();
+
+	/** 牛の移動範囲の半径より遠くにいるときは
+	 * 牛の位置を移動範囲の端にする */
+	if (distance > COW_MOVE_LIMIT_RADIUS)
+	{
+		posXZ.Normalize();
+		pos = center + posXZ * COW_MOVE_LIMIT_RADIUS;
+
+		m_transform.SetPosition(pos);
+		m_cowmodelRender.SetPosition(pos);
+	}
 }
 void Cow::Rotation()
 {
