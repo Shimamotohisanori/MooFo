@@ -1,11 +1,16 @@
 #include "stdafx.h"
 #include "Score.h"
+
 namespace
 {
+	/** 三桁の数字を描画する画像の大きさ */
+	const Vector3 DIGIT_SCALE = { 0.0f,0.0f, 0.0f };
+
 	//数字の大きさ
 	const int  WIDTH = 85.0f;
 	const int HEIGHT= 85.0f;
 }
+
 Score::Score()
 {
 
@@ -33,7 +38,7 @@ bool Score::Start()
 			m_digitSprite[i][j].Init(m_digitPaths[j], WIDTH,HEIGHT);
 
 			//非表示にしないと前のスコアが残ってしまいバグってしまう。
-			m_digitSprite[i][j].SetScale({ 0,0,0, });
+			m_digitSprite[i][j].SetScale(DIGIT_SCALE);
 		}
 	}
 	return true;

@@ -1,13 +1,14 @@
 ﻿#include "stdafx.h"
 #include "UFO.h"
 #include <time.h>
-#include"CountDown/CountDown.h"
+#include "CountDown/CountDown.h"
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "GameScene/Game.h"
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
 #include "Rope/Rope.h"
 #include "GameCamera/GameCamera.h"
 #include "Score/Score.h"
+
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/UFO/UFO2.tkm"; //enModelUpAxis = enModelUpAxisZ;
@@ -212,17 +213,6 @@ void UFO::TakeAwayTheCow()
 		/* 牛の状態を連れていかれる前の状態に戻す */
 		m_targetCow->SetIsTakeAwayed(false);
 
-		/** Gameに通知してaliveCowsから外す */
-		Game* game = FindGO<Game>("game");
-		if (game)
-		{
-			game->ResetCombo();
-			game->ReMoveCow(m_targetCow);
-		}
-
-		/** 牛を削除 */
-		DeleteGO(m_targetCow);
-
 		if (auto rope = FindGO<Rope>("rope"))
 		{
 			if (rope->GetHitCow() == m_targetCow)
@@ -236,6 +226,17 @@ void UFO::TakeAwayTheCow()
 		{
 			camera->SetIsCowCaptured(false);
 		}
+		
+		/** Gameに通知してaliveCowsから外す */
+		Game* game = FindGO<Game>("game");
+		if (game)
+		{
+			game->ResetCombo();
+			game->ReMoveCow(m_targetCow);
+		}
+
+		/** 牛を削除 */
+		DeleteGO(m_targetCow);
 
 		/** 状態をリセットする */
 		m_targetCow = nullptr;

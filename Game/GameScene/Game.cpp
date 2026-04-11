@@ -1,34 +1,26 @@
 ﻿#include "stdafx.h"
 #include "Game.h"
-#include"GameCamera/GameCamera.h"
+#include "GameCamera/GameCamera.h"
 #include "Source/Actor/Stage/Stage.h"
-#include"Source/Actor/Character/Player/Player.h"
-#include"Source/Actor/Character/UFO/UFO.h"
-#include"Source/Actor/Character/Cow/Cow.h"
-#include"Pause/Pause.h"
-#include"GameTimer/Timer.h"
-#include"GameClear.h"
-#include"GameOver.h"
-#include"CountDown/CountDown.h"
+#include "Source/Actor/Character/Player/Player.h"
+#include "Source/Actor/Character/UFO/UFO.h"
+#include "Source/Actor/Character/Cow/Cow.h"
+#include "Pause/Pause.h"
+#include "GameTimer/Timer.h"
+#include "GameClear.h"
+#include "GameOver.h"
+#include "CountDown/CountDown.h"
 #include "Rope/Rope.h"
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
 #include "SoundManager/SoundManager.h"
 #include "Score/Score.h"
 #include "nature/SkyCube.h"
+
 Game::~Game()
 {
 	
 	//ステージを削除
 	DeleteGO(m_stage);
-
-	//牛を削除
-	for (int i = 0; i < EnCow_Num; i++)
-	{
-		if (m_cow[i] != nullptr)
-		{
-			DeleteGO(m_cow[i]);
-		}
-	}
 
 	/** SpawnCow等で増えた牛も含めて生きている牛は全て削除 */
 	for (auto cow : m_aliveCows)
@@ -90,11 +82,9 @@ bool Game::Start()
 		m_UFO[i]->SetPosition(UFO_INFOMATIONS[i].pos);
 	}
 
-	//タイマーの生成
-	m_timer = NewGO<Timer>(0, "timer");
-
 	//スコアの生成
 	m_score = NewGO<Score>(0, "score");
+
 	//牛の救出数の生成
 	m_cowNumberOfRescues = NewGO<CowNumberOfRescues>(0, "cownumberofrescues");
 
@@ -102,6 +92,9 @@ bool Game::Start()
 	m_pause = NewGO<Pause>(0, "pause");
 	m_pause->Deactivate();
 	
+	//タイマーの生成
+	m_timer = NewGO<Timer>(0, "timer");
+
 	m_inGameSound = FindGO<SoundManager>("soundmanager");	
 
 	//ゲームカメラの生成

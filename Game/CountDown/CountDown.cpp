@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CountDown.h"
+
 namespace
 {
 	//ファイルパス指定
@@ -14,6 +15,7 @@ namespace
 	const int StartWIDTH = 700.0f;
 	const int StartHIGHT = 500.0f;
 }
+
 bool CountDown::Start()
 {
 	m_countDown1.Init(FILEPATH1, WIDTH, HIGHT);

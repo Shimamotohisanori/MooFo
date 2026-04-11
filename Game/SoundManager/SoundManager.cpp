@@ -2,9 +2,10 @@
 #include "SoundManager.h"
 #include "sound/SoundEngine.h"
 #include "Pause/SoundPause.h"
+
 namespace
 {
-	/** �t�@�C���p�X��namespace����� */
+	/** サウンド関連の定数をnamespace内にまとめる */
 	const char* BGM_FILEPATH = "Assets/BGM/";
 	const char* SE_FILEPATH = "Assets/SE/";
 	const char* SOUND_FILE_FORMAT = ".wav";

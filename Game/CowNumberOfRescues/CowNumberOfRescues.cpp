@@ -158,8 +158,3 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
     m_fiveSprite.Update();
     m_fiveSprite.Draw(renderContext);
 }
-
-
-
-
-

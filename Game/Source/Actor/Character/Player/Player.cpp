@@ -2,8 +2,9 @@
 #include "Player.h"
 #include "Rope/Rope.h"
 #include "GameScene/Game.h"
-#include"Transform/Transform.h"
-#include"CountDown/CountDown.h"
+#include "Transform/Transform.h"
+#include "CountDown/CountDown.h"
+
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/CowBoy/CowBoy3.tkm";
@@ -14,6 +15,7 @@ namespace
 	const float PLAYER_MOVE_LIMIT_RADIUS = 1450.0f;
 
 }
+
 Player::Player()
 {
 	//アニメーションクリップの再生
@@ -230,6 +232,7 @@ void Player::PlayAnimation()
 		break;
 	}
 }
+
 void Player::Render(RenderContext& rc)
 {
 	m_playerModelRender.Draw(rc);

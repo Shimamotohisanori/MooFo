@@ -2,7 +2,8 @@
 #include "GameCamera.h"
 #include "Rope/Rope.h"
 #include "Source/Actor/Character/Cow/Cow.h"
-#include"Source/Actor/Character/Player/Player.h"
+#include "Source/Actor/Character/Player/Player.h"
+
 namespace
 {
 	/** カメラ基本設定 */

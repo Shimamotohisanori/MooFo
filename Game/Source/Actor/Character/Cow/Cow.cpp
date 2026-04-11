@@ -8,7 +8,7 @@
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
 #include "Source/Actor/Character/UFO/UFO.h"
 #include <time.h>
-#include "Score/Score.h"
+
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/Cow/Model/Cow4.tkm"; //enModelUpAxis = enModelUpAxisZ;
@@ -20,6 +20,7 @@ namespace
 
 	constexpr float COW_MOVE_LIMIT_RADIUS = 1450.0f;
 }
+
 Cow::Cow()
 {
 	//Idle
@@ -46,8 +47,6 @@ bool Cow::Start()
 	m_player = FindGO<Player>("player");
 	m_countdown = FindGO<CountDown>("countdown");
 	m_rope = FindGO<Rope>("rope");
-	Score* score = FindGO<Score>("score");
-	
 	return true;
 }
 
@@ -279,12 +278,9 @@ void Cow::CapturedByPlayer()
 				game->AddScore(100);
 				game->ReMoveCow(this);
 			}
-			//牛を救出することが出来たらスコアを増やす
-				m_isCaptured = true;
-			/*	if (score != nullptr)
-				{
-					score->AddScore(100);
-				}*/
+			
+			//m_isCaptured = true;
+
 			//牛の救出数を増やす
 			CowNumberOfRescues* cowNumberOfRescues = FindGO<CowNumberOfRescues>("cownumberofrescues");
 			if (cowNumberOfRescues)

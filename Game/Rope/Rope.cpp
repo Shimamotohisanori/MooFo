@@ -3,6 +3,7 @@
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "GameCamera/GameCamera.h"
 #include "Source/Actor/Character/Player/Player.h"
+
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/Rope/NewRope.tkm";
@@ -19,6 +20,7 @@ namespace
 	const float ROPE_HIT_DISTANCE = 50.0f;
 
 }
+
 Rope::Rope()
 {
 	
@@ -239,6 +241,3 @@ void Rope::Render(RenderContext& rc)
 		m_ropeCapturedCowModelRender.Draw(rc);
 	}
 }
-
-
-

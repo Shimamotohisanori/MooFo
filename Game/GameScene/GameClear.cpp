@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "SoundManager/SoundManager.h"
 #include "GameClear.h"
-#include"Game.h"
-#include"Title.h"
+#include "Game.h"
+#include "Title.h"
 #include "Score/Score.h"
-#include"CowNumberOfRescues/CowNumberOfRescues.h"
+#include "CowNumberOfRescues/CowNumberOfRescues.h"
 
 namespace
 {
@@ -86,10 +86,8 @@ void GameClear::InGameClear()
 	//削除リクエストが来ているときに削除する
 	if (m_isDeleteRequst == true)
 	{
-		DeleteGO(this);
-
 		DeleteGO(p_clearBGM);
-
+		DeleteGO(this);
 	}
 }
 
