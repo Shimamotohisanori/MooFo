@@ -38,7 +38,12 @@ namespace
 	constexpr float AREA_MAX_X = 1400.0f;
 	constexpr float AREA_MIN_Z = -1100.0f;
 	constexpr float AREA_MAX_Z = 1100.0f;
+
+	/** UFO同士の回避処理のための距離の二乗と力 */
+	constexpr float UFO_AVOID_RANGE_SQ = 400.0f;
+	constexpr float UFO_AVOID_FORCE = 1.5f;
 }
+
 UFO::UFO()
 {
 
@@ -125,6 +130,45 @@ void UFO::Move()
 			m_moveTimer = MOVE_TIME_SEC;//2秒ごとに方向を変える
 		}
 	}
+
+	/* UFO同士の回避処理 */
+	Game* game = FindGO<Game>("game");
+	if (game)
+	{
+		auto ufos = game->GetUFOs();
+
+		/** 回避方向 */
+		Vector3 avoidDir = Vector3::Zero;
+
+		/** UFO同士の距離が近かったら回避する */
+		for (auto u : ufos)
+		{
+			/** 自分自身はスキップ */
+			if (u = this) continue;
+
+			/** 自分と他のUFOの距離を計算 */
+			Vector3 diff = m_transform.GetPosition() - u->m_transform.GetPosition();
+
+			/** y軸は考慮しない */
+			diff.y = 0.0f;
+
+			/** UFO同士の距離が近かったら回避する */
+			if (diff.LengthSq() < UFO_AVOID_RANGE_SQ)
+			{
+				diff.Normalize();
+				avoidDir += diff * UFO_AVOID_FORCE;
+			}
+
+			/** 回避方向がある場合は回避する */
+			if (avoidDir.LengthSq() > 0.0f)
+			{
+				avoidDir.Normalize();
+				m_moveDir += avoidDir * UFO_AVOID_FORCE;
+				m_moveDir.Normalize();
+			}
+		}
+	}
+
 	//移動
 	Vector3 pos = m_transform.GetPosition();
 	//少しづつ位置を動かす

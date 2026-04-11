@@ -57,6 +57,7 @@ const UFOinfo UFO_INFOMATIONS[] =
 	{ "UFO", Vector3(900.0f, 70.0f, 0.0f) }
 };
 
+
 class Game : public IGameObject
 {
 public:
@@ -66,6 +67,7 @@ public:
 	void Update();
 	void Render(RenderContext& rc) {};
 	
+
 public:
 	//ゲームクリアで行う処理
 	void Clear();
@@ -87,21 +89,48 @@ public:
 	}
 
 	bool m_isSound;
+	
 	/*コンボ加算用関数*/
 	void AddCombo();
 
 	/*スコア加算関数*/
 	void AddScore(int score);
+	
 	/*牛が連れ去られた時に読んでコンボをリセットする関数*/
 	void ResetCombo();
+	
 	/*コンボしたかどうか判定するフラグ*/
 	bool IsCombo()const;
+
+	/** UFO立の取得関数 */
+	std::vector<UFO*> GetUFOs()
+	{
+		/** UFOのリストを作成して返す */
+		std::vector<UFO*> ufos;
+
+		/** UFOの配列からUFOのリストに追加する */
+		for (int i = 0; i < EnUFO_Num; i++)
+		{
+
+			/** UFOが存在する場合はリストに追加する */
+			if (m_UFO[i] != nullptr)
+			{
+				ufos.push_back(m_UFO[i]);
+			}
+		}
+
+		/** UFOのリストを返す */
+		return ufos;
+	}
+
+
 private:
 	/** 牛が生まれる関数 */
 	void SpawnCow();
 
 	/** 空出力関数 */
 	void InitSkyCube();
+
 
 private:
 	Stage* m_stage;
