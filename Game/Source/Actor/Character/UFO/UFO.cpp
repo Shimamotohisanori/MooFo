@@ -40,8 +40,11 @@ namespace
 	constexpr float AREA_MAX_Z = 1100.0f;
 
 	/** UFO同士の回避処理のための距離の二乗と力 */
-	constexpr float UFO_AVOID_RANGE_SQ = 400.0f;
+	constexpr float UFO_AVOID_RANGE_SQ = 1500.0f;
 	constexpr float UFO_AVOID_FORCE = 1.5f;
+
+	/** UFO同士の最低距離 */
+	constexpr float MIN_DIST = 200.0f; 
 }
 
 UFO::UFO()
@@ -131,48 +134,54 @@ void UFO::Move()
 		}
 	}
 
-	/* UFO同士の回避処理 */
-	Game* game = FindGO<Game>("game");
-	if (game)
-	{
-		auto ufos = game->GetUFOs();
-
-		/** 回避方向 */
-		Vector3 avoidDir = Vector3::Zero;
-
-		/** UFO同士の距離が近かったら回避する */
-		for (auto u : ufos)
-		{
-			/** 自分自身はスキップ */
-			if (u = this) continue;
-
-			/** 自分と他のUFOの距離を計算 */
-			Vector3 diff = m_transform.GetPosition() - u->m_transform.GetPosition();
-
-			/** y軸は考慮しない */
-			diff.y = 0.0f;
-
-			/** UFO同士の距離が近かったら回避する */
-			if (diff.LengthSq() < UFO_AVOID_RANGE_SQ)
-			{
-				diff.Normalize();
-				avoidDir += diff * UFO_AVOID_FORCE;
-			}
-
-			/** 回避方向がある場合は回避する */
-			if (avoidDir.LengthSq() > 0.0f)
-			{
-				avoidDir.Normalize();
-				m_moveDir += avoidDir * UFO_AVOID_FORCE;
-				m_moveDir.Normalize();
-			}
-		}
-	}
-
 	//移動
 	Vector3 pos = m_transform.GetPosition();
 	//少しづつ位置を動かす
 	pos += m_moveDir * m_moveSpeed * g_gameTime->GetFrameDeltaTime();
+	
+	Game* game = FindGO<Game>("game");
+	/** UFO同士の反発処理 */
+	if (game)
+	{
+		/** UFOのリストを取得 */
+		auto ufos = game->GetUFOs();
+		
+		/** UFO同士の最低距離の二乗 */
+		float MIN_DIST_SQ = MIN_DIST * MIN_DIST;
+
+		/** UFO同士の距離が近すぎたら反発する */
+		for (auto u : ufos)
+		{
+			/** 自分自身はスキップ */
+			if (u == this) continue;
+
+			/** 自分と他のUFOの距離を計算 */
+			Vector3 otherPos = u->m_transform.GetPosition();
+			
+			/**y軸は考慮しない */
+			Vector3 diff = pos - otherPos;
+			diff.y = 0.0f;
+
+			/** UFO同士の距離の二乗 */
+			float distSq = diff.LengthSq();
+
+			/** 近すぎたら反発する */
+			if (distSq < MIN_DIST_SQ && distSq > 0.0f)
+			{
+				/* 反発する方向を計算 */
+				float dist = sqrtf(distSq);
+				
+				/** 正規化 */
+				diff /= dist; 
+
+				/** 反発する力を計算 */
+				float pushBack = (MIN_DIST - dist) * 0.5f;
+				pos += diff * pushBack;
+			}
+		}
+	}
+
+	
 	//四方の柵に当たったら反転させる
 	if (pos.x < AREA_MIN_X)
 	{
