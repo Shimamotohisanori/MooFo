@@ -11,7 +11,7 @@
 
 namespace
 {
-	const char* FILEPATH = "Assets/modelData/UFO/UFO2.tkm"; //enModelUpAxis = enModelUpAxisZ;
+	const char* FILEPATH = "Assets/modelData/UFO/UFO.tkm"; //enModelUpAxis = enModelUpAxisZ;
 
 	/** UFOの大きさ */
 	constexpr float UFO_SCALE = 3.5f;
