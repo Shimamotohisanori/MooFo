@@ -56,7 +56,12 @@ public:
 	{
 		return m_isLeftButton1;
 	}
-
+	
+	/** プレイヤーが動いているかどうかのフラグを取得する関数 */
+	bool GetIsMoving()
+	{
+		return m_isMoving;
+	}
 
 private:
 	/** ロープを投げる関数*/
