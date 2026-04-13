@@ -51,10 +51,10 @@ struct UFOinfo
 /** UFOの一覧 */
 const UFOinfo UFO_INFOMATIONS[] =
 {
-	{ "UFO", Vector3(-300.0f, 70.0f, 0.0f) },
-	{ "UFO", Vector3(300.0f, 70.0f, 0.0f) },
-	{ "UFO", Vector3(600.0f, 70.0f, 0.0f) },
-	{ "UFO", Vector3(900.0f, 70.0f, 0.0f) }
+	{ "UFO", Vector3(-1400.0f, 70.0f, 0.0f) },
+	{ "UFO", Vector3(1400.0f, 70.0f, 0.0f) },
+	{ "UFO", Vector3(0.0f, 70.0f, -1400.0f) },
+	{ "UFO", Vector3(0.0f, 70.0f, 1400.0f) }
 };
 
 
