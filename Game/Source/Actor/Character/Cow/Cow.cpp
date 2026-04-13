@@ -19,6 +19,12 @@ namespace
 	constexpr float PULL_POWER = 8.0f;
 
 	constexpr float COW_MOVE_LIMIT_RADIUS = 1450.0f;
+
+	/** この距離以内なら逃げる */
+	constexpr float AVOID_DISTANCE = 200.0f;
+
+	/** 逃げる強さ */
+	constexpr float AVOID_POWER = 5.0f;
 }
 
 Cow::Cow()
@@ -60,7 +66,10 @@ void Cow::Update()
 	/*アニメーション*/
 	PlayAnimation();
 
-  if (m_rotationState == EnRotationState_MoveDir)
+	/** プレイヤーから逃げる関数 */
+	AvoidPlayer();
+
+  if (m_rotationState == EnCowState_MoveDir)
   {
 		/*移動*/
 		Move();
@@ -166,7 +175,7 @@ void Cow::Move()
 void Cow::Rotation()
 {
 	//移動ステートの時は移動方向に回転する。
-	if (m_rotationState == EnRotationState_MoveDir)
+	if (m_rotationState == EnCowState_MoveDir)
 	{
 		if (fabsf(m_moveDir.x) >= 0.0001f || fabsf(m_moveDir.z) >= 0.0001f)
 		{
@@ -175,7 +184,7 @@ void Cow::Rotation()
 			m_transform.SetRotation(m_transform.GetRotation());
 		}
 	}
-	else if (m_rotationState == EnRotationState_Spin)
+	else if (m_rotationState == EnCowState_Spin)
 	{
 		//回転ステートがスピンのときは常に回転する。
 		m_transform.GetRotation().AddRotationDegY(3.0f);
@@ -298,6 +307,44 @@ void Cow::CapturedByPlayer()
 	}
 }
 
+void Cow::AvoidPlayer()
+{
+	/** 捕まっているときは逃げない */
+	if (m_isCaptured) return;
+
+	/** プレイヤーと牛の位置を取得 */
+	Vector3 playerPos = m_player->GetPosition();
+	Vector3 cowPos = m_transform.GetPosition();
+
+	Vector3 dir = cowPos - playerPos;
+
+	/** プレイヤーから一定距離以内なら逃げる */
+	float dist = dir.Length();
+
+	if (dist < AVOID_DISTANCE)
+	{
+		/** 牛のステートを逃げるに変更 */
+		m_rotationState = EnCowState_Avoid;
+
+		dir.Normalize();
+		cowPos += dir * AVOID_POWER;
+		m_transform.SetPosition(cowPos);
+		m_cowmodelRender.SetPosition(m_transform.GetPosition());
+
+		/** 逃げる方向に回転 */
+		m_transform.GetRotation().SetRotationYFromDirectionXZ(dir);
+		m_transform.SetRotation(m_transform.GetRotation());
+	}
+
+	else
+	{
+		/** プレイヤーから一定距離以上なら通常のステートに戻す */
+		m_rotationState = EnCowState_MoveDir;
+	}
+
+
+}
+
 void Cow::PlayAnimation()
 {
 	/** ロープに捕まっているときはアニメーションを変えない */
@@ -308,11 +355,15 @@ void Cow::PlayAnimation()
 
 	switch (m_cowState)
 	{
-	case 0 :
+	case 0:
 			m_cowmodelRender.PlayAnimation(EnAnimation_Idle);
 			break;
 
 	case 1:
+			m_cowmodelRender.PlayAnimation(EnAnimation_Walk);
+			break;
+
+	case 2:
 			m_cowmodelRender.PlayAnimation(EnAnimation_Walk);
 			break;
 

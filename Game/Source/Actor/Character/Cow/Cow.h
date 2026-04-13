@@ -42,7 +42,7 @@ public:
 
 		void ChangeRotationState()
 		{
-			m_rotationState = EnRotationState_Spin;
+			m_rotationState = EnCowState_Spin;
 		}
 
 		bool GetIsTakeAwayed()
@@ -72,6 +72,9 @@ private:
 	//プレイヤーに捕獲される関数
 	void CapturedByPlayer();
 
+	/** プレイヤーから逃げる関数 */
+	void AvoidPlayer();
+
 private:
 	//ロープ
 	Rope* m_rope;
@@ -85,13 +88,16 @@ private:
 	//UFO
 	UFO* m_takingUFO = nullptr;
 
-	enum EnRotationState
+	enum EnCowState
 	{
-		EnRotationState_MoveDir,
-		EnRotationState_Spin,
-		EnRotationState_Num
+		EnCowState_MoveDir,
+		EnCowState_Spin,
+		EnCowState_Avoid,
+		EnCowState_Num
 	};
-	EnRotationState m_rotationState = EnRotationState_MoveDir;//回転ステート
+	
+	/** 牛のステート */
+	EnCowState m_rotationState = EnCowState_MoveDir;
 	
 	/** 牛のモデルレンダラー */
 	ModelRender m_cowmodelRender;

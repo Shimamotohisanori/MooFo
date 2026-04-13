@@ -76,7 +76,9 @@ void Player::Move()
 		//ロープを投げているときとロープが牛に当たっているときは移動できないようにする
 		return;
 	}
-	
+
+	/** プレイヤーが動いた */
+	m_isMoving = true;
 
 	//左スティックの入力量を取得
 	Vector3 stickL;
