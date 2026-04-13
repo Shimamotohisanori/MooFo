@@ -42,7 +42,7 @@ public:
 
 		void ChangeRotationState()
 		{
-			m_rotationState = EnCowState_Spin;
+			m_rotationState = EnRotateState_Spin;
 		}
 
 		bool GetIsTakeAwayed()
@@ -88,16 +88,15 @@ private:
 	//UFO
 	UFO* m_takingUFO = nullptr;
 
-	enum EnCowState
+	enum EnRotateState
 	{
-		EnCowState_MoveDir,
-		EnCowState_Spin,
-		EnCowState_Avoid,
-		EnCowState_Num
+		EnRotateState_MoveDir,
+		EnRotateState_Spin,
+		EnRotateState_Num
 	};
 	
-	/** 牛のステート */
-	EnCowState m_rotationState = EnCowState_MoveDir;
+	/** 牛の回転ステート */
+	EnRotateState m_rotationState = EnRotateState_MoveDir;
 	
 	/** 牛のモデルレンダラー */
 	ModelRender m_cowmodelRender;

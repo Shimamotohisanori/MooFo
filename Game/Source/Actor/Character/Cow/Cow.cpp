@@ -21,7 +21,7 @@ namespace
 	constexpr float COW_MOVE_LIMIT_RADIUS = 1450.0f;
 
 	/** この距離以内なら逃げる */
-	constexpr float AVOID_DISTANCE = 200.0f;
+	constexpr float AVOID_DISTANCE = 80.0f;
 
 	/** 逃げる強さ */
 	constexpr float AVOID_POWER = 5.0f;
@@ -66,11 +66,11 @@ void Cow::Update()
 	}
 	/*アニメーション*/
 	PlayAnimation();
-
+	
 	/** プレイヤーから逃げる関数 */
 	AvoidPlayer();
 
-  if (m_rotationState == EnCowState_MoveDir)
+  if (m_rotationState == EnRotateState_MoveDir)
   {
 		/*移動*/
 		Move();
@@ -179,7 +179,7 @@ void Cow::Move()
 void Cow::Rotation()
 {
 	/** 移動ステートの時は移動方向に回転する。 */
-	if (m_rotationState == EnCowState_MoveDir)
+	if (m_rotationState == EnRotateState_MoveDir)
 	{
 		if (fabsf(m_moveDir.x) >= 0.0001f || fabsf(m_moveDir.z) >= 0.0001f)
 		{
@@ -188,7 +188,7 @@ void Cow::Rotation()
 			m_transform.SetRotation(m_transform.GetRotation());
 		}
 	}
-	else if (m_rotationState == EnCowState_Spin)
+	else if (m_rotationState == EnRotateState_Spin)
 	{
 		/** 回転ステートがスピンのときは常に回転する。 */
 		m_transform.GetRotation().AddRotationDegY(3.0f);
@@ -313,13 +313,22 @@ void Cow::CapturedByPlayer()
 }
 
 void Cow::AvoidPlayer()
-{
-	/** 捕まっているときは逃げない */
-	if (m_isCaptured) return;
-	
-	/** プレイヤーが動いていないときは逃げない */
-	if (!m_player->GetIsMoving()) return;
+{	
+	/** UFOに捕まっているときは逃げない */
+	if (m_isTakeAwayed == true) return;
 
+	/** ロープに捕まっているときは逃げない */
+	if (m_isCaptured)return;
+
+	/** プレイヤーが動いていないときは逃げない */
+	if (!m_player->GetIsMoving())
+	{
+		/** 通常のステートに戻す */
+		m_cowState = 0;
+		m_rotationState = EnRotateState_MoveDir;
+
+		return;
+	}
 	/** プレイヤーと牛の位置を取得 */
 	Vector3 playerPos = m_player->GetPosition();
 	Vector3 cowPos = m_transform.GetPosition();
@@ -332,7 +341,7 @@ void Cow::AvoidPlayer()
 	if (dist < AVOID_DISTANCE)
 	{
 		/** 牛のステートを逃げるに変更 */
-		m_rotationState = EnCowState_Avoid;
+		m_cowState = 2;
 
 		dir.Normalize();
 		cowPos += dir * AVOID_POWER;
@@ -347,7 +356,8 @@ void Cow::AvoidPlayer()
 	else
 	{
 		/** プレイヤーから一定距離以上なら通常のステートに戻す */
-		m_rotationState = EnCowState_MoveDir;
+		m_cowState = 0;
+		m_rotationState = EnRotateState_MoveDir;
 	}
 
 
