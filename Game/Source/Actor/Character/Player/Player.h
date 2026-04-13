@@ -56,7 +56,12 @@ public:
 	{
 		return m_isLeftButton1;
 	}
-
+	
+	/** プレイヤーが動いているかどうかのフラグを取得する関数 */
+	bool GetIsMoving()
+	{
+		return m_isMoving;
+	}
 
 private:
 	/** ロープを投げる関数*/
@@ -88,6 +93,9 @@ private:
 
 	//左ボタンが押されているかどうかのフラグ
 	bool m_isLeftButton1 = false;
+
+	/** プレイヤーが動いているかどうかのフラグ */
+	bool m_isMoving = false;
 
 	//アニメーション
 	enum EnPlayAnimation

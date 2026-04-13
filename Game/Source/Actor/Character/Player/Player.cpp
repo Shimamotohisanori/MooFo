@@ -62,6 +62,18 @@ void Player::Update()
 	/*ステート管理*/
 	ManageState();
 
+	/** プレイヤーが動いていたら */
+	if (fabsf(m_moveSpeed.x) >= 0.0001f || fabsf(m_moveSpeed.z) >= 0.0001f)
+	{
+		m_isMoving = true;
+	}
+
+	/** プレイヤーが動いていなかったら */
+	else
+	{
+		m_isMoving = false;
+	}
+
 	/*アニメーション*/
 	PlayAnimation();
 	m_playerModelRender.Update();
@@ -76,7 +88,6 @@ void Player::Move()
 		//ロープを投げているときとロープが牛に当たっているときは移動できないようにする
 		return;
 	}
-	
 
 	//左スティックの入力量を取得
 	Vector3 stickL;

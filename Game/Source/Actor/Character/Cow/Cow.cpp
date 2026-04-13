@@ -19,14 +19,21 @@ namespace
 	constexpr float PULL_POWER = 8.0f;
 
 	constexpr float COW_MOVE_LIMIT_RADIUS = 1450.0f;
+
+	/** この距離以内なら逃げる */
+	constexpr float AVOID_DISTANCE = 200.0f;
+
+	/** 逃げる強さ */
+	constexpr float AVOID_POWER = 5.0f;
 }
 
 Cow::Cow()
 {
-	//Idle
+	/** Idle */
 	animationClips[EnAnimation_Idle].Load(THROW_ROPE_ANIMATION_FILE_PATH);
 	animationClips[EnAnimation_Idle].SetLoopFlag(true);
-	//Walk
+	
+	/** Walk */
 	animationClips[EnAnimation_Walk].Load(FILEPATH_WALK);
 	animationClips[EnAnimation_Walk].SetLoopFlag(true);
 }
@@ -52,7 +59,7 @@ bool Cow::Start()
 
 void Cow::Update()
 {
-	//カウントダウン中は牛を動かさないようにするため早期リターン
+	/** カウントダウン中は牛を動かさないようにするため早期リターン */
 	if (m_countdown->GetCountDown())
 	{
 		return;
@@ -60,7 +67,10 @@ void Cow::Update()
 	/*アニメーション*/
 	PlayAnimation();
 
-  if (m_rotationState == EnRotationState_MoveDir)
+	/** プレイヤーから逃げる関数 */
+	AvoidPlayer();
+
+  if (m_rotationState == EnCowState_MoveDir)
   {
 		/*移動*/
 		Move();
@@ -91,52 +101,55 @@ void Cow::Update()
 void Cow::Move()
 {
 
-	//ロープに捕まっているときは移動しない
+	/** ロープに捕まっているときは移動しない */
 	if (m_isCaptured)
 	{
 		return;
 	}
 
-	//タイマーが0以上なら新しい方向を決める
+	/** タイマーが0以上なら新しい方向を決める */
 	if (m_moveTimer <= 0)
 	{
 		if (m_isMove)
 		{
 			Vector3 dir
 			(
-				//(0,1,2,から-1を引いているので)-1,0,1の範囲でランダムな値を生成
+				/** (0, 1, 2, から - 1を引いているので) - 1, 0, 1の範囲でランダムな値を生成 */
 				rand() % 3 - 1,//x
 				0,             //yは常に0
 				rand() % 3 - 1//z
 			);
 
-			// 0,0,0になったら一秒休む
+			/** 0,0,0になったら一秒休む */
 			if (dir.LengthSq() == 0)
 			{
 				dir = Vector3(1, 0, 0);
 			}
 			dir.Normalize();
 			m_moveDir = dir;
-			m_moveTimer = 120.0f;//2秒ごとに方向を変える
+			/**2秒ごとに方向を変える */
+			m_moveTimer = 120.0f;
 			m_isMove = false;
 		}
-		//移動した後に必ず休む
+
+			/** 移動した後に必ず休む */
 			else
 			{
 				m_moveDir = Vector3::Zero;
-				m_moveTimer = 120.0f;//2秒休む
+				/** 2秒休む */
+				m_moveTimer = 120.0f;
 				m_isMove = true;
 			}
 		}
-	//移動
+	/** 移動 */
 	Vector3 pos = m_transform.GetPosition();
-	//少しづつ位置を動かしている
+	/** 少しづつ位置を動かしている */
 	pos += m_moveDir * m_moveSpeed * g_gameTime->GetFrameDeltaTime();
-	//ポジションを更新
+	/** ポジションを更新 */
 	m_transform.SetPosition(pos);
-	//モデルに位置を反映
+	/** モデルに位置を反映 */
 	m_cowmodelRender.SetPosition(m_transform.GetPosition());
-	//タイマーを減らす
+	/** タイマーを減らす */
 	m_moveTimer--;
 
 	/** 移動できる範囲を制限する */
@@ -165,19 +178,19 @@ void Cow::Move()
 }
 void Cow::Rotation()
 {
-	//移動ステートの時は移動方向に回転する。
-	if (m_rotationState == EnRotationState_MoveDir)
+	/** 移動ステートの時は移動方向に回転する。 */
+	if (m_rotationState == EnCowState_MoveDir)
 	{
 		if (fabsf(m_moveDir.x) >= 0.0001f || fabsf(m_moveDir.z) >= 0.0001f)
 		{
-			//移動方向に回転させる
+			/** 移動方向に回転させる */
 			m_transform.GetRotation().SetRotationYFromDirectionXZ(m_moveDir);
 			m_transform.SetRotation(m_transform.GetRotation());
 		}
 	}
-	else if (m_rotationState == EnRotationState_Spin)
+	else if (m_rotationState == EnCowState_Spin)
 	{
-		//回転ステートがスピンのときは常に回転する。
+		/** 回転ステートがスピンのときは常に回転する。 */
 		m_transform.GetRotation().AddRotationDegY(3.0f);
 		m_transform.SetRotation(m_transform.GetRotation());
 	}
@@ -191,13 +204,16 @@ void Cow::ManageState()
 		return;
 	}
 
+	/** 歩きの時 */
 	if (fabsf(m_moveDir.x) >= 0.0001f || fabsf(m_moveDir.z) >= 0.0001f)
 	{
-		m_cowState = 1;//歩き
+		m_cowState = 1;
 	}
+
+	/** 待機の時 */
 	else
 	{
-		m_cowState = 0;//待機
+		m_cowState = 0;
 	}
 }
 
@@ -211,19 +227,19 @@ void Cow::PulledByPlayer()
 
 	if (m_player->GetIsRightButton1() or m_player->GetIsLeftButton1())
 	{
-		//プレイヤーの位置を取得
+		/** プレイヤーの位置を取得 */
 		Vector3 playerPos = m_player->GetPosition();
 
-		//牛の位置
+		/** 牛の位置 */
 		Vector3 cowPos = m_transform.GetPosition();
 
-		//プレイヤーへの方向
+		/** プレイヤーへの方向 */
 		Vector3 dir = playerPos - cowPos;
 
-		//正規化
+		/** 正規化 */
 		dir.Normalize();
 
-		//牛をプレイヤーのいる位置まで徐々に移動
+		/** 牛をプレイヤーのいる位置まで徐々に移動 */
 		cowPos += dir * PULL_POWER;
 
 		m_transform.SetPosition(cowPos);
@@ -237,17 +253,17 @@ void Cow::PulledByPlayer()
 
 void Cow::CapturedByPlayer()
 {
-	//ロープが牛に当たっているとき
+	/** ロープが牛に当たっているとき */
 	if (m_isCaptured)
 	{
-		//牛とプレイヤーの間の距離を計算
+		/** 牛とプレイヤーの間の距離を計算 */
 		Vector3 playerPos = m_player->GetPosition();
 		Vector3 cowPos = m_transform.GetPosition();
 
-		//プレイヤーへの方向
+		/** プレイヤーへの方向 */
 		Vector3 dir = playerPos - cowPos;
 
-		//距離が一定以下なら捕獲される
+		/** 距離が一定以下なら捕獲される */
 		if (dir.Length() < 50.0f)
 		{
 			/** 自分がロープに紐づいてる時だけフラグをおろす */
@@ -263,14 +279,14 @@ void Cow::CapturedByPlayer()
 				m_takingUFO->ReMoveTargetCow();
 			}
 
-			//カメラの牛捕獲フラグを下ろす
+			/** カメラの牛捕獲フラグを下ろす */
 			GameCamera* camera = FindGO<GameCamera>("gameCamera");
 			if (camera)
 			{
 				camera->SetIsCowCaptured(false);
 			}
 
-			//コンボを増やす
+			/** コンボを増やす */
 			Game* game = FindGO<Game>("game");
 			if (game)
 			{
@@ -278,24 +294,63 @@ void Cow::CapturedByPlayer()
 				game->AddScore(100);
 				game->ReMoveCow(this);
 			}
-			
-			//m_isCaptured = true;
 
-			//牛の救出数を増やす
+			/** 牛の救出数を増やす */
 			CowNumberOfRescues* cowNumberOfRescues = FindGO<CowNumberOfRescues>("cownumberofrescues");
 			if (cowNumberOfRescues)
 			{
 				cowNumberOfRescues->AddRescue();
 			}
 
-			//状態をリセットする
+			/** 状態をリセットする */
 			m_isTakeAwayed = false;
 
-			//牛を削除
+			/** 牛を削除 */
 			DeleteGO(this);
 			return;
 		}
 	}
+}
+
+void Cow::AvoidPlayer()
+{
+	/** 捕まっているときは逃げない */
+	if (m_isCaptured) return;
+	
+	/** プレイヤーが動いていないときは逃げない */
+	if (!m_player->GetIsMoving()) return;
+
+	/** プレイヤーと牛の位置を取得 */
+	Vector3 playerPos = m_player->GetPosition();
+	Vector3 cowPos = m_transform.GetPosition();
+
+	Vector3 dir = cowPos - playerPos;
+
+	/** プレイヤーから一定距離以内なら逃げる */
+	float dist = dir.Length();
+
+	if (dist < AVOID_DISTANCE)
+	{
+		/** 牛のステートを逃げるに変更 */
+		m_rotationState = EnCowState_Avoid;
+
+		dir.Normalize();
+		cowPos += dir * AVOID_POWER;
+		m_transform.SetPosition(cowPos);
+		m_cowmodelRender.SetPosition(m_transform.GetPosition());
+
+		/** 逃げる方向に回転 */
+		m_transform.GetRotation().SetRotationYFromDirectionXZ(dir);
+		m_transform.SetRotation(m_transform.GetRotation());
+	}
+
+	else
+	{
+		/** プレイヤーから一定距離以上なら通常のステートに戻す */
+		m_rotationState = EnCowState_MoveDir;
+	}
+
+
 }
 
 void Cow::PlayAnimation()
@@ -308,11 +363,15 @@ void Cow::PlayAnimation()
 
 	switch (m_cowState)
 	{
-	case 0 :
+	case 0:
 			m_cowmodelRender.PlayAnimation(EnAnimation_Idle);
 			break;
 
 	case 1:
+			m_cowmodelRender.PlayAnimation(EnAnimation_Walk);
+			break;
+
+	case 2:
 			m_cowmodelRender.PlayAnimation(EnAnimation_Walk);
 			break;
 
