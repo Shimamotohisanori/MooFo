@@ -71,7 +71,7 @@ void GameClear::Update()
 
 void GameClear::InGameClear()
 {
-	if (g_pad[0]->IsTrigger(enButtonA))
+	if (g_pad[0]->IsPressAnyKey())
 	{
 		Game* game = FindGO<Game>("game");
 		if (game)
