@@ -2,6 +2,7 @@
 #include "Rope.h"
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "GameCamera/GameCamera.h"
+#include"Source/Actor/Character/UFO/UFO.h"
 #include "Source/Actor/Character/Player/Player.h"
 
 namespace
@@ -89,6 +90,10 @@ void Rope::OnHitCow(Cow* cow)
 	m_hitCow = cow;
 
 	cow->SetIsCaptured(true);
+	if (auto ufo = cow->GetTakingUFO())
+	{
+		ufo->GetCowCaptureController()->EndCapture();
+	}
 }
 
 void Rope::PlayerThrowsRope()

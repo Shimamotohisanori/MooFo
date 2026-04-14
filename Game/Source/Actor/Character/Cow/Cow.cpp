@@ -196,6 +196,8 @@ void Cow::Rotation()
 	}
 }
 
+
+
 void Cow::ManageState()
 {
 	/** ロープに捕まっているときは状態を変えない */
