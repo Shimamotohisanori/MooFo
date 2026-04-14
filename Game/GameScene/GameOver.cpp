@@ -73,7 +73,7 @@ void GameOver::Update()
 
 void GameOver::InGameOver()
 {
-	if (g_pad[0]->IsTrigger(enButtonA))
+	if (g_pad[0]->IsPressAnyKey())
 	{
 		//Gameを削除
 		Game* game = FindGO<Game>("game");

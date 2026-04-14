@@ -41,7 +41,7 @@ void Title::Update()
 
 void Title::InTitle()
 {
-	if (g_pad[0]->IsTrigger(enButtonA))
+	if (g_pad[0]->IsPressAnyKey())
 	{
 		NewGO<Game>(0, "game");
 		p_titleSE = m_soundManager->PlayingSE(SoundSE::enDecisionSE, false);
