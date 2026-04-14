@@ -20,6 +20,8 @@ public:
 		void PlayAnimation();
 		void ManageState();
 
+
+
 		void SetPosition(const Vector3& pos)
 		{
 			m_transform.SetPosition(pos);
@@ -64,7 +66,7 @@ public:
 		{
 			return m_takingUFO;
 		}
-
+		
 private:
 	//プレイヤーに引っ張られる関数
 	void PulledByPlayer();
@@ -74,7 +76,7 @@ private:
 
 	/** プレイヤーから逃げる関数 */
 	void AvoidPlayer();
-
+	
 private:
 	//ロープ
 	Rope* m_rope;
@@ -87,6 +89,8 @@ private:
 
 	//UFO
 	UFO* m_takingUFO = nullptr;
+
+	
 
 	enum EnCowState
 	{
