@@ -98,7 +98,7 @@ private:
 	};
 	
 	/** 牛の回転ステート */
-	EnRotateState m_rotationState = EnRotateState_MoveDir;
+	EnCowState m_rotationState = EnRotateState_MoveDir;
 	
 	/** 牛のモデルレンダラー */
 	ModelRender m_cowmodelRender;
