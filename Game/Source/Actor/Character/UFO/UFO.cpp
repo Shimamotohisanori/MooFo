@@ -54,7 +54,7 @@ UFO::UFO()
 
 UFO::~UFO()
 {
-
+	DeleteGO(m_cowCaptureController);
 }
 
 
