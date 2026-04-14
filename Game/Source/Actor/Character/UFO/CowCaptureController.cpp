@@ -36,6 +36,12 @@ void CowCaptureController::Update()
 	{
 		return;
 	}
+
+	if (m_ufo == nullptr)
+	{
+		return;
+	}
+
 	CountTimer();
 
 	CountText();
@@ -111,6 +117,12 @@ void CowCaptureController::Render(RenderContext& rc)
 	{
 		m_countText.Draw(rc);
 	}
+
+	if (m_ufo == nullptr)
+	{
+		return;
+	}
+
 	/** 光が出ているときもしくは、UFOが牛を捕まえているときのみ描画*/
 	if (m_isEmitting or m_ufo->GetIsCowTakeAwayed())
 	{
