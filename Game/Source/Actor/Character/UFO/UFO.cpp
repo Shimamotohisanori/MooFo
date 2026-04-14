@@ -8,12 +8,12 @@
 #include "Rope/Rope.h"
 #include "GameCamera/GameCamera.h"
 #include "Score/Score.h"
-
+#include"Source/Actor/Character/UFO/CowCaptureController.h"
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/UFO/UFO.tkm"; //enModelUpAxis = enModelUpAxisZ;
 
-	/** UFOの大きさ */
+	/** UFOの大きさ*/
 	constexpr float UFO_SCALE = 3.5f;
 
 	/** UFOの移動方向を決めるための乱数の範囲 */
@@ -43,7 +43,7 @@ namespace
 	constexpr float UFO_AVOID_RANGE_SQ = 1500.0f;
 	constexpr float UFO_AVOID_FORCE = 1.5f;
 
-	/** UFO同士の最低距離 */
+	/** UFO同士の最低距離*/
 	constexpr float MIN_DIST = 200.0f; 
 }
 
@@ -54,7 +54,7 @@ UFO::UFO()
 
 UFO::~UFO()
 {
-
+	DeleteGO(m_cowCaptureController);
 }
 
 
@@ -64,11 +64,15 @@ bool UFO::Start()
 	//m_moveDir = Vector3(0.0f, 0.0f, 1.0f);
 	m_countdown = FindGO<CountDown>("countdown");
 	m_score = FindGO<Score>("score");
+	m_cowCaptureController =NewGO<CowCaptureController>(0,"cowcapturecontroller");
+	/** それぞれのUFOに自分自身を設定 */
+	m_cowCaptureController->SetUFO(this);
 	srand(time(nullptr));
 	m_ufomodelRender.SetScale(UFO_SCALE,UFO_SCALE,UFO_SCALE);
 	m_ufomodelRender.Init(FILEPATH);
 	m_ufomodelRender.SetPosition(m_transform.GetPosition());
 	m_ufomodelRender.Update();
+	
 	return true;
 }
 
@@ -87,9 +91,13 @@ void UFO::Update()
 		/** 回転 */
 		Rotation();
 	}
-
-	/** 牛を見つける関数 */
-	FindTheCow();
+	/**　光が出ているときだけ探す*/
+	if (IsLightEmitting())
+	{
+		/** 牛を見つける関数 */
+		FindTheCow();
+	}
+	
 
 	/** 牛を連れていく関数 */
 	TakeAwayTheCow();
@@ -291,9 +299,11 @@ void UFO::TakeAwayTheCow()
 		/** 牛を削除 */
 		DeleteGO(m_targetCow);
 
+		m_cowCaptureController->EndCapture();
 		/** 状態をリセットする */
 		m_targetCow = nullptr;
 		m_isCowTakeAwayed = false;
+		m_cowCaptureController->SetCapturing(false);
 		return;
 	}
 
@@ -301,11 +311,17 @@ void UFO::TakeAwayTheCow()
 
 }
 
+CowCaptureController* UFO::GetCowCaptureController()
+{
+	return m_cowCaptureController;
+}
+
 void UFO::FindTheCow()
 {
+	/**光が出ていないときは探さないようにする*/
+	if (!m_cowCaptureController->GetIsEmitting()) return;
 	/** 牛を連れていけるかどうかのフラグが立っていたら処理しない */
 	if (m_isCowTakeAwayed) return;
-
 	auto cow = FindGOs<Cow>("cow");
 	for (auto c : cow)
 	{
@@ -320,14 +336,16 @@ void UFO::FindTheCow()
 			m_isCowTakeAwayed = true;
 			/** 最初の一匹だけ */
 			m_targetCow = c;
+			//m_cowCaptureController->SetCapturing(true);
+			m_cowCaptureController->StartCapture();
 			m_targetCow->SetTakingUFO(this);
-
 			/** 牛の状態を連れていかれる状態にする */
 			m_targetCow->SetIsTakeAwayed(true);
 			break;
 		}
 	}
 }
+
 
 void UFO::Render(RenderContext& rc)
 {

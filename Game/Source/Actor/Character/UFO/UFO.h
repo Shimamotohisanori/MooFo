@@ -1,8 +1,11 @@
-#pragma once
+﻿#pragma once
 #include"Source/Actor/Character/Character.h"
+#include "Source/Actor/Character/UFO/CowCaptureController.h"
+
 class CountDown;
 class Cow;
 class Score;
+class CowCaptureController;
 class UFO : public Character
 {
 public:
@@ -20,11 +23,23 @@ public:
 		m_transform.SetPosition(pos);
 	}
 
+	const Vector3& GetPosition()
+	{
+		return m_transform.GetPosition();
+	}
 	/** 牛を連れて行けるかどうかのフラグを設定する関数 */
 	void SetIsCowTakeAwayed(bool isCowTakeAwayed)
 	{
 		m_isCowTakeAwayed = isCowTakeAwayed;
 	}
+
+	/** 牛を連れて行けるかどうかのフラグを取得する関数 */
+	bool GetIsCowTakeAwayed()
+	{
+		return m_isCowTakeAwayed;
+	}
+
+	CowCaptureController* GetCowCaptureController();
 
 	/** 目標にしている牛を消す関数 */
 	void ReMoveTargetCow()
@@ -32,6 +47,11 @@ public:
 		m_targetCow = nullptr;
 	}
 
+	bool IsLightEmitting()const
+	{
+		return m_cowCaptureController->GetIsEmitting();
+	}
+	
 	enum EnUFOState
 	{
 		EnUFOState_Move,
@@ -51,7 +71,7 @@ private:
 private:
 	ModelRender m_ufomodelRender;
 	
-	Vector3 m_UfOpos = Vector3(0.0f, 70.0f, 0.0f);
+	Vector3 m_Ufopos = Vector3(0.0f, 70.0f, 0.0f);
 	
 	Vector3 m_moveDir = Vector3::Zero;//移動方向
 	
@@ -66,7 +86,8 @@ private:
 
 	/*スコア*/
 	Score* m_score;
-	
+	/** UFOの牛捕獲コントローラー */
+	CowCaptureController* m_cowCaptureController;
 	/** 牛を連れて行けるかどうかのフラグ */
 	bool m_isCowTakeAwayed = false;
 };

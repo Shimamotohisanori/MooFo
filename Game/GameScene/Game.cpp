@@ -15,6 +15,7 @@
 #include "SoundManager/SoundManager.h"
 #include "Score/Score.h"
 #include "nature/SkyCube.h"
+#include"Source/Actor/Character/UFO/CowCaptureController.h"
 
 Game::~Game()
 {
@@ -62,10 +63,11 @@ Game::~Game()
 bool Game::Start()
 {
 	m_countDown = NewGO<CountDown>(0, "countdown");
-
 	m_player = NewGO <Player>(0, "player");
 	//ステージの生成
 	m_stage = NewGO<Stage>(0, "stage");
+	
+
 	
 	//牛の生成
 	for (int i = 0; i < _countof(COW_INFOMATIONS); i++)
