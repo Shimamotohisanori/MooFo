@@ -34,10 +34,10 @@ namespace
 	constexpr float CAPTURE_RANGE_SQ = 800.0f;
 
 	/**移動可能エリア（柵の内側）*/
-	constexpr float AREA_MIN_X = -1400.0f;
-	constexpr float AREA_MAX_X = 1400.0f;
-	constexpr float AREA_MIN_Z = -1100.0f;
-	constexpr float AREA_MAX_Z = 1100.0f;
+	constexpr float AREA_MIN_X = -1300.0f;
+	constexpr float AREA_MAX_X = 1300.0f;
+	constexpr float AREA_MIN_Z = -600.0f;
+	constexpr float AREA_MAX_Z = 500.0f;
 
 	/** UFO同士の回避処理のための距離の二乗と力 */
 	constexpr float UFO_AVOID_RANGE_SQ = 1500.0f;
@@ -61,7 +61,7 @@ UFO::~UFO()
 bool UFO::Start()
 {
 	//// ★ 強制的に +X 方向へ移動（テスト用）
-	//m_moveDir = Vector3(0.0f, 0.0f, 1.0f);
+	//m_moveDir = Vector3(1.0f, 0.0f, 0.0f);
 	m_countdown = FindGO<CountDown>("countdown");
 	m_score = FindGO<Score>("score");
 	m_cowCaptureController =NewGO<CowCaptureController>(0,"cowcapturecontroller");
