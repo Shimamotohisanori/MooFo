@@ -18,7 +18,7 @@ namespace
 	const Vector3 ARROWSOUNDSCALE = { 0.5f,0.5f,1.0f };
 }bool Pause::Start()
 {
-	m_pauseBackGround.Init("Assets/sprite/PauseUI/pauseBackGround.dds",1980.0f,1080.0f);
+	m_pauseBackGround.Init("Assets/sprite/PauseUI/pauseBackGround2.dds",1980.0f,1080.0f);
 	m_pauseBackGround.Update();
 
 	m_quiteSprite.Init("Assets/sprite/PauseUI/quiteGame.dds",750.0f,650.0f);

@@ -90,13 +90,12 @@ bool Game::Start()
 	//牛の救出数の生成
 	m_cowNumberOfRescues = NewGO<CowNumberOfRescues>(0, "cownumberofrescues");
 
+	//タイマーの生成
+	m_timer = NewGO<Timer>(0, "timer");
 	//ポーズ画面の生成をするが非アクティブにする
 	m_pause = NewGO<Pause>(0, "pause");
 	m_pause->Deactivate();
 	
-	//タイマーの生成
-	m_timer = NewGO<Timer>(0, "timer");
-
 	m_inGameSound = FindGO<SoundManager>("soundmanager");	
 
 	//ゲームカメラの生成
@@ -191,8 +190,6 @@ void Game::Clear()
 		DeleteGO(p_inGameBGM);
 		DeleteGO(this);
 	}
-
-
 }
 
 void Game::Death()

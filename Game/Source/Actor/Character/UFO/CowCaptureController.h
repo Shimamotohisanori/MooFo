@@ -1,6 +1,7 @@
 ﻿#pragma once
 class UFO;
 class CountDown;
+class Pause;
 class CowCaptureController : public IGameObject
 {
 	public:
@@ -25,10 +26,6 @@ public:
 	{
 		m_isCapturing = flag;
 	}
-
-
-	
-
 
 	void StartCapture()
 	{
@@ -67,6 +64,7 @@ private:
 	bool m_isEmitting = false;/** 光が出ているかどうかのフラグ*/
 	bool m_isCapturing = false;/** 牛を捕獲しているかどうかのフラグ*/
 	UFO* m_ufo = nullptr;
+	Pause* m_pause;
 	CountDown* m_countdown;
 };
 
