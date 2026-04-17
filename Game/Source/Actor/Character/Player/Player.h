@@ -78,7 +78,8 @@ private:
 	int m_playerState = 0;//プレイヤーの状態
 	int m_prevPlayerState = -1;//プレイヤーの状態
 
-	
+	/** ロープを投げるまでのクールタイム */
+	float m_throwRopeCoolTime = 0.0f;
 
 	CharacterController m_characterController;//キャラコン
 
