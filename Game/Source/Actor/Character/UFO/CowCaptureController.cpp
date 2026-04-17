@@ -2,6 +2,7 @@
 #include "Source/Actor/Character/UFO/CowCaptureController.h"
 #include"UFO.h"
 #include"CountDown/CountDown.h"
+#include"Pause/Pause.h"
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/UFO/UFOLight.tkm";
@@ -22,6 +23,7 @@ CowCaptureController::~CowCaptureController()
 bool CowCaptureController::Start()
 {
 	m_countdown = FindGO<CountDown>("countdown");
+	m_pause = FindGO<Pause>("pause");
 	m_ufocontrollermodelRender.Init(FILEPATH);
 	/**　最初は光が出ていない状態にする*/
 	m_timer = m_waitTimer;
@@ -33,6 +35,12 @@ bool CowCaptureController::Start()
 void CowCaptureController::Update()
 {
 	if (m_countdown->GetCountDown())
+	{
+		return;
+	}
+
+	/** Pause中は処理を止める*/
+	if (m_pause->GetIsPause())
 	{
 		return;
 	}
@@ -111,13 +119,18 @@ void CowCaptureController::CountText()
 }
 
 void CowCaptureController::Render(RenderContext& rc)
-
-/** 光が出ていないときだけカウント*/ {
+{
+	/** 光が出ていないときだけカウント*/
 	if (!m_isEmitting)
 	{
+		/** Pause中は描画を止める*/
+		if (m_pause->GetIsPause())
+		{
+			return;
+		}
 		m_countText.Draw(rc);
 	}
-
+	
 	if (m_ufo == nullptr)
 	{
 		return;

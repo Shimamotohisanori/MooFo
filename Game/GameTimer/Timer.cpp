@@ -39,7 +39,7 @@ bool Timer::Start()
 
 void Timer::Update()
 {
-
+	/** Pause中は制限時間の更新を止める*/
 	if (m_pause->GetIsPause())
 	{
 		return;
@@ -113,7 +113,11 @@ void Timer::Render(RenderContext& rc)
 	{
 		return;
 	}
-
+	/** Pause中は制限時間の描画を止める*/
+	if (m_pause->GetIsPause())
+	{
+		return;
+	}
 	for (int i = 0; i < 3; i++)
 	{
 		for (int j = 0; j < 10; j++)

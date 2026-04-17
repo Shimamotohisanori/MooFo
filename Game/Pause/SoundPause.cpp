@@ -23,7 +23,7 @@ namespace
 
 bool SoundPause::Start()
 {
-	m_backGroundSprite.Init("Assets/sprite/PauseUI/pauseBackGround.dds", 1980.0f, 1080.0f);
+	m_backGroundSprite.Init("Assets/sprite/PauseUI/pauseBackGround2.dds", 1980.0f, 1080.0f);
 	m_backGroundSprite.Update();
 
 	m_settingSprite.Init("Assets/sprite/PauseUI/setting.dds", 1200.0f, 500.0f);
