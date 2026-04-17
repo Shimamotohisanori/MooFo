@@ -167,6 +167,9 @@ void Player::Rotation()
 
 void Player::ThrowRope()
 {
+	if (m_throwRopeCoolTime > 0.0f) {
+		m_throwRopeCoolTime -= g_gameTime->GetFrameDeltaTime();
+	}
 
 	if (m_rope->GetIsHitCow() or !m_rope)
 	{
@@ -174,11 +177,17 @@ void Player::ThrowRope()
 		return;
 	}
 
+	/** クールダウン中はロープを投げられない */
+	if (m_throwRopeCoolTime > 0.0f) return;
+
 	//RB2ボタンが押されていて、ロープを投げていないとき
 	if (g_pad[0]->IsTrigger(enButtonRB2) && !m_rope->GetIsThrowRope())
 	{
 		//ロープを投げる
 		m_rope->SetIsThrowRope(true);
+
+		/** クールダウン開始 */
+		m_throwRopeCoolTime = 1.5f;
 	}
 }
 
