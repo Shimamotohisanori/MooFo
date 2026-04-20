@@ -6,6 +6,7 @@ class CountDown;
 class Cow;
 class Score;
 class CowCaptureController;
+class Pause;
 class UFO : public Character
 {
 public:
@@ -86,8 +87,13 @@ private:
 
 	/*スコア*/
 	Score* m_score;
+
 	/** UFOの牛捕獲コントローラー */
 	CowCaptureController* m_cowCaptureController;
+	
+	/** ポーズ */
+	Pause* m_pause = nullptr;
+
 	/** 牛を連れて行けるかどうかのフラグ */
 	bool m_isCowTakeAwayed = false;
 };

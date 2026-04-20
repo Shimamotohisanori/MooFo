@@ -7,6 +7,7 @@
 #include "GameScene/Game.h"
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
 #include "Source/Actor/Character/UFO/UFO.h"
+#include "Pause/Pause.h"
 #include <time.h>
 
 namespace
@@ -54,11 +55,18 @@ bool Cow::Start()
 	m_player = FindGO<Player>("player");
 	m_countdown = FindGO<CountDown>("countdown");
 	m_rope = FindGO<Rope>("rope");
+	m_pause = FindGO<Pause>("pause");
 	return true;
 }
 
 void Cow::Update()
 {
+	/* ポーズ中は牛を動かさないようにするため早期リターン */
+	if (m_pause->GetIsPause())
+	{
+		return;
+	}
+
 	/** カウントダウン中は牛を動かさないようにするため早期リターン */
 	if (m_countdown->GetCountDown())
 	{
