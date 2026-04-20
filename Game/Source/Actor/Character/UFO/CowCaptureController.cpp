@@ -6,7 +6,7 @@
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/UFO/UFOLight.tkm";
-	const Vector3 SCALE = Vector3(2.0f, 6.0f, 2.0f);
+	const Vector3 SCALE = Vector3(3.0f, 8.0f,3.0f);
 }
 
 CowCaptureController::CowCaptureController()
@@ -65,7 +65,7 @@ void CowCaptureController::FollowTheCow()
 	if (m_ufo != nullptr) 
 	{
 		Vector3 pos = m_ufo->GetPosition();
-		pos.y -= 150.0f;
+		pos.y -= 350.0f;
 		m_ufocontrollermodelRender.SetPosition(pos);
 		
 	}
