@@ -6,6 +6,7 @@
 class Rope;
 class CountDown;
 class Game;
+class Pause;
 class Player : public Character
 {
 public:
@@ -87,7 +88,11 @@ private:
 
 	Game* m_game;//ゲームクラス
 
+	/** カウントダウン */
 	CountDown* m_countDown;
+
+	/** ポーズ */
+	Pause* m_pause;
 
 	//右ボタンが押されているかどうかのフラグ
 	bool m_isRightButton1 = false;

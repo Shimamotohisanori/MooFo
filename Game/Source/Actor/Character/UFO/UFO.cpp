@@ -9,6 +9,8 @@
 #include "GameCamera/GameCamera.h"
 #include "Score/Score.h"
 #include"Source/Actor/Character/UFO/CowCaptureController.h"
+#include "Pause/Pause.h"
+
 namespace
 {
 	const char* FILEPATH = "Assets/modelData/UFO/UFO.tkm"; //enModelUpAxis = enModelUpAxisZ;
@@ -64,6 +66,7 @@ bool UFO::Start()
 	//m_moveDir = Vector3(1.0f, 0.0f, 0.0f);
 	m_countdown = FindGO<CountDown>("countdown");
 	m_score = FindGO<Score>("score");
+	m_pause = FindGO<Pause>("pause");
 	m_cowCaptureController =NewGO<CowCaptureController>(0,"cowcapturecontroller");
 	/** それぞれのUFOに自分自身を設定 */
 	m_cowCaptureController->SetUFO(this);
@@ -78,6 +81,12 @@ bool UFO::Start()
 
 void UFO::Update()
 {
+	/** ポーズ中はUFOを動かさない */
+	if (m_pause->GetIsPause())
+	{
+		return;
+	}
+
 	/** カウントダウン中はUFOを動かさない */
 	if (m_countdown->GetCountDown())
 	{

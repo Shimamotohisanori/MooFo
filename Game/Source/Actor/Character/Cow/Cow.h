@@ -4,6 +4,7 @@ class Rope;
 class Player;
 class CountDown;
 class UFO;
+class Pause;
 class Cow : public Character
 {
 public:
@@ -89,6 +90,9 @@ private:
 
 	//UFO
 	UFO* m_takingUFO = nullptr;
+
+	/** ポーズ */
+	Pause* m_pause = nullptr;
 
 	enum EnCowState
 	{
