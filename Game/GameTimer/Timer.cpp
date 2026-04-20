@@ -91,9 +91,9 @@ void Timer::TextTimer()
 		}
 
 		// 必要な数字だけ表示 該当する数字だけON
-		m_digitSprite[0][hundreds].SetScale({ 1,1,1 });
-		m_digitSprite[1][tens].SetScale({ 1,1,1 });
-		m_digitSprite[2][ones].SetScale({ 1,1,1 });
+		m_digitSprite[0][hundreds].SetScale({ 0.8f,0.8f,0.8f });
+		m_digitSprite[1][tens].SetScale({ 0.8f,0.8f,0.8f });
+		m_digitSprite[2][ones].SetScale({ 0.8f,0.8f,0.8f });
 		//位置設定
 		m_digitSprite[0][hundreds].SetPosition({ -100.0f,480.0f,0.0f });
 		m_digitSprite[1][tens].SetPosition({ 0.0f,480.0f,0.0f });

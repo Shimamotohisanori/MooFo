@@ -82,7 +82,7 @@ private:
 	SpriteRender m_oneSprite;
 
 	/** 5の画像 */
-	SpriteRender m_fiveSprite;
+	SpriteRender m_zeroSprite;
 	/*リザルト*/
 	bool m_isResult = false;
 
