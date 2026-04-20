@@ -7,7 +7,7 @@ namespace
 	const Vector3 DIGIT_SCALE = { 0.0f,0.0f, 0.0f };
 
 	//数字の大きさ
-	const int  WIDTH = 85.0f;
+	const int  WIDTH = 70.0f;
 	const int HEIGHT= 85.0f;
 }
 

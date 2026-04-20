@@ -22,18 +22,18 @@ namespace
 	const char* RESCUE_FILEPATH = "Assets/sprite/CowNumberOfRescuesUI/CowNumberOfRescues.DDS";
 	const char* SLASH_FILEPATH = "Assets/sprite/CowNumberOfRescuesUI/slash.DDS";
 
-	const Vector2 NUMBER_SPRITE_SIZE = Vector2(50.0f, 70.0f);
+	const Vector2 NUMBER_SPRITE_SIZE = Vector2(40.0f, 60.0f);
 	const Vector2 RESCUE_SPRITE_SIZE = Vector2(250.0f, 220.0f);
-	const Vector2 SLASH_SPRITE_SIZE = Vector2(100.0f, 120.0f);
+	const Vector2 SLASH_SPRITE_SIZE = Vector2(120.0f, 100.0f);
 
 	const Vector3 RESCUE_SPRITE_POSITION = Vector3(-820.0f, -360.0f, 0.0f);
 	const Vector3 NUMBER_SPRITE_TENS_POSITION = Vector3(-670.0f, -360.0f, 0.0f);
-	const Vector3 NUMBER_SPRITE_ONES_POSITION = Vector3(-630.0f, -360.0f, 0.0f);
+	const Vector3 NUMBER_SPRITE_ONES_POSITION = Vector3(-635.0f, -360.0f, 0.0f);
 	const Vector3 NUMBER_SPRITE_ONES_TENBELOW_POSITION = Vector3(-670.0f, -360.0f, 0.0f);
-	const Vector3 SLASH_SPRITE_POSITION = Vector3(-580.0f, -380.0f, 0.0f);
-	const Vector3 SLASH_SPRITE_TENBELOW_POSITION = Vector3(-600.0f, -380.0f, 0.0f);
-	const Vector3 ONE_SPRITE_POSITION = Vector3(-540.0f, -390.0f, 0.0f);
-	const Vector3 FIVE_SPRITE_POSITION = Vector3(-500.0f, -390.0f, 0.0f);
+	const Vector3 SLASH_SPRITE_POSITION = Vector3(-590.0f, -370.0f, 0.0f);
+	const Vector3 SLASH_SPRITE_TENBELOW_POSITION = Vector3(-590.0f, -370.0f, 0.0f);
+	const Vector3 ONE_SPRITE_POSITION = Vector3(-540.0f, -370.0f, 0.0f);
+	const Vector3 ZERO_SPRITE_POSITION = Vector3(-500.0f, -370.0f, 0.0f);
 }
 
 bool CowNumberOfRescues::Start()
@@ -55,9 +55,9 @@ bool CowNumberOfRescues::Start()
 	m_oneSprite.SetPosition(ONE_SPRITE_POSITION);
 	m_oneSprite.Update();
 
-	m_fiveSprite.Init(m_filePath[5].c_str(), NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
-	m_fiveSprite.SetPosition(FIVE_SPRITE_POSITION);
-	m_fiveSprite.Update();
+	m_zeroSprite.Init(m_filePath[0].c_str(), NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
+	m_zeroSprite.SetPosition(ZERO_SPRITE_POSITION);
+	m_zeroSprite.Update();
 
     return true;
 }
@@ -85,29 +85,29 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
     Vector3 onesPos;
     Vector3 slashPos;
     Vector3 onePos;
-    Vector3 fivePos;
+    Vector3 zeroPos;
 
     if (m_isResult)
     {
 		if (m_resultType == ResultType::GameClear)
         {
             //ゲームクリア
-            rescuePos = Vector3(-520.0f,-10.0f, 0.0f);
-            tensPos = Vector3(-420.0f, -10.0f, 0.0f);
+            rescuePos = Vector3(-540.0f,-10.0f, 0.0f);
+            tensPos = Vector3(-390.0f, -10.0f, 0.0f);
             onesPos = Vector3(-370.0f, -10.0f, 0.0f);
             slashPos = Vector3(-320.0f, -10.0f, 0.0f);
             onePos = Vector3(-270.0f, -10.0f, 0.0f);
-            fivePos = Vector3(-230.0f, -10.0f, 0.0f);
+            zeroPos = Vector3(-230.0f, -10.0f, 0.0f);
         }
         else
         {
             //ゲームオーバー
-            rescuePos = Vector3(-600.0f, 50.0f, 0.0f);
-            tensPos = Vector3(-500.0f, 50.0f, 0.0f);
+            rescuePos = Vector3(-620.0f, 50.0f, 0.0f);
+            tensPos = Vector3(-470.0f, 50.0f, 0.0f);
             onesPos = Vector3(-450.0f, 50.0f, 0.0f);
             slashPos = Vector3(-400.0f, 50.0f, 0.0f);
             onePos = Vector3(-350.0f, 50.0f, 0.0f);
-            fivePos = Vector3(-310.0f, 50.0f, 0.0f);
+            zeroPos = Vector3(-310.0f, 50.0f, 0.0f);
         }
        
     }
@@ -119,7 +119,7 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
         onesPos = NUMBER_SPRITE_ONES_POSITION;
         slashPos = SLASH_SPRITE_POSITION;
         onePos = ONE_SPRITE_POSITION;
-        fivePos = FIVE_SPRITE_POSITION;
+        zeroPos = ZERO_SPRITE_POSITION;
     }
 
     // ------------------------
@@ -154,7 +154,7 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
     m_oneSprite.Update();
     m_oneSprite.Draw(renderContext);
 
-    m_fiveSprite.SetPosition(fivePos);
-    m_fiveSprite.Update();
-    m_fiveSprite.Draw(renderContext);
+    m_zeroSprite.SetPosition(zeroPos);
+    m_zeroSprite.Update();
+    m_zeroSprite.Draw(renderContext);
 }
