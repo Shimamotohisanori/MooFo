@@ -69,13 +69,13 @@ public:
 	/** 牛を捕まえた時のロープモデルの位置設定 */
 	void SetRopeModelPos(Vector3 pos)
 	{
-		m_ropeCapturedCowModelRender.SetPosition(pos);
+		m_rollModelRender.SetPosition(pos);
 	}
 
 	/** 牛を捕まえた時のロープモデルの回転設定 */
 	void SetRopeModelRot(Quaternion rot)
 	{
-		m_ropeCapturedCowModelRender.SetRotation(rot);
+		m_rollModelRender.SetRotation(rot);
 	}
 
 private:
@@ -108,7 +108,7 @@ private:
 	ModelRender m_ropeModelRender;
 
 	/** 牛を捕まえた時のロープモデルレンダー */
-	ModelRender m_ropeCapturedCowModelRender;
+	ModelRender m_rollModelRender;
 
 	/** ロープの位置*/
 	Vector3 m_ropePos;
