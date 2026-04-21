@@ -32,6 +32,7 @@ public:
 
 	/*牛の救出数をゲームオーバーとゲームクリアに反映*/
 	int GetNumberOfRescues() const;
+	
 	/*セット関数*/
 	void SetNumber(int number)
 	{
@@ -53,9 +54,61 @@ public:
 
 	ResultType m_resultType = ResultType::GameClear;
 
+
 private:
+	/** レイアウトの初期化 */
+	void InitLayout();
+
+	/** レイアウトの種類 */
+	enum LayoutType
+	{
+		InGame,
+		GameClear,
+		GameOver,
+		LayoutTypeNum
+	};
+	/*レイアウトの種類ごとのUIの大きさ*/
+	
 	/** 救出数 */
-	int m_numberOfRescues = 0;
+	Vector3 rescueScale[LayoutTypeNum];
+	
+	/** 十の位 */
+	Vector3 tensScale[LayoutTypeNum];
+
+	/** 一の位 */
+	Vector3 onesScale[LayoutTypeNum];
+
+	/** 「/」の大きさ */
+	Vector3 slashScale[LayoutTypeNum];
+
+	/** 1の大きさ */
+	Vector3 oneScale[LayoutTypeNum];
+	
+	/** 0の大きさ */
+	Vector3 zeroScale[LayoutTypeNum];
+
+	/** レイアウトの種類ごとのUIの座標 */
+	
+	/** 救出数 */
+	Vector3 rescuePos[LayoutTypeNum];
+	
+	/** 十の位 */
+	Vector3 tensPos[LayoutTypeNum];
+	
+	/** 一の位 */
+	Vector3 onesPos[LayoutTypeNum];
+	
+	/** 「/」の位置 */
+	Vector3 slashPos[LayoutTypeNum];
+	
+	/** 1の位置 */
+	Vector3 onePos[LayoutTypeNum];
+	
+	/** 0の位置 */
+	Vector3 zeroPos[LayoutTypeNum];
+
+	/** 救出数 */
+	int m_numberOfRescues = 30;
 
 	/**	十の位 */
 	int tens = 0;

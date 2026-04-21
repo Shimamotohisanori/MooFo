@@ -5,7 +5,7 @@
 #include"Pause/Pause.h"
 namespace
 {
-	const char* FILEPATH = "Assets/modelData/UFO/UFOLight.tkm";
+	const char* GAMECLEAR_FILEPATH = "Assets/modelData/UFO/UFOLight.tkm";
 	const Vector3 SCALE = Vector3(3.0f, 8.0f,3.0f);
 }
 
@@ -24,7 +24,7 @@ bool CowCaptureController::Start()
 {
 	m_countdown = FindGO<CountDown>("countdown");
 	m_pause = FindGO<Pause>("pause");
-	m_ufocontrollermodelRender.Init(FILEPATH);
+	m_ufocontrollermodelRender.Init(GAMECLEAR_FILEPATH);
 	/**　最初は光が出ていない状態にする*/
 	m_timer = m_waitTimer;
 	m_ufocontrollermodelRender.SetScale(SCALE);

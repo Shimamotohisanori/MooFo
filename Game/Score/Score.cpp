@@ -7,7 +7,7 @@ namespace
 	const Vector3 DIGIT_SCALE = { 0.0f,0.0f, 0.0f };
 
 	//数字の大きさ
-	const int  WIDTH = 70.0f;
+	const int  GAMECLEAR_WIDTH = 70.0f;
 	const int HEIGHT= 85.0f;
 }
 
@@ -35,7 +35,7 @@ bool Score::Start()
 		for (int i = 0; i < 5; i++)
 		{
 			//画像の読み込みと大きさ調整
-			m_digitSprite[i][j].Init(m_digitPaths[j], WIDTH,HEIGHT);
+			m_digitSprite[i][j].Init(m_digitPaths[j], GAMECLEAR_WIDTH,HEIGHT);
 
 			//非表示にしないと前のスコアが残ってしまいバグってしまう。
 			m_digitSprite[i][j].SetScale(DIGIT_SCALE);
@@ -99,14 +99,14 @@ void Score::TextScore()
 		//ゲームクリアならスコアを-580の位置に表示する
 		if (m_resultType == ResultType::GameClear)
 		{
-			baseX = -580.0f;
-			baseY = -150.0f;
+			baseX = -700.0f;
+			baseY = -100.0f;
 		}
 		//ゲームオーバーならスコアを-680の位置に表示する
 		else if (m_resultType == ResultType::GameOver)
 		{
-			baseX = -680.0f;
-			baseY = -70.0f;
+			baseX = -700.0f;
+			baseY = -100.0f;
 		}
 	}
 	else

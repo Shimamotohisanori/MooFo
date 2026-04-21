@@ -19,6 +19,10 @@ class GameClear :public IGameObject
 	void SetFinalClearRescue(int rescue);
 private:
 	SpriteRender m_GameClearSpriteRender;//ゲームクリアのスプライトレンダー
+
+	/** 黒い背景用のスプライトレンダー */
+	SpriteRender m_blackSpriteRender;
+
 	bool m_isDeleteRequst = false;//削除要求フラグ
 
 

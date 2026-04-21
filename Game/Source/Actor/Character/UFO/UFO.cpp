@@ -13,7 +13,7 @@
 
 namespace
 {
-	const char* FILEPATH = "Assets/modelData/UFO/UFO.tkm"; //enModelUpAxis = enModelUpAxisZ;
+	const char* GAMECLEAR_FILEPATH = "Assets/modelData/UFO/UFO.tkm"; //enModelUpAxis = enModelUpAxisZ;
 
 	/** UFOの大きさ*/
 	constexpr float UFO_SCALE = 3.5f;
@@ -72,7 +72,7 @@ bool UFO::Start()
 	m_cowCaptureController->SetUFO(this);
 	srand(time(nullptr));
 	m_ufomodelRender.SetScale(UFO_SCALE,UFO_SCALE,UFO_SCALE);
-	m_ufomodelRender.Init(FILEPATH);
+	m_ufomodelRender.Init(GAMECLEAR_FILEPATH);
 	m_ufomodelRender.SetPosition(m_transform.GetPosition());
 	m_ufomodelRender.Update();
 	

@@ -8,9 +8,16 @@
 
 namespace
 {
-	const char* FILEPATH = "Assets/sprite/GameTransition/GameOver2.dds";
-	const int WIDTH = 1920.0f;
-	const int HIGHT = 1080.0f;
+	const char* GAMECLEAR_FILEPATH = "Assets/sprite/GameTransition/GameOver.dds";
+	const char* BLACK_SPRITE_FILEPATH = "Assets/sprite/GameTransition/Black.DDS";
+
+	const float BLACK_SPRITE_WIDTH = 800.0f;
+	const float BLACK_SPRITE_HIGHT = 550.0f;
+
+	const int GAMECLEAR_WIDTH = 1920.0f;
+	const int GAMEOVER_HIGHT = 1080.0f;
+
+	const Vector3 BLACK_SPRITE_POSITION = Vector3(-550.0f, 0.0f, 0.0f);
 }
 
 GameOver::GameOver()
@@ -28,7 +35,7 @@ GameOver::~GameOver()
 bool GameOver::Start()
 {
 	//画像を読み込む
-	m_GameOverspriteRender.Init(FILEPATH, WIDTH, HIGHT);
+	m_GameOverspriteRender.Init(GAMECLEAR_FILEPATH, GAMECLEAR_WIDTH, GAMEOVER_HIGHT);
 	//スコアを表示するためのスコアクラスを生成
 	m_score = NewGO<Score>(0, "score");
 
@@ -38,6 +45,10 @@ bool GameOver::Start()
 
 	m_deathSound = FindGO<SoundManager>("soundmanager");
 	p_deathBGM = m_deathSound->PlayingBGM(SoundBGM::enGameOverBGM, false);
+
+	m_blackSpriteRender.Init(BLACK_SPRITE_FILEPATH, BLACK_SPRITE_WIDTH, BLACK_SPRITE_HIGHT);
+	m_blackSpriteRender.SetPosition(BLACK_SPRITE_POSITION);
+	m_blackSpriteRender.Update();
 	return true;
 }
 
@@ -107,7 +118,15 @@ void GameOver::SetFinalRescue(int rescue)
 void GameOver::Render(RenderContext& rc)
 {
 	m_GameOverspriteRender.Draw(rc);
-
+	
+	m_blackSpriteRender.SetMulColor(
+		Vector4(
+			1.0f, 
+			1.0f, 
+			1.0f, 
+			0.5f));
+	m_blackSpriteRender.Draw(rc);
+	
 	if (m_score)
 	{
 		m_score->Render(rc);

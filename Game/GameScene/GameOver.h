@@ -21,6 +21,10 @@ public:
 
 private:
 	SpriteRender m_GameOverspriteRender;
+
+	/** 黒い背景用のスプライトレンダラー */
+	SpriteRender m_blackSpriteRender;
+
 	//スコアの表示をコピーするための変数
 	int m_finalScore;
 	bool m_isDeleteRequest = false;

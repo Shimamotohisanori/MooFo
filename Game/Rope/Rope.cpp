@@ -7,7 +7,7 @@
 
 namespace
 {
-	const char* FILEPATH = "Assets/modelData/Rope/NewRope.tkm";
+	const char* GAMECLEAR_FILEPATH = "Assets/modelData/Rope/NewRope.tkm";
 	const char* CAPTURED_COW_FILEPATH = "Assets/modelData/Rope/CapturedCowRope.tkm";
 
 	const Vector3 ROPE_INITIAL_SCALE = { 1.0f, 1.0f, 5.0f };
@@ -41,7 +41,7 @@ Rope::~Rope()
 
 bool Rope::Start()
 {
-	m_ropeModelRender.Init(FILEPATH);
+	m_ropeModelRender.Init(GAMECLEAR_FILEPATH);
 	m_rollModelRender.Init(CAPTURED_COW_FILEPATH);
 	m_player = FindGO<Player>("player");
 	m_ropeScale = ROPE_INITIAL_SCALE;
