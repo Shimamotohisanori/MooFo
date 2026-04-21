@@ -8,7 +8,7 @@
 
 namespace
 {
-	const char* FILEPATH = "Assets/modelData/CowBoy/CowBoy3.tkm";
+	const char* GAMECLEAR_FILEPATH = "Assets/modelData/CowBoy/CowBoy3.tkm";
 	const char* ANIMATION_IDLEFILEPATH = "Assets/modelData/CowBoy/Idle3.tka";
 	const char* ANIMATION_RUNFILEPATH = "Assets/modelData/CowBoy/Run3.tka";
 	const float CHRACTER_CONTROLLER_WIDTH = 25.0f;
@@ -24,7 +24,7 @@ Player::Player()
 	animationClips[enAnimationClip_Idle].SetLoopFlag(true);
 	animationClips[enAnimationClip_Run].Load(ANIMATION_RUNFILEPATH);
 	animationClips[enAnimationClip_Run].SetLoopFlag(true);
-	m_playerModelRender.Init(FILEPATH, animationClips, enAnimationClip_Num, enModelUpAxisZ);
+	m_playerModelRender.Init(GAMECLEAR_FILEPATH, animationClips, enAnimationClip_Num, enModelUpAxisZ);
 
 
 }

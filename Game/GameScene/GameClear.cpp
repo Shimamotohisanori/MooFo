@@ -8,9 +8,16 @@
 
 namespace
 {
-	const char* FILEPATH = "Assets/sprite/GameTransition/GameClear2.dds";
-	const int WIDTH = 1920;
-	const int HEIGHT = 1080;
+	const char* GAMECLEAR_FILEPATH = "Assets/sprite/GameTransition/GameClear.dds";
+	const char* BLACK_SPRITE_FILEPATH = "Assets/sprite/GameTransition/Black.DDS";
+
+	const float BLACK_SPRITE_WIDTH = 800.0f;
+	const float BLACK_SPRITE_HIGHT = 350.0f;
+
+	const int GAMECLEAR_WIDTH = 1920;
+	const int GAMECLEAR_HEIGHT = 1080;
+
+	const Vector3 BLACK_SPRITE_POSITION = Vector3(-550.0f, 0.0f, 0.0f);
 }
 
 GameClear::GameClear()
@@ -28,7 +35,7 @@ GameClear::~GameClear()
 
 bool GameClear::Start()
 {
-	m_GameClearSpriteRender.Init(FILEPATH, WIDTH, HEIGHT);
+	m_GameClearSpriteRender.Init(GAMECLEAR_FILEPATH, GAMECLEAR_WIDTH, GAMECLEAR_HEIGHT);
 	//スコアを表示するためのスコアクラスを生成
 	m_score = NewGO<Score>(0, "score");
 
@@ -37,6 +44,9 @@ bool GameClear::Start()
 	m_clearSound = FindGO<SoundManager>("soundmanager");
 	p_clearBGM = m_clearSound->PlayingBGM(SoundBGM::enGameClearBGM, false);
 
+	m_blackSpriteRender.Init(BLACK_SPRITE_FILEPATH, BLACK_SPRITE_WIDTH, BLACK_SPRITE_HIGHT);
+	m_blackSpriteRender.SetPosition(BLACK_SPRITE_POSITION);
+	m_blackSpriteRender.Update();
 	return true;
 }
 
@@ -103,6 +113,15 @@ void GameClear::SetFinalClearRescue(int rescue)
 void GameClear::Render(RenderContext& rc)
 {
 	m_GameClearSpriteRender.Draw(rc);
+
+	m_blackSpriteRender.SetMulColor(
+		Vector4(
+			1.0f,
+			1.0f,
+			1.0f,
+			0.5f));
+	m_blackSpriteRender.Draw(rc);
+
 	if(m_score)
 	{
 		m_score->Render(rc);

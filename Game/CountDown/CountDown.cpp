@@ -9,8 +9,8 @@ namespace
 	const char* FILEPATH3 = "Assets/sprite/NumberUI/MooFoNumberUI3.dds";
 	const char* FILEPATHStart = "Assets/sprite/NumberUI/Start.dds";
 	//画像の大きさ
-	const int WIDTH = 500.0f;
-	const int HIGHT = 300.0f;
+	const int GAMECLEAR_WIDTH = 500.0f;
+	const int GAMEOVER_HIGHT = 300.0f;
 
 	const int StartWIDTH = 700.0f;
 	const int StartHIGHT = 500.0f;
@@ -18,9 +18,9 @@ namespace
 
 bool CountDown::Start()
 {
-	m_countDown1.Init(FILEPATH1, WIDTH, HIGHT);
-	m_countDown2.Init(FILEPATH2, WIDTH, HIGHT);
-	m_countDown3.Init(FILEPATH3, WIDTH, HIGHT);
+	m_countDown1.Init(FILEPATH1, GAMECLEAR_WIDTH, GAMEOVER_HIGHT);
+	m_countDown2.Init(FILEPATH2, GAMECLEAR_WIDTH, GAMEOVER_HIGHT);
+	m_countDown3.Init(FILEPATH3, GAMECLEAR_WIDTH, GAMEOVER_HIGHT);
 	m_countDownStart.Init(FILEPATHStart, StartWIDTH, StartHIGHT);
 	return true;
 }

@@ -5,9 +5,9 @@
 
 namespace
 {
-	const char* FILEPATH = "Assets/sprite/GameTransition/GameTitle.dds";
-	const int WIDTH = 1920;
-	const int HIGHT = 1080;
+	const char* GAMECLEAR_FILEPATH = "Assets/sprite/GameTransition/GameTitle.dds";
+	const int GAMECLEAR_WIDTH = 1920;
+	const int GAMEOVER_HIGHT = 1080;
 }
 Title::Title()
 {
@@ -22,7 +22,7 @@ Title::~Title()
 
 bool Title::Start()
 {
-	m_TitleSpriteRender.Init(FILEPATH,WIDTH,HIGHT);
+	m_TitleSpriteRender.Init(GAMECLEAR_FILEPATH,GAMECLEAR_WIDTH,GAMEOVER_HIGHT);
 
 	m_soundManager = FindGO<SoundManager>("soundmanager");
 	p_titleBGM = m_soundManager->PlayingBGM(SoundBGM::enTitleBGM, false);

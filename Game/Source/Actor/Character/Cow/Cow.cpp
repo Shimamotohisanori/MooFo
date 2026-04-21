@@ -12,7 +12,7 @@
 
 namespace
 {
-	const char* FILEPATH = "Assets/modelData/Cow/Model/Cow4.tkm"; //enModelUpAxis = enModelUpAxisZ;
+	const char* GAMECLEAR_FILEPATH = "Assets/modelData/Cow/Model/Cow4.tkm"; //enModelUpAxis = enModelUpAxisZ;
 	const char* THROW_ROPE_ANIMATION_FILE_PATH = "Assets/modelData/Cow/Animation/Idle2.tka";
 	const char* FILEPATH_WALK = "Assets/modelData/Cow/Animation/Walk.tka";
 
@@ -48,7 +48,7 @@ bool Cow::Start()
 	
 	srand(time(nullptr));
 
-	m_cowmodelRender.Init(FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
+	m_cowmodelRender.Init(GAMECLEAR_FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
 	m_cowmodelRender.SetPosition(m_transform.GetPosition());
 	m_cowmodelRender.Update();
 
