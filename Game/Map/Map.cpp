@@ -146,8 +146,11 @@ void Map::Render(RenderContext& rc)
 {
 	m_mapSprite.Draw(rc);
 	m_playerSprite.Draw(rc);
+
+	/** 牛を描画させる */
 	for (int i = 0; i < m_cows.size(); i++)
 	{
+		/** もしミニマップないに牛がいたら(true) */
 		if (m_isCowImage[i])
 		{
 			m_cowSprite[i].Draw(rc);
