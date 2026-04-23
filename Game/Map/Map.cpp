@@ -9,7 +9,10 @@ namespace
 	
 	float MAP_RADIUS = 190.0f;
 	float LIMITED_RANGE_IMAGE = 410.0f;
+
+	/** マジックナンバー処理 */
 	const int COW_NUM = 10;
+	const int UFO_NUM = 4;
 }
 
 bool Map::Start()
@@ -25,13 +28,19 @@ bool Map::Start()
 	/** 牛をミニマップ内に出現させる。 */
 	for (int i = 0; i < COW_NUM; i++)
 	{
-		m_cowSprite[i].Init("Assets/sprite/MapUI/CowIcon.dds", 30.0f, 30.0f);
+		m_cowSprite[i].Init("Assets/sprite/MapUI/CowIcon.dds", 25.0f, 25.0f);
+	}
+
+	/** UFOをミニマップ内に出現させる。 */
+	for(int i = 0; i < UFO_NUM; i++)
+	{
+		m_ufoSprite[i].Init("Assets/sprite/MapUI/UFOIcon.dds", 30.0f, 30.0f);
 	}
 	
 
 	/** それぞれのポジションを見つける。*/
-	
 	m_cows = FindGOs<Cow>("cow");
+	m_ufos = FindGOs<UFO>("UFO");
 	m_player = FindGO<Player>("player");
 	
 	return true;
@@ -50,7 +59,7 @@ void Map::Update()
 		if (WorldPositionConvertToMapPosition(playerPos, cowPos, mapPos))
 		{
 			/** マップに表示するように設定する。 */
-			m_isImage[i] = true;
+			m_isCowImage[i] = true;
 
 			/** SpriteRenderに座標を設定 */
 			m_cowSprite[i].SetPosition(mapPos);
@@ -59,7 +68,29 @@ void Map::Update()
 		/** マップに表示する範囲に敵がいなかったら */
 		else
 		{
-			m_isImage[i] = false;
+			m_isCowImage[i] = false;
+		}
+	}
+
+	for (int i = 0; i < m_ufos.size(); i++)
+	{
+		Vector3 ufoPos = m_ufos[i]->GetPosition();
+		Vector3 mapPos;
+
+		/** マップに表示する範囲に牛やUFOがいたら */
+		if (WorldPositionConvertToMapPosition(playerPos, ufoPos, mapPos))
+		{
+			/** マップに表示するように設定する。 */
+			m_isUFOImage[i] = true;
+
+			/** SpriteRenderに座標を設定 */
+			m_ufoSprite[i].SetPosition(mapPos);
+		}
+
+		/** マップに表示する範囲に敵がいなかったら */
+		else
+		{
+			m_isUFOImage[i] = false;
 		}
 	}
 
@@ -70,6 +101,10 @@ void Map::Update()
 		m_cowSprite[i].Update();
 	}
 
+	for (int i = 0; i < UFO_NUM; i++)
+	{
+		m_ufoSprite[i].Update();
+	}
 }
 bool Map::WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3 cowPosition, Vector3& mapPosition)
 {
@@ -113,9 +148,17 @@ void Map::Render(RenderContext& rc)
 	m_playerSprite.Draw(rc);
 	for (int i = 0; i < m_cows.size(); i++)
 	{
-		if (m_isImage[i])
+		if (m_isCowImage[i])
 		{
 			m_cowSprite[i].Draw(rc);
+		}
+	}
+
+	for (int i = 0; i < m_ufos.size(); i++)
+	{
+		if (m_isUFOImage[i])
+		{
+			m_ufoSprite[i].Draw(rc);
 		}
 	}
 }
