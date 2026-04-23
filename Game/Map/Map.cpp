@@ -10,7 +10,6 @@ namespace
 	float MAP_RADIUS = 190.0f;
 	float LIMITED_RANGE_IMAGE = 410.0f;
 
-
 	/** マジックナンバー処理 */
 	const int COW_NUM = 10;
 	const int UFO_NUM = 4;
@@ -35,6 +34,12 @@ bool Map::Start()
 	/** UFOをミニマップ内に出現させる。 */
 	for(int i = 0; i < UFO_NUM; i++)
 	{
+		m_cowSprite[i].Init("Assets/sprite/MapUI/CowIcon.dds", 25.0f, 25.0f);
+	}
+
+	/** UFOをミニマップ内に出現させる。 */
+	for(int i = 0; i < UFO_NUM; i++)
+	
 		m_ufoSprite[i].Init("Assets/sprite/MapUI/UFOIcon.dds", 30.0f, 30.0f);
 	}
 	
@@ -50,6 +55,10 @@ void Map::Update()
 {
 	/** それぞれのポジションを代入させる。 */	
 	Vector3 playerPos = m_player->GetPosition();
+
+	Vector3 forward = g_camera3D->GetForward();
+
+	m_mapAngle = atan2(-forward.x, forward.z);
 
 	for (int i = 0; i < m_cows.size(); i++)
 	{
@@ -123,24 +132,22 @@ bool Map::WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3
 	/** ベクトルの長さを取得 */
 	float cowLength = cowDiff.Length();
 
-	/** カメラの前方向ベクトルから、クォータニオンを生成 */	
-	Vector3 forward = g_camera3D->GetForward();
+	Quaternion rot;
+	rot.SetRotationDegY(m_mapAngle);
+	rot.SetRotationY(m_mapAngle);
+	/** ベクトルに向かう。 */
+	rot.Apply(cowDiff);
 
-	Quaternion cowrot;
-
-	cowrot.SetRotationDegY(atan2(-forward.x, forward.z));
-
-	/** ベクトルに向かう。 */	
-	cowrot.Apply(cowDiff);
-
-	/** ベクトルを正規化する。 */	
+	/** ベクトルを正規化する。 */
 	cowDiff.Normalize();
 
-	/** マップの大きさ/距離制限で。	ベクトルをマップ座標系に変換する。*/	
+	/** マップの大きさ/距離制限で。	ベクトルをマップ座標系に変換する。*/
 	cowDiff *= cowLength * MAP_RADIUS / LIMITED_RANGE_IMAGE;
 
-	/** マップの中央座標と上記ベクトルを加算する。 */	
-	mapPosition = Vector3(MAP_CENTER_POSITION.x + cowDiff.x, MAP_CENTER_POSITION.y + cowDiff.z, 0.0f);
+	/** マップの中央座標と上記ベクトルを加算する。 */
+	mapPosition = Vector3(MAP_CENTER_POSITION.x + cowDiff.x , MAP_CENTER_POSITION.y + cowDiff.z, 0.0f);
+	
+
 	return true;
 }
 void Map::Render(RenderContext& rc)
