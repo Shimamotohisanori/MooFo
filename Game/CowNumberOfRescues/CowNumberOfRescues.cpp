@@ -23,7 +23,7 @@ namespace
 	const char* SLASH_FILEPATH = "Assets/sprite/CowNumberOfRescuesUI/slash.DDS";
 
 	const Vector2 NUMBER_SPRITE_SIZE = Vector2(40.0f, 60.0f);
-	const Vector2 RESCUE_SPRITE_SIZE = Vector2(250.0f, 220.0f);
+	const Vector2 RESCUE_SPRITE_SIZE = Vector2(270.0f, 240.0f);
 	const Vector2 SLASH_SPRITE_SIZE = Vector2(120.0f, 100.0f);
 
     /** インゲームスプライトのスケール */
