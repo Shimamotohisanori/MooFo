@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 class Player;
 class Cow;
 class UFO;
@@ -13,6 +13,7 @@ class Map : public IGameObject
 	/** ワールド座標系からマップ座標系に変換 */
 	bool WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3 cowPosition, Vector3& mapPosition);
 
+	/** vector型で牛とUFOの数値を入れている。 */
 	std::vector<Cow*> m_cows;
 	std::vector<UFO*> m_ufos;
 
@@ -25,6 +26,7 @@ class Map : public IGameObject
   
 	float m_mapAngle = 0.0f;
   
+	/** マップ内に表示されているUIがいるかどうかのフラグ */
 	bool m_isCowImage[10];
 	bool m_isUFOImage[4];
 
