@@ -1,7 +1,8 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "SoundManager/SoundManager.h"
 #include "Title.h"
 #include "Game.h"
+#include"LoadingScene.h"
 
 namespace
 {
@@ -43,9 +44,13 @@ void Title::InTitle()
 {
 	if (g_pad[0]->IsPressAnyKey())
 	{
-		NewGO<Game>(0, "game");
+		m_loadingScene = NewGO<LoadingScene>(0, "loading");
 		p_titleSE = m_soundManager->PlayingSE(SoundSE::enDecisionSE, false);
 		DeleteGO(p_titleBGM);
+		m_loadingScene->SetNextScene([]()
+			{
+				NewGO<Game>(0, "game");
+			});
 		DeleteGO(this);
 	}
 }
