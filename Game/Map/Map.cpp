@@ -10,6 +10,7 @@ namespace
 	float MAP_RADIUS = 190.0f;
 	float LIMITED_RANGE_IMAGE = 410.0f;
 
+
 	/** マジックナンバー処理 */
 	const int COW_NUM = 10;
 	const int UFO_NUM = 4;

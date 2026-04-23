@@ -55,7 +55,7 @@ namespace
 
     /** ゲームクリアスプライトの座標 */
 	const Vector3 GAMECLEAR_RESCUE_SPRITE_POSITION = Vector3(-750.0f, 50.0f, 0.0f);
-	const Vector3 GAMECLEAR_NUMBER_SPRITE_TENS_POSITION = Vector3(-470.0f, 50.0f, 0.0f);
+	const Vector3 GAMECLEAR_NUMBER_SPRITE_TENS_POSITION = Vector3(-520.0f, 50.0f, 0.0f);
 	const Vector3 GAMECLEAR_NUMBER_SPRITE_ONES_POSITION = Vector3(-450.0f, 50.0f, 0.0f);
 	const Vector3 GAMECLEAR_SLASH_SPRITE_POSITION = Vector3(-370.0f, 50.0f, 0.0f);
 	const Vector3 GAMECLEAR_ONE_SPRITE_POSITION = Vector3(-310.0f, 50.0f, 0.0f);
