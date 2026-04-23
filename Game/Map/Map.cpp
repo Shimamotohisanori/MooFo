@@ -5,16 +5,17 @@
 #include "Source/Actor/Character/UFO/UFO.h"
 namespace
 {
-	Vector3 MAP_CENTER_POSITION = Vector3(704.0f, -150.0f, 0.0f);
+	Vector3 MAP_CENTER_POSITION = Vector3(704.0f, -300.0f, 0.0f);
 	
-	float MAP_RADIUS = 240.0f;
-	float LIMITED_RANGE_IMAGE = 600.0f;
+	float MAP_RADIUS = 190.0f;
+	float LIMITED_RANGE_IMAGE = 410.0f;
+	const int COW_NUM = 10;
 }
 
 bool Map::Start()
 {
 	/** ミニマップの背景 */	
-	m_mapSprite.Init("Assets/sprite/MapUI/MapIcon.dds", 512.0f, 512.0f);
+	m_mapSprite.Init("Assets/sprite/MapUI/MapIcon.dds", 400.0f, 400.0f);
 	m_mapSprite.SetPosition(MAP_CENTER_POSITION);
 
 	/** ミニマップの中心(プレイヤー) */	
@@ -22,7 +23,7 @@ bool Map::Start()
 	m_playerSprite.SetPosition(MAP_CENTER_POSITION);
 
 	/** 牛をミニマップ内に出現させる。 */
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < COW_NUM; i++)
 	{
 		m_cowSprite[i].Init("Assets/sprite/MapUI/CowIcon.dds", 30.0f, 30.0f);
 	}
@@ -64,7 +65,7 @@ void Map::Update()
 
 	m_mapSprite.Update();
 	m_playerSprite.Update();
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < COW_NUM; i++)
 	{
 		m_cowSprite[i].Update();
 	}
