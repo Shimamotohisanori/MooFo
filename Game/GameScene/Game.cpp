@@ -14,6 +14,7 @@
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
 #include "SoundManager/SoundManager.h"
 #include "Score/Score.h"
+#include "Map/Map.h"
 #include "nature/SkyCube.h"
 
 Game::~Game()
@@ -57,6 +58,8 @@ Game::~Game()
 	DeleteGO(m_pause);
 	//牛の救出数の削除
 	DeleteGO(m_cowNumberOfRescues);
+	/** ミニマップの削除 */
+	DeleteGO(m_map);
 
 }
 bool Game::Start()
@@ -99,6 +102,8 @@ bool Game::Start()
 
 	//ゲームカメラの生成
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
+
+	m_map = NewGO<Map>(0, "map");
 
 	InitSkyCube();
 
