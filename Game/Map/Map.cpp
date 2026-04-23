@@ -9,6 +9,7 @@ namespace
 	
 	float MAP_RADIUS = 190.0f;
 	float LIMITED_RANGE_IMAGE = 410.0f;
+	const int COW_NUM = 10;
 }
 
 bool Map::Start()
@@ -22,7 +23,7 @@ bool Map::Start()
 	m_playerSprite.SetPosition(MAP_CENTER_POSITION);
 
 	/** 牛をミニマップ内に出現させる。 */
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < COW_NUM; i++)
 	{
 		m_cowSprite[i].Init("Assets/sprite/MapUI/CowIcon.dds", 30.0f, 30.0f);
 	}
@@ -64,7 +65,7 @@ void Map::Update()
 
 	m_mapSprite.Update();
 	m_playerSprite.Update();
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < COW_NUM; i++)
 	{
 		m_cowSprite[i].Update();
 	}
