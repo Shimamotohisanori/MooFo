@@ -229,9 +229,9 @@
     <ClCompile Include="GameScene\Game.cpp" />
     <ClCompile Include="GameScene\GameClear.cpp" />
     <ClCompile Include="GameScene\GameOver.cpp" />
+    <ClCompile Include="GameScene\LoadingScene.cpp" />
     <ClCompile Include="GameScene\Title.cpp" />
     <ClCompile Include="GameTimer\Timer.cpp" />
-    <ClCompile Include="LoadingScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map\Map.cpp" />
     <ClCompile Include="Pause\Pause.cpp" />
@@ -261,9 +261,9 @@
     <ClInclude Include="GameScene\Game.h" />
     <ClInclude Include="GameScene\GameClear.h" />
     <ClInclude Include="GameScene\GameOver.h" />
+    <ClInclude Include="GameScene\LoadingScene.h" />
     <ClInclude Include="GameScene\Title.h" />
     <ClInclude Include="GameTimer\Timer.h" />
-    <ClInclude Include="LoadingScene.h" />
     <ClInclude Include="Map\Map.h" />
     <ClInclude Include="Pause\Pause.h" />
     <ClInclude Include="Pause\SoundPause.h" />

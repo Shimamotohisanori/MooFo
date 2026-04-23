@@ -67,9 +67,11 @@
     <ClCompile Include="Source\Actor\Character\UFO\CowCaptureController.cpp">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClCompile>
-    <ClCompile Include="LoadingScene.cpp" />
     <ClCompile Include="Map\Map.cpp">
       <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene\LoadingScene.cpp">
+      <Filter>GameScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -139,9 +141,11 @@
     <ClInclude Include="Source\Actor\Character\UFO\CowCaptureController.h">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClInclude>
-    <ClInclude Include="LoadingScene.h" />
     <ClInclude Include="Map\Map.h">
       <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene\LoadingScene.h">
+      <Filter>GameScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
