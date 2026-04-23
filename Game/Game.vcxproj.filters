@@ -67,6 +67,7 @@
     <ClCompile Include="Source\Actor\Character\UFO\CowCaptureController.cpp">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClCompile>
+    <ClCompile Include="LoadingScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -135,6 +136,7 @@
     <ClInclude Include="Source\Actor\Character\UFO\CowCaptureController.h">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClInclude>
+    <ClInclude Include="LoadingScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
