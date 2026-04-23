@@ -67,6 +67,7 @@
     <ClCompile Include="Source\Actor\Character\UFO\CowCaptureController.cpp">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClCompile>
+    <ClCompile Include="LoadingScene.cpp" />
     <ClCompile Include="Map\Map.cpp">
       <Filter>Map</Filter>
     </ClCompile>
@@ -138,6 +139,7 @@
     <ClInclude Include="Source\Actor\Character\UFO\CowCaptureController.h">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClInclude>
+    <ClInclude Include="LoadingScene.h" />
     <ClInclude Include="Map\Map.h">
       <Filter>Map</Filter>
     </ClInclude>

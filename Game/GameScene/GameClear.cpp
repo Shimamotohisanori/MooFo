@@ -1,10 +1,10 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "SoundManager/SoundManager.h"
 #include "GameClear.h"
-#include "Game.h"
 #include "Title.h"
 #include "Score/Score.h"
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
+#include"LoadingScene.h"
 
 namespace
 {
@@ -83,13 +83,15 @@ void GameClear::InGameClear()
 {
 	if (g_pad[0]->IsPressAnyKey())
 	{
-		Game* game = FindGO<Game>("game");
-		if (game)
-		{
-			DeleteGO(game);
-		}
-		//タイトルの画像を呼び出す
-		NewGO<Title>(0, "title");
+		m_loadingScene = NewGO<LoadingScene>(0, "loading");
+		m_loadingScene->SetNextScene([]()
+			{
+				/** タイトルの画像を呼び出す*/
+				NewGO<Title>(0, "title");
+			});
+		
+		
+		
 		//自信を削除するフラグを立てる
 		m_isDeleteRequst = true;
 	}
@@ -112,6 +114,8 @@ void GameClear::SetFinalClearRescue(int rescue)
 }
 void GameClear::Render(RenderContext& rc)
 {
+	m_blackSpriteRender.Draw(rc);
+
 	m_GameClearSpriteRender.Draw(rc);
 
 	m_blackSpriteRender.SetMulColor(
@@ -120,7 +124,6 @@ void GameClear::Render(RenderContext& rc)
 			1.0f,
 			1.0f,
 			0.5f));
-	m_blackSpriteRender.Draw(rc);
 
 	if(m_score)
 	{
