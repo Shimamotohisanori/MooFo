@@ -232,6 +232,7 @@
     <ClCompile Include="GameScene\Title.cpp" />
     <ClCompile Include="GameTimer\Timer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map\Map.cpp" />
     <ClCompile Include="Pause\Pause.cpp" />
     <ClCompile Include="Pause\SoundPause.cpp" />
     <ClCompile Include="Rope\Rope.cpp" />
@@ -261,6 +262,7 @@
     <ClInclude Include="GameScene\GameOver.h" />
     <ClInclude Include="GameScene\Title.h" />
     <ClInclude Include="GameTimer\Timer.h" />
+    <ClInclude Include="Map\Map.h" />
     <ClInclude Include="Pause\Pause.h" />
     <ClInclude Include="Pause\SoundPause.h" />
     <ClInclude Include="resource.h" />
