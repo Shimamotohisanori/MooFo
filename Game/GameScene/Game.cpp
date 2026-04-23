@@ -20,7 +20,7 @@
 Game::~Game()
 {
 	
-	//ステージを削除
+	/** ステージを削除 */
 	DeleteGO(m_stage);
 
 	/** SpawnCow等で増えた牛も含めて生きている牛は全て削除 */
@@ -42,21 +42,25 @@ Game::~Game()
 		}
 	}
 
-	//プレイヤーを削除
+	/** プレイヤーを削除 */
 	DeleteGO(m_player);
 
-	//タイマーを削除
+	/** タイマーを削除 */
 	DeleteGO(m_timer);
 
-	//スコアを削除
+	/** スコアを削除 */
 	DeleteGO(m_score);
-	//ゲームカメラを削除
+
+	/** ゲームカメラを削除 */
 	DeleteGO(m_gameCamera);
-	//カウントダウンの削除
+	
+	/** カウントダウンの削除 */
 	DeleteGO(m_countDown);
-	//Pauseの削除
+
+	/** ポーズの削除 */
 	DeleteGO(m_pause);
-	//牛の救出数の削除
+
+	/** 牛の救出数の削除 */
 	DeleteGO(m_cowNumberOfRescues);
 	/** ミニマップの削除 */
 	DeleteGO(m_map);
@@ -105,11 +109,15 @@ bool Game::Start()
 
 	m_map = NewGO<Map>(0, "map");
 
+	//コンボ画像の初期化
+	m_comboSprite.Init("Assets/sprite/ComboUI/Combo.dds", 200.0f, 200.0f);
+	m_comboSprite.SetPosition({ -420.0f, -430.0f, 0.0f });
+	m_comboSprite.Update();
+
 	InitSkyCube();
 
 	return true;
 }
-
 
 
 void Game::Update()
@@ -307,8 +315,10 @@ void Game::ResetCombo()
 	m_scoreMagnification = 1;
 	m_comboTimer = 0.0f;
 }
-void Game:: AddScore(int score)
+void Game::AddScore(int score)
 {
+
+
 	int multiplier = 1;
 	//5コンボするごとにスコアの獲得量を２倍
 	if (m_combo % 5 == 0 && m_combo > 0)
@@ -326,3 +336,7 @@ bool Game::IsCombo()const
 	return m_combo >= 2;
 }
 
+void Game::Render(RenderContext& rc)
+{
+	m_comboSprite.Draw(rc);
+}

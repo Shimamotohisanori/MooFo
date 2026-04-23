@@ -67,12 +67,14 @@ public:
 	~Game();
 	bool Start();
 	void Update();
-	void Render(RenderContext& rc) {};
+	void Render(RenderContext& rc);
 	
 
 public:
-	//ゲームクリアで行う処理
+	/** ゲームクリアで行う処理 */
 	void Clear();
+
+	/** ゲームオーバーで行う処理 */
 	void Death();
 
 	/** 生きてる牛リスト取得関数 */
@@ -81,6 +83,7 @@ public:
 		return m_aliveCows;
 	}
 
+	/** 牛を生きてる牛リストから消す関数 */
 	void ReMoveCow(Cow* cow)
 	{
 		auto it = std::find(m_aliveCows.begin(), m_aliveCows.end(), cow);
@@ -135,18 +138,53 @@ private:
 
 
 private:
+	/** ステージ */
 	Stage* m_stage;
+
+	/** プレイヤー */
 	Player* m_player;
+
+	/** ゲームカメラ */
 	GameCamera* m_gameCamera;
+
+	/** ポーズ */
 	Pause* m_pause;
+
+	/** タイマー */
 	Timer* m_timer;
+
+	/** ゲームクリア */
 	GameClear* m_gameClear;
+
+	/** ゲームオーバー */
 	GameOver* m_gameOver;
+
+	/** カウントダウン */
 	CountDown* m_countDown;
+
+	/** 牛の救出数 */
 	CowNumberOfRescues* m_cowNumberOfRescues;
+
+	/** 牛の捕獲を管理するクラス */
 	CowCaptureController* m_cowCaptureController;
 	Map* m_map;
 
+	/** サウンドマネージャー */
+	SoundManager* m_inGameSound;
+
+	/** ゲーム中のBGM */
+	SoundSource* p_inGameBGM;
+
+	/** スコア */
+	Score* m_score;
+
+	/** スカイキューブ */
+	SkyCube* m_skyCube = nullptr;
+
+	/** コンボ画像 */
+	SpriteRender m_comboSprite;
+
+	/** 牛の配列 */
 	enum EnCow
 	{
 		EnCow_Cow1,
@@ -161,11 +199,14 @@ private:
 		EnCow_Cow10,
 		EnCow_Num
 	};
+
+	/** 牛の配列 */
 	Cow* m_cow[EnCow_Num];
 
 	/** 生きている牛のリスト */
 	std::vector<Cow*> m_aliveCows;
 
+	/** UFOの配列 */
 	enum EnUFO
 	{
 		EnUFO_UFO1,
@@ -174,29 +215,27 @@ private:
 		EnUFO_UFO4,
 		EnUFO_Num
 	};
+
+	/** UFOの配列 */
 	UFO* m_UFO[EnUFO_Num];
-
-	SoundManager* m_inGameSound;
-	SoundSource* p_inGameBGM;
-	Score* m_score;
-
-	/** スカイキューブ */
-	SkyCube* m_skyCube = nullptr;
 
 	/** スカイキューブのタイプ */
 	int m_skyCubeType = enSkyCubeType_Night;
 
+	/** コンボの変数 */
+	int m_combo = 0;
+
+	/** スコアの倍率 */
+	int m_scoreMagnification = 1;
+
+	/** コンボするごとに制限時間をプラスする変数 */
+	float m_comboTimer = 0.0f;
+
 	/** 牛が生まれる時間 */
 	float m_spawnTimer = 0.0f;
 
+	/** プレイヤーが死んでいたら */
 	bool m_isDead;
-
-	/*コンボの変数*/
-	int m_combo = 0;
-	/*コンボするごとに制限時間をプラスする変数*/
-	float m_comboTimer = 0.0f;
-	//スコアの倍率
-	int m_scoreMagnification = 1;
 
 };
 
