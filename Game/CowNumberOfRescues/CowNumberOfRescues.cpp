@@ -23,7 +23,7 @@ namespace
 	const char* SLASH_FILEPATH = "Assets/sprite/CowNumberOfRescuesUI/slash.DDS";
 
 	const Vector2 NUMBER_SPRITE_SIZE = Vector2(40.0f, 60.0f);
-	const Vector2 RESCUE_SPRITE_SIZE = Vector2(250.0f, 220.0f);
+	const Vector2 RESCUE_SPRITE_SIZE = Vector2(270.0f, 240.0f);
 	const Vector2 SLASH_SPRITE_SIZE = Vector2(120.0f, 100.0f);
 
     /** インゲームスプライトのスケール */
@@ -55,7 +55,7 @@ namespace
 
     /** ゲームクリアスプライトの座標 */
 	const Vector3 GAMECLEAR_RESCUE_SPRITE_POSITION = Vector3(-750.0f, 50.0f, 0.0f);
-	const Vector3 GAMECLEAR_NUMBER_SPRITE_TENS_POSITION = Vector3(-470.0f, 50.0f, 0.0f);
+	const Vector3 GAMECLEAR_NUMBER_SPRITE_TENS_POSITION = Vector3(-520.0f, 50.0f, 0.0f);
 	const Vector3 GAMECLEAR_NUMBER_SPRITE_ONES_POSITION = Vector3(-450.0f, 50.0f, 0.0f);
 	const Vector3 GAMECLEAR_SLASH_SPRITE_POSITION = Vector3(-370.0f, 50.0f, 0.0f);
 	const Vector3 GAMECLEAR_ONE_SPRITE_POSITION = Vector3(-310.0f, 50.0f, 0.0f);

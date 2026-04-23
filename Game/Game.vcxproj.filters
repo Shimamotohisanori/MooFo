@@ -68,6 +68,9 @@
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClCompile>
     <ClCompile Include="LoadingScene.cpp" />
+    <ClCompile Include="Map\Map.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -137,6 +140,9 @@
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClInclude>
     <ClInclude Include="LoadingScene.h" />
+    <ClInclude Include="Map\Map.h">
+      <Filter>Map</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
@@ -192,6 +198,9 @@
     </Filter>
     <Filter Include="Score">
       <UniqueIdentifier>{9b3de319-b501-4fc4-969d-59f2fb8fb033}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Map">
+      <UniqueIdentifier>{657db36e-fb3d-4266-8ae6-77954b3f0fa0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

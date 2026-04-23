@@ -12,7 +12,7 @@ namespace
 	const char* BLACK_SPRITE_FILEPATH = "Assets/sprite/GameTransition/Black.DDS";
 
 	const float BLACK_SPRITE_WIDTH = 800.0f;
-	const float BLACK_SPRITE_HIGHT = 550.0f;
+	const float BLACK_SPRITE_HIGHT = 350.0f;
 
 	const int GAMECLEAR_WIDTH = 1920.0f;
 	const int GAMEOVER_HIGHT = 1080.0f;

@@ -32,8 +32,8 @@ namespace
 	constexpr float CAPTURE_HEIGHT = 150.0f;
 	constexpr float CAPTURE_SPEED = 0.5f;
 
-	/** 牛を見つけるときの距離の二乗 */
-	constexpr float CAPTURE_RANGE_SQ = 800.0f;
+	/** 牛を見つけるときの距離 */
+	constexpr float CAPTURE_RANGE = 70.0f;
 
 	/**移動可能エリア（柵の内側）*/
 	constexpr float AREA_MIN_X = -1300.0f;
@@ -338,8 +338,8 @@ void UFO::FindTheCow()
 		Vector3 diff = c->GetPosition() - m_transform.GetPosition();
 		diff.y = 0.0f;
 
-		/** 牛とUFOの距離が600未満だったら牛を連れていく */
-		if (diff.LengthSq() < CAPTURE_RANGE_SQ)
+		/** 牛とUFOの距離が70未満だったら牛を連れていく */
+		if (diff.Length() < CAPTURE_RANGE)
 		{
 			/** 連れていける */
 			m_isCowTakeAwayed = true;
