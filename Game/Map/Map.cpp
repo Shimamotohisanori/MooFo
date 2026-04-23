@@ -61,8 +61,7 @@ void Map::Update()
 	 */
 	m_mapAngle = atan2(-forward.x, forward.z);
 
-	/** ���̃A�C�R�� */
-	Vector3 forward = g_camera3D->GetForward();
+	
 
 	for (int i = 0; i < m_cows.size(); i++)
 	{
