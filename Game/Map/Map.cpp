@@ -34,6 +34,12 @@ bool Map::Start()
 	/** UFOをミニマップ内に出現させる。 */
 	for(int i = 0; i < UFO_NUM; i++)
 	{
+		m_cowSprite[i].Init("Assets/sprite/MapUI/CowIcon.dds", 25.0f, 25.0f);
+	}
+
+	/** UFOをミニマップ内に出現させる。 */
+	for(int i = 0; i < UFO_NUM; i++)
+	
 		m_ufoSprite[i].Init("Assets/sprite/MapUI/UFOIcon.dds", 30.0f, 30.0f);
 	}
 	

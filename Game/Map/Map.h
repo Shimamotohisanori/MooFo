@@ -22,9 +22,9 @@ class Map : public IGameObject
 	SpriteRender m_ufoSprite[4];
 
 	Player* m_player = nullptr;
-
+  
 	float m_mapAngle = 0.0f;
-
+  
 	bool m_isCowImage[10];
 	bool m_isUFOImage[4];
 
