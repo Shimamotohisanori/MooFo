@@ -14,6 +14,7 @@
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
 #include "SoundManager/SoundManager.h"
 #include "Score/Score.h"
+#include "Map/Map.h"
 #include "nature/SkyCube.h"
 
 Game::~Game()
@@ -61,6 +62,8 @@ Game::~Game()
 
 	/** 牛の救出数の削除 */
 	DeleteGO(m_cowNumberOfRescues);
+	/** ミニマップの削除 */
+	DeleteGO(m_map);
 
 }
 bool Game::Start()
@@ -103,6 +106,8 @@ bool Game::Start()
 
 	//ゲームカメラの生成
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
+
+	m_map = NewGO<Map>(0, "map");
 
 	//コンボ画像の初期化
 	m_comboSprite.Init("Assets/sprite/ComboUI/Combo.dds", 200.0f, 200.0f);
