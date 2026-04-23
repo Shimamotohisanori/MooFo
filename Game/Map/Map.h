@@ -1,6 +1,7 @@
 #pragma once
 class Player;
 class Cow;
+class UFO;
 class Map : public IGameObject
 {
  public:
@@ -13,15 +14,17 @@ class Map : public IGameObject
 	bool WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3 cowPosition, Vector3& mapPosition);
 
 	std::vector<Cow*> m_cows;
+	std::vector<UFO*> m_ufos;
 
 	SpriteRender m_mapSprite;
 	SpriteRender m_playerSprite;
 	SpriteRender m_cowSprite[10];
+	SpriteRender m_ufoSprite[4];
 
 	Player* m_player = nullptr;
-	Cow* m_cow = nullptr;
 
-	bool m_isImage[10];
+	bool m_isCowImage[10];
+	bool m_isUFOImage[4];
 
 };
 
