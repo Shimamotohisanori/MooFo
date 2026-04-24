@@ -5,8 +5,19 @@
 #include"Pause/Pause.h"
 namespace
 {
-	const char* GAMECLEAR_FILEPATH = "Assets/modelData/UFO/UFOLight.tkm";
+	const char* LIGHT_FILEPATH = "Assets/modelData/UFO/UFOLight.tkm";
+	const char* LIGHT_APPEAR_NUMBER_FILEPATH[5] = 
+	{
+		"Assets/sprite/UFOLightFontUI/Number1.dds",
+		"Assets/sprite/UFOLightFontUI/Number2.dds",
+		"Assets/sprite/UFOLightFontUI/Number3.dds",
+		"Assets/sprite/UFOLightFontUI/Number4.dds",
+		"Assets/sprite/UFOLightFontUI/Number5.dds"
+	};
 	const Vector3 SCALE = Vector3(3.0f, 8.0f,3.0f);
+	/** 数字の大きさ*/
+	const float NUMBERFONT_WIDTH = 100.0f;
+	const float NUMBERFONT_HEIGHT = 100.0f;
 }
 
 CowCaptureController::CowCaptureController()
@@ -24,7 +35,11 @@ bool CowCaptureController::Start()
 {
 	m_countdown = FindGO<CountDown>("countdown");
 	m_pause = FindGO<Pause>("pause");
-	m_ufocontrollermodelRender.Init(GAMECLEAR_FILEPATH);
+	m_ufocontrollermodelRender.Init(LIGHT_FILEPATH);
+	for (int i = 0; i < 5; i++)
+	{
+		m_LightApperNumberSpriteRender[i].Init(LIGHT_APPEAR_NUMBER_FILEPATH[i], NUMBERFONT_WIDTH, NUMBERFONT_HEIGHT);
+	}
 	/**　最初は光が出ていない状態にする*/
 	m_timer = m_waitTimer;
 	m_ufocontrollermodelRender.SetScale(SCALE);
@@ -106,16 +121,16 @@ void CowCaptureController::CountText()
 	{
 		return;
 	}
-	int seconds = (int)ceilf(m_timer);
-	wchar_t timertext[32];
-	swprintf_s(timertext, 32, L"次の光発射まで%d", seconds);
-	m_countText.SetText(timertext);
-	/**　文字のセット*/
-	m_countText.SetPosition(400.0f, 530.0f, 0.0f);
-	/**　文字の大きさのセット*/
-	m_countText.SetScale(1.0f);
-	/**　文字の色のセット*/
-	m_countText.SetColor(g_vec4White);
+	//int seconds = (int)ceilf(m_timer);
+	//wchar_t timertext[32];
+	//swprintf_s(timertext, 32, L"次の光発射まで%d", seconds);
+	//m_countText.SetText(timertext);
+	///**　文字のセット*/
+	//m_countText.SetPosition(400.0f, 530.0f, 0.0f);
+	///**　文字の大きさのセット*/
+	//m_countText.SetScale(1.0f);
+	///**　文字の色のセット*/
+	//m_countText.SetColor(g_vec4White);
 }
 
 void CowCaptureController::Render(RenderContext& rc)
