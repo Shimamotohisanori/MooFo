@@ -8,9 +8,9 @@
 #include "Rope/Rope.h"
 #include "GameCamera/GameCamera.h"
 #include "Score/Score.h"
-#include"Source/Actor/Character/UFO/CowCaptureController.h"
+#include "Source/Actor/Character/UFO/CowCaptureController.h"
 #include "Pause/Pause.h"
-
+#include "Combo/Combo.h"
 namespace
 {
 	const char* GAMECLEAR_FILEPATH = "Assets/modelData/UFO/UFO.tkm"; //enModelUpAxis = enModelUpAxisZ;
@@ -299,9 +299,10 @@ void UFO::TakeAwayTheCow()
 		
 		/** Gameに通知してaliveCowsから外す */
 		Game* game = FindGO<Game>("game");
-		if (game)
+		Combo* combo = FindGO<Combo>("combo");
+		if (game && combo)
 		{
-			game->ResetCombo();
+			combo->ResetCombo();
 			game->ReMoveCow(m_targetCow);
 		}
 

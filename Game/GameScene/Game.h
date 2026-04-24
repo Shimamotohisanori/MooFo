@@ -14,6 +14,7 @@ class Score;
 class CowNumberOfRescues;
 class CowCaptureController;
 class Map;
+class Combo;
 
 /** 牛の情報をまとめる構造体 */
 struct Cowinfo
@@ -94,18 +95,6 @@ public:
 	}
 
 	bool m_isSound;
-	
-	/*コンボ加算用関数*/
-	void AddCombo();
-
-	/*スコア加算関数*/
-	void AddScore(int score);
-	
-	/*牛が連れ去られた時に読んでコンボをリセットする関数*/
-	void ResetCombo();
-	
-	/*コンボしたかどうか判定するフラグ*/
-	bool IsCombo()const;
 
 	/** UFO立の取得関数 */
 	std::vector<UFO*> GetUFOs()
@@ -181,8 +170,8 @@ private:
 	/** スカイキューブ */
 	SkyCube* m_skyCube = nullptr;
 
-	/** コンボ画像 */
-	SpriteRender m_comboSprite;
+	/** コンボ */
+	Combo* m_combo;
 
 	/** 牛の配列 */
 	enum EnCow
@@ -221,15 +210,6 @@ private:
 
 	/** スカイキューブのタイプ */
 	int m_skyCubeType = enSkyCubeType_Night;
-
-	/** コンボの変数 */
-	int m_combo = 0;
-
-	/** スコアの倍率 */
-	int m_scoreMagnification = 1;
-
-	/** コンボするごとに制限時間をプラスする変数 */
-	float m_comboTimer = 0.0f;
 
 	/** 牛が生まれる時間 */
 	float m_spawnTimer = 0.0f;

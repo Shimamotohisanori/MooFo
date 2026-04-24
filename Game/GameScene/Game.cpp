@@ -16,6 +16,7 @@
 #include "Score/Score.h"
 #include "Map/Map.h"
 #include "nature/SkyCube.h"
+#include "Combo/Combo.h"
 
 Game::~Game()
 {
@@ -68,14 +69,16 @@ Game::~Game()
 }
 bool Game::Start()
 {
+	/** カウントダウンの生成 */
 	m_countDown = NewGO<CountDown>(0, "countdown");
+
+	/** プレイヤーの生成 */
 	m_player = NewGO <Player>(0, "player");
-	//ステージの生成
+
+	/** ステージの生成 */
 	m_stage = NewGO<Stage>(0, "stage");
 	
-
-	
-	//牛の生成
+	/** 牛の生成 */
 	for (int i = 0; i < _countof(COW_INFOMATIONS); i++)
 	{
 		m_cow[i] = NewGO<Cow>(0, COW_INFOMATIONS[i].objectName.c_str());
@@ -83,36 +86,37 @@ bool Game::Start()
 		m_aliveCows.push_back(m_cow[i]);
 	}
 
-	//UFOの生成
+	/** UFOの生成 */
 	for (int i = 0; i < _countof(UFO_INFOMATIONS); i++)
 	{
 		m_UFO[i] = NewGO<UFO>(0, UFO_INFOMATIONS[i].objectName.c_str());
 		m_UFO[i]->SetPosition(UFO_INFOMATIONS[i].pos);
 	}
 
-	//スコアの生成
+	/** スコアの生成 */
 	m_score = NewGO<Score>(0, "score");
 
-	//牛の救出数の生成
+	/** 牛の救出数の生成 */
 	m_cowNumberOfRescues = NewGO<CowNumberOfRescues>(0, "cownumberofrescues");
 
-	//タイマーの生成
+	/** タイマーの生成 */
 	m_timer = NewGO<Timer>(0, "timer");
-	//ポーズ画面の生成をするが非アクティブにする
+
+	/** ポーズ画面の生成をするが非アクティブにする */
 	m_pause = NewGO<Pause>(0, "pause");
 	m_pause->Deactivate();
 	
+	/** サウンドマネージャーの生成 */
 	m_inGameSound = FindGO<SoundManager>("soundmanager");	
 
-	//ゲームカメラの生成
+	/** ゲームカメラの生成 */
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
 
+	/** ミニマップの生成 */
 	m_map = NewGO<Map>(0, "map");
 
-	//コンボ画像の初期化
-	m_comboSprite.Init("Assets/sprite/ComboUI/Combo.dds", 200.0f, 200.0f);
-	m_comboSprite.SetPosition({ -420.0f, -430.0f, 0.0f });
-	m_comboSprite.Update();
+	/** コンボの生成 */
+	m_combo = NewGO<Combo>(0, "combo");
 
 	InitSkyCube();
 
@@ -163,15 +167,9 @@ void Game::Update()
 	}
 
 	//３秒以内に次の牛を救出できなければコンボが途切れたら
-	if(m_comboTimer >0.0f)
+	if(m_combo->GetComboTimer() > 0.0f)
 	{
-		m_comboTimer--;
-	}
-	else
-	{
-		m_combo = 0;
-		//コンボが途切れたらスコアの倍率を1倍に戻す
-		m_scoreMagnification = 1;
+		m_combo->DecreaseComboTimer(g_gameTime->GetFrameDeltaTime());
 	}
 }
 
@@ -290,53 +288,6 @@ void Game::InitSkyCube()
 	g_renderingEngine->SetAmbientByIBLTexture(m_skyCube->GetTextureFilePath(), 0.6f);
 }
 
-
-void Game::AddCombo()
-{
-	m_combo++;
-	//5秒以内に牛を救出出来ればコンボ継続
-	m_comboTimer = 6000.0f;
-	//コンボの時だけ制限時間を増やす
-	if (m_combo >= 2)
-	{
-		m_timer = FindGO<Timer>("timer");
-		if (m_timer)
-		{
-			//コンボすると３秒追加
-			m_timer->AddTimer(3.0f);
-		}
-	}
-}
-
-
-void Game::ResetCombo()
-{
-	m_combo = 0;
-	m_scoreMagnification = 1;
-	m_comboTimer = 0.0f;
-}
-void Game::AddScore(int score)
-{
-
-
-	int multiplier = 1;
-	//5コンボするごとにスコアの獲得量を２倍
-	if (m_combo % 5 == 0 && m_combo > 0)
-	{
-		multiplier = 2;
-	}
-	if (m_score)
-	{
-		m_score->AddScore(score *multiplier);
-	}
-	
-}
-bool Game::IsCombo()const
-{
-	return m_combo >= 2;
-}
-
 void Game::Render(RenderContext& rc)
 {
-	m_comboSprite.Draw(rc);
 }
