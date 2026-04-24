@@ -223,6 +223,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Combo\Combo.cpp" />
     <ClCompile Include="CountDown\CountDown.cpp" />
     <ClCompile Include="CowNumberOfRescues\CowNumberOfRescues.cpp" />
     <ClCompile Include="GameCamera\GameCamera.cpp" />
@@ -255,6 +256,7 @@
     <ClCompile Include="Transform\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Combo\Combo.h" />
     <ClInclude Include="CountDown\CountDown.h" />
     <ClInclude Include="CowNumberOfRescues\CowNumberOfRescues.h" />
     <ClInclude Include="GameCamera\GameCamera.h" />

@@ -4,10 +4,11 @@
 #include "Source/Actor/Character/Player/Player.h"
 #include "CountDown/CountDown.h"
 #include "GameCamera/GameCamera.h"
-#include "GameScene/Game.h"
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
 #include "Source/Actor/Character/UFO/UFO.h"
 #include "Pause/Pause.h"
+#include "Combo/Combo.h"
+#include "GameScene/Game.h"
 #include <time.h>
 
 namespace
@@ -297,11 +298,12 @@ void Cow::CapturedByPlayer()
 			}
 
 			/** コンボを増やす */
+			Combo* combo = FindGO<Combo>("combo");
 			Game* game = FindGO<Game>("game");
-			if (game)
+			if (game && combo)
 			{
-				game->AddCombo();
-				game->AddScore(100);
+				combo->AddCombo();
+				combo->AddScore(100);
 				game->ReMoveCow(this);
 			}
 
