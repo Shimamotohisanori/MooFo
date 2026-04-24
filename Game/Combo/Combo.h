@@ -58,7 +58,17 @@ private:
 	/** コンボの描画関数 */
 	void ViewComboSprite();
 
+
 private:
+	/** ファイルパス */
+	std::string m_filePath[10];
+
+	/** コンボ用の十の位専用数字画像 */
+	SpriteRender m_comboTensSprite[10];
+
+	/** コンボ用の一の位専用数字画像 */
+	SpriteRender m_comboOnesSprite[10];
+
 	/** コンボ画像 */
 	SpriteRender m_comboSprite;
 

@@ -5,11 +5,34 @@
 
 namespace
 {
+	const char* COMBO_NUMBER_FILEPATH = "Assets/sprite/NumberUI/";
+	const char* COMBO_NUMBER_FORMAT = ".dds";
+	const char* COMBO_NUMBER_FILENAME_LIST[10] =
+	{
+		"MooFoNumberUI0",
+		"MooFoNumberUI1",
+		"MooFoNumberUI2",
+		"MooFoNumberUI3",
+		"MooFoNumberUI4",
+		"MooFoNumberUI5",
+		"MooFoNumberUI6",
+		"MooFoNumberUI7",
+		"MooFoNumberUI8",
+		"MooFoNumberUI9"
+	};
+
+	/** コンボ画像の初期ポジション */
+	const Vector3 COMBO_SPRITE_INITIAL_POSITION = { -350.0f, -430.0f, 0.0f };
+
+	/** 数字のスプライトのサイズ */
+	const Vector2 COMBO_NUMBER_SPRITE_SIZE = Vector2(40.0f, 60.0f);
+
 	/** コンボ画像のファイルパス */
 	const char* COMBO_SPRITE_FILEPATH = "Assets/sprite/ComboUI/Combo.dds";
 
-	/** コンボ画像の初期ポジション */
-	const Vector3 COMBO_SPRITE_INITIAL_POSITION = { -400.0f, -430.0f, 0.0f };
+	/** コンボ画像の移動速度 */
+	const float COMBO_SPRITE_MOVE_SPEED = 50.0f;
+	
 }
 Combo::Combo()
 {
@@ -30,6 +53,15 @@ bool Combo::Start()
 	m_comboSprite.SetPosition(COMBO_SPRITE_INITIAL_POSITION);
 	m_comboSprite.Update();
 
+	/** 数のUIを左右全てに読み込む */
+	for (int i = 0; i < 10; i++)
+	{
+		m_filePath[i] = std::string(COMBO_NUMBER_FILEPATH) + COMBO_NUMBER_FILENAME_LIST[i] + COMBO_NUMBER_FORMAT;
+
+		m_comboTensSprite[i].Init(m_filePath[i].c_str(), COMBO_NUMBER_SPRITE_SIZE.x, COMBO_NUMBER_SPRITE_SIZE.y);
+		m_comboOnesSprite[i].Init(m_filePath[i].c_str(), COMBO_NUMBER_SPRITE_SIZE.x, COMBO_NUMBER_SPRITE_SIZE.y);
+	}
+
 	return true;
 }
 
@@ -46,7 +78,7 @@ void Combo::Render(RenderContext & rc)
 		/** コンボ画像の位置をコンボタイマーに応じて右に移動させる */
 		m_comboSprite.SetPosition(
 			Vector3{
-			COMBO_SPRITE_INITIAL_POSITION.x + m_comboSpriteMoveTime * 50.0f,
+			COMBO_SPRITE_INITIAL_POSITION.x + m_comboSpriteMoveTime * COMBO_SPRITE_MOVE_SPEED,
 			COMBO_SPRITE_INITIAL_POSITION.y,
 			COMBO_SPRITE_INITIAL_POSITION.z
 			});
@@ -59,7 +91,54 @@ void Combo::Render(RenderContext & rc)
 				1.0f,
 				m_comboSpriteViewTime));
 
+		/** コンボ画像を表示する */
 		m_comboSprite.Draw(rc);
+
+		/** コンボの十の位と一の位を取得する */
+		int tens = m_combo / 10;
+		int ones = m_combo % 10;
+
+		/** コンボの十の位が0より大きいなら */
+		if (tens > 0)
+		{
+			/** コンボの十の位の画像の位置をコンボタイマーに応じて右に移動させる */
+			m_comboTensSprite[m_combo / 10].SetPosition(
+				Vector3{
+				COMBO_SPRITE_INITIAL_POSITION.x - 175.0f + m_comboSpriteMoveTime * COMBO_SPRITE_MOVE_SPEED,
+				COMBO_SPRITE_INITIAL_POSITION.y - 22.5f,
+				COMBO_SPRITE_INITIAL_POSITION.z
+				});
+
+			/** コンボの十の位の画像のアルファ値をコンボタイマーに応じて変化させる */
+			m_comboTensSprite[m_combo / 10].SetMulColor(
+				Vector4(
+					1.0f,
+					1.0f,
+					1.0f,
+					m_comboSpriteViewTime));
+
+			/** コンボの十の位を表示する */
+			m_comboTensSprite[m_combo / 10].Draw(rc);
+		}
+
+		/** コンボの一の位の画像の位置をコンボタイマーに応じて右に移動させる */
+		m_comboOnesSprite[m_combo % 10].SetPosition(
+			Vector3{
+			COMBO_SPRITE_INITIAL_POSITION.x - 125.0f + m_comboSpriteMoveTime * COMBO_SPRITE_MOVE_SPEED,
+			COMBO_SPRITE_INITIAL_POSITION.y - 22.5f,
+			COMBO_SPRITE_INITIAL_POSITION.z
+			});
+
+		/** コンボの一の位の画像のアルファ値をコンボタイマーに応じて変化させる */
+		m_comboOnesSprite[m_combo % 10].SetMulColor(
+			Vector4(
+				1.0f,
+				1.0f,
+				1.0f,
+				m_comboSpriteViewTime));
+
+		/** コンボの一の位を表示する */
+		m_comboOnesSprite[m_combo % 10].Draw(rc);
 	}
 }
 
@@ -137,5 +216,7 @@ void Combo::ViewComboSprite()
 		}
 
 		m_comboSprite.Update();
+		m_comboTensSprite[m_combo / 10].Update();
+		m_comboOnesSprite[m_combo % 10].Update();
 	}
 }
