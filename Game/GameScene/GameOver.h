@@ -1,6 +1,8 @@
-#pragma once
+﻿#pragma once
 class Score;
 class CowNumberOfRescues;
+class LoadingScene;
+class Title;
 class GameOver : public IGameObject
 {
 public:
@@ -36,5 +38,7 @@ private:
 	Score*m_score;
 	CowNumberOfRescues* m_cowNumberOfRescues;
 	SoundSource* p_deathBGM;
+	LoadingScene* m_loadingScene;
+	
 };
 

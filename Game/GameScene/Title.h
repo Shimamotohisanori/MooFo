@@ -1,4 +1,5 @@
 #pragma once
+class LoadingScene;
 class Title : public IGameObject
 {
 public:
@@ -16,6 +17,7 @@ private:
 	SoundManager* m_soundManager;
 	SoundSource* p_titleBGM;
 	SoundSource* p_titleSE;
+	LoadingScene* m_loadingScene;
 
 };
 

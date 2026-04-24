@@ -1,6 +1,8 @@
 #pragma once
 class Score;
 class CowNumberOfRescues;
+class LoadingScene;
+class Title;
 class GameClear :public IGameObject
 {
 	public:
@@ -35,6 +37,8 @@ private:
 	SoundSource* p_clearBGM;
 	Score* m_score;
 	CowNumberOfRescues* m_cowNumberOfRescues;
+	LoadingScene* m_loadingScene;
+	Title* m_title;
 
 };
 

@@ -1,7 +1,7 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "SoundManager/SoundManager.h"
 #include "GameOver.h"
-#include "Game.h"
+#include"LoadingScene.h"
 #include "Title.h"
 #include "Score/Score.h"
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
@@ -86,24 +86,24 @@ void GameOver::InGameOver()
 {
 	if (g_pad[0]->IsPressAnyKey())
 	{
-		//Gameを削除
-		Game* game = FindGO<Game>("game");
-		if (game)
-		{
-			DeleteGO(game);
-		}
-		NewGO<Title>(0, "title");
+		m_loadingScene = NewGO<LoadingScene>(0, "loading");
+		m_loadingScene->SetNextScene([]()
+			{
+				/** タイトルの画像を呼び出す*/
+				NewGO<Title>(0, "title");
+			});
+		//削除要求フラグを立てる
 		m_isDeleteRequest = true;
-	}
-	
-	//削除リクエストが来ているときに削除する
-	if (m_isDeleteRequest == true)
-	{
-		DeleteGO(p_deathBGM);
-		DeleteGO(this);
+
+
+		//削除リクエストが来ているときに削除する
+		if (m_isDeleteRequest == true)
+		{
+			DeleteGO(p_deathBGM);
+			DeleteGO(this);
+		}
 	}
 }
-
 //スコアをゲームオーバーの画像にセットする関数
 void GameOver::SetFinalScore(int score)
 {

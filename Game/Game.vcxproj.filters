@@ -70,6 +70,9 @@
     <ClCompile Include="Map\Map.cpp">
       <Filter>Map</Filter>
     </ClCompile>
+    <ClCompile Include="GameScene\LoadingScene.cpp">
+      <Filter>GameScene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -140,6 +143,9 @@
     </ClInclude>
     <ClInclude Include="Map\Map.h">
       <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene\LoadingScene.h">
+      <Filter>GameScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
