@@ -3,6 +3,14 @@
 #include "GameTimer/Timer.h"
 #include "Score/Score.h"
 
+namespace
+{
+	/** コンボ画像のファイルパス */
+	const char* COMBO_SPRITE_FILEPATH = "Assets/sprite/ComboUI/Combo.dds";
+
+	/** コンボ画像の初期ポジション */
+	const Vector3 COMBO_SPRITE_INITIAL_POSITION = { -400.0f, -430.0f, 0.0f };
+}
 Combo::Combo()
 {
 }
@@ -18,27 +26,53 @@ bool Combo::Start()
 	m_score = FindGO<Score>("score");
 
 	//コンボ画像の初期化
-	m_comboSprite.Init("Assets/sprite/ComboUI/Combo.dds", 200.0f, 200.0f);
-	m_comboSprite.SetPosition({ -420.0f, -430.0f, 0.0f });
+	m_comboSprite.Init(COMBO_SPRITE_FILEPATH, 200.0f, 200.0f);
+	m_comboSprite.SetPosition(COMBO_SPRITE_INITIAL_POSITION);
 	m_comboSprite.Update();
 
 	return true;
 }
 
 void Combo::Update()
-{}
+{
+	ViewComboSprite();
+}
 
 void Combo::Render(RenderContext & rc)
 {
-	m_comboSprite.Draw(rc);
+	/** コンボ表示フラグが立っているなら */
+	if (m_isViewComboSprite)
+	{
+		/** コンボ画像の位置をコンボタイマーに応じて右に移動させる */
+		m_comboSprite.SetPosition(
+			Vector3{
+			COMBO_SPRITE_INITIAL_POSITION.x + m_comboSpriteMoveTime * 50.0f,
+			COMBO_SPRITE_INITIAL_POSITION.y,
+			COMBO_SPRITE_INITIAL_POSITION.z
+			});
+
+		/** コンボ画像の表示時間に応じてコンボ画像のアルファ値を変化させる */
+		m_comboSprite.SetMulColor(
+			Vector4(
+				1.0f,
+				1.0f,
+				1.0f,
+				m_comboSpriteViewTime));
+
+		m_comboSprite.Draw(rc);
+	}
 }
 
 void Combo::AddCombo()
 {
 	m_combo++;
-	//5秒以内に牛を救出出来ればコンボ継続
+	
+	/** 5秒以内に牛を救出出来ればコンボ継続 */
 	m_comboTimer = 6000.0f;
-	//コンボの時だけ制限時間を増やす
+
+	m_isViewComboSprite = true;
+
+	/** コンボの時だけ制限時間を増やす */
 	if (m_combo >= 2)
 	{
 		m_timer = FindGO<Timer>("timer");
@@ -60,7 +94,8 @@ void Combo::ResetCombo()
 void Combo::AddScore(int score)
 {
 	int multiplier = 1;
-	//5コンボするごとにスコアの獲得量を２倍
+
+	/** 5コンボするごとにスコアの獲得量を２倍 */
 	if (m_combo % 5 == 0 && m_combo > 0)
 	{
 		multiplier = 2;
@@ -74,4 +109,33 @@ void Combo::AddScore(int score)
 bool Combo::IsCombo() const
 {
 	return m_combo >= 2;
+}
+
+void Combo::ViewComboSprite()
+{
+	/** コンボ画像フラグが立っていたら */
+	if (m_isViewComboSprite)
+	{
+		m_comboSpriteViewTime -= g_gameTime->GetFrameDeltaTime();
+
+		m_comboSpriteMoveTime += g_gameTime->GetFrameDeltaTime();
+		
+		/** 1秒経てば */
+		if (m_comboSpriteViewTime < 0.0f)
+		{
+			/** コンボ画像の位置を初期位置に戻す */
+			m_comboSprite.SetPosition(COMBO_SPRITE_INITIAL_POSITION);
+
+			/** コンボ画像の表示時間をリセットする */
+			m_comboSpriteViewTime = 1.0f;
+
+			/** コンボ画像を非表示にする */
+			m_isViewComboSprite = false;
+			
+			/** コンボ画像の移動時間をリセットする */
+			m_comboSpriteMoveTime = 0.0f;
+		}
+
+		m_comboSprite.Update();
+	}
 }

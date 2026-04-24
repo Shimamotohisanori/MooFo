@@ -55,6 +55,10 @@ public:
 
 
 private:
+	/** コンボの描画関数 */
+	void ViewComboSprite();
+
+private:
 	/** コンボ画像 */
 	SpriteRender m_comboSprite;
 
@@ -72,6 +76,15 @@ private:
 
 	/** コンボするごとに制限時間をプラスする変数 */
 	float m_comboTimer = 0.0f;
+
+	/** コンボの画像を表示する時間 */
+	float m_comboSpriteViewTime = 1.0f;
+
+	/** コンボ画像を移動する用の変数 */
+	float m_comboSpriteMoveTime = 0.0f;
+
+	/** コンボ画像を表示するかどうかのフラグ */
+	bool m_isViewComboSprite = false;
 
 };
 
