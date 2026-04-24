@@ -21,6 +21,7 @@ class Map : public IGameObject
 	SpriteRender m_playerSprite;
 	SpriteRender m_cowSprite[10];
 	SpriteRender m_ufoSprite[4];
+	SpriteRender m_dangerSprite[4];
 
 	Player* m_player = nullptr;
   
@@ -29,6 +30,7 @@ class Map : public IGameObject
 	/** マップ内に表示されているUIがいるかどうかのフラグ */
 	bool m_isCowImage[10];
 	bool m_isUFOImage[4];
+	bool m_isdanger[4];
 
 };
 

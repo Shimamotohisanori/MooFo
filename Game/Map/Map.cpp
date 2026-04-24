@@ -6,106 +6,141 @@
 namespace
 {
 	Vector3 MAP_CENTER_POSITION = Vector3(704.0f, -300.0f, 0.0f);
-	
+
 	float MAP_RADIUS = 190.0f;
 	float LIMITED_RANGE_IMAGE = 410.0f;
 
-	/** ãƒžã‚¸ãƒƒã‚¯ãƒŠãƒ³ãƒãƒ¼å‡¦ç† */
-	const int COW_NUM = 10;
-	const int UFO_NUM = 4;
+	/** ƒ}ƒWƒbƒNƒiƒ“ƒo[ˆ— */
+	constexpr int COW_NUM = 10;
+	constexpr int UFO_NUM = 4;
 }
 
 bool Map::Start()
 {
-	/** ãƒŸãƒ‹ãƒžãƒƒãƒ—ã®èƒŒæ™¯ */	
+	/** ƒ~ƒjƒ}ƒbƒv‚Ì”wŒi */
 	m_mapSprite.Init("Assets/sprite/MapUI/MapIcon.dds", 400.0f, 400.0f);
 	m_mapSprite.SetPosition(MAP_CENTER_POSITION);
 
-	/** ãƒŸãƒ‹ãƒžãƒƒãƒ—ã®ä¸­å¿ƒ(ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼) */	
+	/** ƒ~ƒjƒ}ƒbƒv‚Ì’†S(ƒvƒŒƒCƒ„[) */
 	m_playerSprite.Init("Assets/sprite/MapUI/PlayerIcon.dds", 50.0f, 50.0f);
 	m_playerSprite.SetPosition(MAP_CENTER_POSITION);
 
-	/** ç‰›ã‚’ãƒŸãƒ‹ãƒžãƒƒãƒ—å†…ã«å‡ºç¾ã•ã›ã‚‹ã€‚ */
+	/** ‹‚ðƒ~ƒjƒ}ƒbƒv“à‚ÉoŒ»‚³‚¹‚éB */
 	for (int i = 0; i < COW_NUM; i++)
 	{
 		m_cowSprite[i].Init("Assets/sprite/MapUI/CowIcon.dds", 25.0f, 25.0f);
 	}
 
-	/** UFOã‚’ãƒŸãƒ‹ãƒžãƒƒãƒ—å†…ã«å‡ºç¾ã•ã›ã‚‹ã€‚ */
-	for(int i = 0; i < UFO_NUM; i++)
+	/** UFO‚ðƒ~ƒjƒ}ƒbƒv“à‚ÉoŒ»‚³‚¹‚éB */
+	for (int i = 0; i < UFO_NUM; i++)
 	{
-	
+
 		m_ufoSprite[i].Init("Assets/sprite/MapUI/UFOIcon.dds", 30.0f, 30.0f);
 	}
-	
 
-	/** ãã‚Œãžã‚Œã®ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚’è¦‹ã¤ã‘ã‚‹ã€‚*/
+	/* ƒrƒbƒNƒŠƒ}[ƒN‚ðUFO‚ª‹‚ð•ß‚Ü‚¦‚½‚Æ‚«‚É•\Ž¦‚³‚¹‚éB
+	 * UFO‚ª‹N“_‚Æ‚È‚é‚½‚ßUFO_NUM‚ðŽg—p‚·‚é
+	 */
+	for (int i = 0; i < UFO_NUM; i++)
+	{
+		m_dangerSprite[i].Init("Assets/sprite/MapUI/Danger.dds", 30.0f, 30.0f);
+	}
+
+
+	/** ‚»‚ê‚¼‚ê‚Ìƒ|ƒWƒVƒ‡ƒ“‚ðŒ©‚Â‚¯‚éB*/
 	m_cows = FindGOs<Cow>("cow");
 	m_ufos = FindGOs<UFO>("UFO");
 	m_player = FindGO<Player>("player");
-	
+
 	return true;
 }
 void Map::Update()
 {
-	/** ãã‚Œãžã‚Œã®ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚’ä»£å…¥ã•ã›ã‚‹ã€‚ */	
+	/** ‚»‚ê‚¼‚ê‚Ìƒ|ƒWƒVƒ‡ƒ“‚ð‘ã“ü‚³‚¹‚éB */
 	Vector3 playerPos = m_player->GetPosition();
 
-	/** ã‚«ãƒ¡ãƒ©ãŒã©ã®æ–¹å‘ã‚’å‘ã„ã¦ã„ã‚‹ã‹å–å¾—ã™ã‚‹ã€‚ */
+	/** ƒJƒƒ‰‚ª‚Ç‚Ì•ûŒü‚ðŒü‚¢‚Ä‚¢‚é‚©Žæ“¾‚·‚éB */
 	Vector3 forward = g_camera3D->GetForward();
 
-	/* 
-	 *  ã‚«ãƒ¡ãƒ©ã®å‘ãã‚’è§’åº¦ã«å¤‰æ›ã™ã‚‹ã€‚
-	 *  atan2ã¯Xã¨Yã®æ–¹å‘ãŒã©ã®è§’åº¦ã‹ã‚’è¿”ã™é–¢æ•° 
+	/*
+	 *  ƒJƒƒ‰‚ÌŒü‚«‚ðŠp“x‚É•ÏŠ·‚·‚éB
+	 *  atan2‚ÍX‚ÆY‚Ì•ûŒü‚ª‚Ç‚ÌŠp“x‚©‚ð•Ô‚·ŠÖ”
 	 */
 	m_mapAngle = atan2(-forward.x, forward.z);
 
-	/** ç‰›ã®ã‚¢ã‚¤ã‚³ãƒ³ */
+	/** ‹‚ÌƒAƒCƒRƒ“ */
 	for (int i = 0; i < m_cows.size(); i++)
 	{
+		if (m_cows[i]->GetIsTakeAwayed())
+		{
+			m_isCowImage[i] = false;
+			continue;
+		}
 		Vector3 cowPos = m_cows[i]->GetPosition();
 		Vector3 mapPos;
 
-		/** ãƒžãƒƒãƒ—ã«è¡¨ç¤ºã™ã‚‹ç¯„å›²ã«ç‰›ã‚„UFOãŒã„ãŸã‚‰ */
+		/** ƒ}ƒbƒv‚É•\Ž¦‚·‚é”ÍˆÍ‚É‹‚âUFO‚ª‚¢‚½‚ç */
 		if (WorldPositionConvertToMapPosition(playerPos, cowPos, mapPos))
 		{
-			/** ãƒžãƒƒãƒ—ã«è¡¨ç¤ºã™ã‚‹ã‚ˆã†ã«è¨­å®šã™ã‚‹ã€‚ */
+			/** ƒ}ƒbƒv‚É•\Ž¦‚·‚é‚æ‚¤‚ÉÝ’è‚·‚éB */
 			m_isCowImage[i] = true;
 
-			/** SpriteRenderã«åº§æ¨™ã‚’è¨­å®š */
+			/** SpriteRender‚ÉÀ•W‚ðÝ’è */
 			m_cowSprite[i].SetPosition(mapPos);
 		}
 
-		/** ãƒžãƒƒãƒ—ã«è¡¨ç¤ºã™ã‚‹ç¯„å›²ã«æ•µãŒã„ãªã‹ã£ãŸã‚‰ */
+		/** ƒ}ƒbƒv‚É•\Ž¦‚·‚é”ÍˆÍ‚É“G‚ª‚¢‚È‚©‚Á‚½‚ç */
 		else
 		{
 			m_isCowImage[i] = false;
 		}
 	}
 
-	/** UFOã®ã‚¢ã‚¤ã‚³ãƒ³ */
+	/** UFO‚ÌƒAƒCƒRƒ“ */
 	for (int i = 0; i < m_ufos.size(); i++)
 	{
+		/** UFO‚ª‹‚ð‹z‚¢ž‚ñ‚¾‚ç */
+		if (m_ufos[i]->GetIsCowTakeAwayed())
+		{
+			/** UFO‚Ì•`‰æ‚ðÁ‚· */
+			m_isUFOImage[i] = false;
+
+			/** ‘ã‚í‚è‚ÉƒrƒbƒNƒŠƒ}[ƒN‚ð•`‰æ‚³‚¹‚é */
+			Vector3 Pos = m_ufos[i]->GetPosition();
+			Vector3 mapPos;
+
+			/** ƒ}ƒbƒv‚É•\Ž¦‚·‚é”ÍˆÍ‚É‹‚âUFO‚ª‚¢‚½‚ç */
+			if (WorldPositionConvertToMapPosition(playerPos, Pos, mapPos))
+			{
+				m_dangerSprite[i].SetPosition(mapPos);
+				/** ƒ}ƒbƒv‚É•\Ž¦‚·‚é‚æ‚¤‚ÉÝ’è‚·‚éB */
+				m_isdanger[i] = true;
+			}
+
+			continue;
+		}
+		
+		/** ‹‚ð‹z‚¢ž‚ñ‚Å‚¢‚È‚¢ê‡’Êí‚ÌUFO‚ð•`‰æ‚³‚¹‚éB */
 		Vector3 ufoPos = m_ufos[i]->GetPosition();
 		Vector3 mapPos;
 
-		/** ãƒžãƒƒãƒ—ã«è¡¨ç¤ºã™ã‚‹ç¯„å›²ã«ç‰›ã‚„UFOãŒã„ãŸã‚‰ */
+		/** ƒ~ƒjƒ}ƒbƒv“à‚ÉUFO‚ª‚¢‚½‚ç */
 		if (WorldPositionConvertToMapPosition(playerPos, ufoPos, mapPos))
 		{
-			/** ãƒžãƒƒãƒ—ã«è¡¨ç¤ºã™ã‚‹ã‚ˆã†ã«è¨­å®šã™ã‚‹ã€‚ */
+			/** ƒ~ƒjƒ}ƒbƒv“à‚ÉUFO‚ÆÀ•W‚ðƒZƒbƒg‚·‚éB */
 			m_isUFOImage[i] = true;
-
-			/** SpriteRenderã«åº§æ¨™ã‚’è¨­å®š */
 			m_ufoSprite[i].SetPosition(mapPos);
 		}
-
-		/** ãƒžãƒƒãƒ—ã«è¡¨ç¤ºã™ã‚‹ç¯„å›²ã«æ•µãŒã„ãªã‹ã£ãŸã‚‰ */
 		else
 		{
+			/** ‚»‚¤‚¶‚á‚È‚©‚Á‚½‚ç•`‰æ‚µ‚È‚¢B */
 			m_isUFOImage[i] = false;
 		}
+
+		m_isdanger[i] = false;
 	}
 
+	/** •`‰æXVˆ— */
 	m_mapSprite.Update();
 	m_playerSprite.Update();
 	for (int i = 0; i < COW_NUM; i++)
@@ -117,52 +152,58 @@ void Map::Update()
 	{
 		m_ufoSprite[i].Update();
 	}
+
+	for (int i = 0; i < UFO_NUM; i++)
+	{
+		m_dangerSprite[i].Update();
+	}
 }
 bool Map::WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3 cowPosition, Vector3& mapPosition)
 {
-	/** Yåº§æ¨™ã¯ãƒžãƒƒãƒ—ã®åº§æ¨™ã¨ã¯é–¢ä¿‚ãªã„ã®ã§ã€0ã«ã™ã‚‹ã€‚ */
+	/** YÀ•W‚Íƒ}ƒbƒv‚ÌÀ•W‚Æ‚ÍŠÖŒW‚È‚¢‚Ì‚ÅA0‚É‚·‚éB */
 	worldCenterPosition.y = 0.0f;
 	cowPosition.y = 0.0f;
 	Vector3 cowDiff = cowPosition - worldCenterPosition;
-	/** ãƒžãƒƒãƒ—ã®ä¸­å¿ƒã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨ã®è·é›¢ãŒä¸€å®šä»¥ä¸Šé›¢ã‚Œã¦ã„ãŸã‚‰ */
+	/** ƒ}ƒbƒv‚Ì’†S‚ÌƒvƒŒƒCƒ„[‚Æ‚Ì‹——£‚ªˆê’èˆÈã—£‚ê‚Ä‚¢‚½‚ç */
 	if (cowDiff.LengthSq() >= LIMITED_RANGE_IMAGE * LIMITED_RANGE_IMAGE)
 	{
-		/** è¡¨ç¤ºã—ãªã„ã‚ˆã†ã«ã™ã‚‹ã€‚ */
+		/** •\Ž¦‚µ‚È‚¢‚æ‚¤‚É‚·‚éB */
 		return false;
 	}
 
-	/** ãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•ã‚’å–å¾— */
+	/** ƒxƒNƒgƒ‹‚Ì’·‚³‚ðŽæ“¾ */
 	float cowLength = cowDiff.Length();
 
 	Quaternion rot;
-	
-	/** Yè»¸å‘¨ã‚Šã«ãƒžãƒƒãƒ—ã‚’å›žè»¢ã•ã›ã‚‹ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã‚’ä½œã£ã¦ã„ã‚‹ã€‚ */
+
+	/** YŽ²Žü‚è‚Éƒ}ƒbƒv‚ð‰ñ“]‚³‚¹‚éƒNƒH[ƒ^ƒjƒIƒ“‚ðì‚Á‚Ä‚¢‚éB */
 	rot.SetRotationY(m_mapAngle);
 
-	/** ãƒ™ã‚¯ãƒˆãƒ«ã«å‘ã‹ã†ã€‚ */
+	/** ƒxƒNƒgƒ‹‚ÉŒü‚©‚¤B */
 	rot.Apply(cowDiff);
 
-	/** ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ­£è¦åŒ–ã™ã‚‹ã€‚ */
+	/** ƒxƒNƒgƒ‹‚ð³‹K‰»‚·‚éB */
 	cowDiff.Normalize();
 
-	/** ãƒžãƒƒãƒ—ã®å¤§ãã•/è·é›¢åˆ¶é™ã§ã€‚	ãƒ™ã‚¯ãƒˆãƒ«ã‚’ãƒžãƒƒãƒ—åº§æ¨™ç³»ã«å¤‰æ›ã™ã‚‹ã€‚*/
+	/** ƒ}ƒbƒv‚Ì‘å‚«‚³/‹——£§ŒÀ‚ÅB	ƒxƒNƒgƒ‹‚ðƒ}ƒbƒvÀ•WŒn‚É•ÏŠ·‚·‚éB*/
 	cowDiff *= cowLength * MAP_RADIUS / LIMITED_RANGE_IMAGE;
 
-	/** ãƒžãƒƒãƒ—ã®ä¸­å¤®åº§æ¨™ã¨ä¸Šè¨˜ãƒ™ã‚¯ãƒˆãƒ«ã‚’åŠ ç®—ã™ã‚‹ã€‚ */
-	mapPosition = Vector3(MAP_CENTER_POSITION.x + cowDiff.x , MAP_CENTER_POSITION.y + cowDiff.z, 0.0f);
-	
+	/** ƒ}ƒbƒv‚Ì’†‰›À•W‚Æã‹LƒxƒNƒgƒ‹‚ð‰ÁŽZ‚·‚éB */
+	mapPosition = Vector3(MAP_CENTER_POSITION.x + cowDiff.x, MAP_CENTER_POSITION.y + cowDiff.z, 0.0f);
+
 
 	return true;
 }
 void Map::Render(RenderContext& rc)
 {
+	m_mapSprite.SetMulColor(Vector4{ 1.0f,1.0f,1.0f,0.7f });
 	m_mapSprite.Draw(rc);
 	m_playerSprite.Draw(rc);
 
-	/** ç‰›ã‚’æç”»ã•ã›ã‚‹ */
+	/** ‹‚ð•`‰æ‚³‚¹‚é */
 	for (int i = 0; i < m_cows.size(); i++)
 	{
-		/** ã‚‚ã—ãƒŸãƒ‹ãƒžãƒƒãƒ—ãªã„ã«ç‰›ãŒã„ãŸã‚‰(true) */
+		/** ‚à‚µƒ~ƒjƒ}ƒbƒv‚È‚¢‚É‹‚ª‚¢‚½‚ç(true) */
 		if (m_isCowImage[i])
 		{
 			m_cowSprite[i].Draw(rc);
@@ -174,6 +215,14 @@ void Map::Render(RenderContext& rc)
 		if (m_isUFOImage[i])
 		{
 			m_ufoSprite[i].Draw(rc);
+		}
+	}
+
+	for (int i = 0; i < m_ufos.size(); i++)
+	{
+		if (m_isdanger[i])
+		{
+			m_dangerSprite[i].Draw(rc);
 		}
 	}
 }
