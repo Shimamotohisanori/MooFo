@@ -52,12 +52,13 @@ public:
 	/**UFOに光を追従させる関数*/
 	void FollowTheCow();
 	/** 秒数の描画処理*/
-	void CountText();
+	void CountSpriteUI();
 private:
 	ModelRender m_ufocontrollermodelRender;
 	SpriteRender m_LightApperNumberSpriteRender[5];/** 光が出ているときに表示する数字のスプライトレンダー*/
 	SpriteRender m_LightApperSpriteRender;/** 「光の発射まで」を表示するスプライトレンダー*/
 	SpriteRender m_secondsSpriteRender;/** 「秒」を表示するスプライトレンダー*/
+	int m_currentCount = 0;/** 現在の秒数*/
 
 	float m_waitTimer = 5.0f;/**光が出るまでの時間*/
 	float m_emitTimer = 10.0f;/** 光が出ている時間*/

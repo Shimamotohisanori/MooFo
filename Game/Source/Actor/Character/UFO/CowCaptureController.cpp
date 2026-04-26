@@ -6,6 +6,7 @@
 namespace
 {
 	const char* LIGHT_FILEPATH = "Assets/modelData/UFO/UFOLight.tkm";
+	/** 光が出ているときに表示する数字のスプライト*/
 	const char* LIGHT_APPEAR_NUMBER_FILEPATH[5] = 
 	{
 		"Assets/sprite/UFOLightFontUI/Number1.dds",
@@ -14,10 +15,23 @@ namespace
 		"Assets/sprite/UFOLightFontUI/Number4.dds",
 		"Assets/sprite/UFOLightFontUI/Number5.dds"
 	};
-	const Vector3 SCALE = Vector3(3.0f, 8.0f,3.0f);
+
+	/** 光が出ているときに表示する「光の発射まで」のスプライト*/
+	const char* LIGHT_APPEAR_SPRITE_FILEPATH = "Assets/sprite/UFOLightFontUI/NextLightFring.dds";
+	/** 光が出ているときに発射する「秒」のスプライト*/
+	const char* LIGHT_APPEAR_SECONDS_SPRITE_FILEPATH = "Assets/sprite/UFOLightFontUI/Seconds.dds";
+	/** UFOの大きさ*/
+	const Vector3 UFO_SCALE = Vector3(3.0f, 8.0f,3.0f);
+	const Vector3 FONT_SCALE = Vector3(2.0f, 2.0f, 2.0f);
 	/** 数字の大きさ*/
 	const float NUMBERFONT_WIDTH = 100.0f;
 	const float NUMBERFONT_HEIGHT = 100.0f;
+
+	const float FONT_WIDTH = 200.0f;
+	const float FONT_HEIGHT = 200.0f;
+
+	const float SECOMDS_WIDTH = 100.0f;
+	const float SECOMDS_HEIGHT = 100.0f;
 }
 
 CowCaptureController::CowCaptureController()
@@ -35,20 +49,35 @@ bool CowCaptureController::Start()
 {
 	m_countdown = FindGO<CountDown>("countdown");
 	m_pause = FindGO<Pause>("pause");
+	/** 光のスプライト初期化*/
 	m_ufocontrollermodelRender.Init(LIGHT_FILEPATH);
+	m_ufocontrollermodelRender.SetScale(UFO_SCALE);
 	for (int i = 0; i < 5; i++)
 	{
+			/** 光の数字スプライト初期化*/
 		m_LightApperNumberSpriteRender[i].Init(LIGHT_APPEAR_NUMBER_FILEPATH[i], NUMBERFONT_WIDTH, NUMBERFONT_HEIGHT);
+		m_LightApperNumberSpriteRender[i].Update();
 	}
+	/** 光の発射までのスプライト初期化*/
+	m_LightApperSpriteRender.Init(LIGHT_APPEAR_SPRITE_FILEPATH, FONT_WIDTH, FONT_HEIGHT);
+	m_LightApperSpriteRender.SetPosition(Vector3(740.0f,500.0f,0.0f));
+	m_LightApperSpriteRender.SetScale(FONT_SCALE);
+	m_LightApperSpriteRender.Update();
+	/** 秒のスプライト初期化*/
+	m_secondsSpriteRender.Init(LIGHT_APPEAR_SECONDS_SPRITE_FILEPATH, SECOMDS_WIDTH, SECOMDS_HEIGHT);
+	m_secondsSpriteRender.SetPosition(Vector3(940.0f, 510.0f, 0.0f));
+	m_secondsSpriteRender.SetScale(FONT_SCALE);
+	m_secondsSpriteRender.Update();
 	/**　最初は光が出ていない状態にする*/
 	m_timer = m_waitTimer;
-	m_ufocontrollermodelRender.SetScale(SCALE);
+	
 	return true;
 }
 
 
 void CowCaptureController::Update()
 {
+	/** カウントダウン中は処理を止める*/
 	if (m_countdown->GetCountDown())
 	{
 		return;
@@ -59,19 +88,24 @@ void CowCaptureController::Update()
 	{
 		return;
 	}
-
+	/** UFOが存在しない場合は処理を止める*/
 	if (m_ufo == nullptr)
 	{
 		return;
 	}
-
+	/** タイマーのカウント処理*/
 	CountTimer();
-
-	CountText();
-
+	/** スプライトのカウント処理*/
+	CountSpriteUI();
+	/** UFOの追従処理*/
 	FollowTheCow();
-
+	/** UFOのモデル更新*/
 	m_ufocontrollermodelRender.Update();
+	/** 数字スプライトの更新*/
+	if (m_currentCount >= 0)
+	{
+		m_LightApperNumberSpriteRender[m_currentCount].Update();
+	}
 }
 
 
@@ -82,7 +116,6 @@ void CowCaptureController::FollowTheCow()
 		Vector3 pos = m_ufo->GetPosition();
 		pos.y -= 350.0f;
 		m_ufocontrollermodelRender.SetPosition(pos);
-		
 	}
 }
 
@@ -114,47 +147,72 @@ void CowCaptureController::CountTimer()
 	m_isEmitting = (m_state == Emit || m_state == Capture);
 }
 
-void CowCaptureController::CountText()
+void CowCaptureController::CountSpriteUI()
 {
 	/** 光が出ているときは表示しない*/
 	if (m_isEmitting)
 	{
+		/** 光が出ているときはフォントを表示しない状態にする*/
+		m_currentCount = -1;
 		return;
 	}
-	//int seconds = (int)ceilf(m_timer);
-	//wchar_t timertext[32];
-	//swprintf_s(timertext, 32, L"次の光発射まで%d", seconds);
-	//m_countText.SetText(timertext);
-	///**　文字のセット*/
-	//m_countText.SetPosition(400.0f, 530.0f, 0.0f);
-	///**　文字の大きさのセット*/
-	//m_countText.SetScale(1.0f);
-	///**　文字の色のセット*/
-	//m_countText.SetColor(g_vec4White);
+	/** 残り秒数を計算(5→1)*/
+	int seconds = static_cast<int>(std::ceilf(m_timer));
+
+	/** 残り秒数が変わったらスプライトを更新*/
+	if (seconds <= 0 || seconds > 5)
+	{
+		m_currentCount = -1;
+		return;
+	}
+	/**画像配列用に変換*/
+	m_currentCount = seconds - 1;
+
+	/** 表示位置*/
+	Vector3 pos;
+	pos.x = 900.0f;
+	pos.y = 513.0f;
+	pos.z = 0.0f;
+	m_LightApperNumberSpriteRender[m_currentCount].SetPosition(pos);
 }
 
 void CowCaptureController::Render(RenderContext& rc)
 {
-	/** 光が出ていないときだけカウント*/
-	if (!m_isEmitting)
+	if (m_countdown->GetCountDown())
 	{
-		/** Pause中は描画を止める*/
-		if (m_pause->GetIsPause())
-		{
-			return;
-		}
-		m_countText.Draw(rc);
+		return;
 	}
-	
-	if (m_ufo == nullptr)
+	/** Pause中は描画を止める*/
+	if (m_pause->GetIsPause())
 	{
 		return;
 	}
 
+	if (m_ufo == nullptr)
+	{
+		return;
+	}
+	/** 光が出ていないときだけカウント*/
+	if (!m_isEmitting)
+	{
+		/** 光の発射までのスプライト描画*/
+		m_LightApperSpriteRender.Draw(rc);
+		/** 秒のスプライト描画*/
+		m_secondsSpriteRender.Draw(rc);
+	}
+	
+	
+
 	/** 光が出ているときもしくは、UFOが牛を捕まえているときのみ描画*/
-	if (m_isEmitting or m_ufo->GetIsCowTakeAwayed())
+	if (m_isEmitting || m_ufo->GetIsCowTakeAwayed())
 	{
 		m_ufocontrollermodelRender.Draw(rc);
 	}
+	/** 数字スプライトの描画*/
+	if (m_currentCount >= 0 && !m_isEmitting)
+	{
+		m_LightApperNumberSpriteRender[m_currentCount].Draw(rc);
+	}
+	
 }
 	
