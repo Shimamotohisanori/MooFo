@@ -85,6 +85,8 @@ private:
 	/** UFOに見つかった牛 */
 	Cow* m_targetCow = nullptr;
 
+
+
 	/*スコア*/
 	Score* m_score;
 
@@ -96,5 +98,8 @@ private:
 
 	/** 牛を連れて行けるかどうかのフラグ */
 	bool m_isCowTakeAwayed = false;
+
+	/** 牛を追いかけるフラグ */
+	bool m_isChasing = false;
 };
 

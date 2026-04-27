@@ -1,4 +1,4 @@
-п»ї#include "stdafx.h"
+#include "stdafx.h"
 #include "UFO.h"
 #include <time.h>
 #include "CountDown/CountDown.h"
@@ -15,37 +15,37 @@ namespace
 {
 	const char* GAMECLEAR_FILEPATH = "Assets/modelData/UFO/UFO.tkm"; //enModelUpAxis = enModelUpAxisZ;
 
-	/** UFOгЃ®е¤§гЃЌгЃ•*/
+	/** UFO‚М‘е‚«‚і*/
 	constexpr float UFO_SCALE = 3.5f;
 
-	/** UFOгЃ®з§»е‹•ж–№еђ‘г‚’ж±єг‚Ѓг‚‹гЃџг‚ЃгЃ®д№±ж•°гЃ®зЇ„е›І */
+	/** UFO‚М€Ъ“®•ыЊь‚рЊ€‚Я‚й‚Ѕ‚Я‚М—ђђ”‚М”Н€Н */
 	constexpr int   MOVE_DIR_RANGE = 3;
 
-	/** UFOгЃ®з§»е‹•ж™‚й–“гЃЁдј‘г‚Ђж™‚й–“ */
+	/** UFO‚М€Ъ“®ЋћЉФ‚Ж‹x‚ЮЋћЉФ */
 	constexpr float REST_TIME_SEC = 60.0f;
 	constexpr float MOVE_TIME_SEC = 120.0f;
 
-	/** UFOгЃ®е›ћи»ўгЃ®й–ѕеЂ¤ */
+	/** UFO‚М‰с“]‚Ми‡’l */
 	constexpr float ROTATION_THRESHOLD = 0.0001f;
 
-	/** з‰›г‚’йЂЈг‚ЊгЃ¦гЃ„гЃЏгЃЁгЃЌгЃ®UFOгЃ®й«гЃ•гЃЁз‰›г‚’йЂЈг‚ЊгЃ¦гЃ„гЃЏйЂџгЃ• */
+	/** ‹Ќ‚рA‚к‚Д‚ў‚­‚Ж‚«‚МUFO‚МЌ‚‚і‚Ж‹Ќ‚рA‚к‚Д‚ў‚­‘¬‚і */
 	constexpr float CAPTURE_HEIGHT = 150.0f;
 	constexpr float CAPTURE_SPEED = 0.5f;
 
-	/** з‰›г‚’и¦‹гЃ¤гЃ‘г‚‹гЃЁгЃЌгЃ®и·ќй›ў */
+	/** ‹Ќ‚рЊ©‚В‚Ї‚й‚Ж‚«‚М‹——Ј */
 	constexpr float CAPTURE_RANGE = 70.0f;
 
-	/**з§»е‹•еЏЇиѓЅг‚ЁгѓЄг‚ўпј€жџµгЃ®е†…еЃґпј‰*/
+	/**€Ъ“®‰В”\ѓGѓЉѓAЃiЌт‚М“а‘¤Ѓj*/
 	constexpr float AREA_MIN_X = -1300.0f;
 	constexpr float AREA_MAX_X = 1300.0f;
 	constexpr float AREA_MIN_Z = -600.0f;
 	constexpr float AREA_MAX_Z = 500.0f;
 
-	/** UFOеђЊеЈ«гЃ®е›ћйЃїе‡¦зђ†гЃ®гЃџг‚ЃгЃ®и·ќй›ўгЃ®дєЊд№—гЃЁеЉ› */
+	/** UFO“ЇЋm‚М‰с”рЏ€—ќ‚М‚Ѕ‚Я‚М‹——Ј‚М“сЏж‚Ж—Н */
 	constexpr float UFO_AVOID_RANGE_SQ = 1500.0f;
 	constexpr float UFO_AVOID_FORCE = 1.5f;
 
-	/** UFOеђЊеЈ«гЃ®жњЂдЅЋи·ќй›ў*/
+	/** UFO“ЇЋm‚МЌЕ’б‹——Ј*/
 	constexpr float MIN_DIST = 200.0f; 
 }
 
@@ -62,13 +62,11 @@ UFO::~UFO()
 
 bool UFO::Start()
 {
-	//// в… еј·е€¶зљ„гЃ« +X ж–№еђ‘гЃёз§»е‹•пј€гѓ†г‚№гѓ€з”Ёпј‰
-	//m_moveDir = Vector3(1.0f, 0.0f, 0.0f);
 	m_countdown = FindGO<CountDown>("countdown");
 	m_score = FindGO<Score>("score");
 	m_pause = FindGO<Pause>("pause");
 	m_cowCaptureController =NewGO<CowCaptureController>(0,"cowcapturecontroller");
-	/** гЃќг‚ЊгЃћг‚ЊгЃ®UFOгЃ«и‡Єе€†и‡Єиє«г‚’иЁ­е®љ */
+	/** ‚»‚к‚ј‚к‚МUFO‚ЙЋ©•ЄЋ©ђg‚рђЭ’и */
 	m_cowCaptureController->SetUFO(this);
 	srand(time(nullptr));
 	m_ufomodelRender.SetScale(UFO_SCALE,UFO_SCALE,UFO_SCALE);
@@ -81,13 +79,13 @@ bool UFO::Start()
 
 void UFO::Update()
 {
-	/** гѓќгѓјг‚єдё­гЃЇUFOг‚’е‹•гЃ‹гЃ•гЃЄгЃ„ */
+	/** ѓ|Ѓ[ѓY’†‚НUFO‚р“®‚©‚і‚И‚ў */
 	if (m_pause->GetIsPause())
 	{
 		return;
 	}
 
-	/** г‚«г‚¦гѓігѓ€гѓЂг‚¦гѓідё­гЃЇUFOг‚’е‹•гЃ‹гЃ•гЃЄгЃ„ */
+	/** ѓJѓEѓ“ѓgѓ_ѓEѓ“’†‚НUFO‚р“®‚©‚і‚И‚ў */
 	if (m_countdown->GetCountDown())
 	{
 		return;
@@ -95,36 +93,50 @@ void UFO::Update()
 
 	if (m_UFOState == EnUFOState_Move)
 	{
-		/** з§»е‹• */
+		/** €Ъ“® */
 		Move();
-		/** е›ћи»ў */
+		/** ‰с“] */
 		Rotation();
 	}
-	/**гЂЂе…‰гЃЊе‡єгЃ¦гЃ„г‚‹гЃЁгЃЌгЃ гЃ‘жЋўгЃ™*/
+	/**Ѓ@Њх‚ЄЏo‚Д‚ў‚й‚Ж‚«‚ѕ‚Ї’T‚·*/
 	if (IsLightEmitting())
 	{
-		/** з‰›г‚’и¦‹гЃ¤гЃ‘г‚‹й–ўж•° */
+		/** ‹Ќ‚рЊ©‚В‚Ї‚йЉЦђ” */
 		FindTheCow();
 	}
 	
 
-	/** з‰›г‚’йЂЈг‚ЊгЃ¦гЃ„гЃЏй–ўж•° */
+	/** ‹Ќ‚рA‚к‚Д‚ў‚­ЉЦђ” */
 	TakeAwayTheCow();
 
-	/** гѓўгѓ‡гѓ«гЃ®дЅЌзЅ®г‚’еЏЌж  */
+	/** ѓ‚ѓfѓ‹‚М€К’u‚р”Ѕ‰f */
 	m_ufomodelRender.SetPosition(m_transform.GetPosition());
-	/** гѓўгѓ‡гѓ«гЃ®е›ћи»ўг‚’еЏЌж  */
+	/** ѓ‚ѓfѓ‹‚М‰с“]‚р”Ѕ‰f */
 	m_ufomodelRender.SetRotation(m_transform.GetRotation());
-	/** гѓўгѓ‡гѓ«гЃ®ж›ґж–° */
+	/** ѓ‚ѓfѓ‹‚МЌXђV */
 	m_ufomodelRender.Update();
 }
 		
 
 void UFO::Move()
 {
-	/** з‰›г‚’йЂЈг‚ЊгЃ¦гЃ„гЃЈгЃ¦г‚‹жњЂдё­гЃЇз§»е‹•гЃ•гЃ›гЃЄгЃ„ */
+	/** ‹Ќ‚рA‚к‚Д‚ў‚Б‚Д‚йЌЕ’†‚Н€Ъ“®‚і‚№‚И‚ў */
 	if(m_isCowTakeAwayed)
 	{
+		return;
+	}
+
+	/** ’З”ц’†‚И‚з‹Я‚­‚М‹Ќ‚М•ыЊь‚ЙЏ­‚µ‚ё‚Вђi‚ЮЃB */
+	if (m_isChasing)
+	{
+		/** UFO‚М€К’u‚рpos‚Й“ь‚к‚й */
+		Vector3 pos = m_transform.GetPosition();
+
+		/** Њ»ЌЭ‚М€К’u‚ЙЏ­‚µ‚ѕ‚Ї€Ъ“®—К‚р‘«‚µ‚Д‚ў‚йЃB */
+		pos += m_moveDir * m_moveSpeed * g_gameTime->GetFrameDeltaTime();
+
+		/** ЊvЋZ‚µ‚ЅђV‚µ‚ў€К’u‚рЃAЋАЌЫ‚МUFO‚Й”Ѕ‰f‚·‚йЃB */
+		m_transform.SetPosition(pos);
 		return;
 	}
 
@@ -132,66 +144,66 @@ void UFO::Move()
 	{
 		Vector3 dir
 		(
-			//(0,1,2,гЃ‹г‚‰-1г‚’еј•гЃ„гЃ¦гЃ„г‚‹гЃ®гЃ§)-1,0,1гЃ®зЇ„е›ІгЃ§гѓ©гѓігѓЂгѓ гЃЄеЂ¤г‚’з”џж€ђ
+			//(0,1,2,‚©‚з-1‚р€ш‚ў‚Д‚ў‚й‚М‚Е)-1,0,1‚М”Н€Н‚Еѓ‰ѓ“ѓ_ѓЂ‚И’l‚рђ¶ђ¬
 			rand() % MOVE_DIR_RANGE - 1,//x
-			0,             //yгЃЇеёёгЃ«0
+			0,             //y‚НЏн‚Й0
 			rand() % MOVE_DIR_RANGE - 1//z
 		);
-		// 0,0,0гЃ«гЃЄгЃЈгЃџг‚‰дёЂз§’дј‘г‚Ђ
+		// 0,0,0‚Й‚И‚Б‚Ѕ‚з€к•b‹x‚Ю
 		if (dir.LengthSq() == 0)
 		{
 			m_moveDir = Vector3::Zero;
-			m_moveTimer = REST_TIME_SEC;//1з§’дј‘г‚Ђ
+			m_moveTimer = REST_TIME_SEC;//1•b‹x‚Ю
 		}
 		else
 		{
 			dir.Normalize();
 			m_moveDir = dir;
-			m_moveTimer = MOVE_TIME_SEC;//2з§’гЃ”гЃЁгЃ«ж–№еђ‘г‚’е¤‰гЃ€г‚‹
+			m_moveTimer = MOVE_TIME_SEC;//2•b‚І‚Ж‚Й•ыЊь‚р•П‚¦‚й
 		}
 	}
 
-	//з§»е‹•
+	//€Ъ“®
 	Vector3 pos = m_transform.GetPosition();
-	//е°‘гЃ—гЃҐгЃ¤дЅЌзЅ®г‚’е‹•гЃ‹гЃ™
+	//Џ­‚µ‚Г‚В€К’u‚р“®‚©‚·
 	pos += m_moveDir * m_moveSpeed * g_gameTime->GetFrameDeltaTime();
 	
 	Game* game = FindGO<Game>("game");
-	/** UFOеђЊеЈ«гЃ®еЏЌз™єе‡¦зђ† */
+	/** UFO“ЇЋm‚М”Ѕ”­Џ€—ќ */
 	if (game)
 	{
-		/** UFOгЃ®гѓЄг‚№гѓ€г‚’еЏ–еѕ— */
+		/** UFO‚МѓЉѓXѓg‚рЋж“ѕ */
 		auto ufos = game->GetUFOs();
 		
-		/** UFOеђЊеЈ«гЃ®жњЂдЅЋи·ќй›ўгЃ®дєЊд№— */
+		/** UFO“ЇЋm‚МЌЕ’б‹——Ј‚М“сЏж */
 		float MIN_DIST_SQ = MIN_DIST * MIN_DIST;
 
-		/** UFOеђЊеЈ«гЃ®и·ќй›ўгЃЊиї‘гЃ™гЃЋгЃџг‚‰еЏЌз™єгЃ™г‚‹ */
+		/** UFO“ЇЋm‚М‹——Ј‚Є‹Я‚·‚¬‚Ѕ‚з”Ѕ”­‚·‚й */
 		for (auto u : ufos)
 		{
-			/** и‡Єе€†и‡Єиє«гЃЇг‚№г‚­гѓѓгѓ— */
+			/** Ћ©•ЄЋ©ђg‚НѓXѓLѓbѓv */
 			if (u == this) continue;
 
-			/** и‡Єе€†гЃЁд»–гЃ®UFOгЃ®и·ќй›ўг‚’иЁ€з®— */
+			/** Ћ©•Є‚Ж‘ј‚МUFO‚М‹——Ј‚рЊvЋZ */
 			Vector3 otherPos = u->m_transform.GetPosition();
 			
-			/**yи»ёгЃЇиЂѓж…®гЃ—гЃЄгЃ„ */
+			/**yЋІ‚НЌl—¶‚µ‚И‚ў */
 			Vector3 diff = pos - otherPos;
 			diff.y = 0.0f;
 
-			/** UFOеђЊеЈ«гЃ®и·ќй›ўгЃ®дєЊд№— */
+			/** UFO“ЇЋm‚М‹——Ј‚М“сЏж */
 			float distSq = diff.LengthSq();
 
-			/** иї‘гЃ™гЃЋгЃџг‚‰еЏЌз™єгЃ™г‚‹ */
+			/** ‹Я‚·‚¬‚Ѕ‚з”Ѕ”­‚·‚й */
 			if (distSq < MIN_DIST_SQ && distSq > 0.0f)
 			{
-				/* еЏЌз™єгЃ™г‚‹ж–№еђ‘г‚’иЁ€з®— */
+				/* ”Ѕ”­‚·‚й•ыЊь‚рЊvЋZ */
 				float dist = sqrtf(distSq);
 				
-				/** ж­Ји¦ЏеЊ– */
+				/** ђі‹K‰» */
 				diff /= dist; 
 
-				/** еЏЌз™єгЃ™г‚‹еЉ›г‚’иЁ€з®— */
+				/** ”Ѕ”­‚·‚й—Н‚рЊvЋZ */
 				float pushBack = (MIN_DIST - dist) * 0.5f;
 				pos += diff * pushBack;
 			}
@@ -199,50 +211,50 @@ void UFO::Move()
 	}
 
 	
-	//е››ж–№гЃ®жџµгЃ«еЅ“гЃџгЃЈгЃџг‚‰еЏЌи»ўгЃ•гЃ›г‚‹
+	//Ћl•ы‚МЌт‚Й“–‚Ѕ‚Б‚Ѕ‚з”Ѕ“]‚і‚№‚й
 	if (pos.x < AREA_MIN_X)
 	{
 		pos.x = AREA_MIN_X;
-		m_moveDir.x *= -1;//еЈЃгЃ«еЅ“гЃџгЃЈгЃџг‚‰еЏЌи»ўгЃ•гЃ›г‚‹
+		m_moveDir.x *= -1;//•З‚Й“–‚Ѕ‚Б‚Ѕ‚з”Ѕ“]‚і‚№‚й
 	}
 	else if(pos.x > AREA_MAX_X)
 	{
 		pos.x = AREA_MAX_X;
-		m_moveDir.x *= -1;//еЈЃгЃ«еЅ“гЃџгЃЈгЃџг‚‰еЏЌи»ўгЃ•гЃ›г‚‹
+		m_moveDir.x *= -1;//•З‚Й“–‚Ѕ‚Б‚Ѕ‚з”Ѕ“]‚і‚№‚й
 	}
 
 	if (pos.z < AREA_MIN_Z)
 	{
 		pos.z = AREA_MIN_Z;
-		m_moveDir.z *= -1;//еЈЃгЃ«еЅ“гЃџгЃЈгЃџг‚‰еЏЌи»ўгЃ•гЃ›г‚‹
+		m_moveDir.z *= -1;//•З‚Й“–‚Ѕ‚Б‚Ѕ‚з”Ѕ“]‚і‚№‚й
 	}
 	else if (pos.z > AREA_MAX_Z)
 	{
 		pos.z = AREA_MAX_Z;
-		m_moveDir.z *= -1;//еЈЃгЃ«еЅ“гЃџгЃЈгЃџг‚‰еЏЌи»ўгЃ•гЃ›г‚‹
+		m_moveDir.z *= -1;//•З‚Й“–‚Ѕ‚Б‚Ѕ‚з”Ѕ“]‚і‚№‚й
 	}
-	//гѓќг‚ёг‚·гѓ§гѓіг‚’ж›ґж–°
+	//ѓ|ѓWѓVѓ‡ѓ“‚рЌXђV
 	m_transform.SetPosition(pos);
-	//гѓўгѓ‡гѓ«гЃ«дЅЌзЅ®г‚’еЏЌж 
+	//ѓ‚ѓfѓ‹‚Й€К’u‚р”Ѕ‰f
 	m_ufomodelRender.SetPosition(m_transform.GetPosition());
 
-	//г‚їг‚¤гѓћгѓјг‚’жё›г‚‰гЃ™гЂ‚
+	//ѓ^ѓCѓ}Ѓ[‚рЊё‚з‚·ЃB
 	m_moveTimer--;
 
 }
 	
 void UFO::Rotation()
 {
-	/** з‰›г‚’йЂЈг‚ЊгЃ¦гЃ„гЃЈгЃ¦г‚‹жњЂдё­гЃЇе›ћи»ўгЃ•гЃ›гЃЄгЃ„ */
+	/** ‹Ќ‚рA‚к‚Д‚ў‚Б‚Д‚йЌЕ’†‚Н‰с“]‚і‚№‚И‚ў */
 	if(m_isCowTakeAwayed)
 	{
 		return;
 	}
 
-	/** е°‘гЃ—гЃ§г‚‚е‹•гЃ„гЃџг‚‰з§»е‹•ж–№еђ‘гЃ«еђ‘гЃЌг‚’е›ћи»ўгЃ•гЃ›г‚‹ */
+	/** Џ­‚µ‚Е‚а“®‚ў‚Ѕ‚з€Ъ“®•ыЊь‚ЙЊь‚«‚р‰с“]‚і‚№‚й */
 	if (fabsf(m_moveDir.x) >= ROTATION_THRESHOLD || fabsf(m_moveDir.z) >= ROTATION_THRESHOLD)
 	{
-		//з§»е‹•ж–№еђ‘гЃ«е›ћи»ўгЃ•гЃ›г‚‹
+		//€Ъ“®•ыЊь‚Й‰с“]‚і‚№‚й
 		m_transform.GetRotation().SetRotationYFromDirectionXZ(m_moveDir);
 		m_transform.SetRotation(m_transform.GetRotation());
 	}
@@ -250,13 +262,13 @@ void UFO::Rotation()
 
 void UFO::TakeAwayTheCow()
 {
-	/** з‰›г‚’йЂЈг‚ЊгЃ¦гЃ„гЃ‘г‚‹гЃ‹гЃ©гЃ†гЃ‹гЃ®гѓ•гѓ©г‚°гЃЊз«‹гЃЈгЃ¦гЃ„гЃџг‚‰е‡¦зђ†г‚’гЃ™г‚‹ */
+	/** ‹Ќ‚рA‚к‚Д‚ў‚Ї‚й‚©‚З‚¤‚©‚Мѓtѓ‰ѓO‚Є—§‚Б‚Д‚ў‚Ѕ‚зЏ€—ќ‚р‚·‚й */
 	if (!m_isCowTakeAwayed or m_targetCow == nullptr) return;
 
-	/** з‰›г‚’е›ћи»ўзЉ¶ж…‹гЃ«гЃ™г‚‹ */
+	/** ‹Ќ‚р‰с“]Џу‘Ф‚Й‚·‚й */
 	m_targetCow->ChangeRotationState();
 
-	/** UFOгЃ®дЅЌзЅ®гЃ«з‰›г‚’иї‘гЃҐгЃ‘г‚‹ */
+	/** UFO‚М€К’u‚Й‹Ќ‚р‹Я‚Г‚Ї‚й */
 	Vector3 cowPos = m_targetCow->GetPosition();
 	Vector3 ufoPos = m_transform.GetPosition();
 	ufoPos.y += CAPTURE_HEIGHT;
@@ -264,23 +276,23 @@ void UFO::TakeAwayTheCow()
 	Vector3 dir = ufoPos - cowPos;
 	float dist = dir.Length();
 
-	/** з‰›гЃЁUFOгЃ®и·ќй›ўгЃЊ0.5д»ҐдёЉгЃ гЃЈгЃџг‚‰з‰›г‚’UFOгЃ«иї‘гЃҐгЃ‘г‚‹ */
+	/** ‹Ќ‚ЖUFO‚М‹——Ј‚Є0.5€ИЏг‚ѕ‚Б‚Ѕ‚з‹Ќ‚рUFO‚Й‹Я‚Г‚Ї‚й */
 	if (dist > 0.5f)
 	{
 		dir.Normalize();
 		cowPos += dir * CAPTURE_SPEED;
 	}
 
-	//** з‰›гЃЁUFOгЃ®и·ќй›ўгЃЊ0.5жњЄжєЂгЃ гЃЈгЃџг‚‰з‰›г‚’е‰Љй™¤гЃ—гЂЃз‰›гЃ®ж•‘е‡єж•°г‚’жё›г‚‰гЃ™ */
+	//** ‹Ќ‚ЖUFO‚М‹——Ј‚Є0.5–ў–ћ‚ѕ‚Б‚Ѕ‚з‹Ќ‚рЌнЏњ‚µЃA‹Ќ‚М‹~Џoђ”‚рЊё‚з‚· */
 	else
 	{
-		/** з‰›гЃ®ж•‘е‡єж•°г‚’жё›г‚‰гЃ™ */
+		/** ‹Ќ‚М‹~Џoђ”‚рЊё‚з‚· */
 		CowNumberOfRescues* cowNumberOfRescues = FindGO<CowNumberOfRescues>("cownumberofrescues");
 		cowNumberOfRescues->SubRescue();
 
-		/*з‰›гЃЊйЂЈг‚ЊеЋ»г‚‰г‚ЊгЃџг‚‰г‚№г‚іг‚ўг‚’жё›г‚‰гЃ™е‡¦зђ†*/
+		/*‹Ќ‚ЄA‚к‹Ћ‚з‚к‚Ѕ‚зѓXѓRѓA‚рЊё‚з‚·Џ€—ќ*/
 		m_score->DecreaseScore(100);
-		/* з‰›гЃ®зЉ¶ж…‹г‚’йЂЈг‚ЊгЃ¦гЃ„гЃ‹г‚Њг‚‹е‰ЌгЃ®зЉ¶ж…‹гЃ«ж€»гЃ™ */
+		/* ‹Ќ‚МЏу‘Ф‚рA‚к‚Д‚ў‚©‚к‚й‘O‚МЏу‘Ф‚Й–Я‚· */
 		m_targetCow->SetIsTakeAwayed(false);
 
 		if (auto rope = FindGO<Rope>("rope"))
@@ -297,7 +309,7 @@ void UFO::TakeAwayTheCow()
 			camera->SetIsCowCaptured(false);
 		}
 		
-		/** GameгЃ«йЂљзџҐгЃ—гЃ¦aliveCowsгЃ‹г‚‰е¤–гЃ™ */
+		/** Game‚Й’К’m‚µ‚ДaliveCows‚©‚зЉO‚· */
 		Game* game = FindGO<Game>("game");
 		Combo* combo = FindGO<Combo>("combo");
 		if (game && combo)
@@ -306,11 +318,11 @@ void UFO::TakeAwayTheCow()
 			game->ReMoveCow(m_targetCow);
 		}
 
-		/** з‰›г‚’е‰Љй™¤ */
+		/** ‹Ќ‚рЌнЏњ */
 		DeleteGO(m_targetCow);
 
 		m_cowCaptureController->EndCapture();
-		/** зЉ¶ж…‹г‚’гѓЄг‚»гѓѓгѓ€гЃ™г‚‹ */
+		/** Џу‘Ф‚рѓЉѓZѓbѓg‚·‚й */
 		m_targetCow = nullptr;
 		m_isCowTakeAwayed = false;
 		m_cowCaptureController->SetCapturing(false);
@@ -328,28 +340,86 @@ CowCaptureController* UFO::GetCowCaptureController()
 
 void UFO::FindTheCow()
 {
-	/**е…‰гЃЊе‡єгЃ¦гЃ„гЃЄгЃ„гЃЁгЃЌгЃЇжЋўгЃ•гЃЄгЃ„г‚€гЃ†гЃ«гЃ™г‚‹*/
+	/**Њх‚ЄЏo‚Д‚ў‚И‚ў‚Ж‚«‚Н’T‚і‚И‚ў‚ж‚¤‚Й‚·‚й*/
 	if (!m_cowCaptureController->GetIsEmitting()) return;
-	/** з‰›г‚’йЂЈг‚ЊгЃ¦гЃ„гЃ‘г‚‹гЃ‹гЃ©гЃ†гЃ‹гЃ®гѓ•гѓ©г‚°гЃЊз«‹гЃЈгЃ¦гЃ„гЃџг‚‰е‡¦зђ†гЃ—гЃЄгЃ„ */
+	/** ‹Ќ‚рA‚к‚Д‚ў‚Ї‚й‚©‚З‚¤‚©‚Мѓtѓ‰ѓO‚Є—§‚Б‚Д‚ў‚Ѕ‚зЏ€—ќ‚µ‚И‚ў */
 	if (m_isCowTakeAwayed) return;
 	auto cow = FindGOs<Cow>("cow");
+
+	Cow* nearestCow = nullptr;
+
+	/** ЌЕ‚а‹Я‚ў‹Ќ‚рЊ©‚В‚Ї‚й‚Ѕ‚Я‚ЙFLT_MAX‚р——p‚µ‚Д€к“xЌЕ‘еђ”‚Й‚µ‚Д‚Ё‚­ */
+	float nearestDistSq = FLT_MAX;
+
+	/** ‹Ќ‚р€к•C‚ё‚ВЊ©‚йЃB */
 	for (auto c : cow)
 	{
+		/** ‚·‚Е‚Й‹Я‚­‚М‹Ќ‚р•Я‚Ь‚¦‚ж‚¤‚Ж‚µ‚Д‚ў‚йUFO‚Є‚ў‚ЅЏкЌ‡–іЋ‹‚·‚йЃB */
+		if (c->GetIsTakeAwayed()) continue;
 
+		/* 
+		 * ‹——Ј‚рЊvЋZ‚·‚йЃB
+		 * UFO‚©‚з‹Ќ‚М•ыЊь‚рЋж“ѕ‚·‚йЃB
+		 */
 		Vector3 diff = c->GetPosition() - m_transform.GetPosition();
 		diff.y = 0.0f;
 
-		/** з‰›гЃЁUFOгЃ®и·ќй›ўгЃЊ70жњЄжєЂгЃ гЃЈгЃџг‚‰з‰›г‚’йЂЈг‚ЊгЃ¦гЃ„гЃЏ */
+		/** ‹——Ј‚М“сЏж */
+		float distSq = diff.LengthSq();
+
+		/** €к”Ф‹Я‚ў‹Ќ‚рЌXђV */
+		if (distSq < nearestDistSq)
+		{
+			nearestDistSq = distSq;
+			nearestCow = c;
+		}
+
+		/** ‹Я‚­‚Й‹Ќ‚ЄЊ©‚В‚©‚Б‚Д‚ў‚й‚©‚З‚¤‚© */
+		if (nearestCow)
+		{
+			/**  ’З”ц’†‚ѕ‚Б‚Ѕ‚зtrue */
+			m_isChasing = true;
+
+			/** ‹Ќ‚М•ыЊь‚рЌм‚йЃB */
+			Vector3 dir = nearestCow->GetPosition() - m_transform.GetPosition();
+			dir.Normalize();
+
+			/** dir‚М•ыЊь‚Йђi‚Ю‚ж‚¤‚ЙѓZѓbѓg‚·‚йЃB */
+			m_moveDir = dir;
+
+
+			/** ‚а‚µ‹Ќ‚р‹Ќ‚рЊ©‚В‚Ї‚й‚Ж‚«‚М‹——Ј‚М‚Щ‚¤‚Є‘е‚«‚©‚Б‚Ѕ‚з */
+			if (sqrtf(nearestDistSq) < CAPTURE_RANGE)
+			{
+				/** ‚±‚М‹Ќ‚р•Я‚Ь‚¦‚й(true) */
+				m_isCowTakeAwayed = true;
+				m_targetCow = nearestCow;
+
+				/** •ЯЉlЏ€—ќ‚ЄЌм“®‚·‚йЃB */
+				m_cowCaptureController->StartCapture();
+
+				/** ‚ў‚Ь’З‚Б‚Д‚ў‚й‹Ќ‚рtrue‚Й‚µ‚Д‘ј‚МUFO‚Н’З”ц‚µ‚И‚ў‚ж‚¤‚Й‚·‚йЃB */
+				m_targetCow->SetTakingUFO(this);
+				m_targetCow->SetIsTakeAwayed(true);
+			}
+		}
+		/** ‚»‚к‚ў‚Є‚ў‚Н’З”ц‚µ‚И‚ўЃB */
+		else
+		{
+			m_isChasing = false;
+		}
+
+		/** ‹Ќ‚ЖUFO‚М‹——Ј‚Є70–ў–ћ‚ѕ‚Б‚Ѕ‚з‹Ќ‚рA‚к‚Д‚ў‚­ */
 		if (diff.Length() < CAPTURE_RANGE)
 		{
-			/** йЂЈг‚ЊгЃ¦гЃ„гЃ‘г‚‹ */
+			/** A‚к‚Д‚ў‚Ї‚й */
 			m_isCowTakeAwayed = true;
-			/** жњЂе€ќгЃ®дёЂеЊ№гЃ гЃ‘ */
+			/** ЌЕЏ‰‚М€к•C‚ѕ‚Ї */
 			m_targetCow = c;
 			//m_cowCaptureController->SetCapturing(true);
 			m_cowCaptureController->StartCapture();
 			m_targetCow->SetTakingUFO(this);
-			/** з‰›гЃ®зЉ¶ж…‹г‚’йЂЈг‚ЊгЃ¦гЃ„гЃ‹г‚Њг‚‹зЉ¶ж…‹гЃ«гЃ™г‚‹ */
+			/** ‹Ќ‚МЏу‘Ф‚рA‚к‚Д‚ў‚©‚к‚йЏу‘Ф‚Й‚·‚й */
 			m_targetCow->SetIsTakeAwayed(true);
 			break;
 		}
