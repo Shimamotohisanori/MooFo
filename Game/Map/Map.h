@@ -2,6 +2,7 @@
 class Player;
 class Cow;
 class UFO;
+class Pause;
 class Map : public IGameObject
 {
  public:
@@ -24,9 +25,10 @@ class Map : public IGameObject
 	SpriteRender m_dangerSprite[4];
 
 	Player* m_player = nullptr;
+	Pause* m_pause   = nullptr;
   
 	float m_mapAngle = 0.0f;
-  
+
 	/** マップ内に表示されているUIがいるかどうかのフラグ */
 	bool m_isCowImage[10];
 	bool m_isUFOImage[4];
