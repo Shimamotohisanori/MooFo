@@ -114,8 +114,7 @@ void GameClear::SetFinalClearRescue(int rescue)
 }
 void GameClear::Render(RenderContext& rc)
 {
-	m_blackSpriteRender.Draw(rc);
-
+	
 	m_GameClearSpriteRender.Draw(rc);
 
 	m_blackSpriteRender.SetMulColor(
@@ -124,6 +123,8 @@ void GameClear::Render(RenderContext& rc)
 			1.0f,
 			1.0f,
 			0.5f));
+
+	m_blackSpriteRender.Draw(rc);
 
 	if(m_score)
 	{
