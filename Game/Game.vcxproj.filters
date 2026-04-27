@@ -73,6 +73,9 @@
     <ClCompile Include="GameScene\LoadingScene.cpp">
       <Filter>GameScene</Filter>
     </ClCompile>
+    <ClCompile Include="Combo\Combo.cpp">
+      <Filter>Combo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -147,6 +150,9 @@
     <ClInclude Include="GameScene\LoadingScene.h">
       <Filter>GameScene</Filter>
     </ClInclude>
+    <ClInclude Include="Combo\Combo.h">
+      <Filter>Combo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
@@ -205,6 +211,9 @@
     </Filter>
     <Filter Include="Map">
       <UniqueIdentifier>{657db36e-fb3d-4266-8ae6-77954b3f0fa0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Combo">
+      <UniqueIdentifier>{5fe4c3cf-5149-4f68-9ebc-f602307340e5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
