@@ -128,6 +128,12 @@ private:
 	/** 左ボタンが押されているかどうかのフラグ */
 	bool m_isLeftButton1 = false;
 
+	/** 左ボタンが押されているかどうかのフラグ(UI用) */
+	bool m_isLeftButton1_Trigger_Ui = false;
+
+	/** 右ボタンが押されているかどうかのフラグ(UI用) */
+	bool m_isRightButton1_Trigger_Ui = false;
+
 	/** プレイヤーが動いているかどうかのフラグ */
 	bool m_isMoving = false;
 

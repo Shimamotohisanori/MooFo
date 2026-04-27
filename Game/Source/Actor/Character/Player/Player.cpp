@@ -258,13 +258,25 @@ void Player::PullRope()
 			{
 				m_isRightButton1 = true;
 				m_isLeftButton1 = false;
+
+				m_isRightButton1_Trigger_Ui = true;
+				m_isLeftButton1_Trigger_Ui = false;
 			}
 
-			if (g_pad[0]->IsTrigger(enButtonLB1))
+			else if (g_pad[0]->IsTrigger(enButtonLB1))
 			{
 				m_isLeftButton1 = true;
 				m_isRightButton1 = false;
+
+				m_isLeftButton1_Trigger_Ui = true;
+				m_isRightButton1_Trigger_Ui = false;
 			}
+
+			/*else
+			{
+				m_isLeftButton1 = false;
+				m_isRightButton1 = false;
+			}*/
 
 		}
 	}
@@ -313,23 +325,23 @@ void Player::Render(RenderContext& rc)
 	m_playerModelRender.Draw(rc);
 
 	/** 両方のボタンを押していなかったら */
-	if (m_rope->GetIsHitCow() && !m_isLeftButton1 && !m_isRightButton1)
+	if (m_rope->GetIsHitCow() && !m_isLeftButton1_Trigger_Ui && !m_isRightButton1_Trigger_Ui)
 	{
-		/*ロープを引っ張る画像の描画*/
+		/** ロープを引っ張る画像の描画 */
 		m_pullRopeSprite.Draw(rc);
 	}
 
-	/*右ボタンを押しているとき*/
-	if(m_rope->GetIsHitCow() && m_isLeftButton1)
+	/** 右ボタンを押しているとき */
+	if(m_rope->GetIsHitCow() && m_isLeftButton1_Trigger_Ui)
 	{
-		/*ロープを引っ張る画像の描画(LBを押しているとき)*/
+		/** ロープを引っ張る画像の描画(LBを押しているとき) */
 		m_pullRopeSpriteLB.Draw(rc);
 	}
 
-	/*左ボタンを押しているとき*/
-	if (m_rope->GetIsHitCow() && m_isRightButton1)
+	/** 左ボタンを押しているとき */
+	if (m_rope->GetIsHitCow() && m_isRightButton1_Trigger_Ui)
 	{
-		/*ロープを引っ張る画像の描画(RBを押しているとき)*/
+		/** ロープを引っ張る画像の描画(RBを押しているとき) */
 		m_pullRopeSpriteRB.Draw(rc);
 	}
 }
