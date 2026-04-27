@@ -1,8 +1,9 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Map.h"
 #include "Source/Actor/Character/Player/Player.h"
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "Source/Actor/Character/UFO/UFO.h"
+#include "Pause/Pause.h"
 namespace
 {
 	Vector3 MAP_CENTER_POSITION = Vector3(704.0f, -300.0f, 0.0f);
@@ -17,34 +18,36 @@ namespace
 
 bool Map::Start()
 {
-	/** ミニマップの背景 */
-	m_mapSprite.Init("Assets/sprite/MapUI/MapIcon.dds", 400.0f, 400.0f);
-	m_mapSprite.SetPosition(MAP_CENTER_POSITION);
+	m_pause = FindGO<Pause>("pause");
 
-	/** ミニマップの中心(プレイヤー) */
-	m_playerSprite.Init("Assets/sprite/MapUI/PlayerIcon.dds", 50.0f, 50.0f);
-	m_playerSprite.SetPosition(MAP_CENTER_POSITION);
+		/** ミニマップの背景 */
+		m_mapSprite.Init("Assets/sprite/MapUI/MapIcon.dds", 400.0f, 400.0f);
+		m_mapSprite.SetPosition(MAP_CENTER_POSITION);
 
-	/** 牛をミニマップ内に出現させる。 */
-	for (int i = 0; i < COW_NUM; i++)
-	{
-		m_cowSprite[i].Init("Assets/sprite/MapUI/CowIcon.dds", 25.0f, 25.0f);
-	}
+		/** ミニマップの中心(プレイヤー) */
+		m_playerSprite.Init("Assets/sprite/MapUI/PlayerIcon.dds", 50.0f, 50.0f);
+		m_playerSprite.SetPosition(MAP_CENTER_POSITION);
 
-	/** UFOをミニマップ内に出現させる。 */
-	for (int i = 0; i < UFO_NUM; i++)
-	{
+		/** 牛をミニマップ内に出現させる。 */
+		for (int i = 0; i < COW_NUM; i++)
+		{
+			m_cowSprite[i].Init("Assets/sprite/MapUI/CowIcon.dds", 25.0f, 25.0f);
+		}
 
-		m_ufoSprite[i].Init("Assets/sprite/MapUI/UFOIcon.dds", 30.0f, 30.0f);
-	}
+		/** UFOをミニマップ内に出現させる。 */
+		for (int i = 0; i < UFO_NUM; i++)
+		{
 
-	/* ビックリマークをUFOが牛を捕まえたときに表示させる。
-	 * UFOが起点となるためUFO_NUMを使用する
-	 */
-	for (int i = 0; i < UFO_NUM; i++)
-	{
-		m_dangerSprite[i].Init("Assets/sprite/MapUI/Danger.dds", 30.0f, 30.0f);
-	}
+			m_ufoSprite[i].Init("Assets/sprite/MapUI/UFOIcon.dds", 30.0f, 30.0f);
+		}
+
+		/* ビックリマークをUFOが牛を捕まえたときに表示させる。
+		 * UFOが起点となるためUFO_NUMを使用する
+		 */
+		for (int i = 0; i < UFO_NUM; i++)
+		{
+			m_dangerSprite[i].Init("Assets/sprite/MapUI/Danger.dds", 30.0f, 30.0f);
+		}
 
 
 	/** それぞれのポジションを見つける。*/
@@ -196,33 +199,37 @@ bool Map::WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3
 }
 void Map::Render(RenderContext& rc)
 {
-	m_mapSprite.SetMulColor(Vector4{ 1.0f,1.0f,1.0f,0.7f });
-	m_mapSprite.Draw(rc);
-	m_playerSprite.Draw(rc);
-
-	/** 牛を描画させる */
-	for (int i = 0; i < m_cows.size(); i++)
+	if (m_pause->GetIsPause() == false)
 	{
-		/** もしミニマップないに牛がいたら(true) */
-		if (m_isCowImage[i])
+
+		m_mapSprite.SetMulColor(Vector4{ 1.0f,1.0f,1.0f,0.7f });
+		m_mapSprite.Draw(rc);
+		m_playerSprite.Draw(rc);
+
+		/** 牛を描画させる */
+		for (int i = 0; i < m_cows.size(); i++)
 		{
-			m_cowSprite[i].Draw(rc);
+			/** もしミニマップないに牛がいたら(true) */
+			if (m_isCowImage[i])
+			{
+				m_cowSprite[i].Draw(rc);
+			}
 		}
-	}
 
-	for (int i = 0; i < m_ufos.size(); i++)
-	{
-		if (m_isUFOImage[i])
+		for (int i = 0; i < m_ufos.size(); i++)
 		{
-			m_ufoSprite[i].Draw(rc);
+			if (m_isUFOImage[i])
+			{
+				m_ufoSprite[i].Draw(rc);
+			}
 		}
-	}
 
-	for (int i = 0; i < m_ufos.size(); i++)
-	{
-		if (m_isdanger[i])
+		for (int i = 0; i < m_ufos.size(); i++)
 		{
-			m_dangerSprite[i].Draw(rc);
+			if (m_isdanger[i])
+			{
+				m_dangerSprite[i].Draw(rc);
+			}
 		}
 	}
 }
