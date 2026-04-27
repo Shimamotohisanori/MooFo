@@ -108,7 +108,7 @@ private:
 	Vector3 zeroPos[LayoutTypeNum];
 
 	/** 救出数 */
-	int m_numberOfRescues = 40;
+	int m_numberOfRescues = 0;
 
 	/**	十の位 */
 	int tens = 0;

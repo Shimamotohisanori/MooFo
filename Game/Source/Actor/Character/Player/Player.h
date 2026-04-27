@@ -18,17 +18,26 @@ public:
 	void Update() override;
 	void Render(RenderContext& rc) override;
 public:
+
+	/** 移動 */
 	void Move();
+
+	/** 回転 */
 	void Rotation();
-	/*ステート管理*/
+
+	/** ステート管理 */
 	void ManageState();
-	/*アニメーション*/
+
+	/** アニメーション */
 	void PlayAnimation();
+
+	/** プレイヤーのポジション取得関数 */
 	Vector3 GetPosition()
 	{
 		return m_transform.GetPosition();
 	};
 
+	/** プレイヤーの回転取得関数 */
 	Quaternion GetRotation()
 	{
 		return m_transform.GetRotation();
@@ -64,6 +73,7 @@ public:
 		return m_isMoving;
 	}
 
+
 private:
 	/** ロープを投げる関数*/
 	void ThrowRope();
@@ -71,22 +81,31 @@ private:
 	/** ループを引っ張る関数*/
 	void PullRope();
 
+
 private:
+	/** プレイヤーモデル */
 	ModelRender m_playerModelRender;
 
-	Vector3 m_moveSpeed;//移動速度
+	/** ロープを引っ張るまでのクールタイム */
+	CharacterController m_characterController;
 
-	int m_playerState = 0;//プレイヤーの状態
-	int m_prevPlayerState = -1;//プレイヤーの状態
+	/** プレイヤーの移動速度 */
+	Vector3 m_moveSpeed;
 
-	/** ロープを投げるまでのクールタイム */
-	float m_throwRopeCoolTime = 0.0f;
+	/** ロープを引っ張る操作の画像 */
+	SpriteRender m_pullRopeSprite;
 
-	CharacterController m_characterController;//キャラコン
+	/** ロープを引っ張る操作の画像(LBを押している時) */
+	SpriteRender m_pullRopeSpriteLB;
 
-	Rope* m_rope;//ロープクラス
+	/** ロープを引っ張る操作の画像(RBを押している時) */
+	SpriteRender m_pullRopeSpriteRB;
 
-	Game* m_game;//ゲームクラス
+	/** ロープ */
+	Rope* m_rope;
+
+	/** ゲームクラス */
+	Game* m_game;
 
 	/** カウントダウン */
 	CountDown* m_countDown;
@@ -94,16 +113,25 @@ private:
 	/** ポーズ */
 	Pause* m_pause;
 
-	//右ボタンが押されているかどうかのフラグ
+	/** プレイヤーの状態 */
+	int m_playerState = 0;
+
+	/** 前のプレイヤーの状態 */
+	int m_prevPlayerState = -1;
+
+	/** ロープを投げるまでのクールタイム */
+	float m_throwRopeCoolTime = 0.0f;
+
+	/** 右ボタンが押されているかどうかのフラグ */
 	bool m_isRightButton1 = false;
 
-	//左ボタンが押されているかどうかのフラグ
+	/** 左ボタンが押されているかどうかのフラグ */
 	bool m_isLeftButton1 = false;
 
 	/** プレイヤーが動いているかどうかのフラグ */
 	bool m_isMoving = false;
 
-	//アニメーション
+	/** アニメーション */
 	enum EnPlayAnimation
 	{
 		enAnimationClip_Idle,
