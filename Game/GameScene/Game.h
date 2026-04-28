@@ -16,11 +16,6 @@ class CowCaptureController;
 class Map;
 class Combo;
 
-//namespace
-//{
-//	constexpr float UFO_POSY = 70.0f;
-//}
-
 /** UFOの情報をまとめる構造体 */
 struct UFOinfo
 {

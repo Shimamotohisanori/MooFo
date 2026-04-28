@@ -46,7 +46,7 @@ namespace
 	constexpr float UFO_AVOID_FORCE = 1.5f;
 
 	/** UFO同士の最低距離*/
-	constexpr float MIN_DIST = 200.0f; 
+	constexpr float MIN_DIST = 300.0f; 
 }
 
 UFO::UFO()
@@ -197,17 +197,38 @@ void UFO::Move()
 			float distSq = diff.LengthSq();
 
 			/** 近すぎたら反発する */
-			if (distSq < MIN_DIST_SQ && distSq > 0.0f)
+			if (distSq < MIN_DIST_SQ)
 			{
 				/* 反発する方向を計算 */
 				float dist = sqrtf(distSq);
 				
-				/** 正規化 */
-				diff /= dist; 
+				/** 方向ベクトルを作る。 */
+				if (dist == 0.0f)
+				{
+				/**
+				  * 永遠に重ならないようにランダム関数でどっちか逃がす
+				　* 方向ベクトルが0の時Normalizeにできないため使用する
+				  **/
+					diff = Vector3(rand() % 3 - 1, 0, rand() % 3 - 1);
+					diff.Normalize();
+				}
+				else
+				{
+					/** 正規化 */
+					diff /= dist;
+				}
+				
 
 				/** 反発する力を計算 */
-				float pushBack = (MIN_DIST - dist) * 0.5f;
+				//float pushBack = (MIN_DIST - dist) * 0.5f;
+				float pushBack = (MIN_DIST - dist);
+
 				pos += diff * pushBack;
+
+				/** 進行方向も変更する。 */
+				m_moveDir += diff * 0.5f;
+				m_moveDir.Normalize();
+
 			}
 		}
 	}
