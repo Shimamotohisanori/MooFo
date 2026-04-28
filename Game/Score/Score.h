@@ -9,20 +9,23 @@ public:
 	void Update();
 	void Render(RenderContext& rc);
 
-	//牛を救出した時にスコアを取得する関数
+	/** 牛を救出した時にスコアを取得する関数 */
 	void AddScore(int Value);
-	//牛を救出できなかった時にスコアを減少させる関数
+
+	/** 牛を救出できなかった時にスコアを減少させる関数 */
 	void DecreaseScore(int Value);
-	//スコアの描画処理
+
+	/** スコアの描画処理 */
 	void TextScore();
-	//ゲームクリア・ゲームオーバーのときにスコアを表示するかどうかのフラグを立てる関数
+	
+	/** ゲームクリア・ゲームオーバーのときにスコアを表示するかどうかのフラグを立てる関数 */
 	void SetResult(bool isResult);
-	//スコアをゲットする関数
+	
+	/** スコアを取得する関数 */
 	int GetScore() const;
 
-	//スコアをセットする関数（GameClear等から最終スコアを直接反映するため)
+	/** スコアをセットする関数（GameClear等から最終スコアを直接反映するため) */
 	void SetScore(int score);
-
 
 	/** リザルトの種類 */
 	enum class ResultType
@@ -37,16 +40,32 @@ public:
 		m_resultType = type;
 	}
 	ResultType m_resultType = ResultType::GameClear;
+
+
 private:
+	/** スコアのカウンターアニメーション処理 */
+	void ScoreCounterAnimation();
+
+
+private:
+
+	/** スコア */
 	int m_score = 0;
+
+	/** 描画するスコアを保存する変数 */
+	int m_displayScore = 0;
+
+	/** 前フレームのスコアを保存する変数 */
 	int m_prevScore = -1;
-	//ゲームクリア・ゲームオーバーのときにスコアを表示するかどうかのフラグ
+
+	/** ゲームクリア・ゲームオーバーのときにスコアを表示するかどうかのフラグ */
 	bool m_isResult = false;
 
 
-//５桁(万・千・百・十・一)の五桁を描画するスプライト
+	/** ５桁(万・千・百・十・一)の五桁を描画するスプライト */
 	SpriteRender m_digitSprite[5][10];
-	//数字の画像をロード
+	
+	/** 数字の画像をロード */
 	const char* m_digitPaths[10] =
 	{
 		"Assets/sprite/NumberUI/MooFoNumberUI0.dds",
