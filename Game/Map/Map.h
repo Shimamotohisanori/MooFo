@@ -23,6 +23,7 @@ class Map : public IGameObject
 	SpriteRender m_cowSprite[10];
 	SpriteRender m_ufoSprite[4];
 	SpriteRender m_dangerSprite[4];
+	SpriteRender m_outLineSprite;
 
 	Player* m_player = nullptr;
 	Pause* m_pause   = nullptr;

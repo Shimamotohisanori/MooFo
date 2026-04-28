@@ -6,10 +6,30 @@
 #include "Pause/Pause.h"
 namespace
 {
+	/** ミニマップのスプライトのパス */
+	const char* MAP_SPRITE_PATH = "Assets/sprite/MapUI/MapIcon.dds";
+
+	/** プレイヤーのアイコンのファイルパス */
+	const char* PLAYER_ICON_PATH = "Assets/sprite/MapUI/PlayerIcon.dds";
+
+	/** 牛のアイコンのファイルパス */
+	const char* COW_ICON_PATH = "Assets/sprite/MapUI/CowIcon.dds";
+
+	/** UFOのアイコンのファイルパス */
+	const char* UFO_ICON_PATH = "Assets/sprite/MapUI/UFOIcon.dds";
+
+	/** ビックリマークのファイルパス */
+	const char* DANGER_ICON_PATH = "Assets/sprite/MapUI/Danger.dds";
+
+	/** ミニマップの外枠のファイルパス */
+	const char* OUTLINE_ICON_PATH = "Assets/sprite/MapUI/OutLine.dds";
+
 	Vector3 MAP_CENTER_POSITION = Vector3(704.0f, -300.0f, 0.0f);
 
-	float MAP_RADIUS = 190.0f;
-	float LIMITED_RANGE_IMAGE = 410.0f;
+	Vector3 MAP_OUTLINE_POSITION = Vector3(704.0f, -302.5f, 0.0f);
+
+	constexpr float MAP_RADIUS = 180.0f;
+	constexpr float LIMITED_RANGE_IMAGE = 400.0f;
 
 	/** マジックナンバー処理 */
 	constexpr int COW_NUM = 10;
@@ -21,24 +41,28 @@ bool Map::Start()
 	m_pause = FindGO<Pause>("pause");
 
 		/** ミニマップの背景 */
-		m_mapSprite.Init("Assets/sprite/MapUI/MapIcon.dds", 400.0f, 400.0f);
+		m_mapSprite.Init(MAP_SPRITE_PATH, 400.0f, 400.0f);
 		m_mapSprite.SetPosition(MAP_CENTER_POSITION);
 
 		/** ミニマップの中心(プレイヤー) */
-		m_playerSprite.Init("Assets/sprite/MapUI/PlayerIcon.dds", 50.0f, 50.0f);
+		m_playerSprite.Init(PLAYER_ICON_PATH, 50.0f, 50.0f);
 		m_playerSprite.SetPosition(MAP_CENTER_POSITION);
+
+		/** ミニマップの外枠 */
+		m_outLineSprite.Init(OUTLINE_ICON_PATH, 532.0f, 532.0f);
+		m_outLineSprite.SetPosition(MAP_OUTLINE_POSITION);
 
 		/** 牛をミニマップ内に出現させる。 */
 		for (int i = 0; i < COW_NUM; i++)
 		{
-			m_cowSprite[i].Init("Assets/sprite/MapUI/CowIcon.dds", 25.0f, 25.0f);
+			m_cowSprite[i].Init(COW_ICON_PATH, 25.0f, 25.0f);
 		}
 
 		/** UFOをミニマップ内に出現させる。 */
 		for (int i = 0; i < UFO_NUM; i++)
 		{
 
-			m_ufoSprite[i].Init("Assets/sprite/MapUI/UFOIcon.dds", 30.0f, 30.0f);
+			m_ufoSprite[i].Init(UFO_ICON_PATH, 50.0f, 50.0f);
 		}
 
 		/* ビックリマークをUFOが牛を捕まえたときに表示させる。
@@ -46,9 +70,10 @@ bool Map::Start()
 		 */
 		for (int i = 0; i < UFO_NUM; i++)
 		{
-			m_dangerSprite[i].Init("Assets/sprite/MapUI/Danger.dds", 30.0f, 30.0f);
+			m_dangerSprite[i].Init(DANGER_ICON_PATH, 30.0f, 30.0f);
 		}
 
+		
 
 	/** それぞれのポジションを見つける。*/
 	m_cows = FindGOs<Cow>("cow");
@@ -164,6 +189,8 @@ void Map::Update()
 	{
 		m_dangerSprite[i].Update();
 	}
+
+	m_outLineSprite.Update();
 }
 bool Map::WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3 cowPosition, Vector3& mapPosition)
 {
@@ -235,6 +262,8 @@ void Map::Render(RenderContext& rc)
 				m_dangerSprite[i].Draw(rc);
 			}
 		}
+
+		m_outLineSprite.Draw(rc);
 	}
 }
 
