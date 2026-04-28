@@ -21,8 +21,6 @@ Timer::~Timer()
 
 bool Timer::Start()
 {
-	m_countdown = FindGO<CountDown>("countdown");
-	m_pause = FindGO<Pause>("pause");
 	//全ての画像スプライト(30個)を初期化
 	for (int j = 0; j < 10; j++)
 	{
@@ -39,6 +37,13 @@ bool Timer::Start()
 
 void Timer::Update()
 {
+	m_countdown = FindGO<CountDown>("countdown");
+	m_pause = FindGO<Pause>("pause");
+	if(m_pause == nullptr || m_countdown == nullptr)
+	{
+		return;
+	}
+
 	/** Pause中は制限時間の更新を止める*/
 	if (m_pause->GetIsPause())
 	{
@@ -108,6 +113,11 @@ void Timer::AddTimer(float time)
 }
 void Timer::Render(RenderContext& rc)
 {
+	if (m_countdown == nullptr || m_pause == nullptr)
+	{
+		return;
+	}
+
 	//カウントダウン中は制限時間の描画を止めるために早期リターンをする。
 	if (m_countdown->GetCountDown())
 	{

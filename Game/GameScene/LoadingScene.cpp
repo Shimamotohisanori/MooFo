@@ -1,6 +1,13 @@
 ﻿#include "stdafx.h"
 #include "LoadingScene.h"
 #include "SoundManager/SoundManager.h"
+#include "GameScene/Game.h"
+#include "Source/Actor/Character/Player/Player.h"
+#include "Source/Actor/Stage/Stage.h"
+#include "Source/Actor/Character/Cow/Cow.h"
+#include "Source/Actor/Character/UFO/UFO.h"
+#include "GameCamera/GameCamera.h"
+#include "nature/SkyCube.h"
 
 namespace
 {
@@ -21,7 +28,11 @@ namespace
 	const int LOADING_HEIGHT = 800.0f;
 	const int LOADINGWARD_HEIGHT = 100.0f;
 	
+	/** 牛のランダムスポーン範囲 */
+	const int RANDOM_SPAWN_RANGE = 300;
+	const int RANDOM_SPAWN_RANGE_DOUBLE = 600;
 }
+
 LoadingScene::LoadingScene()
 {
 
@@ -30,7 +41,8 @@ LoadingScene::LoadingScene()
 
 LoadingScene::~LoadingScene()
 {
-
+	/** ローディング中の音源を削除する */
+	DeleteGO(m_loadingSound);
 }
 
 bool LoadingScene::Start()
@@ -121,17 +133,17 @@ void LoadingScene::InLoading()
 	/** 一定時間で次のシーンへ移行*/
 	if (m_totalTime >= m_loadingTime)
 	{
-		if (m_nextSceneLoading)
+		if (m_loadType == LoadType::ToGameScene)
 		{
-			/** 次のシーンをロードする関数がセットされているなら呼び出す*/
-			m_nextSceneLoading();
+			/** ゲームシーンに移行するタイプのロード処理*/
+			LoadGameObjectsStepByStep(); 
 		}
-		
-		/** ローディング中の音源を削除する */
-		DeleteGO(m_loadingSound);
 
-		/** 現在のシーンを削除*/
-		DeleteGO(this);
+		else
+		{
+			/** タイトルシーンに移行するタイプのロード処理*/
+			LoadTitleOnly();
+		}
 	}
 }
 
@@ -159,10 +171,179 @@ void LoadingScene::FadeLoadingText()
 		}
 	}
 }
+
+void LoadingScene::LoadGameObjectsStepByStep()
+{
+	switch (m_loadStep)
+	{
+		/** ロードするゲームオブジェクトをステップバイステップで生成する */
+
+		/** プレイヤーを生成*/
+	case 0: NewGO<Player>(0, "player"); break;
+
+		/** ステージを生成*/
+	case 1: NewGO<Stage>(0, "stage"); break;
+
+		/** 牛を生成(10対分)*/
+	case 2:
+	{
+		Cow* cow = NewGO<Cow>(0, "cow");
+		cow->SetPosition(RandomCowPos());
+		m_tempCows.push_back(cow);
+	} break;
+
+	case 3:
+	{
+		Cow* cow = NewGO<Cow>(0, "cow");
+		cow->SetPosition(RandomCowPos());
+		m_tempCows.push_back(cow);
+	} break;
+
+	case 4:
+	{
+		Cow* cow = NewGO<Cow>(0, "cow");
+		cow->SetPosition(RandomCowPos());
+		m_tempCows.push_back(cow);
+	} break;
+
+	case 5:
+	{
+		Cow* cow = NewGO<Cow>(0, "cow");
+		cow->SetPosition(RandomCowPos());
+		m_tempCows.push_back(cow);
+	} break;
+
+	case 6:
+	{
+		Cow* cow = NewGO<Cow>(0, "cow");
+		cow->SetPosition(RandomCowPos());
+		m_tempCows.push_back(cow);
+	} break;
+
+	case 7:
+	{
+		Cow* cow = NewGO<Cow>(0, "cow");
+		cow->SetPosition(RandomCowPos());
+		m_tempCows.push_back(cow);
+	} break;
+
+	case 8:
+	{
+		Cow* cow = NewGO<Cow>(0, "cow");
+		cow->SetPosition(RandomCowPos());
+		m_tempCows.push_back(cow);
+	} break;
+
+	case 9:
+	{
+		Cow* cow = NewGO<Cow>(0, "cow");
+		cow->SetPosition(RandomCowPos());
+		m_tempCows.push_back(cow);
+	} break;
+
+	case 10:
+	{
+		Cow* cow = NewGO<Cow>(0, "cow");
+		cow->SetPosition(RandomCowPos());
+		m_tempCows.push_back(cow);
+	} break;
+
+	case 11:
+	{
+		Cow* cow = NewGO<Cow>(0, "cow");
+		cow->SetPosition(RandomCowPos());
+		m_tempCows.push_back(cow);
+	} break;
+
+	case 12:
+	{
+		Cow* cow = NewGO<Cow>(0, "cow");
+		cow->SetPosition(RandomCowPos());
+		m_tempCows.push_back(cow);
+	} break;
+
+		/** UFOを生成(4体分)*/
+	case 13:
+	{
+		auto ufo = NewGO<UFO>(0, UFO_INFOMATIONS[0].objectName.c_str());
+		ufo->SetPosition(UFO_INFOMATIONS[0].pos);
+	}break;
+	
+	case 14:
+	{
+		auto ufo = NewGO<UFO>(0, UFO_INFOMATIONS[1].objectName.c_str());
+		ufo->SetPosition(UFO_INFOMATIONS[1].pos);
+	}break;
+
+	case 15:
+	{
+		auto ufo = NewGO<UFO>(0, UFO_INFOMATIONS[2].objectName.c_str());
+		ufo->SetPosition(UFO_INFOMATIONS[2].pos);
+	}break;
+
+	case 16:
+	{
+		auto ufo = NewGO<UFO>(0, UFO_INFOMATIONS[3].objectName.c_str());
+		ufo->SetPosition(UFO_INFOMATIONS[3].pos);
+	}break;
+		
+		/** ゲームカメラを生成*/
+	case 17: NewGO<GameCamera>(0, "gameCamera"); break;
+
+		/** スカイキューブを生成*/
+	case 18:
+	{
+		
+		/** SkyCube を生成 */
+		SkyCube* sky = NewGO<SkyCube>(0, "skyCube");
+
+		/** タイプ設定*/
+		sky->SetType((EnSkyCubeType)m_skyCubeType);
+
+		/** スケール設定*/
+		sky->SetScale(10000.0f);
+
+		/** IBL 設定*/
+		g_renderingEngine->SetAmbientByIBLTexture(sky->GetTextureFilePath(), 0.6f);
+	} break;
+
+		/** ゲーム本体を生成*/
+	case 19:
+		Game* game =NewGO<Game>(0, "game");
+
+		/** ロードした牛をゲームに渡す */
+		for (auto cow : m_tempCows)
+		{
+			game->GetAliveCows().push_back(cow);
+		}
+
+		DeleteGO(this);
+		return;
+	}
+
+	m_loadStep++;
+}
+
+void LoadingScene::LoadTitleOnly()
+{
+	m_nextSceneLoading();
+	DeleteGO(this);
+}
+
+Vector3 LoadingScene::RandomCowPos()
+{
+	Vector3 pos;
+	pos.x = (rand() % RANDOM_SPAWN_RANGE_DOUBLE) - RANDOM_SPAWN_RANGE;
+	pos.y = 0.0f;
+	pos.z = (rand() % RANDOM_SPAWN_RANGE_DOUBLE) - RANDOM_SPAWN_RANGE;
+	return pos;
+}
+
 void LoadingScene::SetNextScene(std::function<void()>next)
 {
 	m_nextSceneLoading = next;
 }
+
 void LoadingScene::Render(RenderContext& rc)
 {
 	m_blackLoadingSpriteRender.Draw(rc);

@@ -49,6 +49,9 @@ namespace
 
 	m_game = FindGO<Game>("game");
 	m_choiceSound = FindGO<SoundManager>("soundmanager");
+
+	m_isPause = true;
+
 	return true;
 }
 

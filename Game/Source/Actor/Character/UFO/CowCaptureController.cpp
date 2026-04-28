@@ -47,8 +47,6 @@ CowCaptureController::~CowCaptureController()
 
 bool CowCaptureController::Start()
 {
-	m_countdown = FindGO<CountDown>("countdown");
-	m_pause = FindGO<Pause>("pause");
 	/** 光のスプライト初期化*/
 	m_ufocontrollermodelRender.Init(LIGHT_FILEPATH);
 	m_ufocontrollermodelRender.SetScale(UFO_SCALE);
@@ -77,6 +75,13 @@ bool CowCaptureController::Start()
 
 void CowCaptureController::Update()
 {
+	m_countdown = FindGO<CountDown>("countdown");
+	m_pause = FindGO<Pause>("pause");
+	if (m_pause == nullptr || m_countdown == nullptr)
+	{
+		return;
+	}
+
 	/** カウントダウン中は処理を止める*/
 	if (m_countdown->GetCountDown())
 	{
@@ -178,6 +183,11 @@ void CowCaptureController::CountSpriteUI()
 
 void CowCaptureController::Render(RenderContext& rc)
 {
+	if (m_pause == nullptr || m_countdown == nullptr)
+	{
+		return;
+	}
+
 	if (m_countdown->GetCountDown())
 	{
 		return;

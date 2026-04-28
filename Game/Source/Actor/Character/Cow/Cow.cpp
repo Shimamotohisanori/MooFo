@@ -53,15 +53,22 @@ bool Cow::Start()
 	m_cowmodelRender.SetPosition(m_transform.GetPosition());
 	m_cowmodelRender.Update();
 
-	m_player = FindGO<Player>("player");
-	m_countdown = FindGO<CountDown>("countdown");
-	m_rope = FindGO<Rope>("rope");
-	m_pause = FindGO<Pause>("pause");
+	
 	return true;
 }
 
 void Cow::Update()
 {
+	m_player = FindGO<Player>("player");
+	m_countdown = FindGO<CountDown>("countdown");
+	m_rope = FindGO<Rope>("rope");
+	m_pause = FindGO<Pause>("pause");
+
+	if (m_pause == nullptr || m_countdown == nullptr || m_player == nullptr || m_rope == nullptr)
+	{
+		return;
+	}
+
 	/* ポーズ中は牛を動かさないようにするため早期リターン */
 	if (m_pause->GetIsPause())
 	{

@@ -68,10 +68,7 @@ Player::~Player()
 
 bool Player::Start()
 {
-	m_countDown = FindGO<CountDown>("countdown");
-	m_game = FindGO<Game>("game");
 	m_rope = NewGO<Rope>(0, "rope");
-	m_pause = FindGO<Pause>("pause");
 
     m_characterController.Init(CHRACTER_CONTROLLER_WIDTH, CHRACTER_CONTROLLER_HIGHT, m_transform.GetPosition());
 	m_playerModelRender.SetPosition(m_transform.GetPosition());
@@ -97,6 +94,15 @@ bool Player::Start()
 
 void Player::Update()
 {
+	m_game = FindGO<Game>("game");
+	m_countDown = FindGO<CountDown>("countdown");
+	m_pause = FindGO<Pause>("pause");
+
+	if (m_pause == nullptr || m_countDown == nullptr)
+	{
+		return;
+	}
+
 	/*ポーズ中は操作できないようにする*/
 	if (m_pause->GetIsPause())
 	{

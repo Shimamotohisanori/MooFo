@@ -1,5 +1,8 @@
 ﻿#pragma once
 #include<functional>
+class Cow;
+class CountDown;
+class GameCamera;
 class LoadingScene : public IGameObject
 {
 public:
@@ -20,6 +23,35 @@ public:
 	/** Loading文字のフェード処理を行う関数*/
 	void FadeLoadingText();
 
+	/** ロードするシーンのタイプ*/
+	enum LoadType
+	{
+		/** ゲームシーンに移行するタイプ*/
+		ToGameScene,
+
+		/** タイトルシーンに移行するタイプ*/
+		ToTitleScene,
+	};
+
+	/** ロードするシーンのタイプ*/
+	LoadType m_loadType = ToGameScene;
+
+	/** ロードするシーンのタイプを設定する関数 */
+	void SetLoadType(LoadType loadType)
+	{
+		m_loadType = loadType;
+	}
+
+
+private:
+	/** ゲームオブジェクトをステップバイステップでロードする関数*/
+	void LoadGameObjectsStepByStep();
+
+	/** タイトルのみをロードする関数 */
+	void LoadTitleOnly();
+
+	/** ランダムな牛のスポーン位置を生成する関数 */
+	Vector3 RandomCowPos();
 
 private:
 	/** ローディング中の背景のスプライトレンダー*/
@@ -31,8 +63,17 @@ private:
 	/** Loadingの文字のスプライトレンダー*/
 	SpriteRender m_loadingTextSpriteRender;
 
+	/** ロードするゲームオブジェクト(牛)のリスト*/
+	std::vector<Cow*> m_tempCows;
+
 	/** 現在表示している画像*/
 	int m_currentImage = 0;
+
+	/** ロードするゲームオブジェクトのステップ*/
+	int m_loadStep = 0;
+
+	/** スカイキューブのタイプ */
+	int m_skyCubeType = enSkyCubeType_Night;
 
 	/** タイマー*/
 	float m_timer = 0.0f;
