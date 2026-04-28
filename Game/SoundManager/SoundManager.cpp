@@ -14,7 +14,8 @@ namespace
 		"TitleBGM",
 		"InGameBGM",
 		"GameClearBGM",
-		"GameOverBGM"
+		"GameOverBGM",
+		"LoadBGM",
 	};
 
 	const char* SE_FILENAME_LIST[enSENum] =

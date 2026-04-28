@@ -8,6 +8,7 @@ enum SoundBGM
 	enInGameBGM,
 	enGameClearBGM,
 	enGameOverBGM,
+	enGameLoadingBGM,
 	enBGMNum
 };
 
