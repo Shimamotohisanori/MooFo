@@ -109,6 +109,8 @@ void UFO::Update()
 	/** 牛を連れていく関数 */
 	TakeAwayTheCow();
 
+	m_transform.SetPosition(Vector3{ m_transform.GetPosition().x,70.0f,m_transform.GetPosition().z });
+
 	/** モデルの位置を反映 */
 	m_ufomodelRender.SetPosition(m_transform.GetPosition());
 	/** モデルの回転を反映 */
