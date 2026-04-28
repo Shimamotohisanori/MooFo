@@ -18,6 +18,15 @@
 #include "nature/SkyCube.h"
 #include "Combo/Combo.h"
 
+namespace
+{
+	/**マジックナンバー対策*/
+	const uint8_t COW_NUM = 10;
+	const int RANDOM_SPAWN_RANGE = 300;
+	const int RANDOM_SPAWN_RANGE_DOUBLE = 600;
+	const float NEW_SPAWN_TIMER = 3.0f;
+}
+
 Game::~Game()
 {
 	
@@ -79,11 +88,23 @@ bool Game::Start()
 	m_stage = NewGO<Stage>(0, "stage");
 	
 	/** 牛の生成 */
-	for (int i = 0; i < _countof(COW_INFOMATIONS); i++)
+	for (int i = 0; i < COW_NUM; i++)
 	{
-		m_cow[i] = NewGO<Cow>(0, COW_INFOMATIONS[i].objectName.c_str());
-		m_cow[i]->SetPosition(COW_INFOMATIONS[i].pos);
-		m_aliveCows.push_back(m_cow[i]);
+		Cow* cow = NewGO<Cow>(0, "cow");
+
+		/** 毎回ランダムな位置を生成する*/
+		
+		/** ランダムスポーン位置 */ 
+		Vector3 randomPos;
+
+		/** ランダムスポーン位置を生成する */
+		/** XZ平面の - 300から300の範囲でランダムな位置を生成する */
+		randomPos.x = (rand() % RANDOM_SPAWN_RANGE_DOUBLE) - RANDOM_SPAWN_RANGE;
+		randomPos.y = 0.0f;
+		randomPos.z = (rand() % RANDOM_SPAWN_RANGE_DOUBLE) - RANDOM_SPAWN_RANGE;
+
+		cow->SetPosition(randomPos);
+		m_aliveCows.push_back(cow);
 	}
 
 	/** UFOの生成 */
@@ -240,12 +261,12 @@ void Game::SpawnCow()
 		return;
 	}
 	// 現在の牛の数が10体未満なら補充
-	if (m_aliveCows.size() < _countof(COW_INFOMATIONS))
+	if (m_aliveCows.size() < COW_NUM)
 	{
 		m_spawnTimer += g_gameTime->GetFrameDeltaTime();
 
 		// 3秒ごとに1体補充
-		if (m_spawnTimer >= 3.0f)
+		if (m_spawnTimer >=NEW_SPAWN_TIMER)
 		{
 			m_spawnTimer = 0.0f;
 
@@ -254,9 +275,9 @@ void Game::SpawnCow()
 
 			// スポーン位置（例：ランダム）
 			Vector3 pos;
-			pos.x = (rand() % 600) - 300; // -300〜300
+			pos.x = (rand() % RANDOM_SPAWN_RANGE_DOUBLE) - RANDOM_SPAWN_RANGE; // -300〜300
 			pos.y = 0.0f;
-			pos.z = (rand() % 600) - 300; // -300〜300
+			pos.z = (rand() % RANDOM_SPAWN_RANGE_DOUBLE) - RANDOM_SPAWN_RANGE; // -300〜300
 
 			newCow->SetPosition(pos);
 
@@ -290,4 +311,5 @@ void Game::InitSkyCube()
 
 void Game::Render(RenderContext& rc)
 {
+
 }
