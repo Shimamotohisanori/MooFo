@@ -2,7 +2,7 @@
 #include "Combo.h"
 #include "GameTimer/Timer.h"
 #include "Score/Score.h"
-#include "AddTimerUI.h"
+#include "GameTimer/AddTimerUI.h"
 namespace
 {
 	const char* COMBO_NUMBER_FILEPATH = "Assets/sprite/NumberUI/";

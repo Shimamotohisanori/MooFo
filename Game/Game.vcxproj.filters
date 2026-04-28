@@ -76,7 +76,9 @@
     <ClCompile Include="Combo\Combo.cpp">
       <Filter>Combo</Filter>
     </ClCompile>
-    <ClCompile Include="AddTimerUI.cpp" />
+    <ClCompile Include="GameTimer\AddTimerUI.cpp">
+      <Filter>GameTimer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -154,7 +156,9 @@
     <ClInclude Include="Combo\Combo.h">
       <Filter>Combo</Filter>
     </ClInclude>
-    <ClInclude Include="AddTimerUI.h" />
+    <ClInclude Include="GameTimer\AddTimerUI.h">
+      <Filter>GameTimer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

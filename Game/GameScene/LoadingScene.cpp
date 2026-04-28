@@ -17,7 +17,7 @@ namespace
 	
 	/** 縦幅*/
 	const int BLACKLOADING_HEIGHT = 1080.0f;
-	const int LOADING_HEIGHT = 500.0f;
+	const int LOADING_HEIGHT = 800.0f;
 	const int LOADINGWARD_HEIGHT = 100.0f;
 	
 }
@@ -45,7 +45,7 @@ bool LoadingScene::Start()
 	/** スプライトの位置を設定*/
 	for (int i = 0; i < 3; i++)
 	{
-		m_loadingSpriteRender[i].SetPosition(Vector3(0.0f, 200.0f, 0.0f));
+		m_loadingSpriteRender[i].SetPosition(Vector3(0.0f, 100.0f, 0.0f));
 	}
 	for (int i = 0; i < 3; i++)
 	{

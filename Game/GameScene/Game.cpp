@@ -17,7 +17,7 @@
 #include "Map/Map.h"
 #include "nature/SkyCube.h"
 #include "Combo/Combo.h"
-#include"AddTimerUI.h"
+#include"GameTimer/AddTimerUI.h"
 
 
 namespace

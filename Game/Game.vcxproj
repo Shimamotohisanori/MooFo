@@ -223,7 +223,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AddTimerUI.cpp" />
     <ClCompile Include="Combo\Combo.cpp" />
     <ClCompile Include="CountDown\CountDown.cpp" />
     <ClCompile Include="CowNumberOfRescues\CowNumberOfRescues.cpp" />
@@ -233,6 +232,7 @@
     <ClCompile Include="GameScene\GameOver.cpp" />
     <ClCompile Include="GameScene\LoadingScene.cpp" />
     <ClCompile Include="GameScene\Title.cpp" />
+    <ClCompile Include="GameTimer\AddTimerUI.cpp" />
     <ClCompile Include="GameTimer\Timer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map\Map.cpp" />
@@ -257,7 +257,6 @@
     <ClCompile Include="Transform\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AddTimerUI.h" />
     <ClInclude Include="Combo\Combo.h" />
     <ClInclude Include="CountDown\CountDown.h" />
     <ClInclude Include="CowNumberOfRescues\CowNumberOfRescues.h" />
@@ -267,6 +266,7 @@
     <ClInclude Include="GameScene\GameOver.h" />
     <ClInclude Include="GameScene\LoadingScene.h" />
     <ClInclude Include="GameScene\Title.h" />
+    <ClInclude Include="GameTimer\AddTimerUI.h" />
     <ClInclude Include="GameTimer\Timer.h" />
     <ClInclude Include="Map\Map.h" />
     <ClInclude Include="Pause\Pause.h" />
