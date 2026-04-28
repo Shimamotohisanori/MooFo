@@ -21,7 +21,7 @@ namespace
 	const char* SE_FILENAME_LIST[enSENum] =
 	{
 		"ChoiceSE",
-		"CowCatchSE",
+		"CowCatch",
 		"CowCrySE",
 		"DecisionSE",
 		"ThrowRopeSE",
