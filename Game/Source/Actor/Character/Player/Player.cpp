@@ -5,6 +5,7 @@
 #include "Transform/Transform.h"
 #include "CountDown/CountDown.h"
 #include "Pause/Pause.h"
+#include "SoundManager/SoundManager.h"
 
 namespace
 {
@@ -60,6 +61,8 @@ Player::Player()
 
 Player::~Player()
 {
+	DeleteGO(m_throwRopeSE);
+
 	DeleteGO(m_rope);
 }
 
@@ -235,14 +238,18 @@ void Player::ThrowRope()
 	/** クールダウン中はロープを投げられない */
 	if (m_throwRopeCoolTime > 0.0f) return;
 
-	//RB2ボタンが押されていて、ロープを投げていないとき
+	/** RB2ボタンが押されていて、ロープを投げていないとき */
 	if (g_pad[0]->IsTrigger(enButtonRB2) && !m_rope->GetIsThrowRope())
 	{
-		//ロープを投げる
+		/** ロープを投げる */
 		m_rope->SetIsThrowRope(true);
 
 		/** クールダウン開始 */
 		m_throwRopeCoolTime = 1.5f;
+
+		/** ロープを投げる音を再生 */
+		SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+		m_throwRopeSE = soundManager->PlayingSE(SoundSE::enThrowRopeSE, false);
 	}
 }
 
@@ -271,12 +278,6 @@ void Player::PullRope()
 				m_isLeftButton1_Trigger_Ui = true;
 				m_isRightButton1_Trigger_Ui = false;
 			}
-
-			/*else
-			{
-				m_isLeftButton1 = false;
-				m_isRightButton1 = false;
-			}*/
 
 		}
 	}

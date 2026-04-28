@@ -113,6 +113,9 @@ private:
 	/** ポーズ */
 	Pause* m_pause;
 
+	/** ロープを投げる音 */
+	SoundSource* m_throwRopeSE;
+
 	/** プレイヤーの状態 */
 	int m_playerState = 0;
 

@@ -56,7 +56,8 @@ private:
 	/** フェードインしているかどうかのフラグ*/
 	bool m_isFadeIn = false;
 
-	SoundSource* m_loadingSound;	//ローディング中の音源。
+	/** ローディング中の音源 */
+	SoundSource* m_loadingSound;	
 
 	//これは、LoadingSceneを呼び出すときに、次のシーンをロードする関数を引数で渡してもらうための変数。
 	/** 次のシーンをロードする関数*/
