@@ -13,7 +13,7 @@ class SoundManager;
 class Score;
 class CowNumberOfRescues;
 class CowCaptureController;
-class Map;
+class MiniMap;
 class Combo;
 
 /** 牛の情報をまとめる構造体 */
@@ -156,7 +156,7 @@ private:
 
 	/** 牛の捕獲を管理するクラス */
 	CowCaptureController* m_cowCaptureController;
-	Map* m_map;
+	MiniMap* m_map;
 
 	/** サウンドマネージャー */
 	SoundManager* m_inGameSound;

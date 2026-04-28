@@ -1,16 +1,16 @@
-﻿#pragma once
+#pragma once
 class Player;
 class Cow;
 class UFO;
 class Pause;
-class Map : public IGameObject
+class MiniMap : public IGameObject
 {
- public:
-	Map() {}
-	~Map() {}
+public:
+	MiniMap() {}
+	~MiniMap() {}
 	bool Start();
 	void Update();
-    void Render(RenderContext& rc);private:
+void Render(RenderContext& rc);private:
 	/** ワールド座標系からマップ座標系に変換 */
 	bool WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3 cowPosition, Vector3& mapPosition);
 
@@ -25,8 +25,8 @@ class Map : public IGameObject
 	SpriteRender m_dangerSprite[4];
 
 	Player* m_player = nullptr;
-	Pause* m_pause   = nullptr;
-  
+	Pause* m_pause = nullptr;
+
 	float m_mapAngle = 0.0f;
 
 	/** マップ内に表示されているUIがいるかどうかのフラグ */

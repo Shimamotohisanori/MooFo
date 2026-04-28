@@ -14,7 +14,7 @@
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
 #include "SoundManager/SoundManager.h"
 #include "Score/Score.h"
-#include "Map/Map.h"
+#include "Map/MiniMap.h"
 #include "nature/SkyCube.h"
 #include "Combo/Combo.h"
 
@@ -113,7 +113,7 @@ bool Game::Start()
 	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
 
 	/** ミニマップの生成 */
-	m_map = NewGO<Map>(0, "map");
+	m_map = NewGO<MiniMap>(0, "map");
 
 	/** コンボの生成 */
 	m_combo = NewGO<Combo>(0, "combo");
