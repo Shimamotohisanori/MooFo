@@ -14,19 +14,24 @@ namespace
 		"TitleBGM",
 		"InGameBGM",
 		"GameClearBGM",
-		"GameOverBGM"
+		"GameOverBGM",
+		"LoadBGM",
 	};
 
 	const char* SE_FILENAME_LIST[enSENum] =
 	{
 		"ChoiceSE",
-		"CowCatchSE",
+		"CowCatch",
 		"CowCrySE",
 		"DecisionSE",
 		"ThrowRopeSE",
 		"UFOFlyingSE",
 		"UFOTakeAwaySE",
-		"WalkSE"
+		"WalkSE",
+		"ScoreDecreaseSE",
+		"ScoreRiseSE",
+		"AddTimeSE",
+		"CountDownSE",
 	};
 }
 

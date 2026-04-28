@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Score.h"
+#include "SoundManager/SoundManager.h"
 
 namespace
 {
@@ -23,7 +24,8 @@ Score::Score()
 
 Score::~Score()
 {
-
+	DeleteGO(m_scoreDecreaseSE);
+	DeleteGO(m_scoreRiseSE);
 }
 
 
@@ -149,13 +151,30 @@ void Score::TextScore()
 
 void Score::AddScore(int value)
 {
+	SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+
 	m_score += value;
+
+	/** スコアが増えるSEを再生する */
+	if (soundManager)
+	{
+		m_scoreRiseSE = soundManager->PlayingSE(SoundSE::enScoreRiseSE, false);
+	}
+
 }
 
 
 void Score::DecreaseScore(int value)
 {
+	SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+
 	m_score -= value;
+
+	/** スコアが減るSEを再生する */
+	if (soundManager)
+	{
+		m_scoreDecreaseSE = soundManager->PlayingSE(SoundSE::enScoreDecreaseSE, false);
+	}
 
 	/** スコアがマイナスにならないようにする */
 	if (m_score < 0)

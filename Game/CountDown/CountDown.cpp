@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CountDown.h"
+#include "SoundManager/SoundManager.h"
 
 namespace
 {
@@ -16,12 +17,20 @@ namespace
 	const int StartHIGHT = 500.0f;
 }
 
+CountDown::~CountDown()
+{
+	/** カウントダウンの音を削除 */
+	DeleteGO(m_countDownSE);
+}
+
 bool CountDown::Start()
 {
 	m_countDown1.Init(FILEPATH1, GAMECLEAR_WIDTH, GAMEOVER_HIGHT);
 	m_countDown2.Init(FILEPATH2, GAMECLEAR_WIDTH, GAMEOVER_HIGHT);
 	m_countDown3.Init(FILEPATH3, GAMECLEAR_WIDTH, GAMEOVER_HIGHT);
 	m_countDownStart.Init(FILEPATHStart, StartWIDTH, StartHIGHT);
+
+	
 	return true;
 }
 
@@ -70,6 +79,18 @@ void CountDown::InCountDown()
 	{
 		m_isCountDown = false;
 	}
+
+	/** カウントダウンが始まったら */
+	if (m_Show3)
+	{
+		 SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+		 if (soundManager)
+		 {
+			 /** カウントダウンの音を再生 */
+			 m_countDownSE = soundManager->PlayingSE(SoundSE::enCountDownSE, false);
+		 }
+	}
+
 }
 
 

@@ -174,12 +174,12 @@ void Game::Update()
 			return;
 		}
 		DeleteGO(p_inGameBGM);
-    
+
 		/** ポーズ画面をアクティブにする */
 		m_pause->Activate();
 		m_pause->SetIsPause(true);
 
-  }
+	}
 	//クリア処理
 	Clear();
 	//ゲームオーバー処理

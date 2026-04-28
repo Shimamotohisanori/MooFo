@@ -8,6 +8,7 @@ enum SoundBGM
 	enInGameBGM,
 	enGameClearBGM,
 	enGameOverBGM,
+	enGameLoadingBGM,
 	enBGMNum
 };
 
@@ -21,6 +22,10 @@ enum SoundSE
 	enUFOFlyingSE,
 	enUFOTakeAwaySE,
 	enWalkSE,
+	enScoreDecreaseSE,
+	enScoreRiseSE,
+	enAddTimeSE,
+	enCountDownSE,
 	enSENum
 };
 class SoundManager : public IGameObject

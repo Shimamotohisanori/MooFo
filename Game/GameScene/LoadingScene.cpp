@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "LoadingScene.h"
+#include "SoundManager/SoundManager.h"
 
 namespace
 {
@@ -38,29 +39,42 @@ bool LoadingScene::Start()
 	m_blackLoadingSpriteRender.Init(BLACKLODING_FILEPATH, BLACKLOADING_WIDTH, BLACKLOADING_HEIGHT);
 	m_blackLoadingSpriteRender.SetPosition(Vector3(0.0f, 0.0f, 0.0f));
 	m_blackLoadingSpriteRender.Update();
+	
 	/** スプライトの初期化*/
 	m_loadingSpriteRender[0].Init(COWHOOKLOAD_FILEPATH,LOADING_WIDTH,LOADING_HEIGHT);
 	m_loadingSpriteRender[1].Init(COWRESCUELOAD_FILEPATH,LOADING_WIDTH,LOADING_HEIGHT);
 	m_loadingSpriteRender[2].Init(GAMECLEARLOAD_FILEPATH,LOADING_WIDTH,LOADING_HEIGHT);
+	
 	/** スプライトの位置を設定*/
 	for (int i = 0; i < 3; i++)
 	{
 		m_loadingSpriteRender[i].SetPosition(Vector3(0.0f, 100.0f, 0.0f));
 	}
+	
 	for (int i = 0; i < 3; i++)
 	{
 		m_loadingSpriteRender[i].Update();
 	}
+	
 	/** Loading文字の初期化*/
 	m_loadingTextSpriteRender.Init(LOADINGTEXT_FILEPATH, LOADINGWARD_WIDTH, LOADINGWARD_HEIGHT);
+	
 	/** Loading文字の位置を設定*/
 	m_loadingTextSpriteRender.SetPosition(Vector3(750.0f, -450.0f, 0.0f));
 	m_loadingTextSpriteRender.Update();
+	
 	/** 最初はLoadingの文字は完全に表示しておく*/
 	m_loadingTextAlpha = 1.0f;
+	
 	/** 最初はフェードインしていない状態にする*/
 	m_isFadeIn = false;
 	m_currentImage = 0;
+	
+	SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+
+	/** ローディング中の音源を再生する*/
+	m_loadingSound = soundManager->PlayingBGM(SoundBGM::enGameLoadingBGM, true);
+
 	return true;
 }
 
@@ -112,6 +126,10 @@ void LoadingScene::InLoading()
 			/** 次のシーンをロードする関数がセットされているなら呼び出す*/
 			m_nextSceneLoading();
 		}
+		
+		/** ローディング中の音源を削除する */
+		DeleteGO(m_loadingSound);
+
 		/** 現在のシーンを削除*/
 		DeleteGO(this);
 	}

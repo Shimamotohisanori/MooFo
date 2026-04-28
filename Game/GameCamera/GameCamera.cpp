@@ -3,6 +3,7 @@
 #include "Rope/Rope.h"
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "Source/Actor/Character/Player/Player.h"
+#include "SoundManager/SoundManager.h"
 
 namespace
 {
@@ -37,6 +38,7 @@ GameCamera::GameCamera()
 
 GameCamera::~GameCamera()
 {
+	DeleteGO(m_cowCatchSE);
 }
 
 
@@ -248,7 +250,15 @@ void GameCamera::CheckCameraHitCow()
 			m_rope->OnHitCow(cow);
 
 			/** 牛を捕まえたフラグを立てる */
-			m_isCowCaptured = true; 
+			m_isCowCaptured = true;
+
+			/** 牛を捕まえた音を再生 */
+			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+			if (soundManager)
+			{
+				m_cowCatchSE = soundManager->PlayingSE(SoundSE::enCowCatchSE, false);
+			}
+
 			return;
 		}
 	}

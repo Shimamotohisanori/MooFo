@@ -58,6 +58,9 @@ private:
 	/** ロープを投げている間のforwardを固定する */
 	Vector3 m_ropeForward;
 
+	/** 牛を捕まえた時の音 */
+	SoundSource* m_cowCatchSE = nullptr;
+
 	/** カメラがロープの事を追従し始めたかどうかのフラグ */
 	bool m_isRopeCameraStarted = false;
 

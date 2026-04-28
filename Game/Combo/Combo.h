@@ -76,8 +76,13 @@ private:
 
 	/** タイマー */
 	Timer* m_timer = nullptr;
+	
 	/** タイムを追加する際に出すUI */
 	AddTimerUI* m_addTimerUI = nullptr;
+	
+	/** 時間が増える際の音 */
+	SoundSource* m_addTimerSE = nullptr;
+
 	/** コンボの変数 */
 	int m_combo = 0;
 
