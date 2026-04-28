@@ -27,7 +27,9 @@ namespace
 		"ThrowRopeSE",
 		"UFOFlyingSE",
 		"UFOTakeAwaySE",
-		"WalkSE"
+		"WalkSE",
+		"ScoreDecreaseSE",
+		"ScoreRiseSE",
 	};
 }
 

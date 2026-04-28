@@ -22,6 +22,8 @@ enum SoundSE
 	enUFOFlyingSE,
 	enUFOTakeAwaySE,
 	enWalkSE,
+	enScoreDecreaseSE,
+	enScoreRiseSE,
 	enSENum
 };
 class SoundManager : public IGameObject

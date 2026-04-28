@@ -61,6 +61,11 @@ private:
 	/** ゲームクリア・ゲームオーバーのときにスコアを表示するかどうかのフラグ */
 	bool m_isResult = false;
 
+	/** スコアが減る際のSE */
+	SoundSource* m_scoreDecreaseSE = nullptr;
+
+	/** スコアが増える際のSE */
+	SoundSource* m_scoreRiseSE = nullptr;
 
 	/** ５桁(万・千・百・十・一)の五桁を描画するスプライト */
 	SpriteRender m_digitSprite[5][10];
