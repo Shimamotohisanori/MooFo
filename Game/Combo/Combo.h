@@ -1,6 +1,7 @@
 #pragma once
 class Timer;
 class Score;
+class AddTimerUI;
 /** コンボクラス */
 class Combo : public IGameObject
 {
@@ -53,11 +54,9 @@ public:
 	/** コンボしたかどうか判定するフラグ */
 	bool IsCombo()const;
 
-
 private:
 	/** コンボの描画関数 */
 	void ViewComboSprite();
-
 
 private:
 	/** ファイルパス */
@@ -77,7 +76,8 @@ private:
 
 	/** タイマー */
 	Timer* m_timer = nullptr;
-
+	/** タイムを追加する際に出すUI */
+	AddTimerUI* m_addTimerUI = nullptr;
 	/** コンボの変数 */
 	int m_combo = 0;
 
