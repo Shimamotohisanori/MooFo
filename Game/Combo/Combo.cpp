@@ -2,7 +2,7 @@
 #include "Combo.h"
 #include "GameTimer/Timer.h"
 #include "Score/Score.h"
-
+#include "AddTimerUI.h"
 namespace
 {
 	const char* COMBO_NUMBER_FILEPATH = "Assets/sprite/NumberUI/";
@@ -159,6 +159,11 @@ void Combo::AddCombo()
 		{
 			//コンボすると３秒追加
 			m_timer->AddTimer(3.0f);
+			m_addTimerUI = FindGO<AddTimerUI>("addTimerUI");
+			if (m_addTimerUI)
+			{
+				m_addTimerUI->Play();
+			}
 		}
 	}
 }

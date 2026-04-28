@@ -15,6 +15,7 @@ class CowNumberOfRescues;
 class CowCaptureController;
 class Map;
 class Combo;
+class AddTimerUI;
 
 //namespace
 //{
@@ -151,6 +152,9 @@ private:
 
 	/** コンボ */
 	Combo* m_combo;
+
+	/** タイマー追加UI */
+	AddTimerUI* m_addTimerUI;
 
 	/** 生きている牛のリスト */
 	std::vector<Cow*> m_aliveCows;

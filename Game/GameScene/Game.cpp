@@ -17,6 +17,8 @@
 #include "Map/Map.h"
 #include "nature/SkyCube.h"
 #include "Combo/Combo.h"
+#include"AddTimerUI.h"
+
 
 namespace
 {
@@ -75,6 +77,8 @@ Game::~Game()
 	/** ミニマップの削除 */
 	DeleteGO(m_map);
 
+	/** タイマー追加UIの削除 */
+	DeleteGO(m_addTimerUI);
 }
 bool Game::Start()
 {
@@ -138,6 +142,9 @@ bool Game::Start()
 
 	/** コンボの生成 */
 	m_combo = NewGO<Combo>(0, "combo");
+
+	/** タイマー追加UIの生成 */
+	m_addTimerUI = NewGO<AddTimerUI>(0, "addTimerUI");
 
 	InitSkyCube();
 
