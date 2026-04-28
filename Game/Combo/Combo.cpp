@@ -3,6 +3,7 @@
 #include "GameTimer/Timer.h"
 #include "Score/Score.h"
 #include "GameTimer/AddTimerUI.h"
+#include "SoundManager/SoundManager.h"
 namespace
 {
 	const char* COMBO_NUMBER_FILEPATH = "Assets/sprite/NumberUI/";
@@ -40,6 +41,7 @@ Combo::Combo()
 
 Combo::~Combo()
 {
+	DeleteGO(m_addTimerSE);
 }
 
 bool Combo::Start()
@@ -163,6 +165,12 @@ void Combo::AddCombo()
 			if (m_addTimerUI)
 			{
 				m_addTimerUI->Play();
+			}
+
+			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+			if (soundManager)
+			{
+				m_addTimerSE = soundManager->PlayingSE(SoundSE::enAddTimeSE, false);
 			}
 		}
 	}
