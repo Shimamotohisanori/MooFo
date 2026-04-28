@@ -5,7 +5,7 @@
 #include "GameScene/Game.h"
 #include"GameScene/Title.h"
 #include "SoundManager/SoundManager.h"
-
+#include <time.h>
 
 void ReportLiveObjects()
 {
@@ -36,6 +36,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	NewGO<Title>(0, "title");
 
 	NewGO<SoundManager>(0, "soundmanager");
+
+	srand(time(nullptr));
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
 	//////////////////////////////////////
