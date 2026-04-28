@@ -30,7 +30,7 @@ namespace
 
 	/** ‹‚ğ˜A‚ê‚Ä‚¢‚­‚Æ‚«‚ÌUFO‚Ì‚‚³‚Æ‹‚ğ˜A‚ê‚Ä‚¢‚­‘¬‚³ */
 	constexpr float CAPTURE_HEIGHT = 150.0f;
-	constexpr float CAPTURE_SPEED = 0.5f;
+	constexpr float CAPTURE_SPEED = 0.2f;
 
 	/** ‹‚ğŒ©‚Â‚¯‚é‚Æ‚«‚Ì‹——£ */
 	constexpr float CAPTURE_RANGE = 70.0f;
