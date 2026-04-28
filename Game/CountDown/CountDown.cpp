@@ -81,13 +81,16 @@ void CountDown::InCountDown()
 	}
 
 	/** カウントダウンが始まったら */
-	if (m_Show3)
+	if (m_isCountDown && !m_isPlayCountDownSE)
 	{
 		 SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
 		 if (soundManager)
 		 {
 			 /** カウントダウンの音を再生 */
 			 m_countDownSE = soundManager->PlayingSE(SoundSE::enCountDownSE, false);
+
+			 /** カウントダウンの音を出したフラグを立てる */
+			 m_isPlayCountDownSE = true;
 		 }
 	}
 

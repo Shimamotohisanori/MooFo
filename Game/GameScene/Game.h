@@ -17,11 +17,6 @@ class Map;
 class Combo;
 class AddTimerUI;
 
-//namespace
-//{
-//	constexpr float UFO_POSY = 70.0f;
-//}
-
 /** UFOの情報をまとめる構造体 */
 struct UFOinfo
 {
@@ -101,9 +96,6 @@ public:
 private:
 	/** 牛が生まれる関数 */
 	void SpawnCow();
-
-	/** 空出力関数 */
-	void InitSkyCube();
 
 
 private:

@@ -24,6 +24,7 @@ namespace
 {
 	/**マジックナンバー対策*/
 	const uint8_t COW_NUM = 10;
+	/** 牛のランダムスポーン範囲 */
 	const int RANDOM_SPAWN_RANGE = 300;
 	const int RANDOM_SPAWN_RANGE_DOUBLE = 600;
 	const float NEW_SPAWN_TIMER = 3.0f;
@@ -82,71 +83,49 @@ Game::~Game()
 }
 bool Game::Start()
 {
-	/** カウントダウンの生成 */
-	m_countDown = NewGO<CountDown>(0, "countdown");
+	/** ロード画面で生成済みのオブジェクトを参照するだけにする */
+	m_player = FindGO<Player>("player");
+	m_stage = FindGO<Stage>("stage");
+	m_gameCamera = FindGO<GameCamera>("gameCamera");
+	m_skyCube = FindGO<SkyCube>("skyCube");
+	m_inGameSound = FindGO<SoundManager>("soundmanager");
 
-	/** プレイヤーの生成 */
-	m_player = NewGO <Player>(0, "player");
-
-	/** ステージの生成 */
-	m_stage = NewGO<Stage>(0, "stage");
 	
-	/** 牛の生成 */
-	for (int i = 0; i < COW_NUM; i++)
-	{
-		Cow* cow = NewGO<Cow>(0, "cow");
-
-		/** 毎回ランダムな位置を生成する*/
-		
-		/** ランダムスポーン位置 */ 
-		Vector3 randomPos;
-
-		/** ランダムスポーン位置を生成する */
-		/** XZ平面の - 300から300の範囲でランダムな位置を生成する */
-		randomPos.x = (rand() % RANDOM_SPAWN_RANGE_DOUBLE) - RANDOM_SPAWN_RANGE;
-		randomPos.y = 0.0f;
-		randomPos.z = (rand() % RANDOM_SPAWN_RANGE_DOUBLE) - RANDOM_SPAWN_RANGE;
-
-		cow->SetPosition(randomPos);
-		m_aliveCows.push_back(cow);
-	}
-
-	/** UFOの生成 */
-	for (int i = 0; i < _countof(UFO_INFOMATIONS); i++)
-	{
-		m_UFO[i] = NewGO<UFO>(0, UFO_INFOMATIONS[i].objectName.c_str());
-		m_UFO[i]->SetPosition(UFO_INFOMATIONS[i].pos);
-	}
 
 	/** スコアの生成 */
 	m_score = NewGO<Score>(0, "score");
 
-	/** 牛の救出数の生成 */
+	/** 牛の救出数クラスの生成 */
 	m_cowNumberOfRescues = NewGO<CowNumberOfRescues>(0, "cownumberofrescues");
 
 	/** タイマーの生成 */
 	m_timer = NewGO<Timer>(0, "timer");
 
-	/** ポーズ画面の生成をするが非アクティブにする */
+	/** ポーズの生成 */
 	m_pause = NewGO<Pause>(0, "pause");
 	m_pause->Deactivate();
-	
-	/** サウンドマネージャーの生成 */
-	m_inGameSound = FindGO<SoundManager>("soundmanager");	
 
-	/** ゲームカメラの生成 */
-	m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
-
-	/** ミニマップの生成 */
+	/** マップを生成 */
 	m_map = NewGO<Map>(0, "map");
 
-	/** コンボの生成 */
+	/** コンボを生成 */
 	m_combo = NewGO<Combo>(0, "combo");
 
-	/** タイマー追加UIの生成 */
+	/** 時間を増やすクラスの生成 */
 	m_addTimerUI = NewGO<AddTimerUI>(0, "addTimerUI");
 
-	InitSkyCube();
+	/** カウントダウンはロード側で作っているなら FindGO、ゲーム側でだけなら NewGO */
+	m_countDown = NewGO<CountDown>(0, "countdown");
+
+	/** UFO は名前（またはインデックス）で取得 */
+	for (int i = 0; i < EnUFO_Num; i++)
+	{
+		m_UFO[i] = FindGO<UFO>(UFO_INFOMATIONS[i].objectName.c_str());
+	}
+
+	m_isSound = false;
+	m_isDead = false;
+	m_spawnTimer = 0.0f;
 
 	return true;
 }
@@ -154,7 +133,6 @@ bool Game::Start()
 
 void Game::Update()
 {
-
 	if (!m_isSound)
 	{
 		p_inGameBGM = m_inGameSound->PlayingBGM(SoundBGM::enInGameBGM, false);
@@ -293,27 +271,6 @@ void Game::SpawnCow()
 		}
 	}
 
-}
-
-void Game::InitSkyCube()
-{
-	/** 現在の空を破棄*/
-	DeleteGO(m_skyCube);
-
-	/** 空を出す*/
-	m_skyCube = NewGO<SkyCube>(0, "skyCube");
-
-	/** 空の種類を先ほど破棄した空の変数に代入する*/
-	m_skyCube->SetType((EnSkyCubeType)m_skyCubeType);
-
-	/** 空の大きさを調整*/
-	m_skyCube->SetScale(10000.0f);
-
-	/** 環境光のためのIBLテクスチャをセットする*/
-	/** このコードは、要するにg_renderingEngineのクラスの中にある
-	 *SetAmbientByIBLTextureていう関数の中にある
-	 *光の色が建物に反映される値を変更してる*/
-	g_renderingEngine->SetAmbientByIBLTexture(m_skyCube->GetTextureFilePath(), 0.6f);
 }
 
 void Game::Render(RenderContext& rc)

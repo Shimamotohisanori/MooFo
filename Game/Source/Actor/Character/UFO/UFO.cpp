@@ -62,9 +62,6 @@ UFO::~UFO()
 
 bool UFO::Start()
 {
-	m_countdown = FindGO<CountDown>("countdown");
-	m_score = FindGO<Score>("score");
-	m_pause = FindGO<Pause>("pause");
 	m_cowCaptureController =NewGO<CowCaptureController>(0,"cowcapturecontroller");
 	/** それぞれのUFOに自分自身を設定 */
 	m_cowCaptureController->SetUFO(this);
@@ -79,6 +76,14 @@ bool UFO::Start()
 
 void UFO::Update()
 {
+	m_countdown = FindGO<CountDown>("countdown");
+	m_pause = FindGO<Pause>("pause");
+	m_score = FindGO<Score>("score");
+
+	if(m_pause == nullptr || m_countdown == nullptr)
+	{
+		return;
+	}
 	/** ポーズ中はUFOを動かさない */
 	if (m_pause->GetIsPause())
 	{

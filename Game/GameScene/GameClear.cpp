@@ -84,6 +84,7 @@ void GameClear::InGameClear()
 	if (g_pad[0]->IsPressAnyKey())
 	{
 		m_loadingScene = NewGO<LoadingScene>(0, "loading");
+		m_loadingScene->SetLoadType(LoadingScene::LoadType::ToTitleScene);
 		m_loadingScene->SetNextScene([]()
 			{
 				/** タイトルの画像を呼び出す*/
