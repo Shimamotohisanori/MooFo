@@ -25,6 +25,7 @@ enum SoundSE
 	enScoreDecreaseSE,
 	enScoreRiseSE,
 	enAddTimeSE,
+	enCountDownSE,
 	enSENum
 };
 class SoundManager : public IGameObject

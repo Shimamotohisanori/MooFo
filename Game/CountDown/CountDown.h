@@ -4,7 +4,7 @@ class CountDown : public IGameObject
 {
 public:
 	CountDown() {};
-	~CountDown() {};
+	~CountDown();
 
 	bool  Start();
 	void Update();
@@ -19,6 +19,10 @@ private:
 	SpriteRender m_countDown2;
 	SpriteRender m_countDown1;
 	SpriteRender m_countDownStart;
+
+	/** カウントダウンの音 */
+	SoundSource* m_countDownSE = nullptr;
+
 	//カウントダウン(3秒) + START(1秒)の文字の出力を行う
 	float m_CountDownTime = 4.0f;
 	//trueの間だけカウントダウンが進む
