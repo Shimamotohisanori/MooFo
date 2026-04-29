@@ -1,8 +1,9 @@
 ﻿#include "stdafx.h"
 #include "Source/Actor/Character/UFO/CowCaptureController.h"
-#include"UFO.h"
-#include"CountDown/CountDown.h"
-#include"Pause/Pause.h"
+#include "UFO.h"
+#include "CountDown/CountDown.h"
+#include "Pause/Pause.h"
+#include "GameScene/Game.h"
 namespace
 {
 	const char* LIGHT_FILEPATH = "Assets/modelData/UFO/UFOLight.tkm";
@@ -75,9 +76,16 @@ bool CowCaptureController::Start()
 
 void CowCaptureController::Update()
 {
+	m_game = FindGO<Game>("game");
 	m_countdown = FindGO<CountDown>("countdown");
 	m_pause = FindGO<Pause>("pause");
-	if (m_pause == nullptr || m_countdown == nullptr)
+	if (m_pause == nullptr || m_countdown == nullptr || m_game == nullptr)
+	{
+		return;
+	}
+
+	/** タイムアウトしているときは処理を止める*/
+	if (m_game->GetIsTimeOut())
 	{
 		return;
 	}

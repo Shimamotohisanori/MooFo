@@ -2,6 +2,7 @@
 class Player;
 class Rope;
 class Cow;
+class Game;
 class GameCamera : public IGameObject
 {
 
@@ -49,6 +50,7 @@ private:
 	Player* m_player;
 	Rope* m_rope;
 	Cow* m_cow;
+	Game* m_game;
 
 	Vector3 m_cameraPos;
 

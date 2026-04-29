@@ -124,18 +124,23 @@ bool Game::Start()
 	}
 
 	m_isSound = false;
-	m_isDead = false;
 	m_spawnTimer = 0.0f;
 
+	m_timeOutImage.Init("Assets/sprite/NumberUI/TimeOut.DDS", 100, 100);
+	m_timeOutImage.SetPosition(Vector3(0.0f, 0.0f, 0.0f));
+	m_timeOutImage.Update();
+	
 	return true;
 }
 
 
 void Game::Update()
 {
+
+	/** 音楽が再生されていない場合 */
 	if (!m_isSound)
 	{
-		p_inGameBGM = m_inGameSound->PlayingBGM(SoundBGM::enInGameBGM, false);
+		m_inGameBGM = m_inGameSound->PlayingBGM(SoundBGM::enInGameBGM, true);
 		m_isSound = true;
 	}
 	//ポーズ中はゲーム処理をしない
@@ -146,24 +151,23 @@ void Game::Update()
 	//セレクトボタンを押したら
 	if (g_pad[0]->IsTrigger(enButtonSelect))
 	{
-		//カウントダウン中はPauseの処理をしない
-		if (m_countDown->GetCountDown())
+		/** カウントダウン中かタイムアウトなら */
+		if (m_countDown->GetCountDown() && m_isTimeOut)
 		{
 			return;
 		}
-		DeleteGO(p_inGameBGM);
+		DeleteGO(m_inGameBGM);
 
 		/** ポーズ画面をアクティブにする */
 		m_pause->Activate();
 		m_pause->SetIsPause(true);
 
 	}
-	//クリア処理
-	Clear();
-	//ゲームオーバー処理
-	Death();
 
 	SpawnCow();
+
+	/* タイムアウト処理 */
+	TimeOut();
 
 	// 毎フレームロープに最新の牛リストを渡す
 	Rope* rope = FindGO<Rope>("rope");
@@ -182,65 +186,65 @@ void Game::Update()
 
 void Game::Clear()
 {
-	//ゲームクリアの画像にスコアを渡すための変数
+	/** ゲームクリアの画像にスコアを渡すための変数 */
 	int ClearfinalScore = 0;
 	if (m_score)
 	{
 		ClearfinalScore = m_score->GetScore();
 	}
-	//ゲームクリアの画像に牛の救出数を渡すための変数
+
+	/** ゲームクリアの画像に牛の救出数を渡すための変数 */
 	int ClearfinalRescue = 0;
 	if (m_cowNumberOfRescues)
 	{
 		ClearfinalRescue = m_cowNumberOfRescues->GetNumberOfRescues();
 	}
-	if (m_timer->GetTimer() <= 0.0f && m_cowNumberOfRescues->GetNumberOfRescues() >= 10)
-	{
-		//ゲームクリアの画像を呼び出す
-		m_gameClear = NewGO<GameClear>(0, "gameClear");
-		//ゲームクリアの画像にスコアを渡す
-		m_gameClear->SetFinalClearScore(ClearfinalScore);
-		//ゲームクリアの画像に牛の救出数を渡す
-		m_gameClear->SetFinalClearRescue(ClearfinalRescue);
 
-		DeleteGO(p_inGameBGM);
-		DeleteGO(this);
-	}
+	/** ゲームクリアの画像を呼び出す */
+	m_gameClear = NewGO<GameClear>(0, "gameClear");
+	/** ゲームクリアの画像にスコアを渡す */
+	m_gameClear->SetFinalClearScore(ClearfinalScore);
+	/** ゲームクリアの画像に牛の救出数を渡す */
+	m_gameClear->SetFinalClearRescue(ClearfinalRescue);
+
+	DeleteGO(m_inGameBGM);
+	DeleteGO(m_timeOutSE);
+	DeleteGO(this);
 }
 
 void Game::Death()
 {
-	if (m_isDead)return;
-	//ここでスコアを取得
+	/** ここでスコアを取得 */
 	int finalScore = 0;
 	if (m_score)
 	{
 		finalScore = m_score->GetScore();
 	}
-	//牛の救出数を取得する変数
+
+	/** 牛の救出数を取得する変数 */
 	int finalRescue= 0;
 	if (m_cowNumberOfRescues)
 	{
 		finalRescue = m_cowNumberOfRescues->GetNumberOfRescues();
 	}
 
-	if (m_timer->GetTimer() <=0.0f &&m_cowNumberOfRescues->GetNumberOfRescues( ) < 10)
-	{
-		m_isDead = true;
-		//ゲームオーバーの画像を呼び出す
-		m_gameOver = NewGO<GameOver>(0, "gameover");
-		//ゲームオーバーの画像にスコアを渡す
-		m_gameOver->SetFinalScore(finalScore);
-		//ゲームオーバーの画像に牛の救出数を渡す
-		m_gameOver->SetFinalRescue(finalRescue);
-		DeleteGO(p_inGameBGM);
-		DeleteGO(this);
-	}
+	/** ゲームオーバーの画像を呼び出す */
+	m_gameOver = NewGO<GameOver>(0, "gameover");
+	
+	/** ゲームオーバーの画像にスコアを渡す */
+	m_gameOver->SetFinalScore(finalScore);
+	
+	/** ゲームオーバーの画像に牛の救出数を渡す */
+	m_gameOver->SetFinalRescue(finalRescue);
+	
+	DeleteGO(m_inGameBGM);
+	DeleteGO(m_timeOutSE);
+	DeleteGO(this);
 }
 
 void Game::SpawnCow()
 {
-	if (m_timer->GetTimer() <= 4.0f)
+	if (m_timer->GetTimer() <= 4.0f || m_isTimeOut)
 	{
 		//タイマーが4秒以下なら牛を補充しない
 		return;
@@ -273,7 +277,60 @@ void Game::SpawnCow()
 
 }
 
+void Game::TimeOut()
+{
+	/** タイマーとタイムアウトフラグを見る*/
+	if (m_timer->GetTimer() <= 0.0f && !m_isTimeOut)
+	{
+		/** タイムアウトフラグを立てる */
+		m_isTimeOut = true;
+
+		m_timeOutSE = m_inGameSound->PlayingSE(SoundSE::enTimeOutSE, false);
+		m_timeOutSE->SetVolume(5.0f);
+	}
+
+	/** タイムアウトフラグが立っているなら */
+	if (m_isTimeOut)
+	{
+		m_timeOutTimer += g_gameTime->GetFrameDeltaTime();
+		
+		/** タイムアウトから5秒以上経過しているなら */
+		if (m_timeOutTimer > 5.0f)
+		{
+			/** ゲームオーバーかゲームクリアかを判断する */
+			if (m_cowNumberOfRescues->GetNumberOfRescues() >= 10)
+			{
+				/** ゲームクリアの処理 */
+				Clear();
+			}
+
+			else
+			{
+				/** ゲームオーバーの処理 */
+				Death();
+			}
+
+			m_timeOutTimer = 0.0f;
+		}
+
+		/** タイムアウト画像の大きさを徐々に大きくする */
+		/** 目標のスケールを設定 */
+		Vector3 targetScale = Vector3(10.0f, 10.0f, 1.0f);
+
+		m_timeOutImageScale.x += (targetScale.x - m_timeOutImageScale.x) * 0.1f;
+		m_timeOutImageScale.y += (targetScale.y - m_timeOutImageScale.y) * 0.1f;
+
+		m_timeOutImage.SetScale(m_timeOutImageScale);
+
+		m_timeOutImage.Update();
+	}
+
+}
+
 void Game::Render(RenderContext& rc)
 {
-
+	if (m_isTimeOut)
+	{
+		m_timeOutImage.Draw(rc);
+	}
 }

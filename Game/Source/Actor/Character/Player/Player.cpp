@@ -98,7 +98,13 @@ void Player::Update()
 	m_countDown = FindGO<CountDown>("countdown");
 	m_pause = FindGO<Pause>("pause");
 
-	if (m_pause == nullptr || m_countDown == nullptr)
+	if (m_pause == nullptr || m_countDown == nullptr || m_game == nullptr)
+	{
+		return;
+	}
+
+	/*タイムアウトしていたら操作できないようにする*/
+	if (m_game->GetIsTimeOut())
 	{
 		return;
 	}

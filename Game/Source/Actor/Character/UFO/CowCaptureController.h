@@ -2,6 +2,7 @@
 class UFO;
 class CountDown;
 class Pause;
+class Game;
 class CowCaptureController : public IGameObject
 {
 	public:
@@ -69,5 +70,6 @@ private:
 	UFO* m_ufo = nullptr;
 	Pause* m_pause;
 	CountDown* m_countdown;
+	Game* m_game;
 };
 

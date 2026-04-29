@@ -76,14 +76,22 @@ bool UFO::Start()
 
 void UFO::Update()
 {
+	m_game = FindGO<Game>("game");
 	m_countdown = FindGO<CountDown>("countdown");
 	m_pause = FindGO<Pause>("pause");
 	m_score = FindGO<Score>("score");
 
-	if(m_pause == nullptr || m_countdown == nullptr)
+	if(m_pause == nullptr || m_countdown == nullptr || m_game == nullptr)
 	{
 		return;
 	}
+
+	/** タイムアウトしているときはUFOを動かさない */
+	if (m_game->GetIsTimeOut())
+	{
+		return;
+	}
+
 	/** ポーズ中はUFOを動かさない */
 	if (m_pause->GetIsPause())
 	{

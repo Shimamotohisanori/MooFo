@@ -5,6 +5,7 @@ class Player;
 class CountDown;
 class UFO;
 class Pause;
+class Game;
 class Cow : public Character
 {
 public:
@@ -93,6 +94,9 @@ private:
 
 	/** ポーズ */
 	Pause* m_pause = nullptr;
+
+	/** ゲーム */
+	Game* m_game = nullptr;
 
 	enum EnCowState
 	{

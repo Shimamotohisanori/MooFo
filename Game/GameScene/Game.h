@@ -92,10 +92,19 @@ public:
 		return ufos;
 	}
 
+	/** タイムアウトフラグの取得関数 */
+	bool GetIsTimeOut()
+	{
+		return m_isTimeOut;
+	}
+
 
 private:
 	/** 牛が生まれる関数 */
 	void SpawnCow();
+
+	/** タイムアウト処理 */
+	void TimeOut();
 
 
 private:
@@ -134,7 +143,10 @@ private:
 	SoundManager* m_inGameSound;
 
 	/** ゲーム中のBGM */
-	SoundSource* p_inGameBGM;
+	SoundSource* m_inGameBGM;
+
+	/** タイムアウト時のSE */
+	SoundSource* m_timeOutSE;
 
 	/** スコア */
 	Score* m_score;
@@ -147,6 +159,9 @@ private:
 
 	/** タイマー追加UI */
 	AddTimerUI* m_addTimerUI;
+
+	/** 終了画像 */
+	SpriteRender m_timeOutImage;
 
 	/** 生きている牛のリスト */
 	std::vector<Cow*> m_aliveCows;
@@ -164,14 +179,23 @@ private:
 	/** UFOの配列 */
 	UFO* m_UFO[EnUFO_Num];
 
+	/** タイムアウトの画像のスケール */
+	Vector3 m_timeOutImageScale = Vector3(0.5f, 0.5f, 1.0f);
+
 	/** スカイキューブのタイプ */
 	int m_skyCubeType = enSkyCubeType_Night;
 
 	/** 牛が生まれる時間 */
 	float m_spawnTimer = 0.0f;
 
+	/** タイムアウトからの経過時間 */
+	float m_timeOutTimer = 0.0f;
+
 	/** プレイヤーが死んでいたら */
 	bool m_isDead;
+
+	/** タイムアウトフラグ */
+	bool m_isTimeOut = false;
 
 };
 
