@@ -24,7 +24,13 @@ private:
 	SoundSource* m_countDownSE = nullptr;
 
 	//カウントダウン(3秒) + START(1秒)の文字の出力を行う
-	float m_CountDownTime = 4.0f;
+	float m_countDownTime = 4.0f;
+
+	/** カウントダウンのα値*/
+	float m_countDownAlpha = 1.0f;
+
+	/** カウントダウンのスケール値 */
+	float m_countDownScale = 0.5f;
 
 	//trueの間だけカウントダウンが進む
 	bool m_isCountDown = true;
