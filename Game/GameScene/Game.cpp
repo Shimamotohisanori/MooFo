@@ -136,9 +136,11 @@ bool Game::Start()
 
 void Game::Update()
 {
+
+	/** 音楽が再生されていない場合 */
 	if (!m_isSound)
 	{
-		p_inGameBGM = m_inGameSound->PlayingBGM(SoundBGM::enInGameBGM, false);
+		m_inGameBGM = m_inGameSound->PlayingBGM(SoundBGM::enInGameBGM, true);
 		m_isSound = true;
 	}
 	//ポーズ中はゲーム処理をしない
@@ -154,7 +156,7 @@ void Game::Update()
 		{
 			return;
 		}
-		DeleteGO(p_inGameBGM);
+		DeleteGO(m_inGameBGM);
 
 		/** ポーズ画面をアクティブにする */
 		m_pause->Activate();
@@ -205,7 +207,8 @@ void Game::Clear()
 	/** ゲームクリアの画像に牛の救出数を渡す */
 	m_gameClear->SetFinalClearRescue(ClearfinalRescue);
 
-	DeleteGO(p_inGameBGM);
+	DeleteGO(m_inGameBGM);
+	DeleteGO(m_timeOutSE);
 	DeleteGO(this);
 }
 
@@ -234,7 +237,8 @@ void Game::Death()
 	/** ゲームオーバーの画像に牛の救出数を渡す */
 	m_gameOver->SetFinalRescue(finalRescue);
 	
-	DeleteGO(p_inGameBGM);
+	DeleteGO(m_inGameBGM);
+	DeleteGO(m_timeOutSE);
 	DeleteGO(this);
 }
 
@@ -275,18 +279,21 @@ void Game::SpawnCow()
 
 void Game::TimeOut()
 {
-	/** タイマーが0以下なら */
-	if (m_timer->GetTimer() <= 0.0f)
+	/** タイマーとタイムアウトフラグを見る*/
+	if (m_timer->GetTimer() <= 0.0f && !m_isTimeOut)
 	{
 		/** タイムアウトフラグを立てる */
 		m_isTimeOut = true;
+
+		m_timeOutSE = m_inGameSound->PlayingSE(SoundSE::enTimeOutSE, false);
+		m_timeOutSE->SetVolume(5.0f);
 	}
 
 	/** タイムアウトフラグが立っているなら */
 	if (m_isTimeOut)
 	{
 		m_timeOutTimer += g_gameTime->GetFrameDeltaTime();
-
+		
 		/** タイムアウトから5秒以上経過しているなら */
 		if (m_timeOutTimer > 5.0f)
 		{

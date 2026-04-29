@@ -32,6 +32,7 @@ namespace
 		"ScoreRiseSE",
 		"AddTimeSE",
 		"CountDownSE",
+		"TimeOutSE"
 	};
 }
 

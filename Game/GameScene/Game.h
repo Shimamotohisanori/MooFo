@@ -143,7 +143,10 @@ private:
 	SoundManager* m_inGameSound;
 
 	/** ゲーム中のBGM */
-	SoundSource* p_inGameBGM;
+	SoundSource* m_inGameBGM;
+
+	/** タイムアウト時のSE */
+	SoundSource* m_timeOutSE;
 
 	/** スコア */
 	Score* m_score;
