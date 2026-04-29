@@ -4,7 +4,7 @@
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "Source/Actor/Character/Player/Player.h"
 #include "SoundManager/SoundManager.h"
-
+#include "GameScene/Game.h"
 namespace
 {
 	/** カメラ基本設定 */
@@ -44,11 +44,7 @@ GameCamera::~GameCamera()
 
 bool GameCamera::Start()
 {
-	m_player = FindGO<Player>("player");
-
-	m_rope = FindGO<Rope>("rope");
-
-	m_cow = FindGO<Cow>("cow");
+	
 
 	m_cameraPos.Set(0.0f, 125.0f, -250.0f);
 
@@ -61,6 +57,17 @@ bool GameCamera::Start()
 
 void GameCamera::Update()
 {
+	m_player = FindGO<Player>("player");
+	m_rope = FindGO<Rope>("rope");
+	m_cow = FindGO<Cow>("cow");
+	m_game = FindGO<Game>("game");
+
+	/** タイムアウトしているときはカメラを動かさない */
+	if (m_game == nullptr || m_game->GetIsTimeOut())
+	{
+		return;
+	}
+
 	Follow();
 	FollowRope();
 	CheckCameraHitCow();

@@ -57,7 +57,6 @@ namespace
 
 void Pause::Update()
 {
-	
 	Choose();
 	Select();
 

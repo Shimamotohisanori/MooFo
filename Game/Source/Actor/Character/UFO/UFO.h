@@ -7,6 +7,7 @@ class Cow;
 class Score;
 class CowCaptureController;
 class Pause;
+class Game;
 class UFO : public Character
 {
 public:
@@ -85,7 +86,8 @@ private:
 	/** UFOに見つかった牛 */
 	Cow* m_targetCow = nullptr;
 
-
+	/** ゲームシーン */
+	Game* m_game;
 
 	/*スコア*/
 	Score* m_score;

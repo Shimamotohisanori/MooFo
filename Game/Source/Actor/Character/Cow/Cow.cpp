@@ -54,6 +54,7 @@ bool Cow::Start()
 	m_cowmodelRender.Update();
 
 	
+
 	return true;
 }
 
@@ -63,8 +64,15 @@ void Cow::Update()
 	m_countdown = FindGO<CountDown>("countdown");
 	m_rope = FindGO<Rope>("rope");
 	m_pause = FindGO<Pause>("pause");
+	m_game = FindGO<Game>("game");
 
-	if (m_pause == nullptr || m_countdown == nullptr || m_player == nullptr || m_rope == nullptr)
+	if (m_pause == nullptr || m_countdown == nullptr || m_player == nullptr || m_rope == nullptr || m_game == nullptr)
+	{
+		return;
+	}
+
+	/** タイムアウトしているときは牛を動かさないようにするため早期リターン */
+	if (m_game->GetIsTimeOut())
 	{
 		return;
 	}
