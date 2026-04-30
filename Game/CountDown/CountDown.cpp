@@ -33,7 +33,11 @@ bool CountDown::Start()
 	m_countDown3.Init(FILEPATH3, GAMECLEAR_WIDTH, GAMEOVER_HIGHT);
 	m_countDownStart.Init(FILEPATHStart, StartWIDTH, StartHIGHT);
 
-	
+	SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+
+	/** カウントダウンの音を再生 */
+	m_countDownSE = soundManager->PlayingSE(SoundSE::enCountDownSE, false);
+
 	return true;
 }
 
@@ -98,20 +102,6 @@ void CountDown::InCountDown()
 	/** カウントダウンのスケール処理 */
 	/** この式はスケールの初期スケール + フェードインの進行度に応じたスケールの変化量 * α値 */
 	m_countDownScale = 0.5f + (localTime / FADE_TIME) * m_countDownAlpha;
-
-	/** カウントダウンが始まったら */
-	if (m_isCountDown && !m_isPlayCountDownSE)
-	{
-		 SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
-		 if (soundManager)
-		 {
-			 /** カウントダウンの音を再生 */
-			 m_countDownSE = soundManager->PlayingSE(SoundSE::enCountDownSE, false);
-
-			 /** カウントダウンの音を出したフラグを立てる */
-			 m_isPlayCountDownSE = true;
-		 }
-	}
 
 	m_countDown1.SetScale(Vector3(m_countDownScale, m_countDownScale, 1.0f));
 	m_countDown2.SetScale(Vector3(m_countDownScale, m_countDownScale, 1.0f));

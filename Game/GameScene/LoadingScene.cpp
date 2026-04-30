@@ -73,7 +73,6 @@ bool LoadingScene::Start()
 	
 	/** Loading文字の位置を設定*/
 	m_loadingTextSpriteRender.SetPosition(Vector3(750.0f, -450.0f, 0.0f));
-	m_loadingTextSpriteRender.Update();
 	
 	/** 最初はLoadingの文字は完全に表示しておく*/
 	m_loadingTextAlpha = 1.0f;
@@ -184,109 +183,35 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		/** ステージを生成*/
 	case 1: NewGO<Stage>(0, "stage"); break;
 
-		/** 牛を生成(10対分)*/
+		/** 牛を生成(10体分)*/
 	case 2:
-	{
-		Cow* cow = NewGO<Cow>(0, "cow");
-		cow->SetPosition(RandomCowPos());
-		m_tempCows.push_back(cow);
-	} break;
-
 	case 3:
-	{
-		Cow* cow = NewGO<Cow>(0, "cow");
-		cow->SetPosition(RandomCowPos());
-		m_tempCows.push_back(cow);
-	} break;
-
 	case 4:
-	{
-		Cow* cow = NewGO<Cow>(0, "cow");
-		cow->SetPosition(RandomCowPos());
-		m_tempCows.push_back(cow);
-	} break;
-
 	case 5:
-	{
-		Cow* cow = NewGO<Cow>(0, "cow");
-		cow->SetPosition(RandomCowPos());
-		m_tempCows.push_back(cow);
-	} break;
-
 	case 6:
-	{
-		Cow* cow = NewGO<Cow>(0, "cow");
-		cow->SetPosition(RandomCowPos());
-		m_tempCows.push_back(cow);
-	} break;
-
 	case 7:
-	{
-		Cow* cow = NewGO<Cow>(0, "cow");
-		cow->SetPosition(RandomCowPos());
-		m_tempCows.push_back(cow);
-	} break;
-
 	case 8:
-	{
-		Cow* cow = NewGO<Cow>(0, "cow");
-		cow->SetPosition(RandomCowPos());
-		m_tempCows.push_back(cow);
-	} break;
-
 	case 9:
-	{
-		Cow* cow = NewGO<Cow>(0, "cow");
-		cow->SetPosition(RandomCowPos());
-		m_tempCows.push_back(cow);
-	} break;
-
 	case 10:
-	{
-		Cow* cow = NewGO<Cow>(0, "cow");
-		cow->SetPosition(RandomCowPos());
-		m_tempCows.push_back(cow);
-	} break;
-
 	case 11:
-	{
-		Cow* cow = NewGO<Cow>(0, "cow");
-		cow->SetPosition(RandomCowPos());
-		m_tempCows.push_back(cow);
-	} break;
-
 	case 12:
-	{
+		{
 		Cow* cow = NewGO<Cow>(0, "cow");
 		cow->SetPosition(RandomCowPos());
 		m_tempCows.push_back(cow);
 	} break;
-
-		/** UFOを生成(4体分)*/
-	case 13:
-	{
-		auto ufo = NewGO<UFO>(0, UFO_INFOMATIONS[0].objectName.c_str());
-		ufo->SetPosition(UFO_INFOMATIONS[0].pos);
-	}break;
 	
+		/** UFOを生成(4体分)*/
+
+	case 13:
 	case 14:
-	{
-		auto ufo = NewGO<UFO>(0, UFO_INFOMATIONS[1].objectName.c_str());
-		ufo->SetPosition(UFO_INFOMATIONS[1].pos);
-	}break;
-
 	case 15:
-	{
-		auto ufo = NewGO<UFO>(0, UFO_INFOMATIONS[2].objectName.c_str());
-		ufo->SetPosition(UFO_INFOMATIONS[2].pos);
-	}break;
-
 	case 16:
 	{
-		auto ufo = NewGO<UFO>(0, UFO_INFOMATIONS[3].objectName.c_str());
-		ufo->SetPosition(UFO_INFOMATIONS[3].pos);
-	}break;
-		
+		UFO* ufo = NewGO<UFO>(0, "UFO");
+		ufo->SetPosition(UFO_INFOMATIONS[m_loadStep - 13].pos);
+		} break;
+
 		/** ゲームカメラを生成*/
 	case 17: NewGO<GameCamera>(0, "gameCamera"); break;
 
@@ -298,7 +223,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		SkyCube* sky = NewGO<SkyCube>(0, "skyCube");
 
 		/** タイプ設定*/
-		sky->SetType((EnSkyCubeType)m_skyCubeType);
+		sky->SetType(EnSkyCubeType::enSkyCubeType_Night);
 
 		/** スケール設定*/
 		sky->SetScale(10000.0f);

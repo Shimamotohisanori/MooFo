@@ -19,12 +19,6 @@ public:
 		return m_combo;
 	}
 
-	/** スコア倍率を取得する関数 */
-	int GetScoreMagnification()
-	{
-		return m_scoreMagnification;
-	}
-
 	/** コンボタイマーを減らす関数 */
 	void DecreaseComboTimer(float deltaTime)
 	{
@@ -85,9 +79,6 @@ private:
 
 	/** コンボの変数 */
 	int m_combo = 0;
-
-	/** スコアの倍率 */
-	int m_scoreMagnification = 1;
 
 	/** コンボするごとに制限時間をプラスする変数 */
 	float m_comboTimer = 0.0f;

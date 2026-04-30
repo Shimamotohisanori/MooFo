@@ -293,7 +293,6 @@ void GameCamera::HitCow()
 
 	/** ターゲットは牛 */
 	Vector3 target = hitCow->GetPosition() + Vector3(0.0f, 80.0f, 0.0f);
-	g_camera3D->SetTarget(target);
 
 	/** カメラ位置更新 */
 	Vector3 pos =

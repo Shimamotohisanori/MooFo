@@ -254,18 +254,12 @@ void Rope::RotateRope()
 void Rope::Render(RenderContext& rc)
 {
 	
-	
-	/** ロープが投げられていたらモデルを表示する
-	 * 牛に当たっていたら巻かれたロープを表示する */
+	m_rollModelRender.Draw(rc);
+
+	/** ロープを投げている最中か
+	牛に当たっているならロープモデルを描画する */
 	if (m_isThrowRope or m_isHitCow)
 	{
-		m_rollModelRender.Draw(rc);
 		m_ropeModelRender.Draw(rc);
-	}
-
-	/** 牛に当たってい無かった時は巻かれたロープモデルも表示する */
-	else
-	{
-		m_rollModelRender.Draw(rc);
 	}
 }

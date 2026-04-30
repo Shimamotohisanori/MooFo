@@ -205,7 +205,7 @@ void Cow::Rotation()
 	/** 移動ステートの時は移動方向に回転する。 */
 	if (m_rotationState == EnRotateState_MoveDir)
 	{
-		if (fabsf(m_moveDir.x) >= 0.0001f || fabsf(m_moveDir.z) >= 0.0001f)
+		if (fabsf(m_moveDir.x) >= 0.01f || fabsf(m_moveDir.z) >= 0.01f)
 		{
 			/** 移動方向に回転させる */
 			m_transform.GetRotation().SetRotationYFromDirectionXZ(m_moveDir);
@@ -380,14 +380,6 @@ void Cow::AvoidPlayer()
 		m_transform.SetRotation(m_transform.GetRotation());
 	}
 
-	else
-	{
-		/** プレイヤーから一定距離以上なら通常のステートに戻す */
-		m_cowState = 0;
-		m_rotationState = EnRotateState_MoveDir;
-	}
-
-
 }
 
 void Cow::PlayAnimation()
@@ -405,9 +397,6 @@ void Cow::PlayAnimation()
 			break;
 
 	case 1:
-			m_cowmodelRender.PlayAnimation(EnAnimation_Walk);
-			break;
-
 	case 2:
 			m_cowmodelRender.PlayAnimation(EnAnimation_Walk);
 			break;

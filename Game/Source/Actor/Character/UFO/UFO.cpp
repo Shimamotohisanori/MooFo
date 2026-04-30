@@ -65,7 +65,6 @@ bool UFO::Start()
 	m_cowCaptureController =NewGO<CowCaptureController>(0,"cowcapturecontroller");
 	/** ‚»‚ê‚¼‚ê‚ÌUFO‚ÉŽ©•ªŽ©g‚ðÝ’è */
 	m_cowCaptureController->SetUFO(this);
-	srand(time(nullptr));
 	m_ufomodelRender.SetScale(UFO_SCALE,UFO_SCALE,UFO_SCALE);
 	m_ufomodelRender.Init(GAMECLEAR_FILEPATH);
 	m_ufomodelRender.SetPosition(m_transform.GetPosition());
