@@ -32,8 +32,8 @@ namespace
 	constexpr int GAMEOVER_PRESS_TITLE_HEIGHT = 1700;
 
 	/** ゲームオーバーの画像の大きさ */
-	const int GAMEOVER_WIDTH = 1920.0f;
-	const int GAMEOVER_HIGHT = 1080.0f;
+	constexpr int GAMEOVER_WIDTH = 1920;
+	constexpr int GAMEOVER_HIGHT = 1080;
 
 	/** ゲームオーバー画面での点滅の最後の間隔 */
 	constexpr float GAMEOVER_FINAL_BLINK_INTERVAL = 1.0f;

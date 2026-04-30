@@ -42,7 +42,6 @@ private:
 	SoundSource* m_decisionSE;
 	LoadingScene* m_loadingScene;
 
-
 	enum enGameOverState
 	{
 		/** ゲームオーバーのフェードイン */

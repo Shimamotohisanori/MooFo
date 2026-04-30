@@ -11,34 +11,71 @@ class GameClear :public IGameObject
 	bool Start();
 	void Update();
 	void Render(RenderContext& rc);
-	//ゲームクリアで行う処理
+	
+	/** ゲームクリアで行う処理 */
 	void InGameClear();
 
-	//スコアをセットする関数
+	/** スコアをセットする関数 */
 	void SetFinalClearScore(int score);
 
-	//救出数をセットする関数
+	/** 救出数をセットする関数 */
 	void SetFinalClearRescue(int rescue);
+
+
 private:
-	SpriteRender m_GameClearSpriteRender;//ゲームクリアのスプライトレンダー
+	/** ゲームクリアのフェード処理 */
+	void FadeGameClear();
+
+
+private:
+	/** ゲームクリアのスプライトレンダー */
+	SpriteRender m_GameClearSpriteRender;
 
 	/** 黒い背景用のスプライトレンダー */
 	SpriteRender m_blackSpriteRender;
 
-	bool m_isDeleteRequst = false;//削除要求フラグ
-
-
-	int m_finalScore;//最終スコアを保存する変数
-	int m_finalRescue;//最終救出数を保存する変数
-	bool m_isScoreSet = false;//スコアがセットされたかどうかのフラグ
-	bool m_isRescueSet = false;//救出数がセットされたかどうかのフラグ
+	/** ゲームクリア画面でのスタートを促すスプライトレンダー */
+	SpriteRender m_gameClearPressTitleSpriteRender;
 
 	SoundManager* m_clearSound;
-	SoundSource* p_clearBGM;
+
+	SoundSource* m_clearBGM;
+	SoundSource* m_decisionSE;
+
 	Score* m_score;
 	CowNumberOfRescues* m_cowNumberOfRescues;
 	LoadingScene* m_loadingScene;
 	Title* m_title;
 
+	enum enGameClearState
+	{
+		/** ゲームクリアのフェードイン */
+		FadeIn,
+		/** ゲームクリアのフェードアウト */
+		FadeOut,
+	};
+	enGameClearState m_gameClearState = FadeIn;
+
+	/** 最終スコアを保存する変数 */
+	int m_finalScore;
+
+	/** 最終救出数を保存する変数 */
+	int m_finalRescue;
+
+	/** α値の変数 */
+	float m_gameClearAlpha = 1.0f;
+
+	/** 点滅の間隔 */
+	float m_gameClearBlinkInterval = 50.0f;
+
+	/** ゲームクリアでのタイトルに戻るボタンを押したときのフラグ */
+	bool m_isGameClearToTitleButtonPressed = false;
+
+	/** スコアがセットされたかどうかのフラグ */
+	bool m_isScoreSet = false;
+
+	/** 救出数がセットされたかどうかのフラグ */
+	bool m_isRescueSet = false;
+	
 };
 
