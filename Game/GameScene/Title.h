@@ -11,13 +11,38 @@ public:
 	void InTitle();
 	void Render(RenderContext& rc);
 
+
 private:
-	SpriteRender m_TitleSpriteRender;//タイトルのスプライトレンダー
+	/** フェード用関数 */
+	void FadeTitle();
+
+private:
+	SpriteRender m_titleSpriteRender;//タイトルのスプライトレンダー
+
+	/** タイトル画面でのスタートを促すスプライトレンダー */
+	SpriteRender m_titlePressStartSpriteRender;
 
 	SoundManager* m_soundManager;
-	SoundSource* p_titleBGM;
-	SoundSource* p_titleSE;
+	SoundSource* m_titleBGM;
+	SoundSource* m_titleSE;
 	LoadingScene* m_loadingScene;
 
+	enum enTitleState
+	{
+		/** タイトルのフェードイン */
+		FadeIn,
+		/** タイトルのフェードアウト */
+		FadeOut,
+	};
+	enTitleState m_titleState = FadeIn;
+
+	/** α値の変数 */
+	float m_titleAlpha = 0.0f;
+
+	/** 点滅の間隔 */
+	float m_titleBlinkInterval = 50.0f;
+
+	/** ボタンを押したときのフラグ */
+	bool m_isStartButtonPressed = false;
 };
 
