@@ -179,7 +179,6 @@ void Combo::AddCombo()
 void Combo::ResetCombo()
 {
 	m_combo = 0;
-	m_scoreMagnification = 1;
 	m_comboTimer = 0.0f;
 }
 

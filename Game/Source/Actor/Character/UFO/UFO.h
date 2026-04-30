@@ -23,12 +23,14 @@ public:
 	void SetPosition(const Vector3& pos)
 	{
 		m_transform.SetPosition(pos);
+		m_ufomodelRender.SetPosition(pos);
 	}
 
-	const Vector3& GetPosition()
+	Vector3 GetPosition()
 	{
 		return m_transform.GetPosition();
 	}
+
 	/** 牛を連れて行けるかどうかのフラグを設定する関数 */
 	void SetIsCowTakeAwayed(bool isCowTakeAwayed)
 	{
@@ -54,13 +56,7 @@ public:
 		return m_cowCaptureController->GetIsEmitting();
 	}
 	
-	enum EnUFOState
-	{
-		EnUFOState_Move,
-		EnUFOState_Idle,
-		EnUFOState_Num
-	};
-	EnUFOState m_UFOState = EnUFOState_Move;//プレイヤーステート
+	
 
 
 private:
@@ -72,8 +68,6 @@ private:
 
 private:
 	ModelRender m_ufomodelRender;
-	
-	Vector3 m_Ufopos = Vector3(0.0f, 70.0f, 0.0f);
 	
 	Vector3 m_moveDir = Vector3::Zero;//移動方向
 	
@@ -103,5 +97,14 @@ private:
 
 	/** 牛を追いかけるフラグ */
 	bool m_isChasing = false;
+
+	enum EnUFOState
+	{
+		EnUFOState_Move,
+		EnUFOState_Idle,
+		EnUFOState_Num
+	};
+	/** UFOの状態 */
+	EnUFOState m_UFOState = EnUFOState_Move;
 };
 

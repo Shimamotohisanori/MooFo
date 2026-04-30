@@ -98,25 +98,12 @@ void Player::Update()
 	m_countDown = FindGO<CountDown>("countdown");
 	m_pause = FindGO<Pause>("pause");
 
-	if (m_pause == nullptr || m_countDown == nullptr || m_game == nullptr)
-	{
-		return;
-	}
-
-	/*タイムアウトしていたら操作できないようにする*/
-	if (m_game->GetIsTimeOut())
-	{
-		return;
-	}
-
-	/*ポーズ中は操作できないようにする*/
-	if (m_pause->GetIsPause())
-	{
-		return;
-	}
-
-	/*カウントダウン中は操作できないようにする*/
-	if (m_countDown->GetCountDown())
+	if (m_pause == nullptr ||
+		m_countDown == nullptr ||
+		m_game == nullptr ||
+		m_game->GetIsTimeOut() ||
+		m_pause->GetIsPause() ||
+		m_countDown->GetCountDown())
 	{
 		return;
 	}
@@ -132,17 +119,8 @@ void Player::Update()
 	/*ステート管理*/
 	ManageState();
 
-	/** プレイヤーが動いていたら */
-	if (fabsf(m_moveSpeed.x) >= 0.0001f || fabsf(m_moveSpeed.z) >= 0.0001f)
-	{
-		m_isMoving = true;
-	}
-
-	/** プレイヤーが動いていなかったら */
-	else
-	{
-		m_isMoving = false;
-	}
+	/*プレイヤーが動いているかどうかのフラグを設定する*/
+	m_isMoving = (m_moveSpeed.LengthSq() >= 0.0001f);
 
 	/*アニメーション*/
 	PlayAnimation();
@@ -239,6 +217,10 @@ void Player::ThrowRope()
 {
 	if (m_throwRopeCoolTime > 0.0f) {
 		m_throwRopeCoolTime -= g_gameTime->GetFrameDeltaTime();
+
+		if(m_throwRopeCoolTime < 0.0f) {
+			m_throwRopeCoolTime = 0.0f;
+		}
 	}
 
 	if (m_rope->GetIsHitCow() or !m_rope)

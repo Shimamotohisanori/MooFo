@@ -72,9 +72,6 @@ private:
 	/** ロードするゲームオブジェクトのステップ*/
 	int m_loadStep = 0;
 
-	/** スカイキューブのタイプ */
-	int m_skyCubeType = enSkyCubeType_Night;
-
 	/** タイマー*/
 	float m_timer = 0.0f;
 

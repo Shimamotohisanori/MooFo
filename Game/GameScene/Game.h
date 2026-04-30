@@ -135,8 +135,7 @@ private:
 	/** 牛の救出数 */
 	CowNumberOfRescues* m_cowNumberOfRescues;
 
-	/** 牛の捕獲を管理するクラス */
-	CowCaptureController* m_cowCaptureController;
+	/** ミニマップ */
 	Map* m_map;
 
 	/** サウンドマネージャー */
@@ -182,17 +181,11 @@ private:
 	/** タイムアウトの画像のスケール */
 	Vector3 m_timeOutImageScale = Vector3(0.5f, 0.5f, 1.0f);
 
-	/** スカイキューブのタイプ */
-	int m_skyCubeType = enSkyCubeType_Night;
-
 	/** 牛が生まれる時間 */
 	float m_spawnTimer = 0.0f;
 
 	/** タイムアウトからの経過時間 */
 	float m_timeOutTimer = 0.0f;
-
-	/** プレイヤーが死んでいたら */
-	bool m_isDead;
 
 	/** タイムアウトフラグ */
 	bool m_isTimeOut = false;
