@@ -19,8 +19,8 @@ private:
 private:
 	SpriteRender m_titleSpriteRender;//タイトルのスプライトレンダー
 
-	/** スタートを促すスプライトレンダー */
-	SpriteRender m_pressStartSpriteRender;
+	/** タイトル画面でのスタートを促すスプライトレンダー */
+	SpriteRender m_titlePressStartSpriteRender;
 
 	SoundManager* m_soundManager;
 	SoundSource* m_titleBGM;
@@ -37,12 +37,12 @@ private:
 	enTitleState m_titleState = FadeIn;
 
 	/** α値の変数 */
-	float m_alpha = 0.0f;
+	float m_titleAlpha = 0.0f;
 
 	/** 点滅の間隔 */
-	float m_blinkInterval = 50.0f;
+	float m_titleBlinkInterval = 50.0f;
 
 	/** ボタンを押したときのフラグ */
-	bool m_isButtonPressed = false;
+	bool m_isStartButtonPressed = false;
 };
 

@@ -7,15 +7,15 @@
 namespace
 {
 	const char* GAMETITLE_FILEPATH = "Assets/sprite/GameTransition/GameTitle.dds";
-	const char* PRESSSTART_FILEPATH = "Assets/sprite/GameTransition/PressAnyButton.dds";
+	const char* TITLE_PRESSSTART_FILEPATH = "Assets/sprite/GameTransition/PressAnyButton.dds";
 
-	const Vector3 PRESSSTART_POS = { 0.0f, -350.0f, 0.0f };
+	const Vector3 TITLE_PRESSSTART_POS = { 0.0f, -350.0f, 0.0f };
 
 	const int GAMETITLE_WIDTH = 1920;
 	const int GAMETITLE_HEIGHT = 1080;
 
-	constexpr int PRESSSTART_WIDTH = 1400;
-	constexpr int PRESSSTART_HEIGHT = 1700;
+	constexpr int TITLE_PRESSSTART_WIDTH = 1400;
+	constexpr int TITLE_PRESSSTART_HEIGHT = 1700;
 
 	/** タイトル画面での点滅の最後の間隔 */
 	constexpr float TITLE_FINAL_BLINK_INTERVAL = 1.0f;
@@ -35,9 +35,9 @@ bool Title::Start()
 {
 	m_titleSpriteRender.Init(GAMETITLE_FILEPATH, GAMETITLE_WIDTH, GAMETITLE_HEIGHT);
 
-	m_pressStartSpriteRender.Init(PRESSSTART_FILEPATH, PRESSSTART_WIDTH, PRESSSTART_HEIGHT);
-	m_pressStartSpriteRender.SetPosition(PRESSSTART_POS);
-	m_pressStartSpriteRender.Update();
+	m_titlePressStartSpriteRender.Init(TITLE_PRESSSTART_FILEPATH, TITLE_PRESSSTART_WIDTH, TITLE_PRESSSTART_HEIGHT);
+	m_titlePressStartSpriteRender.SetPosition(TITLE_PRESSSTART_POS);
+	m_titlePressStartSpriteRender.Update();
 
 	m_soundManager = FindGO<SoundManager>("soundmanager");
 	m_titleBGM = m_soundManager->PlayingBGM(SoundBGM::enTitleBGM, false);
@@ -53,33 +53,34 @@ void Title::Update()
 	FadeTitle();
 
 	m_titleSpriteRender.Update();
-	m_pressStartSpriteRender.Update();
+	m_titlePressStartSpriteRender.Update();
 }
 
 
 void Title::InTitle()
 {
-	if (g_pad[0]->IsPressAnyKey() && !m_isButtonPressed)
+	if (g_pad[0]->IsPressAnyKey() && !m_isStartButtonPressed)
 	{
 		/* ボタンを押したときの処理 */
-		m_isButtonPressed = true;
+		m_isStartButtonPressed = true;
 
 		m_titleSE = m_soundManager->PlayingSE(SoundSE::enDecisionSE, false);
 
 	}
 
-	if (m_isButtonPressed)
+	if (m_isStartButtonPressed)
 	{
 		/* 点滅の間隔を減らしていく */
-		m_blinkInterval -= g_gameTime->GetFrameDeltaTime() * m_blinkInterval;
+		m_titleBlinkInterval -= g_gameTime->GetFrameDeltaTime() * m_titleBlinkInterval;
 
 		/* 点滅の間隔が最後の間隔以下になったときに、タイトルからローディングシーンに移行する */
-		if (m_blinkInterval <= TITLE_FINAL_BLINK_INTERVAL)
+		if (m_titleBlinkInterval <= TITLE_FINAL_BLINK_INTERVAL)
 		{
-			m_isButtonPressed = false;
+			m_isStartButtonPressed = false;
 			m_loadingScene = NewGO<LoadingScene>(0, "loading");
 			m_loadingScene->SetLoadType(LoadingScene::LoadType::ToGameScene);
 			DeleteGO(m_titleBGM);
+			DeleteGO(m_titleSE);
 			m_loadingScene->SetNextScene([]()
 				{
 					NewGO<Game>(0, "game");
@@ -91,25 +92,25 @@ void Title::InTitle()
 
 void Title::FadeTitle()
 {
-	if (!m_isButtonPressed)
+	if (!m_isStartButtonPressed)
 	{
 		/** フェード処理*/
 		switch (m_titleState)
 		{
 		case FadeIn:
-			m_alpha += g_gameTime->GetFrameDeltaTime();
-			if (m_alpha >= 1.0f)
+			m_titleAlpha += g_gameTime->GetFrameDeltaTime();
+			if (m_titleAlpha >= 1.0f)
 			{
-				m_alpha = 1.0f;
+				m_titleAlpha = 1.0f;
 				m_titleState = FadeOut;
 			}
 			break;
 
 		case FadeOut:
-			m_alpha -= g_gameTime->GetFrameDeltaTime();
-			if (m_alpha <= 0.0f)
+			m_titleAlpha -= g_gameTime->GetFrameDeltaTime();
+			if (m_titleAlpha <= 0.0f)
 			{
-				m_alpha = 0.0f;
+				m_titleAlpha = 0.0f;
 				m_titleState = FadeIn;
 			}
 			break;
@@ -122,19 +123,19 @@ void Title::Render(RenderContext& rc)
 	m_titleSpriteRender.Draw(rc);
 
 	/* ボタンが押されていないときはスタートを促すスプライトをフェード描画する */
-	if (!m_isButtonPressed)
+	if (!m_isStartButtonPressed)
 	{
 		/** α値が0.0より大きいときに描画する */
-		if (m_alpha > 0.0f)
+		if (m_titleAlpha > 0.0f)
 		{
-			m_pressStartSpriteRender.SetMulColor(
+			m_titlePressStartSpriteRender.SetMulColor(
 				Vector4(
 					1.0f,
 					1.0f,
 					1.0f,
-					m_alpha));
+					m_titleAlpha));
 
-			m_pressStartSpriteRender.Draw(rc);
+			m_titlePressStartSpriteRender.Draw(rc);
 		}
 
 		return;
@@ -142,15 +143,15 @@ void Title::Render(RenderContext& rc)
 
 	/** 点滅処理 */
 	/* 点滅の間隔が偶数のときは描画する */
-	if(static_cast<int>(m_blinkInterval * 2) % 2 == 0)
+	if(static_cast<int>(m_titleBlinkInterval * 2) % 2 == 0)
 	{
-		m_pressStartSpriteRender.SetMulColor(
+		m_titlePressStartSpriteRender.SetMulColor(
 			Vector4(
 				1.0f,
 				1.0f,
 				1.0f,
 				1.0f));
-		m_pressStartSpriteRender.Draw(rc);
+		m_titlePressStartSpriteRender.Draw(rc);
 	}
 
 }

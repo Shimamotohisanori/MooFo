@@ -22,23 +22,56 @@ public:
 
 
 private:
+	/** ゲームオーバーのフェード処理 */
+	void FadeGameOver();
+
+private:
 	SpriteRender m_GameOverspriteRender;
 
 	/** 黒い背景用のスプライトレンダラー */
 	SpriteRender m_blackSpriteRender;
 
-	//スコアの表示をコピーするための変数
-	int m_finalScore;
-	bool m_isDeleteRequest = false;
-	bool m_isScoreSet = false;
+	/** ゲームオーバー画面でのスタートを促すスプライトレンダー */
+	SpriteRender m_gameOverPressTitleSpriteRender;
 
-	int m_finalRescue = 0;
-	bool m_isRescueSet = false;
+	/** スコアの表示をコピーするための変数 */
 	SoundManager* m_deathSound;
 	Score*m_score;
 	CowNumberOfRescues* m_cowNumberOfRescues;
-	SoundSource* p_deathBGM;
+	SoundSource* m_deathBGM;
+	SoundSource* m_decisionSE;
 	LoadingScene* m_loadingScene;
+
+
+	enum enGameOverState
+	{
+		/** ゲームオーバーのフェードイン */
+		FadeIn,
+		/** ゲームオーバーのフェードアウト */
+		FadeOut,
+	};
+	enGameOverState m_gameOverState = FadeIn;
+
+	int m_finalScore;
+
+	int m_finalRescue = 0;
+
+	/** α値の変数 */
+	float m_gameOverAlpha = 1.0f;
+
+	/** 点滅の間隔 */
+	float m_gameOverBlinkInterval = 50.0f;
+
+	/** ボタンを押したときのフラグ */
+	bool m_isGameOverToTitleButtonPressed = false;
+
+	/** 削除要求フラグ */
+	bool m_isDeleteRequest = false;
+
+	/** スコアをセットしたかどうかのフラグ */
+	bool m_isScoreSet = false;
 	
+	/** 救出数をセットしたかどうかのフラグ */
+	bool m_isRescueSet = false;
 };
 
