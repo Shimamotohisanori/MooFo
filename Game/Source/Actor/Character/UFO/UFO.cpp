@@ -409,56 +409,43 @@ void UFO::FindTheCow()
 			nearestCow = c;
 		}
 
-		/** 近くに牛が見つかっているかどうか */
-		if (nearestCow)
+	}
+
+	/** 近くに牛が見つかっているかどうか */
+	if (nearestCow)
+	{
+		/**  追尾中だったらtrue */
+		m_isChasing = true;
+
+		/** 牛の方向を作る。 */
+		Vector3 dir = nearestCow->GetPosition() - m_transform.GetPosition();
+		dir.Normalize();
+
+		/** dirの方向に進むようにセットする。 */
+		m_moveDir = dir;
+
+
+		/** もし牛を牛を見つけるときの距離のほうが大きかったら */
+		if (sqrtf(nearestDistSq) < CAPTURE_RANGE)
 		{
-			/**  追尾中だったらtrue */
-			m_isChasing = true;
-
-			/** 牛の方向を作る。 */
-			Vector3 dir = nearestCow->GetPosition() - m_transform.GetPosition();
-			dir.Normalize();
-
-			/** dirの方向に進むようにセットする。 */
-			m_moveDir = dir;
-
-
-			/** もし牛を牛を見つけるときの距離のほうが大きかったら */
-			if (sqrtf(nearestDistSq) < CAPTURE_RANGE)
-			{
-				/** この牛を捕まえる(true) */
-				m_isCowTakeAwayed = true;
-				m_targetCow = nearestCow;
-
-				/** 捕獲処理が作動する。 */
-				m_cowCaptureController->StartCapture();
-
-				/** いま追っている牛をtrueにして他のUFOは追尾しないようにする。 */
-				m_targetCow->SetTakingUFO(this);
-				m_targetCow->SetIsTakeAwayed(true);
-			}
-		}
-		/** それいがいは追尾しない。 */
-		else
-		{
-			m_isChasing = false;
-		}
-
-		/** 牛とUFOの距離が70未満だったら牛を連れていく */
-		if (diff.Length() < CAPTURE_RANGE)
-		{
-			/** 連れていける */
+			/** この牛を捕まえる(true) */
 			m_isCowTakeAwayed = true;
-			/** 最初の一匹だけ */
-			m_targetCow = c;
-			//m_cowCaptureController->SetCapturing(true);
+			m_targetCow = nearestCow;
+
+			/** 捕獲処理が作動する。 */
 			m_cowCaptureController->StartCapture();
+
+			/** いま追っている牛をtrueにして他のUFOは追尾しないようにする。 */
 			m_targetCow->SetTakingUFO(this);
-			/** 牛の状態を連れていかれる状態にする */
 			m_targetCow->SetIsTakeAwayed(true);
-			break;
 		}
 	}
+	/** それいがいは追尾しない。 */
+	else
+	{
+		m_isChasing = false;
+	}
+
 }
 
 
