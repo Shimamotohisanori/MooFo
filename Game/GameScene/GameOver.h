@@ -59,7 +59,10 @@ private:
 	float m_gameOverAlpha = 1.0f;
 
 	/** 点滅の間隔 */
-	float m_gameOverBlinkInterval = 50.0f;
+	float m_gameOverBlinkInterval = 25.0f;
+
+	/** 点滅が終わる時間 */
+	float m_gameOverFinalBlinkTime = 1.0f;
 
 	/** ボタンを押したときのフラグ */
 	bool m_isGameOverToTitleButtonPressed = false;

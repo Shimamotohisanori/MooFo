@@ -66,7 +66,10 @@ private:
 	float m_gameClearAlpha = 1.0f;
 
 	/** 点滅の間隔 */
-	float m_gameClearBlinkInterval = 50.0f;
+	float m_gameClearBlinkInterval = 25.0f;
+
+	/** 点滅が終わる時間 */
+	float m_gameClearFinalBlinkTime = 1.0f;
 
 	/** ゲームクリアでのタイトルに戻るボタンを押したときのフラグ */
 	bool m_isGameClearToTitleButtonPressed = false;

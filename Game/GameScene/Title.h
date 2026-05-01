@@ -40,7 +40,10 @@ private:
 	float m_titleAlpha = 0.0f;
 
 	/** 点滅の間隔 */
-	float m_titleBlinkInterval = 50.0f;
+	float m_titleBlinkInterval = 25.0f;
+
+	/** 点滅が終わる時間 */
+	float m_titleFinalBlinkTime = 1.0f;
 
 	/** ボタンを押したときのフラグ */
 	bool m_isStartButtonPressed = false;
