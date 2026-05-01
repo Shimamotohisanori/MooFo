@@ -34,9 +34,6 @@ namespace
 	/** ゲームクリアのタイトルを促す画像の大きさ */
 	constexpr int GAMECLEAR_PRESS_TITLE_WIDTH = 1400;
 	constexpr int GAMECLEAR_PRESS_TITLE_HEIGHT = 1700;
-
-	/** ゲームクリア画面での点滅の最後の間隔 */
-	constexpr float GAMECLEAR_FINAL_BLINK_INTERVAL = 1.0f;
 }
 
 GameClear::GameClear()
@@ -125,9 +122,12 @@ void GameClear::InGameClear()
 
 	if(m_isGameClearToTitleButtonPressed)
 	{
+
+		m_gameClearFinalBlinkTime -= g_gameTime->GetFrameDeltaTime();
+
 		m_gameClearBlinkInterval -= g_gameTime->GetFrameDeltaTime() * m_gameClearBlinkInterval;
 
-		if (m_gameClearBlinkInterval <= GAMECLEAR_FINAL_BLINK_INTERVAL)
+		if (m_gameClearFinalBlinkTime <= 0.0f)
 		{
 			m_isGameClearToTitleButtonPressed = false;
 			/* ゲームクリアからタイトルシーンに移行する */

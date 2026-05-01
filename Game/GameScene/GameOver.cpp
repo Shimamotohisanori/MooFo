@@ -35,8 +35,6 @@ namespace
 	constexpr int GAMEOVER_WIDTH = 1920;
 	constexpr int GAMEOVER_HIGHT = 1080;
 
-	/** ゲームオーバー画面での点滅の最後の間隔 */
-	constexpr float GAMEOVER_FINAL_BLINK_INTERVAL = 1.0f;
 }
 
 GameOver::GameOver()
@@ -127,11 +125,14 @@ void GameOver::InGameOver()
 
 	if (m_isGameOverToTitleButtonPressed)
 	{
+		m_gameOverFinalBlinkTime -= g_gameTime->GetFrameDeltaTime();
+
 		/* 点滅の間隔を減らしていく */
 		m_gameOverBlinkInterval -= g_gameTime->GetFrameDeltaTime() * m_gameOverBlinkInterval;
 
+
 		/* 点滅の間隔が最後の間隔以下になったときに、ゲームオーバーからタイトルシーンに移行する */
-		if (m_gameOverBlinkInterval <= GAMEOVER_FINAL_BLINK_INTERVAL)
+		if (m_gameOverFinalBlinkTime <= 0.0f)
 		{
 			m_isGameOverToTitleButtonPressed = false;
 			m_loadingScene = NewGO<LoadingScene>(0, "loading");

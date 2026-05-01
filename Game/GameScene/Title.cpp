@@ -70,11 +70,13 @@ void Title::InTitle()
 
 	if (m_isStartButtonPressed)
 	{
+		m_titleFinalBlinkTime -= g_gameTime->GetFrameDeltaTime();
+
 		/* 点滅の間隔を減らしていく */
 		m_titleBlinkInterval -= g_gameTime->GetFrameDeltaTime() * m_titleBlinkInterval;
 
 		/* 点滅の間隔が最後の間隔以下になったときに、タイトルからローディングシーンに移行する */
-		if (m_titleBlinkInterval <= TITLE_FINAL_BLINK_INTERVAL)
+		if (m_titleFinalBlinkTime <= 0.0f)
 		{
 			m_isStartButtonPressed = false;
 			m_loadingScene = NewGO<LoadingScene>(0, "loading");
