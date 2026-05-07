@@ -29,6 +29,9 @@ namespace
 	float MAP_RADIUS = 190.0f;
 	float LIMITED_RANGE_IMAGE = 410.0f;
   
+	Vector3 MAP_OUTLINE_POSITION = Vector3(704.0f, -302.5f, 0.0f);
+
+
 	constexpr float MAP_RADIUS = 180.0f;
 	constexpr float LIMITED_RANGE_IMAGE = 400.0f;
 
