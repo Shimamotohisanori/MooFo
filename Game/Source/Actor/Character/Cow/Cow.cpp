@@ -27,6 +27,9 @@ namespace
 
 	/** 逃げる強さ */
 	constexpr float AVOID_POWER = 5.0f;
+
+	/** 牛の移動時間と休憩時間 */
+	constexpr int RANDOMCOW_TIMER = 180 + 60;
 }
 
 Cow::Cow()
@@ -151,8 +154,8 @@ void Cow::Move()
 			}
 			dir.Normalize();
 			m_moveDir = dir;
-			/**2秒ごとに方向を変える */
-			m_moveTimer = 120.0f;
+			/** 1～4秒間ランダムに方向を変える */
+			m_moveTimer = rand() % RANDOMCOW_TIMER;
 			m_isMove = false;
 		}
 
@@ -160,8 +163,8 @@ void Cow::Move()
 			else
 			{
 				m_moveDir = Vector3::Zero;
-				/** 2秒休む */
-				m_moveTimer = 120.0f;
+				/** 1～4秒間のランダム時間に休む */
+				m_moveTimer = rand() % RANDOMCOW_TIMER;
 				m_isMove = true;
 			}
 		}
