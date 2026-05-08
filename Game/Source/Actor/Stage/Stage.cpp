@@ -3,6 +3,8 @@
 namespace
 {
 	Vector3 STAGE_POS = { 0.0f, 160.0f, 0.0f };
+
+	Vector3 STAGEMAP_POS = { 0.0f,0.0f,0.0f };
 }
 
 Stage::Stage()
@@ -19,13 +21,10 @@ bool Stage::Start()
 	m_stageModelRender.SetPosition(STAGE_POS);
 	m_stageModelRender.Update();
 
-	m_treeModelRender.Init("Assets/modelData/Stage/Tree.tkm");
-	m_treeModelRender.SetPosition(STAGE_POS);
-	m_treeModelRender.Update();
-
-	m_groundModelRender.Init("Assets/modelData/Stage/Ground.tkm");
-	m_groundModelRender.SetPosition(STAGE_POS);
-	m_groundModelRender.Update();
+	m_mapStageModelRender.Init("Assets/modelData/Stage/StageGround.tkm");
+	m_mapStageModelRender.SetPosition(STAGEMAP_POS);
+	m_mapStageModelRender.Update();
+	
 	return true;
 }
 
@@ -36,6 +35,5 @@ void Stage::Update()
 void Stage::Render(RenderContext& rc)
 {
 	m_stageModelRender.Draw(rc);
-	m_treeModelRender.Draw(rc);
-	m_groundModelRender.Draw(rc);
+	m_mapStageModelRender.Draw(rc);
 }
