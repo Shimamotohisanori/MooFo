@@ -21,7 +21,7 @@ bool Stage::Start()
 	m_stageModelRender.SetPosition(STAGE_POS);
 	m_stageModelRender.Update();
 
-	m_mapStageModelRender.Init("Assets/modelData/Stage/MapStage.tkm");
+	m_mapStageModelRender.Init("Assets/modelData/Stage/StageGround.tkm");
 	m_mapStageModelRender.SetPosition(STAGEMAP_POS);
 	m_mapStageModelRender.Update();
 	
