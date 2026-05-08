@@ -9,12 +9,12 @@
 #include "Pause/Pause.h"
 #include "Combo/Combo.h"
 #include "GameScene/Game.h"
-#include <time.h>
+#include"DummyCow.h"
 
 namespace
 {
 	const char* GAMECLEAR_FILEPATH = "Assets/modelData/Cow/Model/Cow4.tkm"; //enModelUpAxis = enModelUpAxisZ;
-	const char* THROW_ROPE_ANIMATION_FILE_PATH = "Assets/modelData/Cow/Animation/Idle2.tka";
+	const char* IDLE_ANIMATION_FILE_PATH = "Assets/modelData/Cow/Animation/Idle2.tka";
 	const char* FILEPATH_WALK = "Assets/modelData/Cow/Animation/Walk.tka";
 
 	/** プレイヤーに引っ張られるときの力 */
@@ -35,7 +35,7 @@ namespace
 Cow::Cow()
 {
 	/** Idle */
-	animationClips[EnAnimation_Idle].Load(THROW_ROPE_ANIMATION_FILE_PATH);
+	animationClips[EnAnimation_Idle].Load(IDLE_ANIMATION_FILE_PATH);
 	animationClips[EnAnimation_Idle].SetLoopFlag(true);
 	
 	/** Walk */
@@ -45,12 +45,11 @@ Cow::Cow()
 
 Cow::~Cow()
 {
+
 }
 
 bool Cow::Start()
 {
-	
-	srand(time(nullptr));
 
 	m_cowmodelRender.Init(GAMECLEAR_FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
 	m_cowmodelRender.SetPosition(m_transform.GetPosition());
@@ -334,6 +333,13 @@ void Cow::CapturedByPlayer()
 
 			/** 状態をリセットする */
 			m_isTakeAwayed = false;
+			
+			DummyCow* dummyCow = NewGO<DummyCow>(0, "dummyCow");
+			/** dummyCowに牛の情報を渡す*/
+			dummyCow->SetPosition(m_transform.GetPosition());
+			dummyCow->SetRotation(m_transform.GetRotation());
+			/** ジャンプアニメーションを再生*/
+			dummyCow->PlayJumpAnimtion();
 
 			/** 牛を削除 */
 			DeleteGO(this);

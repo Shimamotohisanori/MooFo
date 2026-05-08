@@ -244,6 +244,7 @@
     <ClCompile Include="Source\Actor\Actor.cpp" />
     <ClCompile Include="Source\Actor\Character\Character.cpp" />
     <ClCompile Include="Source\Actor\Character\Cow\Cow.cpp" />
+    <ClCompile Include="Source\Actor\Character\Cow\DummyCow.cpp" />
     <ClCompile Include="Source\Actor\Character\Player\Player.cpp" />
     <ClCompile Include="Source\Actor\Character\UFO\CowCaptureController.cpp" />
     <ClCompile Include="Source\Actor\Character\UFO\UFO.cpp" />
@@ -278,6 +279,7 @@
     <ClInclude Include="Source\Actor\Actor.h" />
     <ClInclude Include="Source\Actor\Character\Character.h" />
     <ClInclude Include="Source\Actor\Character\Cow\Cow.h" />
+    <ClInclude Include="Source\Actor\Character\Cow\DummyCow.h" />
     <ClInclude Include="Source\Actor\Character\Player\Player.h" />
     <ClInclude Include="Source\Actor\Character\UFO\CowCaptureController.h" />
     <ClInclude Include="Source\Actor\Character\UFO\UFO.h" />
