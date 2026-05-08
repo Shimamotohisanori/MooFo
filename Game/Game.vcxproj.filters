@@ -79,6 +79,9 @@
     <ClCompile Include="GameTimer\AddTimerUI.cpp">
       <Filter>GameTimer</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Cow\DummyCow.cpp">
+      <Filter>Source\Actor\Character\Cow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -158,6 +161,9 @@
     </ClInclude>
     <ClInclude Include="GameTimer\AddTimerUI.h">
       <Filter>GameTimer</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Cow\DummyCow.h">
+      <Filter>Source\Actor\Character\Cow</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

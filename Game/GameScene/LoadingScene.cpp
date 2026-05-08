@@ -29,8 +29,8 @@ namespace
 	const int LOADINGWARD_HEIGHT = 100.0f;
 	
 	/** 牛のランダムスポーン範囲 */
-	const int RANDOM_SPAWN_RANGE = 300;
-	const int RANDOM_SPAWN_RANGE_DOUBLE = 600;
+	const int RANDOM_SPAWN_RANGE = 500;
+	const int RANDOM_SPAWN_RANGE_DOUBLE = 800;
 }
 
 LoadingScene::LoadingScene()

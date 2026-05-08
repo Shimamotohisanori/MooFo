@@ -33,7 +33,7 @@ namespace
 	constexpr float CAPTURE_SPEED = 0.2f;
 
 	/** 牛を見つけるときの距離 */
-	constexpr float CAPTURE_RANGE = 70.0f;
+	constexpr float CAPTURE_RANGE = 30.0f;
 
 	/**移動可能エリア（柵の内側）*/
 	constexpr float AREA_MIN_X = -1300.0f;
