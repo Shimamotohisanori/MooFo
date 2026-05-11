@@ -10,14 +10,14 @@
 namespace
 {
 	/** プレイヤーモデルのファイルパス */
-	const char* PLAYER_FILEPATH = "Assets/modelData/CowBoy/CowBoy3.tkm";
+	const char* PLAYER_FILEPATH = "Assets/modelData/CowBoy/CowBooy.tkm";
 	
 	/** アニメーションのファイルパス */
 	/** 待機アニメーション */
-	const char* ANIMATION_IDLEFILEPATH = "Assets/modelData/CowBoy/Idle3.tka";
+	const char* ANIMATION_IDLEFILEPATH = "Assets/modelData/CowBoy/Idle.tka";
 	
 	/** 走るアニメーション */
-	const char* ANIMATION_RUNFILEPATH = "Assets/modelData/CowBoy/Run3.tka";
+	const char* ANIMATION_RUNFILEPATH = "Assets/modelData/CowBoy/Run.tka";
 	
 	/** ロープを引っ張る画像のファイルパス */
 	const char* PULLROPEFILEPATH = "Assets/sprite/PullRopeButton/PullRope.dds";
@@ -89,6 +89,10 @@ bool Player::Start()
 	m_pullRopeSpriteRB.SetPosition(PULLROPE_SPRITE_POS);
 	m_pullRopeSpriteRB.Update();
 
+	/** 初期化時にステートを待機状態にする */
+	m_playerState = 0;
+	m_playerModelRender.Update();
+
 	return true;
 }
 
@@ -97,6 +101,9 @@ void Player::Update()
 	m_game = FindGO<Game>("game");
 	m_countDown = FindGO<CountDown>("countdown");
 	m_pause = FindGO<Pause>("pause");
+
+	/*アニメーション*/
+	PlayAnimation();
 
 	if (m_pause == nullptr ||
 		m_countDown == nullptr ||
@@ -122,8 +129,7 @@ void Player::Update()
 	/*プレイヤーが動いているかどうかのフラグを設定する*/
 	m_isMoving = (m_moveSpeed.LengthSq() >= 0.0001f);
 
-	/*アニメーション*/
-	PlayAnimation();
+	
 	m_playerModelRender.Update();
 }
 
@@ -307,10 +313,14 @@ void Player::PlayAnimation()
 	case 0:
 		//待機アニメーション
 		m_playerModelRender.PlayAnimation(enAnimationClip_Idle);
+
+		m_playerModelRender.Update();
 		break;
 	case 1:
 		//走るアニメーション
 		m_playerModelRender.PlayAnimation(enAnimationClip_Run);
+		
+		m_playerModelRender.Update();
 		break;
 	}
 }
