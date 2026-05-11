@@ -18,16 +18,31 @@ class Map : public IGameObject
 	std::vector<Cow*> m_cows;
 	std::vector<UFO*> m_ufos;
 
+	/** マップの画像 */
 	SpriteRender m_mapSprite;
+
+	/** プレイヤーアイコンの画像 */
 	SpriteRender m_playerSprite;
+
+	/** 牛アイコンの画像 */
 	SpriteRender m_cowSprite[10];
+
+	/** UFOアイコンの画像 */
 	SpriteRender m_ufoSprite[4];
+
+	/** 危険アイコンの画像 */
 	SpriteRender m_dangerSprite[4];
+
+	/** アウトラインアイコンの画像 */
 	SpriteRender m_outLineSprite;
 
+	/** プレイヤーのポインタ */
 	Player* m_player = nullptr;
+
+	/** ポーズのポインタ */
 	Pause* m_pause   = nullptr;
   
+	/** マップの回転角度 */
 	float m_mapAngle = 0.0f;
 
 	/** マップ内に表示されているUIがいるかどうかのフラグ */
