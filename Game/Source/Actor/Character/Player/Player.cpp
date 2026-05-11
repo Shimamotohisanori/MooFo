@@ -10,14 +10,14 @@
 namespace
 {
 	/** プレイヤーモデルのファイルパス */
-	const char* PLAYER_FILEPATH = "Assets/modelData/CowBoy/CowBoy3.tkm";
+	const char* PLAYER_FILEPATH = "Assets/modelData/CowBoy/CowBooy.tkm";
 	
 	/** アニメーションのファイルパス */
 	/** 待機アニメーション */
-	const char* ANIMATION_IDLEFILEPATH = "Assets/modelData/CowBoy/Idle3.tka";
+	const char* ANIMATION_IDLEFILEPATH = "Assets/modelData/CowBoy/Idle.tka";
 	
 	/** 走るアニメーション */
-	const char* ANIMATION_RUNFILEPATH = "Assets/modelData/CowBoy/Run3.tka";
+	const char* ANIMATION_RUNFILEPATH = "Assets/modelData/CowBoy/Run.tka";
 	
 	/** ロープを引っ張る画像のファイルパス */
 	const char* PULLROPEFILEPATH = "Assets/sprite/PullRopeButton/PullRope.dds";
