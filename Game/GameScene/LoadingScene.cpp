@@ -208,7 +208,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	case 15:
 	case 16:
 	{
-		UFO* ufo = NewGO<UFO>(0, "UFO");
+		UFO* ufo = NewGO<UFO>(0, UFO_INFOMATIONS[m_loadStep - 13].objectName.c_str());
 		ufo->SetPosition(UFO_INFOMATIONS[m_loadStep - 13].pos);
 		} break;
 
