@@ -32,7 +32,7 @@ private:
 		EnAnimation_Jump,
 		EnAnimation_Num,
 
-	};
+	}; 
 	AnimationClip animationClips[EnAnimation_Num];
 	/** アニメーションが再生中かを表すフラグ*/
 	bool m_isPlaying = false;

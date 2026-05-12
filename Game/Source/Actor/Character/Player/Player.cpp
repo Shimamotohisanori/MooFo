@@ -6,11 +6,17 @@
 #include "CountDown/CountDown.h"
 #include "Pause/Pause.h"
 #include "SoundManager/SoundManager.h"
-
+#include "Source/Actor/Character/Cow/Cow.h"
 namespace
 {
 	/** プレイヤーモデルのファイルパス */
 	const char* PLAYER_FILEPATH = "Assets/modelData/CowBoy/CowBooy.tkm";
+
+	/** プレイヤーが牛を引っ張るモデルのファイルパス(左) */
+	const char* PLAYER_PULL_LEFT_FILEPATH = "Assets/modelData/CowBoy/CowBoyPullLeft.tkm";
+
+	/** プレイヤーが牛を引っ張るモデルファイルパス(右) */
+	const char* PLAYER_PULL_RIGHT_FILEPATH = "Assets/modelData/CowBoy/CowBoyPullRight.tkm";
 	
 	/** アニメーションのファイルパス */
 	/** 待機アニメーション */
@@ -52,8 +58,10 @@ Player::Player()
 	//アニメーションクリップの再生
 	animationClips[enAnimationClip_Idle].Load(ANIMATION_IDLEFILEPATH);
 	animationClips[enAnimationClip_Idle].SetLoopFlag(true);
+
 	animationClips[enAnimationClip_Run].Load(ANIMATION_RUNFILEPATH);
 	animationClips[enAnimationClip_Run].SetLoopFlag(true);
+
 	m_playerModelRender.Init(PLAYER_FILEPATH, animationClips, enAnimationClip_Num, enModelUpAxisZ);
 
 
@@ -73,6 +81,12 @@ bool Player::Start()
     m_characterController.Init(CHRACTER_CONTROLLER_WIDTH, CHRACTER_CONTROLLER_HIGHT, m_transform.GetPosition());
 	m_playerModelRender.SetPosition(m_transform.GetPosition());
 	m_playerModelRender.Update();
+
+	m_playerPullLeftModelRender.Init(PLAYER_PULL_LEFT_FILEPATH);
+	m_playerPullLeftModelRender.SetPosition(m_transform.GetPosition());
+
+	m_playerPullRightModelRender.Init(PLAYER_PULL_RIGHT_FILEPATH);
+	m_playerPullRightModelRender.SetPosition(m_transform.GetPosition());
 
 	/** ロープを引っ張る画像の初期化 */
 	m_pullRopeSprite.Init(PULLROPEFILEPATH,PULLROPE_SPRITE_WIDTH,PULLROPE_SPRITE_HEIGHT);
@@ -115,14 +129,18 @@ void Player::Update()
 		return;
 	}
 
+	/*ロープを引っ張る処理*/
+	PullRope();
+	/** プレイヤーのモデル変更条件処理 */
+	//ButtonModel();
+	/** プレイヤーのモデル変更処理 */
+	//UpdateModelByState();
 	/*移動*/
 	Move();
 	/*回転*/
 	Rotation();
 	/*ロープを投げる処理*/
 	ThrowRope();
-	/*ロープを引っ張る処理*/
-	PullRope();
 	/*ステート管理*/
 	ManageState();
 
@@ -131,6 +149,8 @@ void Player::Update()
 
 	
 	m_playerModelRender.Update();
+	m_playerPullLeftModelRender.Update();
+	m_playerPullRightModelRender.Update();
 }
 
 void Player::Move()
@@ -199,7 +219,8 @@ void Player::Move()
 
 	//モデルの座標をキャラクターコントローラーの座標に合わせる
 	m_playerModelRender.SetPosition(m_transform.GetPosition());
-
+	m_playerPullLeftModelRender.SetPosition(m_transform.GetPosition());
+	m_playerPullRightModelRender.SetPosition(m_transform.GetPosition());
 }
 
 void Player::Rotation()
@@ -253,6 +274,24 @@ void Player::ThrowRope()
 	}
 }
 
+void Player::ButtonModel()
+{
+	/** 牛がロープに引っかかったときに引き上げるプレイヤーのモデル変更処理 */
+
+	if (m_rope->GetIsHitCow() && m_isLeftButton1_Trigger)
+	{
+		m_modelState = enModel_Pull_Left;
+	}
+	else if (m_rope->GetIsHitCow() && m_isRightButton1_Trigger)
+	{
+		m_modelState = enModel_Pull_Right;
+	}
+	else
+	{
+		m_modelState = enModel_Normal;
+	}
+}
+
 void Player::PullRope()
 {
 
@@ -266,8 +305,8 @@ void Player::PullRope()
 				m_isRightButton1 = true;
 				m_isLeftButton1 = false;
 
-				m_isRightButton1_Trigger_Ui = true;
-				m_isLeftButton1_Trigger_Ui = false;
+				m_isRightButton1_Trigger = true;
+				m_isLeftButton1_Trigger = false;
 			}
 
 			else if (g_pad[0]->IsTrigger(enButtonLB1))
@@ -275,14 +314,65 @@ void Player::PullRope()
 				m_isLeftButton1 = true;
 				m_isRightButton1 = false;
 
-				m_isLeftButton1_Trigger_Ui = true;
-				m_isRightButton1_Trigger_Ui = false;
+				m_isLeftButton1_Trigger = true;
+				m_isRightButton1_Trigger = false;
 			}
 
 		}
 	}
 }
 
+void Player::UpdateModelByState()
+{
+	/** もしステートが同じなら早期リターンする */
+	if (m_modelState == m_prevModelState)
+	{
+		return;
+	}
+
+	m_prevModelState = m_modelState;
+
+	switch (m_modelState)
+	{
+	case enModel_Normal:
+		ChangeModel(PLAYER_FILEPATH);
+		break;
+
+	case enModel_Pull_Left:
+		ChangeModel(PLAYER_PULL_LEFT_FILEPATH);
+		break;
+
+	case enModel_Pull_Right:
+		ChangeModel(PLAYER_PULL_RIGHT_FILEPATH);
+		break;
+	}
+
+}
+
+void Player::ChangeModel(const char* modelPath)
+{
+	/** 現在のプレイヤーの位置を取得 */
+	Vector3 pos = m_transform.GetPosition();
+
+	/** 現在のプレイヤーの回転位置を取得 */
+	Quaternion rot = m_transform.GetRotation();
+
+	m_playerModelRender.Init(
+		/** 表示したいモデルのファイルパス */
+		modelPath,
+		/** 使用するアニメーショ */
+		animationClips,
+		enAnimationClip_Num,
+		enModelUpAxisZ
+	);
+
+	/** 位置と回転をセットする。 */
+	m_playerModelRender.SetPosition(pos);
+	m_playerModelRender.SetRotation(rot);
+
+	/** モデルを反映させる */
+	m_playerModelRender.Update();
+}
 
 void Player::ManageState()
 {
@@ -298,7 +388,6 @@ void Player::ManageState()
 	}
 
 }
-
 
 void Player::PlayAnimation()
 {
@@ -322,31 +411,39 @@ void Player::PlayAnimation()
 		
 		m_playerModelRender.Update();
 		break;
+
 	}
 }
 
 void Player::Render(RenderContext& rc)
 {
-	m_playerModelRender.Draw(rc);
+	if (!m_rope->GetIsHitCow())
+	{
+		m_playerModelRender.Draw(rc);
+	}
 
 	/** 両方のボタンを押していなかったら */
-	if (m_rope->GetIsHitCow() && !m_isLeftButton1_Trigger_Ui && !m_isRightButton1_Trigger_Ui)
+	if (m_rope->GetIsHitCow() && !m_isLeftButton1_Trigger && !m_isRightButton1_Trigger)
 	{
 		/** ロープを引っ張る画像の描画 */
 		m_pullRopeSprite.Draw(rc);
+
+		
 	}
 
 	/** 右ボタンを押しているとき */
-	if(m_rope->GetIsHitCow() && m_isLeftButton1_Trigger_Ui)
+	if(m_rope->GetIsHitCow() && m_isLeftButton1_Trigger)
 	{
 		/** ロープを引っ張る画像の描画(LBを押しているとき) */
 		m_pullRopeSpriteLB.Draw(rc);
+		m_playerPullRightModelRender.Draw(rc);
 	}
 
 	/** 左ボタンを押しているとき */
-	if (m_rope->GetIsHitCow() && m_isRightButton1_Trigger_Ui)
+	if (m_rope->GetIsHitCow() && m_isRightButton1_Trigger)
 	{
 		/** ロープを引っ張る画像の描画(RBを押しているとき) */
 		m_pullRopeSpriteRB.Draw(rc);
+		m_playerPullLeftModelRender.Draw(rc);
 	}
 }
