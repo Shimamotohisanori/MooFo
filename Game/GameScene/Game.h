@@ -16,6 +16,7 @@ class CowCaptureController;
 class Map;
 class Combo;
 class AddTimerUI;
+class EffectManager;
 
 /** UFOの情報をまとめる構造体 */
 struct UFOinfo
@@ -177,6 +178,9 @@ private:
 
 	/** UFOの配列 */
 	UFO* m_UFO[EnUFO_Num];
+
+	/** エフェクトマネージャー */
+	EffectManager* m_effectManager;
 
 	/** タイムアウトの画像のスケール */
 	Vector3 m_timeOutImageScale = Vector3(0.5f, 0.5f, 1.0f);

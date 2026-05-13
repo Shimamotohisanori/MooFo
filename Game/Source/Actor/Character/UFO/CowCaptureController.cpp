@@ -4,6 +4,7 @@
 #include "CountDown/CountDown.h"
 #include "Pause/Pause.h"
 #include "GameScene/Game.h"
+#include "EffectManager/EffectManager.h"
 namespace
 {
 	const char* LIGHT_FILEPATH = "Assets/modelData/UFO/UFOLight.tkm";
@@ -142,20 +143,25 @@ void CowCaptureController::FollowTheCow()
 	{
 		return;
 	}
-		Vector3 pos = m_ufo->GetPosition();
-		//pos.y -= 50.0f;
-		m_ufoSpotLight.SetPosition(pos);
 
-		/** 光が出ているときだけ描画する*/
-		if (m_isEmitting ||m_ufo->GetIsCowTakeAwayed())
-		{
-			m_ufoSpotLight.SetColor(0.6, 0.9f, 1.0f);
-		}
-		else
-		{
-			m_ufoSpotLight.SetColor(0.0f, 0.0f, 0.0f);
-		}
-		m_ufoSpotLight.Update();
+	Vector3 pos = m_ufo->GetPosition();
+
+	/** UFOの光をエフェクト*/
+
+		//Vector3 pos = m_ufo->GetPosition();
+		////pos.y -= 50.0f;
+		//m_ufoSpotLight.SetPosition(pos);
+
+		///** 光が出ているときだけ描画する*/
+		//if (m_isEmitting ||m_ufo->GetIsCowTakeAwayed())
+		//{
+		//	m_ufoSpotLight.SetColor(0.6, 0.9f, 1.0f);
+		//}
+		//else
+		//{
+		//	m_ufoSpotLight.SetColor(0.0f, 0.0f, 0.0f);
+		//}
+		//m_ufoSpotLight.Update();
 }
 
 
@@ -186,6 +192,15 @@ void CowCaptureController::CountTimer()
 	}
 	// 状態に応じてフラグ更新
 	m_isEmitting = (m_state == Emit || m_state == Capture);
+
+	/** Emitに入った瞬間にエフェクトを再生する*/
+	if (!m_prevIsEmitting && m_isEmitting)
+	{
+		PlayLightEffect();
+	}
+
+	m_prevIsEmitting = m_isEmitting;
+
 }
 
 void CowCaptureController::CountSpriteUI()
@@ -215,6 +230,24 @@ void CowCaptureController::CountSpriteUI()
 	pos.y = 513.0f;
 	pos.z = 0.0f;
 	m_LightApperNumberSpriteRender[m_currentCount].SetPosition(pos);
+}
+
+void CowCaptureController::PlayLightEffect()
+{
+	if (!m_ufo) return;
+
+	auto e = NewGO<nsK2EngineLow::EffectEmitter>(0);
+	e->Init((int)EffectID::EffectID_UFOLight);
+
+	/**  UFO の真下に出す */
+	Vector3 pos = m_ufo->GetPosition();
+	pos.y -= 50.0f;
+	e->SetPosition(pos);
+
+	/** UFO のライトは大きい方が見える */
+	e->SetScale({ 5.0f, 5.0f, 5.0f });
+
+	e->Play();
 }
 
 void CowCaptureController::Render(RenderContext& rc)

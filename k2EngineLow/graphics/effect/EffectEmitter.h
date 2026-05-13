@@ -85,7 +85,7 @@ namespace nsK2EngineLow {
 		/// <returns>‰ñ“]B</returns>
 		const Quaternion& GetRotation() const
 		{
-			m_effect.GetRotation();
+			return m_effect.GetRotation();
 		}
 		/// <summary>
 		/// Ä¶’†‚©‚Ç‚¤‚©‚ğæ“¾B

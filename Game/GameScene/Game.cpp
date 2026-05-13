@@ -17,8 +17,8 @@
 #include "Map/Map.h"
 #include "nature/SkyCube.h"
 #include "Combo/Combo.h"
-#include"GameTimer/AddTimerUI.h"
-
+#include "GameTimer/AddTimerUI.h"
+#include "EffectManager/EffectManager.h"
 
 namespace
 {
@@ -32,7 +32,6 @@ namespace
 
 Game::~Game()
 {
-	
 	/** ステージを削除 */
 	DeleteGO(m_stage);
 
@@ -67,6 +66,9 @@ Game::~Game()
 	/** ゲームカメラを削除 */
 	DeleteGO(m_gameCamera);
 	
+	/** 空の削除 */
+	DeleteGO(m_skyCube);
+
 	/** カウントダウンの削除 */
 	DeleteGO(m_countDown);
 
@@ -80,6 +82,9 @@ Game::~Game()
 
 	/** タイマー追加UIの削除 */
 	DeleteGO(m_addTimerUI);
+
+	/** エフェクトマネージャーの削除 */
+	DeleteGO(m_effectManager);
 }
 bool Game::Start()
 {
@@ -89,8 +94,8 @@ bool Game::Start()
 	m_gameCamera = FindGO<GameCamera>("gameCamera");
 	m_skyCube = FindGO<SkyCube>("skyCube");
 	m_inGameSound = FindGO<SoundManager>("soundmanager");
-
-	
+	m_effectManager = FindGO<EffectManager>("effectManager");
+	//m_effectManager->Init();
 
 	/** スコアの生成 */
 	m_score = NewGO<Score>(0, "score");

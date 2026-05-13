@@ -54,6 +54,12 @@ public:
 	void FollowTheCow();
 	/** 秒数の描画処理*/
 	void CountSpriteUI();
+
+
+private:
+	/** UFOの光を出す関数*/
+	void PlayLightEffect();
+
 private:
 	/** スポットライト*/
 	nsK2Engine::SpotLight m_ufoSpotLight;
@@ -77,6 +83,9 @@ private:
 	bool m_isEmitting = false;
 	/** 牛を捕獲しているかどうかのフラグ*/
 	bool m_isCapturing = false;
+
+	/** Emitに入った瞬間を記録するフラグ*/
+	bool m_prevIsEmitting = false;
 
 	UFO* m_ufo = nullptr;
 	Pause* m_pause;
