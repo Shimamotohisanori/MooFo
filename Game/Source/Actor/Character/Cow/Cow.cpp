@@ -14,13 +14,19 @@
 
 namespace
 {
-	const char* GAMECLEAR_FILEPATH = "Assets/modelData/Cow/Model/Cow4.tkm"; //enModelUpAxis = enModelUpAxisZ;
+	/** 牛のモデルファイルパス */
+	const char* COW_MOCEL_FILEPATH = "Assets/modelData/Cow/Model/Cow4.tkm"; //enModelUpAxis = enModelUpAxisZ;
+
+	/** 牛のアニメーションのファイルパス */
 	const char* IDLE_ANIMATION_FILE_PATH = "Assets/modelData/Cow/Animation/Idle2.tka";
-	const char* FILEPATH_WALK = "Assets/modelData/Cow/Animation/Walk.tka";
+
+	/** 牛の歩くアニメーションのファイルパス */
+	const char* WALK_ANIMATION_FILE_PATH = "Assets/modelData/Cow/Animation/Walk.tka";
 
 	/** プレイヤーに引っ張られるときの力 */
 	constexpr float PULL_POWER = 8.0f;
 
+	/** プレイヤーから逃げるときの力 */
 	constexpr float COW_MOVE_LIMIT_RADIUS = 1450.0f;
 
 	/** この距離以内なら逃げる */
@@ -40,7 +46,7 @@ Cow::Cow()
 	animationClips[EnAnimation_Idle].SetLoopFlag(true);
 	
 	/** Walk */
-	animationClips[EnAnimation_Walk].Load(FILEPATH_WALK);
+	animationClips[EnAnimation_Walk].Load(WALK_ANIMATION_FILE_PATH);
 	animationClips[EnAnimation_Walk].SetLoopFlag(true);
 }
 
@@ -52,7 +58,7 @@ Cow::~Cow()
 bool Cow::Start()
 {
 
-	m_cowmodelRender.Init(GAMECLEAR_FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
+	m_cowmodelRender.Init(COW_MOCEL_FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
 	m_cowmodelRender.SetPosition(m_transform.GetPosition());
 	m_cowmodelRender.Update();
 
@@ -70,6 +76,7 @@ void Cow::Update()
 	m_game = FindGO<Game>("game");
 	m_cowCaptureController = FindGO<CowCaptureController>("cowcapturecontroller");
 
+	/** どれかが存在しないときは処理しないようにするため早期リターン */
 	if (m_pause == nullptr ||
 		m_countdown == nullptr ||
 		m_player == nullptr ||
@@ -97,35 +104,38 @@ void Cow::Update()
 	{
 		return;
 	}
-	/*アニメーション*/
+
+	/** アニメーションの再生 */
 	PlayAnimation();
 	
 	/** プレイヤーから逃げる関数 */
 	AvoidPlayer();
 
-  if (m_rotationState == EnRotateState_MoveDir)
-  {
-		/*移動*/
+	if (m_rotationState == EnRotateState_MoveDir)
+	{
+		/** 移動 */
 		Move();
-  }
+	}
 	
-	/*ステート*/
+	/** ステート管理 */
 	ManageState();
-	/*回転*/
+	
+	/** 回転 */
 	Rotation();
 	
-	/** 牛がプレイヤーに引っ張られる処理*/
+	/** 牛がプレイヤーに引っ張られる処理 */
 	PulledByPlayer();
 
-	/** 牛がプレイヤーに捕獲される処理*/
+	/** 牛がプレイヤーに捕獲される処理 */
 	CapturedByPlayer();
 
-	/*モデルの位置を反映*/
+	/** モデルの位置を反映 */
 	m_cowmodelRender.SetPosition(m_transform.GetPosition());
-	/*モデルに回転を反映*/
+	
+	/** モデルに回転を反映 */
 	m_cowmodelRender.SetRotation(m_transform.GetRotation());
 
-	/*モデルの更新*/
+	/** モデルの更新 */
 	m_cowmodelRender.Update();
 
 }

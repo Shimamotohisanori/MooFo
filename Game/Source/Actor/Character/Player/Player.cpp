@@ -317,12 +317,12 @@ void Player::ManageState()
 	}
 	if (fabsf(m_moveSpeed.x) >= 0.01f || fabsf(m_moveSpeed.z) >= 0.01f)
 	{
-		//移動しているときは走るアニメーションにする
+		/** 移動しているときは走るアニメーションにする */
 		m_playerState = 1;
 	}
 	else
 	{
-		//移動していないときは待機アニメーションにする
+		/** 移動していないときは待機アニメーションにする */
 		m_playerState = 0;
 	}
 
@@ -330,7 +330,7 @@ void Player::ManageState()
 
 void Player::PlayAnimation()
 {
-	//前の状態と同じ状態だったらアニメーションを切り替えない
+	/** 前の状態と同じ状態だったらアニメーションを切り替えない */
 	if (m_playerState == m_prevPlayerState)
 	{
 		return;
@@ -339,26 +339,26 @@ void Player::PlayAnimation()
 	switch (m_playerState)
 	{
 	case 0:
-		//待機アニメーション
+		/** 待機アニメーション */
 		m_playerModelRender.PlayAnimation(enAnimationClip_Idle);
 
 		m_playerModelRender.Update();
 		break;
 	case 1:
-		//走るアニメーション
+		/** 走るアニメーション */
 		
 			m_playerModelRender.PlayAnimation(enAnimationClip_Run);
 
 			m_playerModelRender.Update();
 		break;
 	case 2:
-		//縄を引っ張るアニメーション(左)
+		/** 縄を引っ張るアニメーション(左) */
 		m_playerModelRender.PlayAnimation(enAnimationClip_PullLeft);
 
 		m_playerModelRender.Update();
 		break;
 	case 3:
-		//縄を引っ張るアニメーション(右)
+		/** 縄を引っ張るアニメーション(右) */
 		m_playerModelRender.PlayAnimation(enAnimationClip_PullRight);
 
 		m_playerModelRender.Update();
@@ -369,7 +369,7 @@ void Player::PlayAnimation()
 
 void Player::Render(RenderContext& rc)
 {
-		m_playerModelRender.Draw(rc);
+	m_playerModelRender.Draw(rc);
 
 	/** 両方のボタンを押していなかったら */
 	if (m_rope->GetIsHitCow() && !m_isLeftButton1_Trigger && !m_isRightButton1_Trigger)

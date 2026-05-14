@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "UFO.h"
-#include <time.h>
 #include "CountDown/CountDown.h"
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "GameScene/Game.h"
@@ -13,7 +12,8 @@
 #include "Combo/Combo.h"
 namespace
 {
-	const char* GAMECLEAR_FILEPATH = "Assets/modelData/UFO/UFO.tkm"; //enModelUpAxis = enModelUpAxisZ;
+	/** UFOのモデルファイルパス */
+	const char* UFO_MODEL_FILEPATH = "Assets/modelData/UFO/UFO.tkm"; //enModelUpAxis = enModelUpAxisZ;
 
 	/** UFOの大きさ*/
 	constexpr float UFO_SCALE = 3.5f;
@@ -52,10 +52,12 @@ namespace
 	constexpr float MIN_DIST_SQ = MIN_DIST * MIN_DIST;
 }
 
+
 UFO::UFO()
 {
 
 }
+
 
 UFO::~UFO()
 {
@@ -66,15 +68,17 @@ UFO::~UFO()
 bool UFO::Start()
 {
 	m_cowCaptureController =NewGO<CowCaptureController>(0,"cowcapturecontroller");
+
 	/** それぞれのUFOに自分自身を設定 */
 	m_cowCaptureController->SetUFO(this);
+	m_ufomodelRender.Init(UFO_MODEL_FILEPATH);
 	m_ufomodelRender.SetScale(UFO_SCALE,UFO_SCALE,UFO_SCALE);
-	m_ufomodelRender.Init(GAMECLEAR_FILEPATH);
 	m_ufomodelRender.SetPosition(m_transform.GetPosition());
 	m_ufomodelRender.Update();
 	
 	return true;
 }
+
 
 void UFO::Update()
 {
@@ -83,6 +87,7 @@ void UFO::Update()
 	m_pause = FindGO<Pause>("pause");
 	m_score = FindGO<Score>("score");
 
+	/** UFOがゲームシーンに存在していないときは処理をしない */
 	if(m_pause == nullptr || m_countdown == nullptr || m_game == nullptr)
 	{
 		return;
@@ -110,17 +115,18 @@ void UFO::Update()
 	{
 		/** 移動 */
 		Move();
+		
 		/** 回転 */
 		Rotation();
 	}
-	/**　光が出ているときだけ探す*/
+
+	/**　光が出ているときだけ探す */
 	if (IsLightEmitting())
 	{
 		/** 牛を見つける関数 */
 		FindTheCow();
 	}
 	
-
 	/** 牛を連れていく関数 */
 	TakeAwayTheCow();
 
@@ -128,8 +134,10 @@ void UFO::Update()
 
 	/** モデルの位置を反映 */
 	m_ufomodelRender.SetPosition(m_transform.GetPosition());
+
 	/** モデルの回転を反映 */
 	m_ufomodelRender.SetRotation(m_transform.GetRotation());
+	
 	/** モデルの更新 */
 	m_ufomodelRender.Update();
 }
@@ -143,7 +151,7 @@ void UFO::Move()
 		return;
 	}
 
-	/** 追尾中なら近くの牛の方向に少しずつ進む。 */
+	/** 追尾中なら近くの牛の方向に少しずつ進む */
 	if (m_isChasing)
 	{
 		/** UFOの位置をposに入れる */
@@ -152,10 +160,10 @@ void UFO::Move()
 		/** 追跡中でも反発処理を行う */
 		ApplyUFOAvoidance(pos);
 
-		/** 現在の位置に少しだけ移動量を足している。 */
+		/** 現在の位置に少しだけ移動量を足している */
 		pos += m_moveDir * m_moveSpeed * g_gameTime->GetFrameDeltaTime();
 
-		/** 計算した新しい位置を、実際のUFOに反映する。 */
+		/** 計算した新しい位置を、実際のUFOに反映する */
 		m_transform.SetPosition(pos);
 		return;
 	}
@@ -164,25 +172,26 @@ void UFO::Move()
 	{
 		Vector3 dir
 		(
-			//(0,1,2,から-1を引いているので)-1,0,1の範囲でランダムな値を生成
-			rand() % MOVE_DIR_RANGE - 1,//x
-			0,             //yは常に0
-			rand() % MOVE_DIR_RANGE - 1//z
+			/** (0, 1, 2, から - 1を引いているので) - 1, 0, 1の範囲でランダムな値を生成 */
+			rand() % MOVE_DIR_RANGE - 1,/** x */
+			0,                          /** yは常に0 */
+			rand() % MOVE_DIR_RANGE - 1 /** z */
 		);
-		// 0,0,0になったら一秒休む
+
+		/** 0, 0, 0になったら一秒休む */
 		if (dir.LengthSq() == 0)
 		{
 			m_moveDir = Vector3::Zero;
-			m_moveTimer = REST_TIME_SEC;//1秒休む
+			m_moveTimer = REST_TIME_SEC;/** 1秒休む */
 		}
+
 		else
 		{
 			dir.Normalize();
 			m_moveDir = dir;
-			m_moveTimer = MOVE_TIME_SEC;//2秒ごとに方向を変える
+			m_moveTimer = MOVE_TIME_SEC;/** 2秒ごとに方向を変える */
 		}
 	}
-
 	
 	Vector3 pos = m_transform.GetPosition();
 
@@ -198,7 +207,7 @@ void UFO::Move()
 	/** 制限区域内に収める */
 	ClampToArea(pos);
 
-	/** 計算した新しい位置を、実際のUFOに反映する。 */
+	/** 計算した新しい位置を、実際のUFOに反映する */
 	m_transform.SetPosition(pos);
 
 	/** モデルに位置を反映 */
@@ -210,6 +219,7 @@ void UFO::Move()
 
 }
 	
+
 void UFO::Rotation()
 {
 	/** 牛を連れていってる最中は回転させない */
@@ -221,11 +231,12 @@ void UFO::Rotation()
 	/** 少しでも動いたら移動方向に向きを回転させる */
 	if (fabsf(m_moveDir.x) >= ROTATION_THRESHOLD || fabsf(m_moveDir.z) >= ROTATION_THRESHOLD)
 	{
-		//移動方向に回転させる
+		/** 移動方向に回転させる */
 		m_transform.GetRotation().SetRotationYFromDirectionXZ(m_moveDir);
 		m_transform.SetRotation(m_transform.GetRotation());
 	}
 }
+
 
 void UFO::TakeAwayTheCow()
 {
@@ -257,9 +268,9 @@ void UFO::TakeAwayTheCow()
 		CowNumberOfRescues* cowNumberOfRescues = FindGO<CowNumberOfRescues>("cownumberofrescues");
 		cowNumberOfRescues->SubRescue();
 
-		/*牛が連れ去られたらスコアを減らす処理*/
+		/** 牛が連れ去られたらスコアを減らす処理 */
 		m_score->DecreaseScore(100);
-		/* 牛の状態を連れていかれる前の状態に戻す */
+		/** 牛の状態を連れていかれる前の状態に戻す */
 		m_targetCow->SetIsTakeAwayed(false);
 
 		if (auto rope = FindGO<Rope>("rope"))
@@ -299,14 +310,16 @@ void UFO::TakeAwayTheCow()
 
 }
 
+
 CowCaptureController* UFO::GetCowCaptureController()
 {
 	return m_cowCaptureController;
 }
 
+
 void UFO::FindTheCow()
 {
-	/**光が出ていないときは探さないようにする*/
+	/** 光が出ていないときは探さないようにする */
 	if (!m_cowCaptureController->GetIsEmitting()) return;
 	
 	/** 牛を連れていけるかどうかのフラグが立っていたら処理しない */
@@ -363,11 +376,11 @@ void UFO::FindTheCow()
 		/**  追尾中だったらtrue */
 		m_isChasing = true;
 
-		/** 牛の方向を作る。 */
+		/** 牛の方向を作る */
 		Vector3 dir = nearestCow->GetPosition() - m_transform.GetPosition();
 		dir.Normalize();
 
-		/** dirの方向に進むようにセットする。 */
+		/** dirの方向に進むようにセットする */
 		m_moveDir = dir;
 
 
@@ -378,18 +391,20 @@ void UFO::FindTheCow()
 			m_isCowTakeAwayed = true;
 			m_targetCow = nearestCow;
 
-			/** いま追っている牛をtrueにして他のUFOは追尾しないようにする。 */
+			/** いま追っている牛をtrueにして他のUFOは追尾しないようにする */
 			m_targetCow->SetIsTakeAwayed(true);
 			m_cowCaptureController->SetCapturing(true);
 		}
 	}
-	/** それいがいは追尾しない。 */
+
+	/** それいがいは追尾しない */
 	else
 	{
 		m_isChasing = false;
 	}
 
 }
+
 
 void UFO::ApplyUFOAvoidance(Vector3& pos)
 {
@@ -445,8 +460,10 @@ void UFO::ApplyUFOAvoidance(Vector3& pos)
 	}
 }
 
+
 void UFO::ClampToArea(Vector3& pos)
 {
+	/** UFOが制限区域を出ないようにする */
 	if (pos.x < AREA_MIN_X)
 	{
 		pos.x = AREA_MIN_X;

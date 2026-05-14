@@ -19,8 +19,6 @@ private:
 
 private:
 	ModelRender m_stageModelRender;
-	ModelRender m_treeModelRender;
-	ModelRender m_groundModelRender;
 	ModelRender m_mapStageModelRender;
 };
 
