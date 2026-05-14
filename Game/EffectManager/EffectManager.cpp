@@ -14,9 +14,4 @@ void EffectManager::LoadEffects()
 		(int)EffectID::EffectID_UFOLight,
 		u"Assets/Effects/UFOLight.efk"
 	);
-
-	nsK2EngineLow::EffectEngine::GetInstance()->ResistEffect(
-		(int)EffectID::EffectID_UFOLightCapture,
-		u"Assets/Effects/UFOLightCapture.efk"
-	);
 }

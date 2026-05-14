@@ -30,23 +30,26 @@ public:
 		m_numberOfRescues--;
 	}
 
-	/*牛の救出数をゲームオーバーとゲームクリアに反映*/
+	/** 牛の救出数をゲームオーバーとゲームクリアに反映 */
 	int GetNumberOfRescues() const;
 	
-	/*セット関数*/
+	/** セット関数 */
 	void SetNumber(int number)
 	{
 		m_numberOfRescues = number;
 	}
 	
+	/** リザルトをセットする関数 */
 	void SetResult(bool isResult);
 
+	/** リザルトの種類 */
 	enum class ResultType
 	{
 		GameClear,
 		GameOver,
 	};
 
+	/**リザルトの種類をセットする関数 */
 	void SetResultType(ResultType type)
 	{
 		m_resultType = type;
@@ -67,7 +70,7 @@ private:
 		GameOver,
 		LayoutTypeNum
 	};
-	/*レイアウトの種類ごとのUIの大きさ*/
+	/** レイアウトの種類ごとのUIの大きさ */
 	
 	/** 救出数 */
 	Vector3 rescueScale[LayoutTypeNum];
@@ -108,13 +111,13 @@ private:
 	Vector3 zeroPos[LayoutTypeNum];
 
 	/** 救出数 */
-	int m_numberOfRescues = 0;
+	uint8_t m_numberOfRescues = 0;
 
 	/**	十の位 */
-	int tens = 0;
+	uint8_t tens = 0;
 
 	/** 一の位 */
-	int ones = 0;
+	uint8_t ones = 0;
 
 	/** ファイルパス */
 	std::string m_filePath[10];
@@ -136,7 +139,8 @@ private:
 
 	/** 5の画像 */
 	SpriteRender m_zeroSprite;
-	/*リザルト*/
+	
+	/** リザルト */
 	bool m_isResult = false;
 
 };

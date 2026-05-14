@@ -36,7 +36,7 @@ const UFOinfo UFO_INFOMATIONS[] =
 	{ "UFO4", Vector3(0.0f, 70.0f, 1400.0f) }
 };
 
-
+/** ゲームクラス */
 class Game : public IGameObject
 {
 public:
