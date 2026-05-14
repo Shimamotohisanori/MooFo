@@ -33,8 +33,6 @@ namespace
 	m_soundSprite.SetPosition(SOUNDPOS);
 	m_soundSprite.Update();
 
-	m_arrowSprite.Init("Assets/sprite/PauseUI/Arrow.dds", 150.0f, 150.0f);
-
 	//m_settingSprite.Init("Assets/setting.dds",300.0f,200.0f);
 	//m_bgmSprite.Init("Assets/BGM.dds",100.0f,150.0f);
 	//m_sePrite.Init("Assets/SE.dds",100.0f,150.0f);
@@ -151,5 +149,5 @@ void Pause::Render(RenderContext& rc)
 	m_quiteSprite.Draw(rc);
 	m_resumeSprite.Draw(rc);
 	m_soundSprite.Draw(rc);
-	m_arrowSprite.Draw(rc);
+	//m_arrowSprite.Draw(rc);
 }

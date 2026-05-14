@@ -15,13 +15,13 @@ public:
 	void Render(RenderContext& rc);
 
 	/** ポーズ中に選んでいる場所の番号設定関数 */
-	void SetCountNumber(int countNumber)
+	void SetCountNumber(uint8_t countNumber)
 	{
 		m_countNumber = countNumber;
 	}
 
 	/** ポーズ中に選んでいる場所の番号取得関数 */
-	int GetCountNumber()
+	uint8_t GetCountNumber()
 	{
 		return m_countNumber;
 	}
@@ -40,7 +40,7 @@ public:
 
 
 private:
-	int m_countNumber = 0;
+	uint8_t m_countNumber = 0;
 
 	SoundManager* m_choiceSound;
 	SoundSource* p_chiceSE;

@@ -83,6 +83,8 @@ bool Map::Start()
 }
 void Map::Update()
 {
+	m_flashTImer += g_gameTime->GetFrameDeltaTime();
+
 	/** それぞれのポジションを代入させる。 */
 	Vector3 playerPos = m_player->GetPosition();
 
@@ -255,10 +257,14 @@ void Map::Render(RenderContext& rc)
 			}
 		}
 
+		float flash = (sinf(m_flashTImer * 4.0f) + 1.0f) * 0.5f;
+
 		for (int i = 0; i < m_ufos.size(); i++)
 		{
 			if (m_isdanger[i])
 			{
+				m_dangerSprite[i].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, flash));
+
 				m_dangerSprite[i].Draw(rc);
 			}
 		}
