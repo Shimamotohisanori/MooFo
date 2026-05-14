@@ -120,10 +120,10 @@ private:
 	Cow* m_cow;
 
 	/** プレイヤーの状態 */
-	int m_playerState = 0;
+	uint8_t m_playerState = 0;
 
 	/** 前のプレイヤーの状態 */
-	int m_prevPlayerState = -1;
+	uint8_t m_prevPlayerState = -1;
 
 	/** ロープを投げるまでのクールタイム */
 	float m_throwRopeCoolTime = 0.0f;
@@ -143,26 +143,19 @@ private:
 	/** プレイヤーが動いているかどうかのフラグ */
 	bool m_isMoving = false;
 
+	/** 縄を引っ張っているアニメーションが交互に呼び出されているか確認するフラグ */
+	bool m_isPullAnimation = false;
+
 	/** アニメーション */
 	enum EnPlayAnimation
 	{
 		enAnimationClip_Idle,
 		enAnimationClip_Run,
+		enAnimationClip_PullLeft,
+		enAnimationClip_PullRight,
 		enAnimationClip_Num,
 	};
 
 	AnimationClip animationClips[enAnimationClip_Num];
-
-	/** 現在のモデル状態のステート */
-	enum PlayerModelState
-	{
-		enModel_Normal,
-		enModel_Pull_Left,
-		enModel_Pull_Right
-	};
-
-	PlayerModelState m_modelState = enModel_Normal;
-	/** 毎フレーム実行されないように対策 */
-	PlayerModelState m_prevModelState = enModel_Normal;
 };
 

@@ -20,9 +20,10 @@ namespace
 	const char* ANIMATION_RUNFILEPATH = "Assets/modelData/CowBoy/Run.tka";
 
 	/** ロープを引っ張るアニメーション(左) */
-	const char* ANIMATION_PULLLEFT_FILEPATH = "Assets/modelData/PullLeft.tka";
+	const char* ANIMATION_PULLLEFT_FILEPATH = "Assets/modelData/CowBoy/PullLeft.tka";
 
-
+	/** ロープを引っ張るアニメーション(右) */
+	const char* ANIMATION_PULLRIGHT_FILEPATH = "Assets/modelData/CowBoy/PullRight.tka";
 	
 	/** ロープを引っ張る画像のファイルパス */
 	const char* PULLROPEFILEPATH = "Assets/sprite/PullRopeButton/PullRope.dds";
@@ -60,6 +61,12 @@ Player::Player()
 
 	animationClips[enAnimationClip_Run].Load(ANIMATION_RUNFILEPATH);
 	animationClips[enAnimationClip_Run].SetLoopFlag(true);
+
+	animationClips[enAnimationClip_PullLeft].Load(ANIMATION_PULLLEFT_FILEPATH);
+	animationClips[enAnimationClip_PullLeft].SetLoopFlag(true);
+
+	animationClips[enAnimationClip_PullRight].Load(ANIMATION_PULLRIGHT_FILEPATH);
+	animationClips[enAnimationClip_PullRight].SetLoopFlag(true);
 
 	m_playerModelRender.Init(PLAYER_FILEPATH, animationClips, enAnimationClip_Num, enModelUpAxisZ);
 
@@ -284,12 +291,30 @@ void Player::PullRope()
 				m_isRightButton1_Trigger = false;
 			}
 
+			if (g_pad[0]->IsTrigger(enButtonRB1) || g_pad[0]->IsTrigger(enButtonLB1))
+			{
+				if (m_isPullAnimation)
+				{
+					m_playerState = 2;
+				}
+				else
+				{
+					m_playerState = 3;
+				}
+
+				m_isPullAnimation = !m_isPullAnimation;
+			}
 		}
 	}
 }
 
 void Player::ManageState()
 {
+	/** 牛を引っ張っている最中は再生しないようにする。 */
+	if (m_rope->GetIsHitCow())
+	{
+		return;
+	}
 	if (fabsf(m_moveSpeed.x) >= 0.01f || fabsf(m_moveSpeed.z) >= 0.01f)
 	{
 		//移動しているときは走るアニメーションにする
@@ -326,6 +351,19 @@ void Player::PlayAnimation()
 
 			m_playerModelRender.Update();
 		break;
+	case 2:
+		//縄を引っ張るアニメーション(左)
+		m_playerModelRender.PlayAnimation(enAnimationClip_PullLeft);
+
+		m_playerModelRender.Update();
+		break;
+	case 3:
+		//縄を引っ張るアニメーション(右)
+		m_playerModelRender.PlayAnimation(enAnimationClip_PullRight);
+
+		m_playerModelRender.Update();
+		break;
+
 	}
 }
 
