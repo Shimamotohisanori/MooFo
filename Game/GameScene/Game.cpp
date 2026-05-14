@@ -247,6 +247,22 @@ void Game::Death()
 	DeleteGO(this);
 }
 
+void Game::ReMoveCow(Cow* cow)
+{
+	/** 生きている牛のリストから引数で渡された牛を消す */
+	auto it = std::find(m_aliveCows.begin(), m_aliveCows.end(), cow);
+	if (it != m_aliveCows.end())
+	{
+		m_aliveCows.erase(it);
+	}
+
+	/** Mapにも通知 */
+	if (m_map)
+	{
+		m_map->RemoveCow(cow);
+	}
+}
+
 void Game::SpawnCow()
 {
 	if (m_timer->GetTimer() <= 4.0f || m_isTimeOut)

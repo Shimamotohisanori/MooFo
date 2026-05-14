@@ -28,14 +28,14 @@ public:
 		m_isCapturing = flag;
 	}
 
-	void StartCapture()
+	/** 捕獲終了の処理を行う関数*/
+	void EndCaptured()
 	{
-		
-	}
-
-	void EndCapture()
-	{
-		
+		if (m_ufoLightEffect)
+		{
+			m_ufoLightEffect->Stop();
+			m_ufoLightEffect = nullptr;
+		}
 	}
 
 	enum UFOLightState
@@ -50,21 +50,21 @@ public:
 		
 	/** UFOが光を出すまでの時間をカウントする関数*/
 	void CountTimer();
-	/**UFOに光を追従させる関数*/
-	void FollowTheCow();
+
 	/** 秒数の描画処理*/
 	void CountSpriteUI();
 
 
 private:
+
+	/** 光をUDOに追従させる関数 */
+	void FollowUFO();
+
 	/** UFOの光を出す関数*/
 	void PlayLightEffect();
 
 private:
-	/** スポットライト*/
-	nsK2Engine::SpotLight m_ufoSpotLight;
-	/** モデルレンダー*/
-	ModelRender m_ufocontrollermodelRender;
+	
 	/** 光が出ているときに表示する数字のスプライトレンダー*/
 	SpriteRender m_LightApperNumberSpriteRender[5];
 	/** 「光の発射まで」を表示するスプライトレンダー*/
@@ -91,5 +91,8 @@ private:
 	Pause* m_pause;
 	CountDown* m_countdown;
 	Game* m_game;
+
+	/** UFOの光のエフェクト*/
+	EffectEmitter* m_ufoLightEffect;
 };
 

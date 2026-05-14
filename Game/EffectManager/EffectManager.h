@@ -4,6 +4,7 @@
 enum class EffectID
 {
 	EffectID_UFOLight,
+	EffectID_UFOLightCapture,
 	EffectID_Num
 };
 

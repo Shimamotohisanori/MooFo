@@ -6,6 +6,7 @@ class CountDown;
 class UFO;
 class Pause;
 class Game;
+class CowCaptureController;
 class Cow : public Character
 {
 public:
@@ -80,16 +81,16 @@ private:
 	void AvoidPlayer();
 	
 private:
-	//ロープ
+	/** ロープ */
 	Rope* m_rope;
 
-	//プレイヤー
+	/** プレイヤー */
 	Player* m_player;
 
-	//カウントダウン
+	/** カウントダウン */
 	CountDown* m_countdown;
 
-	//UFO
+	/** UFO */
 	UFO* m_takingUFO = nullptr;
 
 	/** ポーズ */
@@ -97,6 +98,9 @@ private:
 
 	/** ゲーム */
 	Game* m_game = nullptr;
+
+	/** 牛捕獲コントローラー */
+	CowCaptureController* m_cowCaptureController = nullptr;
 
 	enum EnCowState
 	{

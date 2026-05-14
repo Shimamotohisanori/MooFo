@@ -9,7 +9,8 @@
 #include "Pause/Pause.h"
 #include "Combo/Combo.h"
 #include "GameScene/Game.h"
-#include"DummyCow.h"
+#include "DummyCow.h"
+#include "Source/Actor/Character/UFO/CowCaptureController.h"
 
 namespace
 {
@@ -67,8 +68,14 @@ void Cow::Update()
 	m_rope = FindGO<Rope>("rope");
 	m_pause = FindGO<Pause>("pause");
 	m_game = FindGO<Game>("game");
+	m_cowCaptureController = FindGO<CowCaptureController>("cowcapturecontroller");
 
-	if (m_pause == nullptr || m_countdown == nullptr || m_player == nullptr || m_rope == nullptr || m_game == nullptr)
+	if (m_pause == nullptr ||
+		m_countdown == nullptr ||
+		m_player == nullptr ||
+		m_rope == nullptr ||
+		m_game == nullptr ||
+		m_cowCaptureController == nullptr)
 	{
 		return;
 	}
@@ -305,6 +312,10 @@ void Cow::CapturedByPlayer()
 			{
 				m_takingUFO->SetIsCowTakeAwayed(false);
 				m_takingUFO->ReMoveTargetCow();
+				/** 牛捕獲コントローラーの捕獲フラグを下ろす */
+				m_takingUFO->GetCowCaptureController()->SetCapturing(false);
+				/** 牛捕獲コントローラーの捕獲終了の処理を行う関数を呼ぶ*/
+				m_takingUFO->GetCowCaptureController()->EndCaptured();
 			}
 
 			/** カメラの牛捕獲フラグを下ろす */
@@ -335,12 +346,14 @@ void Cow::CapturedByPlayer()
 			m_isTakeAwayed = false;
 			
 			DummyCow* dummyCow = NewGO<DummyCow>(0, "dummyCow");
+			
 			/** dummyCowに牛の情報を渡す*/
 			dummyCow->SetPosition(m_transform.GetPosition());
 			dummyCow->SetRotation(m_transform.GetRotation());
+			
 			/** ジャンプアニメーションを再生*/
 			dummyCow->PlayJumpAnimtion();
-
+			
 			/** 牛を削除 */
 			DeleteGO(this);
 			return;

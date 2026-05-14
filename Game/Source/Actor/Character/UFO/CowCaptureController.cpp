@@ -49,23 +49,7 @@ CowCaptureController::~CowCaptureController()
 
 bool CowCaptureController::Start()
 {
-	/** スポットライト初期化*/
-	m_ufoSpotLight.Init();
-	/** 色の設定*/
-	m_ufoSpotLight.SetColor(0.6f, 0.9f, 1.0f);
-	/** スポットライト範囲*/
-	m_ufoSpotLight.SetRange(200.0f);
-	/** 射出方向*/
-	m_ufoSpotLight.SetDirection(0.0f, 5.0f, 0.0f);
-	/** 射出角度*/
-	m_ufoSpotLight.SetAngle(100.0f);
-	/** 影響率に累乗する値の設定*/
-	m_ufoSpotLight.SetAngleAffectPowParam(0.6f);
-	/** 影響率の累乗数の設定*/
-	m_ufoSpotLight.SetRangeAffectPowParam(0.5f);
 
-	/*m_ufocontrollermodelRender.Init(LIGHT_FILEPATH);
-	m_ufocontrollermodelRender.SetScale(UFO_SCALE);*/
 	for (int i = 0; i < 5; i++)
 	{
 			/** 光の数字スプライト初期化*/
@@ -84,7 +68,7 @@ bool CowCaptureController::Start()
 	m_secondsSpriteRender.Update();
 	/**　最初は光が出ていない状態にする*/
 	m_timer = m_waitTimer;
-	
+
 	return true;
 }
 
@@ -123,10 +107,13 @@ void CowCaptureController::Update()
 	}
 	/** タイマーのカウント処理*/
 	CountTimer();
+	
 	/** スプライトのカウント処理*/
 	CountSpriteUI();
-	/** UFOの追従処理*/
-	FollowTheCow();
+	
+	/** UFOに光を追従させる処理*/
+	FollowUFO();
+
 	/** UFOのモデル更新*/
 	//m_ufoSpotLight.Update();
 	/** 数字スプライトの更新*/
@@ -135,37 +122,6 @@ void CowCaptureController::Update()
 		m_LightApperNumberSpriteRender[m_currentCount].Update();
 	}
 }
-
-
-void CowCaptureController::FollowTheCow()
-{
-	if (!m_ufo)
-	{
-		return;
-	}
-
-	Vector3 pos = m_ufo->GetPosition();
-
-	/** UFOの光をエフェクト*/
-
-		//Vector3 pos = m_ufo->GetPosition();
-		////pos.y -= 50.0f;
-		//m_ufoSpotLight.SetPosition(pos);
-
-		///** 光が出ているときだけ描画する*/
-		//if (m_isEmitting ||m_ufo->GetIsCowTakeAwayed())
-		//{
-		//	m_ufoSpotLight.SetColor(0.6, 0.9f, 1.0f);
-		//}
-		//else
-		//{
-		//	m_ufoSpotLight.SetColor(0.0f, 0.0f, 0.0f);
-		//}
-		//m_ufoSpotLight.Update();
-}
-
-
-
 
 void CowCaptureController::CountTimer()
 {
@@ -186,8 +142,6 @@ void CowCaptureController::CountTimer()
 			m_state = Wait;
 			m_timer = m_waitTimer;
 		}
-		break;
-	case Capture:
 		break;
 	}
 	// 状態に応じてフラグ更新
@@ -232,22 +186,57 @@ void CowCaptureController::CountSpriteUI()
 	m_LightApperNumberSpriteRender[m_currentCount].SetPosition(pos);
 }
 
+void CowCaptureController::FollowUFO()
+{
+	if (!m_ufo) return;
+
+	Vector3 pos = m_ufo->GetPosition();
+	pos.y -= 60.0f;
+
+	/** 探索の光エフェクトが存在する場合 */
+	if (m_ufoLightEffect)
+	{
+		/** Emit状態ではないかつ
+		 * 牛を捕獲していないときエフェクトを破棄する */
+		if (!m_isEmitting && !m_isCapturing)
+		{
+			m_ufoLightEffect->Stop();
+			m_ufoLightEffect = nullptr;
+		}
+
+		/** エフェクトが再生されていない時はもう一度再生させる */
+		else if (!m_ufoLightEffect->IsPlay())
+		{
+			m_ufoLightEffect->Play();
+		}
+
+		else
+		{
+			/** UFOの位置にエフェクトを追従させる */
+			m_ufoLightEffect->SetPosition(pos);
+		}
+	}
+}
+
 void CowCaptureController::PlayLightEffect()
 {
 	if (!m_ufo) return;
 
-	auto e = NewGO<nsK2EngineLow::EffectEmitter>(0);
-	e->Init((int)EffectID::EffectID_UFOLight);
+	/** Emit状態で
+	 * かつ牛を捕獲していないときにエフェクトを生成する*/
+	if (m_state == Emit && !m_isCapturing)
+	{
+		/** 探索中のエフェクトを生成*/
+		m_ufoLightEffect = NewGO<nsK2EngineLow::EffectEmitter>(0);
+		m_ufoLightEffect->Init((int)EffectID::EffectID_UFOLight);
 
-	/**  UFO の真下に出す */
-	Vector3 pos = m_ufo->GetPosition();
-	pos.y -= 50.0f;
-	e->SetPosition(pos);
+		/** UFO のライトは大きい方が見える */
+		m_ufoLightEffect->SetScale({ 2.0f, 3.8f, 2.0f });
 
-	/** UFO のライトは大きい方が見える */
-	e->SetScale({ 5.0f, 5.0f, 5.0f });
-
-	e->Play();
+		/** UFOの光エフェクトを再生 */
+		m_ufoLightEffect->Play();
+	}
+	
 }
 
 void CowCaptureController::Render(RenderContext& rc)

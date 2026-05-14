@@ -61,14 +61,7 @@ public:
 	}
 
 	/** 牛を生きてる牛リストから消す関数 */
-	void ReMoveCow(Cow* cow)
-	{
-		auto it = std::find(m_aliveCows.begin(), m_aliveCows.end(), cow);
-		if (it != m_aliveCows.end())
-		{
-			m_aliveCows.erase(it);
-		}
-	}
+	void ReMoveCow(Cow* cow);
 
 	bool m_isSound;
 
