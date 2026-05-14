@@ -16,6 +16,7 @@ class CowCaptureController;
 class Map;
 class Combo;
 class AddTimerUI;
+class EffectManager;
 
 /** UFOの情報をまとめる構造体 */
 struct UFOinfo
@@ -60,14 +61,7 @@ public:
 	}
 
 	/** 牛を生きてる牛リストから消す関数 */
-	void ReMoveCow(Cow* cow)
-	{
-		auto it = std::find(m_aliveCows.begin(), m_aliveCows.end(), cow);
-		if (it != m_aliveCows.end())
-		{
-			m_aliveCows.erase(it);
-		}
-	}
+	void ReMoveCow(Cow* cow);
 
 	bool m_isSound;
 
@@ -177,6 +171,9 @@ private:
 
 	/** UFOの配列 */
 	UFO* m_UFO[EnUFO_Num];
+
+	/** エフェクトマネージャー */
+	EffectManager* m_effectManager;
 
 	/** タイムアウトの画像のスケール */
 	Vector3 m_timeOutImageScale = Vector3(0.5f, 0.5f, 1.0f);

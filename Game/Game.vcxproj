@@ -193,6 +193,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -226,6 +228,7 @@
     <ClCompile Include="Combo\Combo.cpp" />
     <ClCompile Include="CountDown\CountDown.cpp" />
     <ClCompile Include="CowNumberOfRescues\CowNumberOfRescues.cpp" />
+    <ClCompile Include="EffectManager\EffectManager.cpp" />
     <ClCompile Include="GameCamera\GameCamera.cpp" />
     <ClCompile Include="GameScene\Game.cpp" />
     <ClCompile Include="GameScene\GameClear.cpp" />
@@ -261,6 +264,7 @@
     <ClInclude Include="Combo\Combo.h" />
     <ClInclude Include="CountDown\CountDown.h" />
     <ClInclude Include="CowNumberOfRescues\CowNumberOfRescues.h" />
+    <ClInclude Include="EffectManager\EffectManager.h" />
     <ClInclude Include="GameCamera\GameCamera.h" />
     <ClInclude Include="GameScene\Game.h" />
     <ClInclude Include="GameScene\GameClear.h" />

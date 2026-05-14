@@ -8,6 +8,7 @@
 #include "Source/Actor/Character/UFO/UFO.h"
 #include "GameCamera/GameCamera.h"
 #include "nature/SkyCube.h"
+#include "EffectManager/EffectManager.h"
 
 namespace
 {
@@ -215,8 +216,11 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		/** ゲームカメラを生成*/
 	case 17: NewGO<GameCamera>(0, "gameCamera"); break;
 
+		/** エフェクトマネージャーを生成*/
+	case 18: NewGO<EffectManager>(0, "effectManager"); break;
+
 		/** スカイキューブを生成*/
-	case 18:
+	case 19:
 	{
 		
 		/** SkyCube を生成 */
@@ -229,11 +233,11 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		sky->SetScale(10000.0f);
 
 		/** IBL 設定*/
-		g_renderingEngine->SetAmbientByIBLTexture(sky->GetTextureFilePath(), 0.6f);
+		g_renderingEngine->SetAmbientByIBLTexture(sky->GetTextureFilePath(), 0.8f);
 	} break;
 
 		/** ゲーム本体を生成*/
-	case 19:
+	case 20:
 		Game* game =NewGO<Game>(0, "game");
 
 		/** ロードした牛をゲームに渡す */

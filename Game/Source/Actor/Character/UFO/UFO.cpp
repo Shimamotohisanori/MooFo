@@ -356,11 +356,10 @@ void UFO::TakeAwayTheCow()
 		/** 牛を削除 */
 		DeleteGO(m_targetCow);
 
-		m_cowCaptureController->EndCapture();
 		/** 状態をリセットする */
 		m_targetCow = nullptr;
 		m_isCowTakeAwayed = false;
-		m_cowCaptureController->SetCapturing(false);
+
 		return;
 	}
 
@@ -432,12 +431,10 @@ void UFO::FindTheCow()
 			m_isCowTakeAwayed = true;
 			m_targetCow = nearestCow;
 
-			/** 捕獲処理が作動する。 */
-			m_cowCaptureController->StartCapture();
-
 			/** いま追っている牛をtrueにして他のUFOは追尾しないようにする。 */
 			m_targetCow->SetTakingUFO(this);
 			m_targetCow->SetIsTakeAwayed(true);
+			m_cowCaptureController->SetCapturing(true);
 		}
 	}
 	/** それいがいは追尾しない。 */

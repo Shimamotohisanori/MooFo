@@ -103,10 +103,6 @@ void Rope::OnHitCow(Cow* cow)
 	m_hitCow = cow;
 
 	cow->SetIsCaptured(true);
-	if (auto ufo = cow->GetTakingUFO())
-	{
-		ufo->GetCowCaptureController()->EndCapture();
-	}
 }
 
 void Rope::PlayerThrowsRope()
