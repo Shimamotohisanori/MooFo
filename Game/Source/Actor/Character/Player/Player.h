@@ -82,23 +82,9 @@ private:
 	/** ループを引っ張る関数*/
 	void PullRope();
 
-	/** プレイヤーのボタン操作でモデルを変更させる関数 */
-	void ButtonModel();
-
-	/** モデルを条件で変更させる関数 */
-	void ChangeModel(const char* modelPath);
-
-	void UpdateModelByState();
-
 private:
 	/** プレイヤーモデル */
 	ModelRender m_playerModelRender;
-
-	/** プレイヤーがロープを引っ張るモデル(左) */
-	ModelRender m_playerPullLeftModelRender;
-
-	/** プレイヤーがロープを引っ張るモデル(右) */
-	ModelRender m_playerPullRightModelRender;
 
 	/** ロープを引っ張るまでのクールタイム */
 	CharacterController m_characterController;
