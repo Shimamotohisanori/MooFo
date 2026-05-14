@@ -1,12 +1,13 @@
 #pragma once
 #include"Source/Actor/Character/Character.h"
-/**
-*Playerクラス
-*/
+/*
+ * Playerクラス
+ */
 class Rope;
 class CountDown;
 class Game;
 class Pause;
+class Cow;
 class Player : public Character
 {
 public:
@@ -81,7 +82,6 @@ private:
 	/** ループを引っ張る関数*/
 	void PullRope();
 
-
 private:
 	/** プレイヤーモデル */
 	ModelRender m_playerModelRender;
@@ -116,11 +116,14 @@ private:
 	/** ロープを投げる音 */
 	SoundSource* m_throwRopeSE;
 
+	/** 牛 */
+	Cow* m_cow;
+
 	/** プレイヤーの状態 */
-	int m_playerState = 0;
+	uint8_t m_playerState = 0;
 
 	/** 前のプレイヤーの状態 */
-	int m_prevPlayerState = -1;
+	uint8_t m_prevPlayerState = -1;
 
 	/** ロープを投げるまでのクールタイム */
 	float m_throwRopeCoolTime = 0.0f;
@@ -132,21 +135,27 @@ private:
 	bool m_isLeftButton1 = false;
 
 	/** 左ボタンが押されているかどうかのフラグ(UI用) */
-	bool m_isLeftButton1_Trigger_Ui = false;
+	bool m_isLeftButton1_Trigger = false;
 
 	/** 右ボタンが押されているかどうかのフラグ(UI用) */
-	bool m_isRightButton1_Trigger_Ui = false;
+	bool m_isRightButton1_Trigger = false;
 
 	/** プレイヤーが動いているかどうかのフラグ */
 	bool m_isMoving = false;
+
+	/** 縄を引っ張っているアニメーションが交互に呼び出されているか確認するフラグ */
+	bool m_isPullAnimation = false;
 
 	/** アニメーション */
 	enum EnPlayAnimation
 	{
 		enAnimationClip_Idle,
 		enAnimationClip_Run,
+		enAnimationClip_PullLeft,
+		enAnimationClip_PullRight,
 		enAnimationClip_Num,
 	};
+
 	AnimationClip animationClips[enAnimationClip_Num];
 };
 
