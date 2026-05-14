@@ -6,20 +6,28 @@
 
 namespace
 {
+	/** タイトルの画像のファイルパス */
 	const char* GAMETITLE_FILEPATH = "Assets/sprite/GameTransition/GameTitle.dds";
+
+	/** タイトルを促す画像のファイルパス */
 	const char* TITLE_PRESSSTART_FILEPATH = "Assets/sprite/GameTransition/PressAnyButton.dds";
 
+	/** タイトルを促す画像の座標 */
 	const Vector3 TITLE_PRESSSTART_POS = { 0.0f, -350.0f, 0.0f };
 
+	/** タイトルの画像の大きさ(横幅、高さ) */
 	const int GAMETITLE_WIDTH = 1920;
 	const int GAMETITLE_HEIGHT = 1080;
 
+	/** タイトルを促す画像の大きさ(横幅、高さ) */
 	constexpr int TITLE_PRESSSTART_WIDTH = 1400;
 	constexpr int TITLE_PRESSSTART_HEIGHT = 1700;
 
 	/** タイトル画面での点滅の最後の間隔 */
 	constexpr float TITLE_FINAL_BLINK_INTERVAL = 1.0f;
 }
+
+
 Title::Title()
 {
 
@@ -30,6 +38,7 @@ Title::~Title()
 {
 
 }
+
 
 bool Title::Start()
 {
@@ -48,8 +57,10 @@ bool Title::Start()
 
 void Title::Update()
 {
+	/** タイトルでの処理 */
 	InTitle();
 
+	/** タイトルのフェード処理 */
 	FadeTitle();
 
 	m_titleSpriteRender.Update();
@@ -61,7 +72,7 @@ void Title::InTitle()
 {
 	if (g_pad[0]->IsPressAnyKey() && !m_isStartButtonPressed)
 	{
-		/* ボタンを押したときの処理 */
+		/** ボタンを押したときの処理 */
 		m_isStartButtonPressed = true;
 
 		m_titleSE = m_soundManager->PlayingSE(SoundSE::enDecisionSE, false);
@@ -72,10 +83,10 @@ void Title::InTitle()
 	{
 		m_titleFinalBlinkTime -= g_gameTime->GetFrameDeltaTime();
 
-		/* 点滅の間隔を減らしていく */
+		/** 点滅の間隔を減らしていく */
 		m_titleBlinkInterval -= g_gameTime->GetFrameDeltaTime() * m_titleBlinkInterval;
 
-		/* 点滅の間隔が最後の間隔以下になったときに、タイトルからローディングシーンに移行する */
+		/** 点滅の間隔が最後の間隔以下になったときに、タイトルからローディングシーンに移行する */
 		if (m_titleFinalBlinkTime <= 0.0f)
 		{
 			m_isStartButtonPressed = false;
@@ -124,7 +135,7 @@ void Title::Render(RenderContext& rc)
 {
 	m_titleSpriteRender.Draw(rc);
 
-	/* ボタンが押されていないときはスタートを促すスプライトをフェード描画する */
+	/** ボタンが押されていないときはスタートを促すスプライトをフェード描画する */
 	if (!m_isStartButtonPressed)
 	{
 		/** α値が0.0より大きいときに描画する */

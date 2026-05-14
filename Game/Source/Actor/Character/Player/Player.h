@@ -82,6 +82,7 @@ private:
 	/** ループを引っ張る関数*/
 	void PullRope();
 
+
 private:
 	/** プレイヤーモデル */
 	ModelRender m_playerModelRender;

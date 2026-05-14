@@ -78,6 +78,7 @@ public:
 		m_rollModelRender.SetRotation(rot);
 	}
 
+
 private:
 	/** プレイヤーが縄を投げた時の縄の処理関数 */
 	void PlayerThrowsRope();
@@ -93,6 +94,7 @@ private:
 
 	/** ロープの回転に関する関数 */
 	void RotateRope();
+
 
 private:
 	/** プレイヤー */

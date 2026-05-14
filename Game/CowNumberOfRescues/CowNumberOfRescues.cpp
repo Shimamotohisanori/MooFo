@@ -3,6 +3,7 @@
 
 namespace
 {
+	/** 数のUIのファイルパス */
     const char* COUNT_NUMBER_FILEPATH = "Assets/sprite/NumberUI/";
     const char* COUNT_NUMBER_FORMAT = ".dds";
     const char* COUNT_NUMBER_FILENAME_LIST[10] =
@@ -19,11 +20,19 @@ namespace
 		"MooFoNumberUI9"
 	};
 
+	/** 救出数のUIのファイルパス */
 	const char* RESCUE_FILEPATH = "Assets/sprite/CowNumberOfRescuesUI/CowNumberOfRescues.DDS";
+
+	/** スラッシュのUIのファイルパス */
 	const char* SLASH_FILEPATH = "Assets/sprite/CowNumberOfRescuesUI/slash.DDS";
 
+	/** 数のスプライトのサイズ */
 	const Vector2 NUMBER_SPRITE_SIZE = Vector2(40.0f, 60.0f);
+
+	/** 救出数のスプライトのサイズ */
 	const Vector2 RESCUE_SPRITE_SIZE = Vector2(270.0f, 240.0f);
+
+	/** スラッシュのスプライトのサイズ */
 	const Vector2 SLASH_SPRITE_SIZE = Vector2(120.0f, 100.0f);
 
     /** インゲームスプライトのスケール */
@@ -176,38 +185,35 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
 		layoutType = LayoutType::InGame;
     }
 
-    // ------------------------
-    // 救出アイコン
-    // ------------------------
+    /** 救出画像の表示 */
     m_rescueSprite.SetPosition(rescuePos[layoutType]);
 	m_rescueSprite.SetScale(rescueScale[layoutType]);
     m_rescueSprite.Update();
     m_rescueSprite.Draw(renderContext);
 
-    // ------------------------
-    // 現在の救出数
-    // ------------------------
+    /** 現在の救出数が10以上なら */
     if (m_numberOfRescues >= 10)
     {
-        // 十の位
+        /** 十の位用のスプライトの表示 */
         m_tensSprite[tens].SetPosition(tensPos[layoutType]);
         m_tensSprite[tens].SetScale(tensScale[layoutType]);
         m_tensSprite[tens].Update();
         m_tensSprite[tens].Draw(renderContext);
     }
 
-    // 一の位
+    /** 一の位用のスプライトの表示 */
     m_onesSprite[ones].SetPosition(onesPos[layoutType]);
     m_onesSprite[ones].SetScale(onesScale[layoutType]);
     m_onesSprite[ones].Update();
     m_onesSprite[ones].Draw(renderContext);
-    //「/」
+
+    /** スラッシュの表示 */
     m_slashSprite.SetPosition(slashPos[layoutType]);
     m_slashSprite.SetScale(slashScale[layoutType]);
     m_slashSprite.Update();
     m_slashSprite.Draw(renderContext);
 
-    // 最大値（1 / 5）
+    /** 最大値（1 / 10）の表示 */
     m_oneSprite.SetPosition(onePos[layoutType]);
     m_oneSprite.SetScale(oneScale[layoutType]);
     m_oneSprite.Update();

@@ -9,16 +9,26 @@ public:
 	bool  Start();
 	void Update();
 	void Render(RenderContext& rc);
+	
 	/** カウントダウン処理 */
 	void InCountDown();
+	
 	/*カウントダウンの変数を取りたいときに使う関数*/
 	bool GetCountDown()const { return m_isCountDown; };
 
 
 private:
+	/** カウントダウンの数字のスプライト */
+	/** カウントダウンの3のスプライト */
 	SpriteRender m_countDown3;
+
+	/** カウントダウンの2のスプライト */
 	SpriteRender m_countDown2;
+	
+	/** カウントダウンの1のスプライト */
 	SpriteRender m_countDown1;
+	
+	/** カウントダウンのSTARTのスプライト */
 	SpriteRender m_countDownStart;
 
 	/** カウントダウンの音 */

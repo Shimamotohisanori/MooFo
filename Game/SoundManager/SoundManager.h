@@ -29,6 +29,8 @@ enum SoundSE
 	enTimeOutSE,
 	enSENum
 };
+
+/** サウンドマネージャークラス */
 class SoundManager : public IGameObject
 {
 public:
@@ -36,18 +38,22 @@ public:
 	~SoundManager();
 	void Update();
 
-	void SetBGMVolume(int number);
-
-	void SetSEVolume(int number);
-
+	/** BGMを再生する関数 */
 	float m_bgmVolume = 0.4f;
+
+	/** SEを再生する関数 */
 	float m_seVolume  = 0.6f;
 
-	int m_bgmCount = 0;
+	/** BGMの数 */
+	uint8_t m_bgmCount = 0;
 
+	/** ポーズ中にサウンド操作をするクラスのポインタ */
 	SoundPause* m_soundPause;
 
+	/** BGMを再生する関数 */
 	SoundSource* PlayingBGM(SoundBGM number, bool isLoop = true);
+
+	/** SEを再生する関数 */
 	SoundSource* PlayingSE(SoundSE number, bool isLoop = true);
 
 };
