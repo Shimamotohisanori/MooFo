@@ -6,6 +6,8 @@ class CountDown;
 class UFO;
 class Pause;
 class Game;
+class SoundManager;
+class DummyCow;
 class Cow : public Character
 {
 public:
@@ -97,6 +99,13 @@ private:
 
 	/** ゲーム */
 	Game* m_game = nullptr;
+	/** 牛の鳴き声のSE*/
+	SoundSource* m_CowCrySE;
+
+	DummyCow* m_dummyCow = nullptr;
+
+	/* 牛のサウンドマネージャー**/
+	SoundManager* m_CowSound;
 
 	enum EnCowState
 	{
@@ -121,7 +130,8 @@ private:
 	bool m_isCaptured = false;//自身がロープに捕まったかどうかのフラグ
 
 	bool m_isTakeAwayed = false;//UFOに連れて行かれたかどうかのフラグ
-
+	/** 牛のSEを一度だけ鳴らすためのフラグ*/
+	bool m_CowSE = false;
 	
 	enum EnAnimation
 	{

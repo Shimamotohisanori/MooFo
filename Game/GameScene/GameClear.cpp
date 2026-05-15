@@ -134,7 +134,7 @@ void GameClear::InGameClear()
 			m_loadingScene = NewGO<LoadingScene>(0, "loading");
 			m_loadingScene->SetLoadType(LoadingScene::LoadType::ToTitleScene);
 			DeleteGO(m_clearBGM);
-			DeleteGO(m_decisionSE);
+			//DeleteGO(m_decisionSE);
 			m_loadingScene->SetNextScene([]()
 				{
 					/** タイトルの画像を呼び出す*/

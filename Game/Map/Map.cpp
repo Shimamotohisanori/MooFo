@@ -4,6 +4,7 @@
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "Source/Actor/Character/UFO/UFO.h"
 #include "Pause/Pause.h"
+#include"GameScene/Game.h";
 namespace
 {
 	/** ミニマップのスプライトのパス */
@@ -33,13 +34,24 @@ namespace
 	constexpr float LIMITED_RANGE_IMAGE = 400.0f;
 
 	/** マジックナンバー処理 */
-	constexpr int COW_NUM = 10;
-	constexpr int UFO_NUM = 4;
+	//constexpr int COW_NUM = 10;
+	//constexpr int UFO_NUM = 4;
 }
 
 bool Map::Start()
 {
 	m_pause = FindGO<Pause>("pause");
+
+	/** それぞれのポジションを見つける。*/
+	m_cows = FindGOs<Cow>("cow");
+	/** ゲームを取得してからUFOの情報をもらう*/
+	Game* game = FindGO<Game>("game");
+	if (game != nullptr)
+	{
+		m_ufos = game->GetUFOs();
+	}
+	m_player = FindGO<Player>("player");
+
 
 	/** ミニマップの背景 */
 	m_mapSprite.Init(MAP_SPRITE_PATH, 400.0f, 400.0f);
@@ -53,14 +65,15 @@ bool Map::Start()
 	m_outLineSprite.Init(OUTLINE_ICON_PATH, 532.0f, 532.0f);
 	m_outLineSprite.SetPosition(MAP_OUTLINE_POSITION);
 
+
 	/** 牛をミニマップ内に出現させる。 */
-	for (int i = 0; i < COW_NUM; i++)
+	for (int i = 0; i < m_cows.size(); i++)
 	{
 		m_cowSprite[i].Init(COW_ICON_PATH, 25.0f, 25.0f);
 	}
 
 	/** UFOをミニマップ内に出現させる。 */
-	for (int i = 0; i < UFO_NUM; i++)
+	for (int i = 0; i < m_ufos.size(); i++)
 	{
 		m_ufoSprite[i].Init(UFO_ICON_PATH, 50.0f, 50.0f);
 	}
@@ -68,17 +81,13 @@ bool Map::Start()
 	/* ビックリマークをUFOが牛を捕まえたときに表示させる。
 	 * UFOが起点となるためUFO_NUMを使用する
 	 */
-	for (int i = 0; i < UFO_NUM; i++)
+	for (int i = 0; i < m_ufos.size(); i++)
 	{
 		m_dangerSprite[i].Init(DANGER_ICON_PATH, 30.0f, 30.0f);
 	}
 
 
-	/** それぞれのポジションを見つける。*/
-	m_cows = FindGOs<Cow>("cow");
-	m_ufos = FindGOs<UFO>("UFO");
-	m_player = FindGO<Player>("player");
-
+	
 	return true;
 }
 void Map::Update()
@@ -98,6 +107,12 @@ void Map::Update()
 	/** 牛のアイコン */
 	for (int i = 0; i < m_cows.size(); i++)
 	{
+		Cow* cow = m_cows[i];
+		if (cow == nullptr)
+		{
+			continue;
+		}
+		
 		if (m_cows[i]->GetIsTakeAwayed())
 		{
 			m_isCowImage[i] = false;
@@ -175,17 +190,17 @@ void Map::Update()
 	/** 描画更新処理 */
 	m_mapSprite.Update();
 	m_playerSprite.Update();
-	for (int i = 0; i < COW_NUM; i++)
+	for (int i = 0; i < m_cows.size(); i++)
 	{
 		m_cowSprite[i].Update();
 	}
 
-	for (int i = 0; i < UFO_NUM; i++)
+	for (int i = 0; i < m_ufos.size(); i++)
 	{
 		m_ufoSprite[i].Update();
 	}
 
-	for (int i = 0; i < UFO_NUM; i++)
+	for (int i = 0; i < m_ufos.size(); i++)
 	{
 		m_dangerSprite[i].Update();
 	}

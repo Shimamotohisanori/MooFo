@@ -61,7 +61,7 @@ Player::Player()
 
 Player::~Player()
 {
-	DeleteGO(m_throwRopeSE);
+	//DeleteGO(m_throwRopeSE);
 
 	DeleteGO(m_rope);
 }
