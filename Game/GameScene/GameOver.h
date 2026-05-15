@@ -3,6 +3,7 @@ class Score;
 class CowNumberOfRescues;
 class LoadingScene;
 class Title;
+/** ゲームオーバーのクラス */
 class GameOver : public IGameObject
 {
 public:
@@ -13,11 +14,14 @@ public:
 	bool Start();
 	void Update();
 	void Render(RenderContext& rc);
-	//GameOver時に行う処理
+
+	/** GameOver時に行う処理 */
 	void InGameOver();
-	//スコアをセットする関数
+	
+	/** スコアをセットする関数 */
 	void SetFinalScore(int score);
-	//救出数をセットする関数
+	
+	/** 救出数をセットする関数 */
 	void SetFinalRescue(int rescue);
 
 
@@ -25,7 +29,9 @@ private:
 	/** ゲームオーバーのフェード処理 */
 	void FadeGameOver();
 
+
 private:
+	/** ゲームオーバーのスプライトレンダー */
 	SpriteRender m_GameOverspriteRender;
 
 	/** 黒い背景用のスプライトレンダラー */
@@ -34,14 +40,25 @@ private:
 	/** ゲームオーバー画面でのスタートを促すスプライトレンダー */
 	SpriteRender m_gameOverPressTitleSpriteRender;
 
-	/** スコアの表示をコピーするための変数 */
+	/** ゲームオーバーのBGMとSEを管理するサウンドマネージャー */
 	SoundManager* m_deathSound;
-	Score*m_score;
+
+	/** スコアクラスのポインタ */
+	Score* m_score;
+
+	/** 救出数クラスのポインタ */
 	CowNumberOfRescues* m_cowNumberOfRescues;
+
+	/** ゲームオーバーのBGM */
 	SoundSource* m_deathBGM;
+
+	/** ゲームオーバーのSE */
 	SoundSource* m_decisionSE;
+
+	/** ゲームオーバーからタイトルシーンに移行するためのローディングシーン */
 	LoadingScene* m_loadingScene;
 
+	/** タイトルシーンに移行するときのタイトルクラスのポインタ */
 	enum enGameOverState
 	{
 		/** ゲームオーバーのフェードイン */
@@ -51,9 +68,11 @@ private:
 	};
 	enGameOverState m_gameOverState = FadeIn;
 
-	int m_finalScore;
+	/** スコアの最終値 */
+	uint8_t m_finalScore;
 
-	int m_finalRescue = 0;
+	/** 救出数の最終値 */
+	uint8_t m_finalRescue = 0;
 
 	/** α値の変数 */
 	float m_gameOverAlpha = 1.0f;

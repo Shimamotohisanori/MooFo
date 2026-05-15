@@ -6,6 +6,9 @@ class CountDown;
 class UFO;
 class Pause;
 class Game;
+class SoundManager;
+class DummyCow;
+class CowCaptureController;
 class Cow : public Character
 {
 public:
@@ -17,79 +20,101 @@ public:
 		void Update() override;
 		void Render(RenderContext& rc) override;
 public:
-		void Move()override;
-		void Rotation();
-		void PlayAnimation();
-		void ManageState();
+	/** 移動関数 */
+	void Move()override;
 
+	/** 回転関数 */
+	void Rotation();
 
+	/** アニメーション再生関数 */
+	void PlayAnimation();
 
-		void SetPosition(const Vector3& pos)
-		{
-			m_transform.SetPosition(pos);
-		}
+	/** 状態管理関数 */
+	void ManageState();
 
-		Vector3 GetPosition()
-		{
-			return m_transform.GetPosition();
-		}
+	/** 牛の位置を設定する関数 */
+	void SetPosition(const Vector3& pos)
+	{
+		m_transform.SetPosition(pos);
+	}
 
-		Quaternion GetRotation()
-		{
-			return m_transform.GetRotation();
-		}
+	/** 牛の位置を取得する関数 */
+	Vector3 GetPosition()
+	{
+		return m_transform.GetPosition();
+	}
 
-		void SetIsCaptured(bool isCaptured)
-		{
-			m_isCaptured = isCaptured;
-		}
+	/** 牛の回転を取得する関数 */
+	Quaternion GetRotation()
+	{
+		return m_transform.GetRotation();
+	}
 
-		void ChangeRotationState()
-		{
-			m_rotationState = EnRotateState_Spin;
-		}
+	/** 牛の回転を設定する関数 */
+	void SetRotation(const Quaternion& rot)
+	{
+		m_transform.SetRotation(rot);
+	}
 
-		bool GetIsTakeAwayed()
-		{
-			return m_isTakeAwayed;
-		}
+	/** 牛が捕獲されたかどうかを設定する関数 */
+	void SetIsCaptured(bool isCaptured)
+	{
+		m_isCaptured = isCaptured;
+	}
 
-		void SetIsTakeAwayed(bool isTakeAwayed)
-		{
-			m_isTakeAwayed = isTakeAwayed;
-		}
+	/** 牛のステートを回転に変更する関数 */
+	void ChangeRotationState()
+	{
+		m_rotationState = EnRotateState_Spin;
+	}
 
-		void SetTakingUFO(UFO* takingUFO)
-		{
-			m_takingUFO = takingUFO;
-		}
+	/** 牛が捕獲されたかどうかを取得する関数 */
+	bool GetIsTakeAwayed()
+	{
+		return m_isTakeAwayed;
+	}
 
-		UFO* GetTakingUFO()
-		{
-			return m_takingUFO;
-		}
+	/** 牛がUFOに連れて行かれたかどうかを設定する関数 */
+	void SetIsTakeAwayed(bool isTakeAwayed)
+	{
+		m_isTakeAwayed = isTakeAwayed;
+	}
+
+	/** 対象のUFOを設定する関数 */
+	void SetTakingUFO(UFO* takingUFO)
+	{
+		m_takingUFO = takingUFO;
+	}
+
+	/** 対象のUFOを取得する関数 */
+	UFO* GetTakingUFO()
+	{
+		return m_takingUFO;
+	}
 		
+
 private:
-	//プレイヤーに引っ張られる関数
+	/** プレイヤーに引っ張られる関数 */
 	void PulledByPlayer();
 
-	//プレイヤーに捕獲される関数
+	/** プレイヤーに捕獲される関数 */
 	void CapturedByPlayer();
 
 	/** プレイヤーから逃げる関数 */
 	void AvoidPlayer();
 	
+
 private:
-	//ロープ
+	/** ロープ */
 	Rope* m_rope;
 
-	//プレイヤー
+	/** プレイヤー */
 	Player* m_player;
 
-	//カウントダウン
+	/** カウントダウン */
 	CountDown* m_countdown;
 
-	//UFO
+	/** UFO */
 	UFO* m_takingUFO = nullptr;
 
 	/** ポーズ */
@@ -97,6 +122,16 @@ private:
 
 	/** ゲーム */
 	Game* m_game = nullptr;
+	/** 牛の鳴き声のSE*/
+	SoundSource* m_CowCrySE;
+
+	DummyCow* m_dummyCow = nullptr;
+
+	/* 牛のサウンドマネージャー**/
+	SoundManager* m_CowSound;
+
+	/** 牛捕獲コントローラー */
+	CowCaptureController* m_cowCaptureController = nullptr;
 
 	enum EnCowState
 	{
@@ -111,17 +146,29 @@ private:
 	/** 牛のモデルレンダラー */
 	ModelRender m_cowmodelRender;
 
-	uint8_t m_cowState;//牛のステート
+	/** 牛のステート */
+	uint8_t m_cowState;
 
-	Vector3 m_moveDir = Vector3::Zero;//移動方向
-	float m_moveSpeed = 50.0f;//移動速度
-	int m_moveTimer = 0;//移動タイマー
-	bool m_isMove = false;//移動しているかどうか
+	/** 牛の移動方向 */
+	Vector3 m_moveDir = Vector3::Zero;
 
-	bool m_isCaptured = false;//自身がロープに捕まったかどうかのフラグ
+	/** 牛の移動速度 */
+	float m_moveSpeed = 50.0f;
 
-	bool m_isTakeAwayed = false;//UFOに連れて行かれたかどうかのフラグ
+	/** 牛の移動時間 */
+	uint8_t m_moveTimer = 0;
 
+	/** 牛が移動しているかどうか */
+	bool m_isMove = false;
+
+	/** 牛のSEを一度だけ鳴らすためのフラグ*/
+	bool m_CowSE = false;
+
+	/** 牛がロープに捕まったかどうか */
+	bool m_isCaptured = false;
+
+	/** 牛がUFOに連れ去られているかどうか */
+	bool m_isTakeAwayed = false;
 	
 	enum EnAnimation
 	{

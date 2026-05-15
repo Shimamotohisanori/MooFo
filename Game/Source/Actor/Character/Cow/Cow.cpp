@@ -9,17 +9,25 @@
 #include "Pause/Pause.h"
 #include "Combo/Combo.h"
 #include "GameScene/Game.h"
-#include"DummyCow.h"
+#include"SoundManager/SoundManager.h"
+#include "DummyCow.h"
+#include "Source/Actor/Character/UFO/CowCaptureController.h"
 
 namespace
 {
-	const char* GAMECLEAR_FILEPATH = "Assets/modelData/Cow/Model/Cow4.tkm"; //enModelUpAxis = enModelUpAxisZ;
+	/** 牛のモデルファイルパス */
+	const char* COW_MOCEL_FILEPATH = "Assets/modelData/Cow/Model/Cow4.tkm"; //enModelUpAxis = enModelUpAxisZ;
+
+	/** 牛のアニメーションのファイルパス */
 	const char* IDLE_ANIMATION_FILE_PATH = "Assets/modelData/Cow/Animation/Idle2.tka";
-	const char* FILEPATH_WALK = "Assets/modelData/Cow/Animation/Walk.tka";
+
+	/** 牛の歩くアニメーションのファイルパス */
+	const char* WALK_ANIMATION_FILE_PATH = "Assets/modelData/Cow/Animation/Walk.tka";
 
 	/** プレイヤーに引っ張られるときの力 */
 	constexpr float PULL_POWER = 8.0f;
 
+	/** プレイヤーから逃げるときの力 */
 	constexpr float COW_MOVE_LIMIT_RADIUS = 1450.0f;
 
 	/** この距離以内なら逃げる */
@@ -39,24 +47,21 @@ Cow::Cow()
 	animationClips[EnAnimation_Idle].SetLoopFlag(true);
 	
 	/** Walk */
-	animationClips[EnAnimation_Walk].Load(FILEPATH_WALK);
+	animationClips[EnAnimation_Walk].Load(WALK_ANIMATION_FILE_PATH);
 	animationClips[EnAnimation_Walk].SetLoopFlag(true);
 }
 
 Cow::~Cow()
 {
-
+	//DeleteGO(m_CowCrySE);
 }
 
 bool Cow::Start()
 {
-
-	m_cowmodelRender.Init(GAMECLEAR_FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
+  m_CowSound  = FindGO<SoundManager>("soundmanager");
+	m_cowmodelRender.Init(COW_MOCEL_FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
 	m_cowmodelRender.SetPosition(m_transform.GetPosition());
 	m_cowmodelRender.Update();
-
-	
-
 	return true;
 }
 
@@ -67,8 +72,15 @@ void Cow::Update()
 	m_rope = FindGO<Rope>("rope");
 	m_pause = FindGO<Pause>("pause");
 	m_game = FindGO<Game>("game");
+	m_cowCaptureController = FindGO<CowCaptureController>("cowcapturecontroller");
 
-	if (m_pause == nullptr || m_countdown == nullptr || m_player == nullptr || m_rope == nullptr || m_game == nullptr)
+	/** どれかが存在しないときは処理しないようにするため早期リターン */
+	if (m_pause == nullptr ||
+		m_countdown == nullptr ||
+		m_player == nullptr ||
+		m_rope == nullptr ||
+		m_game == nullptr ||
+		m_cowCaptureController == nullptr)
 	{
 		return;
 	}
@@ -90,35 +102,38 @@ void Cow::Update()
 	{
 		return;
 	}
-	/*アニメーション*/
+
+	/** アニメーションの再生 */
 	PlayAnimation();
 	
 	/** プレイヤーから逃げる関数 */
 	AvoidPlayer();
 
-  if (m_rotationState == EnRotateState_MoveDir)
-  {
-		/*移動*/
+	if (m_rotationState == EnRotateState_MoveDir)
+	{
+		/** 移動 */
 		Move();
-  }
+	}
 	
-	/*ステート*/
+	/** ステート管理 */
 	ManageState();
-	/*回転*/
+	
+	/** 回転 */
 	Rotation();
 	
-	/** 牛がプレイヤーに引っ張られる処理*/
+	/** 牛がプレイヤーに引っ張られる処理 */
 	PulledByPlayer();
 
-	/** 牛がプレイヤーに捕獲される処理*/
+	/** 牛がプレイヤーに捕獲される処理 */
 	CapturedByPlayer();
 
-	/*モデルの位置を反映*/
+	/** モデルの位置を反映 */
 	m_cowmodelRender.SetPosition(m_transform.GetPosition());
-	/*モデルに回転を反映*/
+	
+	/** モデルに回転を反映 */
 	m_cowmodelRender.SetRotation(m_transform.GetRotation());
 
-	/*モデルの更新*/
+	/** モデルの更新 */
 	m_cowmodelRender.Update();
 
 }
@@ -276,6 +291,15 @@ void Cow::PulledByPlayer()
 
 		m_player->SetGetLeftButton1(false);
 		m_player->SetGetRightButton1(false);
+
+		/** 牛の鳴き声効果音を流す*/
+		if (m_CowSE == false)
+		{
+			m_CowCrySE = m_CowSound->PlayingSE(SoundSE::enCowCrySE, false);
+			m_CowCrySE->SetVolume(5.0f);
+			m_CowSE = true;
+		}
+		
 	}
 }
 
@@ -290,7 +314,8 @@ void Cow::CapturedByPlayer()
 
 		/** プレイヤーへの方向 */
 		Vector3 dir = playerPos - cowPos;
-
+		
+		
 		/** 距離が一定以下なら捕獲される */
 		if (dir.Length() < 50.0f)
 		{
@@ -305,6 +330,10 @@ void Cow::CapturedByPlayer()
 			{
 				m_takingUFO->SetIsCowTakeAwayed(false);
 				m_takingUFO->ReMoveTargetCow();
+				/** 牛捕獲コントローラーの捕獲フラグを下ろす */
+				m_takingUFO->GetCowCaptureController()->SetCapturing(false);
+				/** 牛捕獲コントローラーの捕獲終了の処理を行う関数を呼ぶ*/
+				m_takingUFO->GetCowCaptureController()->EndCaptured();
 			}
 
 			/** カメラの牛捕獲フラグを下ろす */
@@ -334,13 +363,16 @@ void Cow::CapturedByPlayer()
 			/** 状態をリセットする */
 			m_isTakeAwayed = false;
 			
-			DummyCow* dummyCow = NewGO<DummyCow>(0, "dummyCow");
+		    m_dummyCow = NewGO<DummyCow>(0, "dummyCow");
 			/** dummyCowに牛の情報を渡す*/
-			dummyCow->SetPosition(m_transform.GetPosition());
-			dummyCow->SetRotation(m_transform.GetRotation());
+			m_dummyCow->SetPosition(m_transform.GetPosition());
+			m_dummyCow->SetRotation(m_transform.GetRotation());
 			/** ジャンプアニメーションを再生*/
-			dummyCow->PlayJumpAnimtion();
-
+			m_dummyCow->PlayJumpAnimtion();
+			if (game)
+			{
+				game->SetDuumyCow(m_dummyCow);
+			}
 			/** 牛を削除 */
 			DeleteGO(this);
 			return;

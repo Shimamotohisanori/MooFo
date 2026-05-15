@@ -3,6 +3,7 @@ class Score;
 class CowNumberOfRescues;
 class LoadingScene;
 class Title;
+/** ゲームクリアのクラス */
 class GameClear :public IGameObject
 {
 	public:
@@ -37,14 +38,25 @@ private:
 	/** ゲームクリア画面でのスタートを促すスプライトレンダー */
 	SpriteRender m_gameClearPressTitleSpriteRender;
 
+	/** ゲームクリアのBGMとSEを管理するサウンドマネージャー */
 	SoundManager* m_clearSound;
 
+	/** ゲームクリアのBGM */
 	SoundSource* m_clearBGM;
+
+	/** ゲームクリアのSE */
 	SoundSource* m_decisionSE;
 
+	/** スコアクラスのポインタ */
 	Score* m_score;
+
+	/** 救出数クラスのポインタ */
 	CowNumberOfRescues* m_cowNumberOfRescues;
+
+	/** ゲームクリアからタイトルシーンに移行するためのローディングシーン */
 	LoadingScene* m_loadingScene;
+
+	/** タイトルシーンに移行するときのタイトルクラスのポインタ */
 	Title* m_title;
 
 	enum enGameClearState
@@ -57,10 +69,10 @@ private:
 	enGameClearState m_gameClearState = FadeIn;
 
 	/** 最終スコアを保存する変数 */
-	int m_finalScore;
+	uint8_t m_finalScore;
 
 	/** 最終救出数を保存する変数 */
-	int m_finalRescue;
+	uint8_t m_finalRescue;
 
 	/** α値の変数 */
 	float m_gameClearAlpha = 1.0f;

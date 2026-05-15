@@ -47,11 +47,19 @@ private:
 
 
 private:
+	/** プレイヤー */
 	Player* m_player;
+
+	/** ロープ */
 	Rope* m_rope;
+
+	/** 牛 */
 	Cow* m_cow;
+
+	/** ゲーム */
 	Game* m_game;
 
+	/** ロープを投げている間のカメラ位置を保存する変数 */
 	Vector3 m_cameraPos;
 
 	/** ロープ追従開始前のカメラ位置を保存する変数 */

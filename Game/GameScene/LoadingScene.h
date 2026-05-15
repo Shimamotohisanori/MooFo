@@ -3,6 +3,7 @@
 class Cow;
 class CountDown;
 class GameCamera;
+/** ローディングシーンのクラス*/
 class LoadingScene : public IGameObject
 {
 public:
@@ -53,6 +54,7 @@ private:
 	/** ランダムな牛のスポーン位置を生成する関数 */
 	Vector3 RandomCowPos();
 
+
 private:
 	/** ローディング中の背景のスプライトレンダー*/
 	SpriteRender m_blackLoadingSpriteRender;
@@ -67,10 +69,10 @@ private:
 	std::vector<Cow*> m_tempCows;
 
 	/** 現在表示している画像*/
-	int m_currentImage = 0;
+	uint8_t m_currentImage = 0;
 
 	/** ロードするゲームオブジェクトのステップ*/
-	int m_loadStep = 0;
+	uint8_t m_loadStep = 0;
 
 	/** タイマー*/
 	float m_timer = 0.0f;

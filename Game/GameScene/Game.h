@@ -14,8 +14,10 @@ class Score;
 class CowNumberOfRescues;
 class CowCaptureController;
 class Map;
+class DummyCow;
 class Combo;
 class AddTimerUI;
+class EffectManager;
 
 /** UFOの情報をまとめる構造体 */
 struct UFOinfo
@@ -29,13 +31,13 @@ struct UFOinfo
 /** UFOの一覧 */
 const UFOinfo UFO_INFOMATIONS[] =
 {
-	{ "UFO", Vector3(-1400.0f, 70.0f, 0.0f) },
-	{ "UFO", Vector3(1400.0f, 70.0f, 0.0f) },
-	{ "UFO", Vector3(0.0f, 70.0f, -1400.0f) },
-	{ "UFO", Vector3(0.0f, 70.0f, 1400.0f) }
+	{ "UFO1", Vector3(-1400.0f, 70.0f, 0.0f) },
+	{ "UFO2", Vector3(1400.0f, 70.0f, 0.0f) },
+	{ "UFO3", Vector3(0.0f, 70.0f, -1400.0f) },
+	{ "UFO4", Vector3(0.0f, 70.0f, 1400.0f) }
 };
 
-
+/** ゲームクラス */
 class Game : public IGameObject
 {
 public:
@@ -60,14 +62,7 @@ public:
 	}
 
 	/** 牛を生きてる牛リストから消す関数 */
-	void ReMoveCow(Cow* cow)
-	{
-		auto it = std::find(m_aliveCows.begin(), m_aliveCows.end(), cow);
-		if (it != m_aliveCows.end())
-		{
-			m_aliveCows.erase(it);
-		}
-	}
+	void ReMoveCow(Cow* cow);
 
 	bool m_isSound;
 
@@ -96,6 +91,11 @@ public:
 	bool GetIsTimeOut()
 	{
 		return m_isTimeOut;
+	}
+	/** ダミーの牛のセッター*/
+	void SetDuumyCow(DummyCow* cow)
+	{
+		m_dummyCow = cow;
 	}
 
 
@@ -158,7 +158,8 @@ private:
 
 	/** タイマー追加UI */
 	AddTimerUI* m_addTimerUI;
-
+	/** ダミーの牛*/
+	DummyCow* m_dummyCow;
 	/** 終了画像 */
 	SpriteRender m_timeOutImage;
 
@@ -177,6 +178,9 @@ private:
 
 	/** UFOの配列 */
 	UFO* m_UFO[EnUFO_Num];
+
+	/** エフェクトマネージャー */
+	EffectManager* m_effectManager;
 
 	/** タイムアウトの画像のスケール */
 	Vector3 m_timeOutImageScale = Vector3(0.5f, 0.5f, 1.0f);

@@ -78,7 +78,7 @@ private:
 	SoundSource* m_addTimerSE = nullptr;
 
 	/** コンボの変数 */
-	int m_combo = 0;
+	uint8_t m_combo = 0;
 
 	/** コンボするごとに制限時間をプラスする変数 */
 	float m_comboTimer = 0.0f;

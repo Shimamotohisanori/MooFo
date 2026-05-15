@@ -7,9 +7,13 @@
 
 namespace
 {
-	const char* GAMECLEAR_FILEPATH = "Assets/modelData/Rope/NewRope.tkm";
+	/** ロープのモデルファイルパス */
+	const char* ROPE_MODEL_FILEPATH = "Assets/modelData/Rope/NewRope.tkm";
+
+	/** 捕まった牛用のロープモデルファイルパス */
 	const char* CAPTURED_COW_FILEPATH = "Assets/modelData/Rope/CapturedCowRope.tkm";
 
+	/** ロープの初期の大きさ */
 	const Vector3 ROPE_INITIAL_SCALE = { 1.0f, 1.0f, 5.0f };
 
 	/** 牛に当たっていない時の巻かれたロープの大きさ */
@@ -18,15 +22,29 @@ namespace
 	/** 牛に当たった時の巻かれたロープの大きさ */
 	const Vector3 HIT_COW_ROLL_ROPE_SCALE = { 1.0f, 1.0f, 1.0f };
 
+	/** プレイヤーの右手からロープが出る位置のオフセット */
 	const float ROPE_OFFSET_RIGHT = 10.0f;
+
+	/** プレイヤーの前からロープが出る位置のオフセット */
 	const float ROPE_OFFSET_FORWARD = 0.5f;
+
+	/** プレイヤーの上からロープが出る位置のオフセット */
 	const float ROPE_OFFSET_UP = 30.0f;
+
+	/** 牛の位置の少し上を狙うためのオフセット */
 	const float ROPE_AIM_UP_OFFSET = 30.0f;
+
+	/** ロープの伸び縮みのスケールを求めるための距離にかける係数 */
 	const float ROPE_SCALE_FACTOR = 0.05f;
+
+	/** ロープの伸び縮みのスケールの最小値 */
 	const float ROPE_MIN_SCALE_Z = 0.002f;
+
+	/** ロープが牛に当たったとみなす距離 */
 	const float ROPE_HIT_DISTANCE = 50.0f;
 
 }
+
 
 Rope::Rope()
 {
@@ -34,14 +52,16 @@ Rope::Rope()
 
 }
 
+
 Rope::~Rope()
 {
 
 }
 
+
 bool Rope::Start()
 {
-	m_ropeModelRender.Init(GAMECLEAR_FILEPATH);
+	m_ropeModelRender.Init(ROPE_MODEL_FILEPATH);
 	m_rollModelRender.Init(CAPTURED_COW_FILEPATH);
 	m_player = FindGO<Player>("player");
 	m_ropeScale = ROPE_INITIAL_SCALE;
@@ -50,6 +70,7 @@ bool Rope::Start()
 	m_rollModelRender.SetScale(NO_HIT_COW_ROLL_ROPE_SCALE);
 	return true;
 }
+
 
 void Rope::Update()
 {
@@ -97,17 +118,15 @@ void Rope::Update()
 	m_ropeModelRender.Update();
 }
 
+
 void Rope::OnHitCow(Cow* cow)
 {
 	m_isHitCow = true;
 	m_hitCow = cow;
 
 	cow->SetIsCaptured(true);
-	if (auto ufo = cow->GetTakingUFO())
-	{
-		ufo->GetCowCaptureController()->EndCapture();
-	}
 }
+
 
 void Rope::PlayerThrowsRope()
 {
@@ -139,6 +158,7 @@ void Rope::PlayerThrowsRope()
 	}
 }
 
+
 void Rope::FollowRightHand()
 {
 	Vector3 playerPos = m_player->GetPosition();
@@ -164,6 +184,7 @@ void Rope::FollowRightHand()
 
 }
 
+
 void Rope::StretchRope()
 {
 
@@ -187,6 +208,7 @@ void Rope::StretchRope()
 	m_ropeModelRender.SetScale(m_ropeScale);
 
 }
+
 
 void Rope::RotateStretchRope()
 {
@@ -215,6 +237,7 @@ void Rope::RotateStretchRope()
 	m_ropeModelRender.SetRotation(m_ropeRot);
 
 }
+
 
 void Rope::RotateRope()
 {
@@ -250,6 +273,7 @@ void Rope::RotateRope()
 		m_rollModelRender.SetRotation(m_ropeRot);
 	}
 }
+
 
 void Rope::Render(RenderContext& rc)
 {

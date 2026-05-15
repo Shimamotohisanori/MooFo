@@ -41,7 +41,7 @@ Combo::Combo()
 
 Combo::~Combo()
 {
-	DeleteGO(m_addTimerSE);
+	//DeleteGO(m_addTimerSE);
 }
 
 bool Combo::Start()
