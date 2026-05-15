@@ -216,6 +216,8 @@ bool Map::WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3
 	rot.SetRotationY(m_mapAngle);
 
 	/** ベクトルに向かう。 */
+	 
+	
 	rot.Apply(cowDiff);
 
 	/** ベクトルを正規化する。 */

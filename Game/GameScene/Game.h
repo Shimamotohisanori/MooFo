@@ -159,7 +159,7 @@ private:
 	/** タイマー追加UI */
 	AddTimerUI* m_addTimerUI;
 	/** ダミーの牛*/
-	DummyCow* m_dummyCow;
+	DummyCow* m_dummyCow = nullptr;
 	/** 終了画像 */
 	SpriteRender m_timeOutImage;
 
