@@ -14,6 +14,7 @@ class Score;
 class CowNumberOfRescues;
 class CowCaptureController;
 class Map;
+class DummyCow;
 class Combo;
 class AddTimerUI;
 class EffectManager;
@@ -91,6 +92,11 @@ public:
 	{
 		return m_isTimeOut;
 	}
+	/** ダミーの牛のセッター*/
+	void SetDuumyCow(DummyCow* cow)
+	{
+		m_dummyCow = cow;
+	}
 
 
 private:
@@ -152,7 +158,8 @@ private:
 
 	/** タイマー追加UI */
 	AddTimerUI* m_addTimerUI;
-
+	/** ダミーの牛*/
+	DummyCow* m_dummyCow;
 	/** 終了画像 */
 	SpriteRender m_timeOutImage;
 

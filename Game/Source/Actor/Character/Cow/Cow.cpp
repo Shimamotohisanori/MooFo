@@ -9,6 +9,7 @@
 #include "Pause/Pause.h"
 #include "Combo/Combo.h"
 #include "GameScene/Game.h"
+#include"SoundManager/SoundManager.h"
 #include "DummyCow.h"
 #include "Source/Actor/Character/UFO/CowCaptureController.h"
 
@@ -52,18 +53,15 @@ Cow::Cow()
 
 Cow::~Cow()
 {
-
+	//DeleteGO(m_CowCrySE);
 }
 
 bool Cow::Start()
 {
-
+  m_CowSound  = FindGO<SoundManager>("soundmanager");
 	m_cowmodelRender.Init(COW_MOCEL_FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
 	m_cowmodelRender.SetPosition(m_transform.GetPosition());
 	m_cowmodelRender.Update();
-
-	
-
 	return true;
 }
 
@@ -293,6 +291,15 @@ void Cow::PulledByPlayer()
 
 		m_player->SetGetLeftButton1(false);
 		m_player->SetGetRightButton1(false);
+
+		/** 牛の鳴き声効果音を流す*/
+		if (m_CowSE == false)
+		{
+			m_CowCrySE = m_CowSound->PlayingSE(SoundSE::enCowCrySE, false);
+			m_CowCrySE->SetVolume(5.0f);
+			m_CowSE = true;
+		}
+		
 	}
 }
 
@@ -307,7 +314,8 @@ void Cow::CapturedByPlayer()
 
 		/** プレイヤーへの方向 */
 		Vector3 dir = playerPos - cowPos;
-
+		
+		
 		/** 距離が一定以下なら捕獲される */
 		if (dir.Length() < 50.0f)
 		{
@@ -355,15 +363,16 @@ void Cow::CapturedByPlayer()
 			/** 状態をリセットする */
 			m_isTakeAwayed = false;
 			
-			DummyCow* dummyCow = NewGO<DummyCow>(0, "dummyCow");
-			
+		    m_dummyCow = NewGO<DummyCow>(0, "dummyCow");
 			/** dummyCowに牛の情報を渡す*/
-			dummyCow->SetPosition(m_transform.GetPosition());
-			dummyCow->SetRotation(m_transform.GetRotation());
-			
+			m_dummyCow->SetPosition(m_transform.GetPosition());
+			m_dummyCow->SetRotation(m_transform.GetRotation());
 			/** ジャンプアニメーションを再生*/
-			dummyCow->PlayJumpAnimtion();
-			
+			m_dummyCow->PlayJumpAnimtion();
+			if (game)
+			{
+				game->SetDuumyCow(m_dummyCow);
+			}
 			/** 牛を削除 */
 			DeleteGO(this);
 			return;

@@ -93,7 +93,7 @@ void Title::InTitle()
 			m_loadingScene = NewGO<LoadingScene>(0, "loading");
 			m_loadingScene->SetLoadType(LoadingScene::LoadType::ToGameScene);
 			DeleteGO(m_titleBGM);
-			DeleteGO(m_titleSE);
+			//DeleteGO(m_titleSE);
 			m_loadingScene->SetNextScene([]()
 				{
 					NewGO<Game>(0, "game");

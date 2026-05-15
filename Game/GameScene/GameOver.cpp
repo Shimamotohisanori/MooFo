@@ -137,7 +137,7 @@ void GameOver::InGameOver()
 			m_isGameOverToTitleButtonPressed = false;
 			m_loadingScene = NewGO<LoadingScene>(0, "loading");
 			m_loadingScene->SetLoadType(LoadingScene::LoadType::ToTitleScene);
-			DeleteGO(m_decisionSE);
+			//DeleteGO(m_decisionSE);
 			DeleteGO(m_deathBGM);
 			m_loadingScene->SetNextScene([]()
 				{
