@@ -14,12 +14,12 @@ public:
 	void UpdateSEUI();
 	void Render(RenderContext& rc);
 
-	void SetCount(uint8_t count)
+	void SetCount(int count)
 	{
 		m_Count = count;
 	}
 
-	uint8_t GetCount()
+	int GetCount()
 	{
 		return m_Count;
 	}
@@ -46,7 +46,7 @@ public:
 
 	
 private:
-	uint8_t m_Count = 0;
+	int m_Count = 0;
 
 	float m_bgmVolume = 0.4f;
 	float m_seVolume  = 0.6f;

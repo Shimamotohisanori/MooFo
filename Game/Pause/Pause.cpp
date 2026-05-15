@@ -7,37 +7,50 @@
 
 namespace
 {
-	//const std::string PAUSE_SPRITE_FILE_PASS = "Assets/sptite/";
-	const Vector3 QUITEPOS = { 0.0f,-100.0f,0.0f };
-	const Vector3 RESUMEPOS = { 0.0f,150.0f,0.0f };
-	const Vector3 SOUNDPOS = { 0.0f,-300.0f,0.0f };
-	const Vector3 ARROWPOS = { -350.0f,150.0f,0.0f };
-	const Vector3 SECONDARROWPOS = { -350.0f,-105.0f,0.0f };
-	const Vector3 THIRDARROWPOS = { -170.0f,-300.0f,0.0f };
-	const Vector3 ARROWSCALE = { 1.0f,1.0f,1.0f };
-	const Vector3 ARROWSOUNDSCALE = { 0.5f,0.5f,1.0f };
-}bool Pause::Start()
+	const char* PAUSE_BACKGROUND_PATH = "Assets/sprite/PauseUI/pauseBackGround2.dds";
+	const char* PAUSE_QUITE_PATH      = "Assets/sprite/PauseUI/quiteGame.dds";
+	const char* PAUSE_RESUME_PATH     = "Assets/sprite/PauseUI/resumeGame.dds";
+	const char* PAUSE_SOUND_PATH      = "Assets/sprite/PauseUI/sound.dds";
+	const char* PAUSE_BLACK_SOUND_PATH  = "Assets/sprite/PauseUI/soundBlack.dds";
+	const char* PAUSE_BLACK_RESUME_PATH = "Assets/sprite/PauseUI/resumeGameBlack.dds";
+	const char* PAUSE_BLACK_QUITE_PATH  = "Assets/sprite/PauseUI/quiteGameBlack.dds";
+	
+	const Vector3 QUITEPOS  = { 0.0f,-100.0f,0.0f };
+	const Vector3 RESUMEPOS = { 0.0f, 150.0f,0.0f };
+	const Vector3 SOUNDPOS  = { 0.0f,-300.0f,0.0f };
+	const Vector3 QUITE_BLACKPOS  = {0.0f, 150.0f,0.0f};
+	const Vector3 RESUME_BLACKPOS = {0.0f,-110.0f,0.0f};
+	const Vector3 SOUND_BLACKPOS  = {0.0f,-300.0f,0.0f};
+}
+
+bool Pause::Start()
 {
-	m_pauseBackGround.Init("Assets/sprite/PauseUI/pauseBackGround2.dds",1980.0f,1080.0f);
+	m_pauseBackGround.Init(PAUSE_BACKGROUND_PATH,1980.0f,1080.0f);
 	m_pauseBackGround.Update();
 
-	m_quiteSprite.Init("Assets/sprite/PauseUI/quiteGame.dds",750.0f,650.0f);
+	m_quiteSprite.Init(PAUSE_QUITE_PATH,750.0f,650.0f);
 	m_quiteSprite.SetPosition(QUITEPOS);
 	m_quiteSprite.Update();
 
-	m_resumeSprite.Init("Assets/sprite/PauseUI/resumeGame.dds",650.0f,550.0f);
+	m_resumeSprite.Init(PAUSE_RESUME_PATH,650.0f,550.0f);
 	m_resumeSprite.SetPosition(RESUMEPOS);
 	m_resumeSprite.Update();
 
-	m_soundSprite.Init("Assets/sprite/PauseUI/sound.dds",350.0f,250.0f);
+	m_soundSprite.Init(PAUSE_SOUND_PATH,350.0f,250.0f);
 	m_soundSprite.SetPosition(SOUNDPOS);
 	m_soundSprite.Update();
 
-	//m_settingSprite.Init("Assets/setting.dds",300.0f,200.0f);
-	//m_bgmSprite.Init("Assets/BGM.dds",100.0f,150.0f);
-	//m_sePrite.Init("Assets/SE.dds",100.0f,150.0f);
-	//m_volumeSprite.Init("Assets/volume.dds",100.0f,100.0f);
-	//m_notVolumeSprite.Init("Assets/notVolume.dds",100.0f,100.0f);
+	m_soundBlackSprite.Init(PAUSE_BLACK_SOUND_PATH, 370.0f, 250.0f);
+	m_soundBlackSprite.SetPosition(SOUND_BLACKPOS);
+	m_soundBlackSprite.Update();
+
+	m_quiteBlackSprite.Init(PAUSE_BLACK_QUITE_PATH, 800.0f, 630.0f);
+	m_quiteBlackSprite.SetPosition(QUITE_BLACKPOS);
+	m_quiteBlackSprite.Update();
+
+	m_resumeBlackSprite.Init(PAUSE_BLACK_RESUME_PATH, 650.0f, 550.0f);
+	m_resumeBlackSprite.SetPosition(RESUME_BLACKPOS);
+	m_resumeBlackSprite.Update();
 
 	/** ポーズ画面の音量設定クラスを生成 */
 	m_soundPause = NewGO<SoundPause>(0, "soundpause");
@@ -55,7 +68,7 @@ namespace
 
 void Pause::Update()
 {
-	Choose();
+	Choice();
 	Select();
 
 	/** 上下の入力で選択している場所の番号を変える */
@@ -72,41 +85,18 @@ void Pause::Update()
 
 }
 
-void Pause::Choose()
+void Pause::Choice()
 {
-	// ** 選択している場所の番号が-1になったら2にする */
+	/** 範囲外に言ったら一番下に戻る。 */
 	if (m_countNumber == -1)
 	{
 		m_countNumber = 2;
 	}
-
-	/** 選択している場所の番号が3になったら0にする */
-	if (m_countNumber == 0)
-	{
-		m_arrowSprite.SetPosition(ARROWPOS);
-		m_arrowSprite.SetScale(ARROWSCALE);
-	}
-
-	/** 選択している場所の番号が1になったら矢印の位置を変える */
-	else if (m_countNumber == 1)
-	{
-		m_arrowSprite.SetPosition(SECONDARROWPOS);
-		m_arrowSprite.SetScale(ARROWSCALE);
-	}
-
-	/** 選択している場所の番号が2になったら矢印の位置を変える */
-	else if (m_countNumber == 2)
-	{
-		m_arrowSprite.SetPosition(THIRDARROWPOS);
-		m_arrowSprite.SetScale(ARROWSOUNDSCALE);
-	}
-	
-	/** 選択している場所の番号が3になったら0にする */
-	else if (m_countNumber == 3)
+	/** 範囲外に行ったら先頭に戻る。 */
+	if (m_countNumber >= 3)
 	{
 		m_countNumber = 0;
 	}
-	m_arrowSprite.Update();
 }
 
 void Pause::Select()
@@ -149,5 +139,58 @@ void Pause::Render(RenderContext& rc)
 	m_quiteSprite.Draw(rc);
 	m_resumeSprite.Draw(rc);
 	m_soundSprite.Draw(rc);
-	//m_arrowSprite.Draw(rc);
+	m_quiteBlackSprite.Draw(rc);
+	m_resumeBlackSprite.Draw(rc);
+	m_soundBlackSprite.Draw(rc);
+
+	if (m_countNumber == 0)
+	{
+		m_quiteBlackSprite.SetMulColor
+		(
+			Vector4(1.0f, 1.0f, 1.0f, 0.0f)
+		);
+
+		m_resumeBlackSprite.SetMulColor
+		(
+			Vector4(1.0f, 1.0f, 1.0f, 0.5f)
+		);
+		m_soundBlackSprite.SetMulColor
+		(
+			Vector4(1.0f, 1.0f, 1.0f, 0.5)
+		);
+	}
+
+	if (m_countNumber == 1)
+	{
+		m_quiteBlackSprite.SetMulColor
+		(
+			Vector4(1.0f, 1.0f, 1.0f, 0.5f)
+		);
+
+		m_resumeBlackSprite.SetMulColor
+		(
+			Vector4(1.0f, 1.0f, 1.0f, 0.0f)
+		);
+		m_soundBlackSprite.SetMulColor
+		(
+			Vector4(1.0f, 1.0f, 1.0f, 0.5)
+		);
+	}
+
+	if (m_countNumber == 2)
+	{
+		m_quiteBlackSprite.SetMulColor
+		(
+			Vector4(1.0f, 1.0f, 1.0f, 0.5f)
+		);
+
+		m_resumeBlackSprite.SetMulColor
+		(
+			Vector4(1.0f, 1.0f, 1.0f, 0.5f)
+		);
+		m_soundBlackSprite.SetMulColor
+		(
+			Vector4(1.0f, 1.0f, 1.0f, 0.0)
+		);
+	}
 }
