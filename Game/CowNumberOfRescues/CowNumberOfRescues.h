@@ -30,7 +30,7 @@ public:
 		m_numberOfRescues--;
 	}
 
-	/** 牛の救出数をゲームオーバーとゲームクリアに反映 */
+	/** 牛の救出数を取得 */
 	int GetNumberOfRescues() const;
 	
 	/** セット関数 */

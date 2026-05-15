@@ -201,7 +201,6 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	case 9:
 	case 10:
 	case 11:
-	case 12:
 		{
 		Cow* cow = NewGO<Cow>(0, "cow");
 		cow->SetPosition(RandomCowPos());
@@ -210,23 +209,23 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	
 		/** UFOを生成(4体分) */
 
+	case 12:
 	case 13:
 	case 14:
 	case 15:
-	case 16:
 	{
 		UFO* ufo = NewGO<UFO>(0, UFO_INFOMATIONS[m_loadStep - 13].objectName.c_str());
 		ufo->SetPosition(UFO_INFOMATIONS[m_loadStep - 13].pos);
 		} break;
 
 		/** ゲームカメラを生成 */
-	case 17: NewGO<GameCamera>(0, "gameCamera"); break;
+	case 16: NewGO<GameCamera>(0, "gameCamera"); break;
 
 		/** エフェクトマネージャーを生成 */
-	case 18: NewGO<EffectManager>(0, "effectManager"); break;
+	case 17: NewGO<EffectManager>(0, "effectManager"); break;
 
 		/** スカイキューブを生成 */
-	case 19:
+	case 18:
 	{
 		
 		/** SkyCube を生成 */
@@ -243,7 +242,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	} break;
 
 		/** ゲーム本体を生成 */
-	case 20:
+	case 19:
 		Game* game =NewGO<Game>(0, "game");
 
 		/** ロードした牛をゲームに渡す */
