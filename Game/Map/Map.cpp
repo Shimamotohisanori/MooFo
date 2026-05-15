@@ -1,4 +1,4 @@
-�ｿ#include "stdafx.h"
+#include "stdafx.h"
 #include "Map.h"
 #include "Source/Actor/Character/Player/Player.h"
 #include "Source/Actor/Character/Cow/Cow.h"
@@ -223,6 +223,8 @@ bool Map::WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3
 	rot.SetRotationY(m_mapAngle);
 
 	/** ベクトルに向かう。 */
+	 
+	
 	rot.Apply(cowDiff);
 
 	/** ベクトルを正規化する。 */
