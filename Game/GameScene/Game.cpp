@@ -148,12 +148,14 @@ void Game::Update()
 		m_inGameBGM = m_inGameSound->PlayingBGM(SoundBGM::enInGameBGM, true);
 		m_isSound = true;
 	}
-	//ポーズ中はゲーム処理をしない
+	
+	/** ポーズ中はゲーム処理をしない */
 	if (m_pause->IsActive())
 	{
 		return;
 	}
-	//セレクトボタンを押したら
+
+	/** セレクトボタンを押したら */
 	if (g_pad[0]->IsTrigger(enButtonSelect))
 	{
 		/** カウントダウン中かタイムアウトなら */
@@ -169,19 +171,20 @@ void Game::Update()
 
 	}
 
+	/** 牛を生む関数 */
 	SpawnCow();
 
 	/* タイムアウト処理 */
 	TimeOut();
 
-	// 毎フレームロープに最新の牛リストを渡す
+	/** 毎フレームロープに最新の牛リストを渡す */
 	Rope* rope = FindGO<Rope>("rope");
 	if (rope)
 	{
 		rope->SetCowList(m_aliveCows);
 	}
 
-	//３秒以内に次の牛を救出できなければコンボが途切れたら
+	/** ３秒以内に次の牛を救出できなければコンボが途切れたら */
 	if(m_combo->GetComboTimer() > 0.0f)
 	{
 		m_combo->DecreaseComboTimer(g_gameTime->GetFrameDeltaTime());
@@ -207,8 +210,10 @@ void Game::Clear()
 
 	/** ゲームクリアの画像を呼び出す */
 	m_gameClear = NewGO<GameClear>(0, "gameClear");
+
 	/** ゲームクリアの画像にスコアを渡す */
 	m_gameClear->SetFinalClearScore(ClearfinalScore);
+	
 	/** ゲームクリアの画像に牛の救出数を渡す */
 	m_gameClear->SetFinalClearRescue(ClearfinalRescue);
 
@@ -256,6 +261,14 @@ void Game::ReMoveCow(Cow* cow)
 		m_aliveCows.erase(it);
 	}
 
+	// Rope にも通知
+	Rope* rope = FindGO<Rope>("rope");
+	if (rope && rope->GetHitCow() == cow)
+	{
+		rope->SetIsHitCow(false);
+		rope->SetHitCow(nullptr);
+	}
+
 	/** Mapにも通知 */
 	if (m_map)
 	{
@@ -267,31 +280,57 @@ void Game::SpawnCow()
 {
 	if (m_timer->GetTimer() <= 4.0f || m_isTimeOut)
 	{
-		//タイマーが4秒以下なら牛を補充しない
+		/** タイマーが4秒以下なら牛を補充しない */
 		return;
 	}
-	// 現在の牛の数が10体未満なら補充
+
+	/** 現在の牛の数が10体未満なら補充 */
 	if (m_aliveCows.size() < COW_NUM)
 	{
 		m_spawnTimer += g_gameTime->GetFrameDeltaTime();
 
-		// 3秒ごとに1体補充
+		/** 3秒ごとに1体補充 */
 		if (m_spawnTimer >=NEW_SPAWN_TIMER)
 		{
+			
+			int currentrescues = m_cowNumberOfRescues->GetNumberOfRescues();
+
+			/** もし牛の救出数が一定以上ならスポーンする範囲を大きくする */
+			if (currentrescues >= 10)
+			{
+				m_difficultyLevelSpawnRange = 600;
+			}
+			
+			else if (currentrescues >= 5)
+			{
+				m_difficultyLevelSpawnRange = 400;
+			}
+
+			else
+			{
+				m_difficultyLevelSpawnRange = 0;
+			}
+
 			m_spawnTimer = 0.0f;
 
-			// 新しい牛を生成
+			/** 新しい牛を生成 */
 			Cow* newCow = NewGO<Cow>(0, "cow");
 
-			// スポーン位置（例：ランダム）
+			/** スポーン位置（例：ランダム） */
 			Vector3 pos;
-			pos.x = (rand() % RANDOM_SPAWN_RANGE_DOUBLE) - RANDOM_SPAWN_RANGE; // -300〜300
+
+			/** ランダムスポーン範囲に難易度による調整を加える */
+			int range = RANDOM_SPAWN_RANGE + m_difficultyLevelSpawnRange;
+
+			/** ランダムな位置を生成する */
+			/** 難易度(牛の救出数)に応じてスポーン範囲を調整 */
+			pos.x = (rand() % (range * 2)) - range;
 			pos.y = 0.0f;
-			pos.z = (rand() % RANDOM_SPAWN_RANGE_DOUBLE) - RANDOM_SPAWN_RANGE; // -300〜300
+			pos.z = (rand() % (range * 2)) - range;
 
 			newCow->SetPosition(pos);
 
-			// 生きている牛リストに追加
+			/** 生きている牛リストに追加 */
 			m_aliveCows.push_back(newCow);
 		}
 	}

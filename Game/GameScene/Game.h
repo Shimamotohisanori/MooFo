@@ -178,6 +178,9 @@ private:
 	/** タイムアウトの画像のスケール */
 	Vector3 m_timeOutImageScale = Vector3(0.5f, 0.5f, 1.0f);
 
+	/** 難易度(牛の救出数)により変動する牛生成の範囲 */
+	int m_difficultyLevelSpawnRange = 0;
+
 	/** 牛が生まれる時間 */
 	float m_spawnTimer = 0.0f;
 
