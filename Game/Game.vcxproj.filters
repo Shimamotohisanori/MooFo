@@ -82,6 +82,9 @@
     <ClCompile Include="Source\Actor\Character\Cow\DummyCow.cpp">
       <Filter>Source\Actor\Character\Cow</Filter>
     </ClCompile>
+    <ClCompile Include="EffectManager\EffectManager.cpp">
+      <Filter>EffectManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -165,6 +168,9 @@
     <ClInclude Include="Source\Actor\Character\Cow\DummyCow.h">
       <Filter>Source\Actor\Character\Cow</Filter>
     </ClInclude>
+    <ClInclude Include="EffectManager\EffectManager.h">
+      <Filter>EffectManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
@@ -226,6 +232,9 @@
     </Filter>
     <Filter Include="Combo">
       <UniqueIdentifier>{5fe4c3cf-5149-4f68-9ebc-f602307340e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EffectManager">
+      <UniqueIdentifier>{f8524da2-c7d8-4f71-ac89-094ca5a29087}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

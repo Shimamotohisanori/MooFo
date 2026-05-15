@@ -44,14 +44,15 @@ GameCamera::~GameCamera()
 
 bool GameCamera::Start()
 {
-	
-
+	/** カメラの初期位置を設定 */
 	m_cameraPos.Set(0.0f, 125.0f, -250.0f);
 
-	//近平面を設定
+	/** 近平面を設定 */
 	g_camera3D->SetNear(1.0f);
-	//円平面を設定
+
+	/** 円平面を設定 */
 	g_camera3D->SetFar(1000000.0f);
+
 	return true;
 }
 
@@ -81,53 +82,61 @@ void GameCamera::Follow()
 	if (m_rope->GetIsThrowRope())
 	{
 		return;
-	}																																																																																																																																																																																																																																																																																																																																																													
+	}
 
-
+	/** 注視点の計算 */
 	Vector3 target;
-	//注視点をプレイヤーの座標に設定
+
+	/** 注視点をプレイヤーの座標に設定 */
 	target = m_player->GetPosition();
-	//プレイヤーの足元より少し上に注視点を設定
+
+	/** プレイヤーの足元より少し上に注視点を設定 */
 	target.y += 80.0f;
 
+	/** カメラの位置を回転させる前に保存しておく */
 	Vector3 toCameraPosOld = m_cameraPos;
 
-	//右スティック入力取得でカメラを回す
+	/** 右スティック入力取得でカメラを回す */
 	float x = g_pad[0]->GetRStickXF();
 	float y = g_pad[0]->GetRStickYF();
-	//Y軸周りの回転
+
+	/** Y軸周りの回転 */
 	Quaternion rot;
+
+	/** 回転量はスティック入力に応じて変化させる */
 	rot.SetRotationDeg(Vector3::AxisY, 1.3f * x);
 
+	/** カメラ位置を回転させる */
 	rot.Apply(m_cameraPos);
 
-	// --- 上下回転修正版 ---
-	//「カメラの右方向」を現在の m_CameraPos から正しく計算し、
-	//それを使ってX軸回転を行っている。
+	/** カメラの前方向を計算 */
 	Vector3 forward = m_cameraPos;
-  
+
+	/**  前方向が極端に小さい場合は、デフォルトの前方向を使用して正規化する */
 	if (forward.LengthSq() > 0.0001f)
 		forward.Normalize();
 	else
-		forward = Vector3(0, 0, 1);   // 安全なデフォルト方向
+		forward = Vector3(0, 0, 1);
 	forward.Normalize();
 
-	// ワールド上方向
+	/** カメラの上方向は常にY軸方向とする */
 	Vector3 up = Vector3::AxisY;
 
-	// カメラの右方向を算出
+	/** カメラの右方向を算出 */
 	Vector3 right;
 	right.Cross(up, forward);
 	right.Normalize();
 
-	// 上下回転
+	/** 上下回転 */
 	rot.SetRotationDeg(right, 1.3f * y);
 
+	/** カメラ位置を回転させる */
 	rot.Apply(m_cameraPos);
 
-
+	/** カメラの前方向を再計算 */
 	Vector3 dir = m_cameraPos;
 
+	/** 前方向が極端に小さい場合は、デフォルトの前方向を使用して正規化する */
 	if (dir.LengthSq() > 0.00001f)
 	{
 		dir.Normalize();
@@ -136,32 +145,36 @@ void GameCamera::Follow()
 	{
 		dir = Vector3(0, 0, -1);
 	}
-	float limit = 0.95f; // cos角度による制限(= 約72°)
+	/** cos角度による制限(= 約72°) */
+	float limit = 0.95f; 
+
+	/** カメラの前方向とY軸の内積がlimitより大きい場合は、上向きすぎ・下向きすぎと判断してカメラ位置を元に戻す */
 	if (fabsf(dir.Dot(Vector3::AxisY)) > limit)
 	{
-		// 上向きすぎ・下向きすぎを防止
+		/** 上向きすぎ・下向きすぎを防止 */
 		m_cameraPos = toCameraPosOld;
 	}
 
-	//視点の計算
+	/** 視点の計算 */
 	Vector3 pos = target + m_cameraPos;
 
 
-	// カメラ位置と注視点が一致しないようにする保険
+	/** カメラ位置と注視点が一致しないようにする保険 */
 	if ((pos - target).LengthSq() < 0.0001f)
 	{
 		pos = target + Vector3(0.0f, 0.0f, -50.0f); // 適当な距離を確保
 	}
 
-	// 地面付近にカメラがあった場合はそれ以上下に行かないようにする
+	/** 地面付近にカメラがあった場合はそれ以上下に行かないようにする */
 	if (pos.y < MIN_CAMERA_HEIGHT) {
 		pos.y = MIN_CAMERA_HEIGHT;
 	}
 
-	//メインカメラに注視点と視点を設定
+	/** メインカメラに注視点と視点を設定 */
 	g_camera3D->SetTarget(target);
 	g_camera3D->SetPosition(pos);
-	//カメラの更新
+
+	/** カメラの更新 */
 	g_camera3D->Update();
 }
 

@@ -6,7 +6,7 @@
 #include "CountDown/CountDown.h"
 #include "Pause/Pause.h"
 #include "SoundManager/SoundManager.h"
-
+#include "Source/Actor/Character/Cow/Cow.h"
 namespace
 {
 	/** プレイヤーモデルのファイルパス */
@@ -18,6 +18,12 @@ namespace
 	
 	/** 走るアニメーション */
 	const char* ANIMATION_RUNFILEPATH = "Assets/modelData/CowBoy/Run.tka";
+
+	/** ロープを引っ張るアニメーション(左) */
+	const char* ANIMATION_PULLLEFT_FILEPATH = "Assets/modelData/CowBoy/PullLeft.tka";
+
+	/** ロープを引っ張るアニメーション(右) */
+	const char* ANIMATION_PULLRIGHT_FILEPATH = "Assets/modelData/CowBoy/PullRight.tka";
 	
 	/** ロープを引っ張る画像のファイルパス */
 	const char* PULLROPEFILEPATH = "Assets/sprite/PullRopeButton/PullRope.dds";
@@ -52,10 +58,17 @@ Player::Player()
 	//アニメーションクリップの再生
 	animationClips[enAnimationClip_Idle].Load(ANIMATION_IDLEFILEPATH);
 	animationClips[enAnimationClip_Idle].SetLoopFlag(true);
+
 	animationClips[enAnimationClip_Run].Load(ANIMATION_RUNFILEPATH);
 	animationClips[enAnimationClip_Run].SetLoopFlag(true);
-	m_playerModelRender.Init(PLAYER_FILEPATH, animationClips, enAnimationClip_Num, enModelUpAxisZ);
 
+	animationClips[enAnimationClip_PullLeft].Load(ANIMATION_PULLLEFT_FILEPATH);
+	animationClips[enAnimationClip_PullLeft].SetLoopFlag(true);
+
+	animationClips[enAnimationClip_PullRight].Load(ANIMATION_PULLRIGHT_FILEPATH);
+	animationClips[enAnimationClip_PullRight].SetLoopFlag(true);
+
+	m_playerModelRender.Init(PLAYER_FILEPATH, animationClips, enAnimationClip_Num, enModelUpAxisZ);
 
 }
 
@@ -115,14 +128,14 @@ void Player::Update()
 		return;
 	}
 
+	/*ロープを引っ張る処理*/
+	PullRope();
 	/*移動*/
 	Move();
 	/*回転*/
 	Rotation();
 	/*ロープを投げる処理*/
 	ThrowRope();
-	/*ロープを引っ張る処理*/
-	PullRope();
 	/*ステート管理*/
 	ManageState();
 
@@ -199,7 +212,6 @@ void Player::Move()
 
 	//モデルの座標をキャラクターコントローラーの座標に合わせる
 	m_playerModelRender.SetPosition(m_transform.GetPosition());
-
 }
 
 void Player::Rotation()
@@ -266,8 +278,8 @@ void Player::PullRope()
 				m_isRightButton1 = true;
 				m_isLeftButton1 = false;
 
-				m_isRightButton1_Trigger_Ui = true;
-				m_isLeftButton1_Trigger_Ui = false;
+				m_isRightButton1_Trigger = true;
+				m_isLeftButton1_Trigger = false;
 			}
 
 			else if (g_pad[0]->IsTrigger(enButtonLB1))
@@ -275,34 +287,50 @@ void Player::PullRope()
 				m_isLeftButton1 = true;
 				m_isRightButton1 = false;
 
-				m_isLeftButton1_Trigger_Ui = true;
-				m_isRightButton1_Trigger_Ui = false;
+				m_isLeftButton1_Trigger = true;
+				m_isRightButton1_Trigger = false;
 			}
 
+			if (g_pad[0]->IsTrigger(enButtonRB1) || g_pad[0]->IsTrigger(enButtonLB1))
+			{
+				if (m_isPullAnimation)
+				{
+					m_playerState = 2;
+				}
+				else
+				{
+					m_playerState = 3;
+				}
+
+				m_isPullAnimation = !m_isPullAnimation;
+			}
 		}
 	}
 }
 
-
 void Player::ManageState()
 {
+	/** 牛を引っ張っている最中は再生しないようにする。 */
+	if (m_rope->GetIsHitCow())
+	{
+		return;
+	}
 	if (fabsf(m_moveSpeed.x) >= 0.01f || fabsf(m_moveSpeed.z) >= 0.01f)
 	{
-		//移動しているときは走るアニメーションにする
+		/** 移動しているときは走るアニメーションにする */
 		m_playerState = 1;
 	}
 	else
 	{
-		//移動していないときは待機アニメーションにする
+		/** 移動していないときは待機アニメーションにする */
 		m_playerState = 0;
 	}
 
 }
 
-
 void Player::PlayAnimation()
 {
-	//前の状態と同じ状態だったらアニメーションを切り替えない
+	/** 前の状態と同じ状態だったらアニメーションを切り替えない */
 	if (m_playerState == m_prevPlayerState)
 	{
 		return;
@@ -311,17 +339,31 @@ void Player::PlayAnimation()
 	switch (m_playerState)
 	{
 	case 0:
-		//待機アニメーション
+		/** 待機アニメーション */
 		m_playerModelRender.PlayAnimation(enAnimationClip_Idle);
 
 		m_playerModelRender.Update();
 		break;
 	case 1:
-		//走るアニメーション
-		m_playerModelRender.PlayAnimation(enAnimationClip_Run);
+		/** 走るアニメーション */
 		
+			m_playerModelRender.PlayAnimation(enAnimationClip_Run);
+
+			m_playerModelRender.Update();
+		break;
+	case 2:
+		/** 縄を引っ張るアニメーション(左) */
+		m_playerModelRender.PlayAnimation(enAnimationClip_PullLeft);
+
 		m_playerModelRender.Update();
 		break;
+	case 3:
+		/** 縄を引っ張るアニメーション(右) */
+		m_playerModelRender.PlayAnimation(enAnimationClip_PullRight);
+
+		m_playerModelRender.Update();
+		break;
+
 	}
 }
 
@@ -330,21 +372,21 @@ void Player::Render(RenderContext& rc)
 	m_playerModelRender.Draw(rc);
 
 	/** 両方のボタンを押していなかったら */
-	if (m_rope->GetIsHitCow() && !m_isLeftButton1_Trigger_Ui && !m_isRightButton1_Trigger_Ui)
+	if (m_rope->GetIsHitCow() && !m_isLeftButton1_Trigger && !m_isRightButton1_Trigger)
 	{
 		/** ロープを引っ張る画像の描画 */
-		m_pullRopeSprite.Draw(rc);
+		m_pullRopeSprite.Draw(rc);		
 	}
 
 	/** 右ボタンを押しているとき */
-	if(m_rope->GetIsHitCow() && m_isLeftButton1_Trigger_Ui)
+	if(m_rope->GetIsHitCow() && m_isLeftButton1_Trigger)
 	{
 		/** ロープを引っ張る画像の描画(LBを押しているとき) */
 		m_pullRopeSpriteLB.Draw(rc);
 	}
 
 	/** 左ボタンを押しているとき */
-	if (m_rope->GetIsHitCow() && m_isRightButton1_Trigger_Ui)
+	if (m_rope->GetIsHitCow() && m_isRightButton1_Trigger)
 	{
 		/** ロープを引っ張る画像の描画(RBを押しているとき) */
 		m_pullRopeSpriteRB.Draw(rc);

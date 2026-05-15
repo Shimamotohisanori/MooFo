@@ -4,17 +4,19 @@
 
 namespace
 {
-	//ファイルパス指定
+	/** ファイルパス指定 */
 	const char* FILEPATH1 = "Assets/sprite/NumberUI/MooFoNumberUI1.dds";
 	const char* FILEPATH2 = "Assets/sprite/NumberUI/MooFoNumberUI2.dds";
 	const char* FILEPATH3 = "Assets/sprite/NumberUI/MooFoNumberUI3.dds";
 	const char* FILEPATHStart = "Assets/sprite/NumberUI/Start.dds";
-	//画像の大きさ
+	
+	/** 画像の大きさ */
 	const int GAMECLEAR_WIDTH = 500.0f;
 	const int GAMEOVER_HIGHT = 300.0f;
 
-	const int StartWIDTH = 700.0f;
-	const int StartHIGHT = 500.0f;
+	/** STARTの画像の大きさ */
+	const int STARTWIDTH = 700.0f;
+	const int STARTHIGHT = 500.0f;
 
 	/** カウントダウンのフェードインにかかる時間 */
 	constexpr float FADE_TIME = 1.0f;
@@ -31,7 +33,7 @@ bool CountDown::Start()
 	m_countDown1.Init(FILEPATH1, GAMECLEAR_WIDTH, GAMEOVER_HIGHT);
 	m_countDown2.Init(FILEPATH2, GAMECLEAR_WIDTH, GAMEOVER_HIGHT);
 	m_countDown3.Init(FILEPATH3, GAMECLEAR_WIDTH, GAMEOVER_HIGHT);
-	m_countDownStart.Init(FILEPATHStart, StartWIDTH, StartHIGHT);
+	m_countDownStart.Init(FILEPATHStart, STARTWIDTH, STARTHIGHT);
 
 	SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
 
@@ -55,7 +57,7 @@ void CountDown::InCountDown()
 {
 	m_countDownTime -= g_gameTime->GetFrameDeltaTime();
 
-	//最初は全てOFF
+	/** 最初は全てOFF */
 	m_Show1 = false;
 	m_Show2 = false;
 	m_Show3 = false;
@@ -85,7 +87,7 @@ void CountDown::InCountDown()
 		 m_ShowStart = true;
 	}
 
-	//カウントダウン終了
+	/** カウントダウン終了 */
 	else
 	{
 		m_isCountDown = false;

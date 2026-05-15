@@ -37,6 +37,7 @@ namespace
 	};
 }
 
+
 SoundManager::SoundManager()
 {
 
@@ -57,54 +58,58 @@ SoundManager::SoundManager()
 	}
 }
 
+
 SoundManager::~SoundManager()
 {
 }
 
+
 void SoundManager::Update()
 {
-	// ポーズ画面の音量設定クラスを取得
+	/** ポーズ画面の音量設定クラスを取得 */
 	m_soundPause = FindGO<SoundPause>("soundpause");
 
-	// まだ存在していなければ何もしない
+	/** まだ存在していなければ何もしない */
 	if (m_soundPause == nullptr)
 	{
 		return;
 	}
 
-	// ポーズ画面で設定された音量を取得
+	/** ポーズ画面で設定された音量を取得 */
 	m_bgmVolume = m_soundPause->GetBGMVolume();
 	m_seVolume = m_soundPause->GetSEVolume();
 }
 
 SoundSource* SoundManager::PlayingBGM(SoundBGM number, bool isLoop)
 {
-	// 新しく音を鳴らすためのオブジェクトを作成
+	/** 新しく音を鳴らすためのオブジェクトを作成 */
 	SoundSource* bgm = NewGO<SoundSource>(0);
 
-	// どのBGMを鳴らすか設定
+	/** どのBGMを鳴らすか設定 */
 	bgm->Init(number);
 
+	/** 音量を設定 */
 	bgm->SetVolume(m_bgmVolume);
-	// ループ再生するかどうかを指定して再生
+
+	/** ループ再生するかどうかを指定して再生 */
 	bgm->Play(isLoop);
 
-	// 作成した音を返す
+	/** 作成した音を返す */
 	return bgm;
 }
 
 SoundSource* SoundManager::PlayingSE(SoundSE number, bool isLoop)
 {
-	// 新しく音を鳴らすオブジェクトを作成
+	/** 新しく音を鳴らすオブジェクトを作成 */
 	SoundSource* se = NewGO<SoundSource>(0);
 
-	// SEはBGMの後ろに登録されているのでオフセットを足す
+	/** SEはBGMの後ろに登録されているのでオフセットを足す */
 	se->Init(number + m_bgmCount);
 
-	// ★ここで音量設定
+	/** 音量設定 */
 	se->SetVolume(m_seVolume);
 
-	// 再生
+	/** 再生 */
 	se->Play(isLoop);
 
 	return se;

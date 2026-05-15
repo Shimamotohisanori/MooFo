@@ -66,6 +66,12 @@ private:
 	/** 牛を見つける関数 */
 	void FindTheCow();
 
+	/** UFO同士の反発関数 */
+	void ApplyUFOAvoidance(Vector3& pos);
+
+	/** UFOが制限区域を出ないようにする関数 */
+	void ClampToArea(Vector3& pos);
+
 private:
 	ModelRender m_ufomodelRender;
 	
@@ -73,7 +79,7 @@ private:
 	
 	float m_moveSpeed = 50.0f;//移動速度
 
-	int m_moveTimer = 0;//移動タイマー
+	uint8_t m_moveTimer = 0;//移動タイマー
 	
 	CountDown* m_countdown;
 

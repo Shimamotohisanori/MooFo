@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+�ｿ#include "stdafx.h"
 #include "Map.h"
 #include "Source/Actor/Character/Player/Player.h"
 #include "Source/Actor/Character/Cow/Cow.h"
@@ -34,25 +34,23 @@ namespace
 	constexpr float LIMITED_RANGE_IMAGE = 400.0f;
 
 	/** マジックナンバー処理 */
-	//constexpr int COW_NUM = 10;
-	//constexpr int UFO_NUM = 4;
+	constexpr int COW_NUM = 10;
+	constexpr int UFO_NUM = 4;
 }
 
 bool Map::Start()
 {
 	m_pause = FindGO<Pause>("pause");
 
-	/** それぞれのポジションを見つける。*/
 	m_cows = FindGOs<Cow>("cow");
-	/** ゲームを取得してからUFOの情報をもらう*/
 	Game* game = FindGO<Game>("game");
 	if (game != nullptr)
 	{
 		m_ufos = game->GetUFOs();
 	}
 	m_player = FindGO<Player>("player");
-
-
+  
+  
 	/** ミニマップの背景 */
 	m_mapSprite.Init(MAP_SPRITE_PATH, 400.0f, 400.0f);
 	m_mapSprite.SetPosition(MAP_CENTER_POSITION);
@@ -64,15 +62,13 @@ bool Map::Start()
 	/** ミニマップの外枠 */
 	m_outLineSprite.Init(OUTLINE_ICON_PATH, 532.0f, 532.0f);
 	m_outLineSprite.SetPosition(MAP_OUTLINE_POSITION);
-
-
-	/** 牛をミニマップ内に出現させる。 */
+  /** 牛をミニマップ内に出現させる。 */
 	for (int i = 0; i < m_cows.size(); i++)
 	{
 		m_cowSprite[i].Init(COW_ICON_PATH, 25.0f, 25.0f);
 	}
 
-	/** UFOをミニマップ内に出現させる。 */
+  /** UFOをミニマップ内に出現させる。 */
 	for (int i = 0; i < m_ufos.size(); i++)
 	{
 		m_ufoSprite[i].Init(UFO_ICON_PATH, 50.0f, 50.0f);
@@ -86,8 +82,6 @@ bool Map::Start()
 		m_dangerSprite[i].Init(DANGER_ICON_PATH, 30.0f, 30.0f);
 	}
 
-
-	
 	return true;
 }
 void Map::Update()

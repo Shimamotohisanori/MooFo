@@ -5,16 +5,22 @@ namespace
 {
 	/** タイムを追加する際に出す[+]の画像のファイルパス*/
 	const char* PLUS_FILEPATH = "Assets/sprite/NumberUI/PlusFont.dds";
+	
 	/** タイムを追加する際に出す[3]の画像のファイルパス*/
 	const char* THREE_FILEPATH = "Assets/sprite/NumberUI/MooFoNumberUI3.dds";
+	
 	/** タイムを追加する際に出すの画像の横幅*/
 	const int WIDTH = 200.0f;
+	
 	/** タイムを追加する際に出す画像の縦幅*/
 	const int HEIGHT = 200.0f;
+	
 	/** タイムを追加する際に出す画像のスケール */
 	const Vector3 SCALE = Vector3(0.4f, 0.4f, 0.4f);
+	
 	/** [3]の画像の位置 */
 	const Vector3 THREE_POSITION = Vector3(100.0f, 400.0f, 0.0f);
+	
 	/** [+]の画像の位置 */
 	const Vector3 PLUS_POSITION = Vector3(30.0f, 400.0f, 0.0f);
 }
@@ -70,11 +76,11 @@ void AddTimerUI::FadeOut()
 	if (m_isAddTimer)
 	{
 		m_timer += g_gameTime->GetFrameDeltaTime();
-/** タイマーがフェードイン時間未満の場合 */
+		/** タイマーがフェードイン時間未満の場合 */
 		if (m_timer < FADE_IN_TIME)
 		{
 			/** フェードイン処理 */
-			m_alpha = m_timer /FADE_IN_TIME;
+			m_alpha = m_timer / FADE_IN_TIME;
 		}
 		/** タイマーがフェードイン時間以上で表示保持時間未満の場合*/
 		else if (m_timer < FADE_IN_TIME + HOLD_TIME)
