@@ -5,13 +5,12 @@ class SoundManager;
 class Pause : public IGameObject
 {
 public:
-	Pause(){}
-	~Pause(){}
+	Pause() {}
+	~Pause() {}
 	bool Start();
 	void Update();
-	void Choose();
 	void Select();
-	//void StopBGM();
+	void Choice();
 	void Render(RenderContext& rc);
 
 	/** ポーズ中に選んでいる場所の番号設定関数 */
@@ -51,20 +50,18 @@ private:
 
 	Game* m_game;
 	SoundPause* m_soundPause;
-	
+
 	SpriteRender m_pauseBackGround;
 	SpriteRender m_quiteSprite;
 	SpriteRender m_resumeSprite;
 	SpriteRender m_soundSprite;
 	SpriteRender m_settingSprite;
 	SpriteRender m_bgmSprite;
-	SpriteRender m_sePrite;
+	SpriteRender m_seSprite;
 	SpriteRender m_volumeSprite;
 	SpriteRender m_notVolumeSprite;
-	SpriteRender m_arrowSprite;
-
-	
-
-	
+	SpriteRender m_soundBlackSprite;
+	SpriteRender m_resumeBlackSprite;
+	SpriteRender m_quiteBlackSprite;
 
 };

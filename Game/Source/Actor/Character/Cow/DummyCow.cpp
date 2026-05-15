@@ -1,5 +1,7 @@
 ﻿#include "stdafx.h"
+#include"SoundManager/SoundManager.h"
 #include "DummyCow.h"
+
 namespace
 {
 	/** 牛のモデルファイルパス */
@@ -20,43 +22,59 @@ DummyCow::DummyCow()
 
 DummyCow::~DummyCow()
 {
-	
+
 }
 
 
 bool DummyCow::Start()
 {
-	/** モデルの初期化 */
+	m_DummyCowSE = FindGO<SoundManager>("soundmanager");
+	
+	/** モデルの初期化*/
 	m_dummyCowModelRender.Init(FILEPATH,animationClips,EnAnimation_Num, enModelUpAxisZ);
-
-	/** 位置と回転を反映 */
 	m_dummyCowModelRender.SetPosition(m_position);
 	m_dummyCowModelRender.SetRotation(m_rotation);
-
-	if (m_requestPlayJump)
-	{
-		/** 救出した後はY軸のみ0にする */
-		m_position.y = 0.0f;
-		m_dummyCowModelRender.SetPosition(m_position);
-		m_dummyCowModelRender.PlayAnimation(EnAnimation_Jump);
-		m_isPlaying = true;
-	}
-
+	
 	return true;
 }
 
 
 void DummyCow::Update()
 {
-	/** ジャンプアニメーション中なら */
+	if (m_requestPlayJump && !m_isPlaying)
+	{
+		/** アニメーションを再生*/
+		m_dummyCowModelRender.PlayAnimation(EnAnimation_Jump);
+		/** 救出した後のSEを流す*/
+		if (!m_RescueSE && m_DummyCowSE != nullptr)
+		{
+			m_RescueCowSE = m_DummyCowSE->PlayingSE(SoundSE::enRescueCowSE, false);
+			m_RescueCowSE->SetVolume(5.0f);
+			m_RescueSE = true;
+		}
+		m_isPlaying = true;
+	}
+	if(m_requestPlayJump)
+	{
+		/** 救出した後はY軸のみ0にする */
+		m_position.y = 0.0f;
+		m_dummyCowModelRender.SetPosition(m_position);
+     }
+	/** モデル更新*/
+	m_dummyCowModelRender.Update();
+  /** ジャンプアニメーション中なら */
 	if (m_isPlaying &&!m_dummyCowModelRender.IsPlayingAnimation())
 	{
-		DeleteGO(this);
-		return;
+		m_deleteDelay++;
+		if (m_deleteDelay > 5)
+		{
+			m_isDelete = true;
+		}
+		
+	   return;
 	}
-	m_dummyCowModelRender.Update();
+	
 }
-
 
 void DummyCow::PlayJumpAnimtion()
 {

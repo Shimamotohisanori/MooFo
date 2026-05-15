@@ -56,6 +56,8 @@ private:
 	/** マップの回転角度 */
 	float m_mapAngle = 0.0f;
 
+	float m_flashTImer = 0.0f;
+
 	/** マップ内に表示されているUIがいるかどうかのフラグ */
 	bool m_isCowImage[10];
 	bool m_isUFOImage[4];

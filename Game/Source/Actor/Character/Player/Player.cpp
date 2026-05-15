@@ -74,7 +74,7 @@ Player::Player()
 
 Player::~Player()
 {
-	DeleteGO(m_throwRopeSE);
+	//DeleteGO(m_throwRopeSE);
 
 	DeleteGO(m_rope);
 }
@@ -345,6 +345,7 @@ void Player::PlayAnimation()
 		m_playerModelRender.Update();
 		break;
 	case 1:
+		//走るアニメーション
 		/** 走るアニメーション */
 		
 			m_playerModelRender.PlayAnimation(enAnimationClip_Run);
@@ -369,7 +370,7 @@ void Player::PlayAnimation()
 
 void Player::Render(RenderContext& rc)
 {
-	m_playerModelRender.Draw(rc);
+		m_playerModelRender.Draw(rc);
 
 	/** 両方のボタンを押していなかったら */
 	if (m_rope->GetIsHitCow() && !m_isLeftButton1_Trigger && !m_isRightButton1_Trigger)

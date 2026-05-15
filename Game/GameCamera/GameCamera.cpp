@@ -38,7 +38,7 @@ GameCamera::GameCamera()
 
 GameCamera::~GameCamera()
 {
-	DeleteGO(m_cowCatchSE);
+	//DeleteGO(m_cowCatchSE);
 }
 
 

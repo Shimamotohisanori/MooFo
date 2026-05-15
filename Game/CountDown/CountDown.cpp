@@ -25,7 +25,7 @@ namespace
 CountDown::~CountDown()
 {
 	/** カウントダウンの音を削除 */
-	DeleteGO(m_countDownSE);
+	//DeleteGO(m_countDownSE);
 }
 
 bool CountDown::Start()
