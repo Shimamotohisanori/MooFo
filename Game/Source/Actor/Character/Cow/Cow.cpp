@@ -58,7 +58,8 @@ Cow::~Cow()
 
 bool Cow::Start()
 {
-  m_CowSound  = FindGO<SoundManager>("soundmanager");
+	m_CowSound  = FindGO<SoundManager>("soundmanager");
+	m_cowmodelRender.SetRaytracingWorld(false);
 	m_cowmodelRender.Init(COW_MOCEL_FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
 	m_cowmodelRender.SetPosition(m_transform.GetPosition());
 	m_cowmodelRender.Update();

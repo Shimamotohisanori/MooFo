@@ -38,8 +38,9 @@ public:
 		if (m_ufoLightEffect)
 		{
 			m_ufoLightEffect->Stop();
-			m_ufoLightEffect = nullptr;
 		}
+
+		m_ufoLightEffect = nullptr;
 	}
 
 	enum UFOLightState
@@ -113,6 +114,6 @@ private:
 	Game* m_game;
 
 	/** UFOの光のエフェクト */
-	EffectEmitter* m_ufoLightEffect;
+	EffectEmitter* m_ufoLightEffect = nullptr;
 };
 

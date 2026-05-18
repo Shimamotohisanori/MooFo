@@ -213,6 +213,12 @@ void CowCaptureController::FollowUFO()
 	/** 探索の光エフェクトが存在する場合 */
 	if (m_ufoLightEffect)
 	{
+		if (m_ufoLightEffect->IsDead())
+		{
+			m_ufoLightEffect = nullptr;
+			return;
+		}
+
 		/** Emit状態ではないかつ
 		 * 牛を捕獲していないときエフェクトを破棄する */
 		if (!m_isEmitting && !m_isCapturing)
