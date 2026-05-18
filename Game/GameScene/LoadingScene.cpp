@@ -214,8 +214,10 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	case 14:
 	case 15:
 	{
-		UFO* ufo = NewGO<UFO>(0, UFO_INFOMATIONS[m_loadStep - 13].objectName.c_str());
-		ufo->SetPosition(UFO_INFOMATIONS[m_loadStep - 13].pos);
+		int index = m_loadStep - 12;
+
+		UFO* ufo = NewGO<UFO>(0, UFO_INFOMATIONS[index].objectName.c_str());
+		ufo->SetPosition(UFO_INFOMATIONS[index].pos);
 		} break;
 
 		/** ゲームカメラを生成 */

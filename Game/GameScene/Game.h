@@ -31,10 +31,10 @@ struct UFOinfo
 /** UFOの一覧 */
 const UFOinfo UFO_INFOMATIONS[] =
 {
-	{ "UFO1", Vector3(-1400.0f, 70.0f, 0.0f) },
-	{ "UFO2", Vector3(1400.0f, 70.0f, 0.0f) },
-	{ "UFO3", Vector3(0.0f, 70.0f, -1400.0f) },
-	{ "UFO4", Vector3(0.0f, 70.0f, 1400.0f) }
+	{ "UFO", Vector3(-1400.0f, 70.0f, 0.0f) },
+	{ "UFO", Vector3( 1400.0f, 70.0f, 0.0f) },
+	{ "UFO", Vector3(    0.0f, 70.0f, -1400.0f) },
+	{ "UFO", Vector3(    0.0f, 70.0f, 1400.0f) }
 };
 
 /** ゲームクラス */
@@ -70,7 +70,7 @@ public:
 	std::vector<UFO*> GetUFOs()
 	{
 		/** UFOのリストを作成して返す */
-		std::vector<UFO*> ufos;
+		std::vector<UFO*> m_ufos;
 
 		/** UFOの配列からUFOのリストに追加する */
 		for (int i = 0; i < EnUFO_Num; i++)
@@ -79,12 +79,12 @@ public:
 			/** UFOが存在する場合はリストに追加する */
 			if (m_UFO[i] != nullptr)
 			{
-				ufos.push_back(m_UFO[i]);
+				m_ufos.push_back(m_UFO[i]);
 			}
 		}
 
 		/** UFOのリストを返す */
-		return ufos;
+		return m_ufos;
 	}
 
 	/** タイムアウトフラグの取得関数 */
