@@ -53,7 +53,7 @@ Cow::Cow()
 
 Cow::~Cow()
 {
-	//DeleteGO(m_CowCrySE);
+
 }
 
 bool Cow::Start()
