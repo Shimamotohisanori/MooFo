@@ -2,6 +2,7 @@
 #include "Map.h"
 #include "Source/Actor/Character/Player/Player.h"
 #include "Source/Actor/Character/Cow/Cow.h"
+#include "GameScene/Game.h"
 #include "Source/Actor/Character/UFO/UFO.h"
 #include "Pause/Pause.h"
 namespace
@@ -75,17 +76,24 @@ bool Map::Start()
 
 
 	/** それぞれのポジションを見つける。*/
-	m_cows = FindGOs<Cow>("cow");
+	//m_cows = FindGOs<Cow>("cow");
 	m_ufos = FindGOs<UFO>("UFO");
 	m_player = FindGO<Player>("player");
-
+	m_game = FindGO<Game>("game");
 	return true;
 }
 void Map::Update()
 {
+	/** ゲームオブジェクトが見つからなかったら処理を行わない。 */
+	if (m_game == nullptr || m_player == nullptr) return;
+
+	/** フラッシュタイマーの更新 */
 	m_flashTImer += g_gameTime->GetFrameDeltaTime();
 
-	/** それぞれのポジションを代入させる。 */
+	/** 生きている牛のリストを取得する。 */
+	auto& cows = m_game->GetAliveCows();
+
+	/** プレイヤーのワールド座標を取得する。 */
 	Vector3 playerPos = m_player->GetPosition();
 
 	/** カメラがどの方向を向いているか取得する。 */
@@ -97,15 +105,24 @@ void Map::Update()
 	 */
 	m_mapAngle = atan2(-forward.x, forward.z);
 
-	/** 牛のアイコン */
-	for (int i = 0; i < m_cows.size(); i++)
+	/** 全フラグをリセット */
+	for (int i = 0; i < COW_NUM; i++)
 	{
-		if (m_cows[i]->GetIsTakeAwayed())
-		{
-			m_isCowImage[i] = false;
-			continue;
-		}
-		Vector3 cowPos = m_cows[i]->GetPosition();
+		m_isCowImage[i] = false;
+	}
+
+	/** 牛のアイコン */
+	/** 牛の数が牛のアイコンの数より多い場合
+	牛のアイコンの数までしか処理を行わない。 */
+	int cowCount = min((int)cows.size(), COW_NUM);
+	for (int i = 0; i < cowCount; i++)
+	{
+		/** 死んでいる牛とUFOに連れて行かれた牛はマップに表示させない。 */
+		if (cows[i]->IsDead()) continue;
+		if (cows[i]->GetIsTakeAwayed()) continue;
+
+		/** 牛のワールド座標を取得する。 */
+		Vector3 cowPos = cows[i]->GetPosition();
 		Vector3 mapPos;
 
 		/** マップに表示する範囲に牛やUFOがいたら */
@@ -117,16 +134,10 @@ void Map::Update()
 			/** SpriteRenderに座標を設定 */
 			m_cowSprite[i].SetPosition(mapPos);
 		}
-
-		/** マップに表示する範囲に敵がいなかったら */
-		else
-		{
-			m_isCowImage[i] = false;
-		}
 	}
 
 	/** UFOのアイコン */
-	for (int i = 0; i < m_ufos.size(); i++)
+	for (int i = 0; i < (int)m_ufos.size(); i++)
 	{
 		/** UFOが牛を吸い込んだら */
 		if (m_ufos[i]->GetIsCowTakeAwayed())
@@ -135,26 +146,27 @@ void Map::Update()
 			m_isUFOImage[i] = false;
 
 			/** 代わりにビックリマークを描画させる */
-			Vector3 Pos = m_ufos[i]->GetPosition();
+			Vector3 pos = m_ufos[i]->GetPosition();
 			Vector3 mapPos;
 
 			/** マップに表示する範囲に牛やUFOがいたら */
-			if (WorldPositionConvertToMapPosition(playerPos, Pos, mapPos))
+			if (WorldPositionConvertToMapPosition(playerPos, pos, mapPos))
 			{
-				m_dangerSprite[i].SetPosition(mapPos);
 				/** マップに表示するように設定する。 */
+				m_dangerSprite[i].SetPosition(mapPos);
+
+				/** ビックリマークを描画させる。 */
 				m_isdanger[i] = true;
 			}
-
 			else
 			{
+				/** そうじゃなかったら描画しない。 */
 				m_isdanger[i] = false;
 			}
-
 			continue;
 		}
 
-		/** 牛を吸い込んでいない場合通常のUFOを描画させる。 */
+		/** UFOが牛を吸い込んでいない場合通常のUFOを描画させる。 */
 		Vector3 ufoPos = m_ufos[i]->GetPosition();
 		Vector3 mapPos;
 
@@ -171,28 +183,27 @@ void Map::Update()
 			m_isUFOImage[i] = false;
 		}
 
+		/* ビックリマークは描画しない。 */
 		m_isdanger[i] = false;
 	}
 
 	/** 描画更新処理 */
 	m_mapSprite.Update();
 	m_playerSprite.Update();
+
 	for (int i = 0; i < COW_NUM; i++)
 	{
 		m_cowSprite[i].Update();
 	}
-
 	for (int i = 0; i < UFO_NUM; i++)
 	{
 		m_ufoSprite[i].Update();
-	}
-
-	for (int i = 0; i < UFO_NUM; i++)
-	{
 		m_dangerSprite[i].Update();
 	}
 
 	m_outLineSprite.Update();
+
+	
 }
 bool Map::WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3 cowPosition, Vector3& mapPosition)
 {
@@ -234,44 +245,85 @@ bool Map::WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3
 }
 void Map::Render(RenderContext& rc)
 {
-	if (m_pause->GetIsPause() == false)
+	if (m_pause == nullptr) return;
+	if (m_game == nullptr) return;
+	if (m_pause->GetIsPause()) return;
+
+	auto& cows = m_game->GetAliveCows();
+
+	m_mapSprite.SetMulColor(Vector4{ 1.0f, 1.0f, 1.0f, 0.7f });
+	m_mapSprite.Draw(rc);
+	m_playerSprite.Draw(rc);
+
+	/** 牛アイコンの描画 */
+	int cowCount = min((int)cows.size(), COW_NUM);
+	for (int i = 0; i < cowCount; i++)
 	{
-
-		m_mapSprite.SetMulColor(Vector4{ 1.0f,1.0f,1.0f,0.7f });
-		m_mapSprite.Draw(rc);
-		m_playerSprite.Draw(rc);
-
-		/** 牛を描画させる */
-		for (int i = 0; i < m_cows.size(); i++)
+		if (m_isCowImage[i])
 		{
-			/** もしミニマップないに牛がいたら(true) */
-			if (m_isCowImage[i])
-			{
-				m_cowSprite[i].Draw(rc);
-			}
+			m_cowSprite[i].Draw(rc);
 		}
-
-		for (int i = 0; i < m_ufos.size(); i++)
-		{
-			if (m_isUFOImage[i])
-			{
-				m_ufoSprite[i].Draw(rc);
-			}
-		}
-
-		float flash = (sinf(m_flashTImer * 4.0f) + 1.0f) * 0.5f;
-
-		for (int i = 0; i < m_ufos.size(); i++)
-		{
-			if (m_isdanger[i])
-			{
-				m_dangerSprite[i].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, flash));
-
-				m_dangerSprite[i].Draw(rc);
-			}
-		}
-
-		m_outLineSprite.Draw(rc);
 	}
+
+	/** UFOアイコンの描画 */
+	for (int i = 0; i < (int)m_ufos.size(); i++)
+	{
+		if (m_isUFOImage[i])
+		{
+			m_ufoSprite[i].Draw(rc);
+		}
+	}
+
+	/** ビックリマークの描画 */
+	float flash = (sinf(m_flashTImer * 4.0f) + 1.0f) * 0.5f;
+	for (int i = 0; i < (int)m_ufos.size(); i++)
+	{
+		if (m_isdanger[i])
+		{
+			m_dangerSprite[i].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, flash));
+			m_dangerSprite[i].Draw(rc);
+		}
+	}
+
+	m_outLineSprite.Draw(rc);
+	//if (m_pause->GetIsPause() == false)
+	//{
+
+	//	m_mapSprite.SetMulColor(Vector4{ 1.0f,1.0f,1.0f,0.7f });
+	//	m_mapSprite.Draw(rc);
+	//	m_playerSprite.Draw(rc);
+
+	//	/** 牛を描画させる */
+	//	for (int i = 0; i < m_cows.size(); i++)
+	//	{
+	//		/** もしミニマップないに牛がいたら(true) */
+	//		if (m_isCowImage[i])
+	//		{
+	//			m_cowSprite[i].Draw(rc);
+	//		}
+	//	}
+
+	//	for (int i = 0; i < m_ufos.size(); i++)
+	//	{
+	//		if (m_isUFOImage[i])
+	//		{
+	//			m_ufoSprite[i].Draw(rc);
+	//		}
+	//	}
+
+	//	float flash = (sinf(m_flashTImer * 4.0f) + 1.0f) * 0.5f;
+
+	//	for (int i = 0; i < m_ufos.size(); i++)
+	//	{
+	//		if (m_isdanger[i])
+	//		{
+	//			m_dangerSprite[i].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, flash));
+
+	//			m_dangerSprite[i].Draw(rc);
+	//		}
+	//	}
+
+	//	m_outLineSprite.Draw(rc);
+	//}
 }
 

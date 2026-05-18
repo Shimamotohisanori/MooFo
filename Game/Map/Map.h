@@ -3,6 +3,7 @@ class Player;
 class Cow;
 class UFO;
 class Pause;
+class Game;
 class Map : public IGameObject
 {
  public:
@@ -13,20 +14,23 @@ class Map : public IGameObject
     void Render(RenderContext& rc);
 	
 	/** 牛を削除する関数 */
-	void RemoveCow(Cow* cow)
+	/*void RemoveCow(Cow* cow)
 	{
 		auto iter = std::find(m_cows.begin(), m_cows.end(), cow);
 		if (iter != m_cows.end())
 		{
 			m_cows.erase(iter);
 		}
-	}
+	}*/
+
 private:
 	/** ワールド座標系からマップ座標系に変換 */
 	bool WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3 cowPosition, Vector3& mapPosition);
 
 	/** vector型で牛とUFOの数値を入れている。 */
-	std::vector<Cow*> m_cows;
+	//std::vector<Cow*> m_cows;
+	Game* m_game;
+
 	std::vector<UFO*> m_ufos;
 
 	/** マップの画像 */

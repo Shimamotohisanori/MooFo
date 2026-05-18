@@ -229,7 +229,7 @@ void Game::Clear()
 	m_gameClear->SetFinalClearRescue(ClearfinalRescue);
 
 	DeleteGO(m_inGameBGM);
-	//DeleteGO(m_timeOutSE);
+	
 	DeleteGO(this);
 }
 
@@ -259,7 +259,7 @@ void Game::Death()
 	m_gameOver->SetFinalRescue(finalRescue);
 	
 	DeleteGO(m_inGameBGM);
-	//DeleteGO(m_timeOutSE);
+	
 	DeleteGO(this);
 }
 
@@ -278,12 +278,6 @@ void Game::ReMoveCow(Cow* cow)
 	{
 		rope->SetIsHitCow(false);
 		rope->SetHitCow(nullptr);
-	}
-
-	/** Mapにも通知 */
-	if (m_map)
-	{
-		m_map->RemoveCow(cow);
 	}
 }
 
@@ -380,6 +374,8 @@ void Game::TimeOut()
 				/** ゲームオーバーの処理 */
 				Death();
 			}
+
+			return;
 
 			m_timeOutTimer = 0.0f;
 		}
