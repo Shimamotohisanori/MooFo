@@ -17,9 +17,9 @@
 #include "Map/Map.h"
 #include "nature/SkyCube.h"
 #include "Combo/Combo.h"
-#include"GameTimer/AddTimerUI.h"
-#include"Source/Actor/Character/Cow/DummyCow.h"
-#include "EffectManager/EffectManager.h"
+#include "GameTimer/AddTimerUI.h"
+#include "Source/Actor/Character/Cow/DummyCow.h"
+#include "Source/Actor/Character/UFO/UFOLightUI.h"
 
 namespace
 {
@@ -39,21 +39,19 @@ Game::~Game()
 	/** SpawnCow等で増えた牛も含めて生きている牛は全て削除 */
 	for (auto cow : m_aliveCows)
 	{
-		if (cow)
+		/** 牛が存在する場合は削除する */
+		if (cow && !cow->IsDead())
 		{
 			DeleteGO(cow);
 		}
-	}
-	m_aliveCows.clear();
 
-	/** UFOを削除 */
-	for (int i = 0; i < EnUFO_Num; i++)
-	{
-		if (m_UFO[i] != nullptr)
+		/** 牛が存在しない場合はスキップする */
+		else
 		{
-			DeleteGO(m_UFO[i]);
+			continue;
 		}
 	}
+	m_aliveCows.clear();
 
 	/** プレイヤーを削除 */
 	DeleteGO(m_player);
@@ -62,7 +60,8 @@ Game::~Game()
 	DeleteGO(m_timer);
 
 	/** スコアを削除 */
-	DeleteGO(m_score);
+	if (m_score && !m_score->IsDead()) DeleteGO(m_score);
+	//DeleteGO(m_score);
 
 	/** ゲームカメラを削除 */
 	DeleteGO(m_gameCamera);
@@ -77,15 +76,18 @@ Game::~Game()
 	DeleteGO(m_pause);
 
 	/** 牛の救出数の削除 */
-	DeleteGO(m_cowNumberOfRescues);
+	if (m_cowNumberOfRescues && !m_cowNumberOfRescues->IsDead())
+		DeleteGO(m_cowNumberOfRescues);
+	//DeleteGO(m_cowNumberOfRescues);
+	
 	/** ミニマップの削除 */
 	DeleteGO(m_map);
 
 	/** タイマー追加UIの削除 */
 	DeleteGO(m_addTimerUI);
 
-	/** エフェクトマネージャーの削除 */
-	DeleteGO(m_effectManager);
+	/** UFOのライトUI削除 */
+	DeleteGO(m_ufoLightUI);
 }
 bool Game::Start()
 {
@@ -95,8 +97,6 @@ bool Game::Start()
 	m_gameCamera = FindGO<GameCamera>("gameCamera");
 	m_skyCube = FindGO<SkyCube>("skyCube");
 	m_inGameSound = FindGO<SoundManager>("soundmanager");
-	m_effectManager = FindGO<EffectManager>("effectManager");
-	//m_effectManager->Init();
 
 	/** スコアの生成 */
 	m_score = NewGO<Score>(0, "score");
@@ -123,6 +123,9 @@ bool Game::Start()
 	/** カウントダウンはロード側で作っているなら FindGO、ゲーム側でだけなら NewGO */
 	m_countDown = NewGO<CountDown>(0, "countdown");
 
+	/** UFOのライトUIを生成 */
+	m_ufoLightUI = NewGO<UFOLightUI>(0, "ufoLightUI");
+
 	/** UFO は名前（またはインデックス）で取得 */
 	for (int i = 0; i < EnUFO_Num; i++)
 	{
@@ -142,6 +145,20 @@ bool Game::Start()
 
 void Game::Update()
 {
+	/** 生きている牛のリストをループして牛が存在するか確認する */
+	for (auto it = m_aliveCows.begin(); it != m_aliveCows.end();)
+	{
+		Cow* cow = *it;
+		if (!cow || cow->GetIsDeadFlag())
+		{
+			it = m_aliveCows.erase(it);
+		}
+
+		else
+		{
+			++it;
+		}
+	}
 
 	/** 音楽が再生されていない場合 */
 	if (!m_isSound)
@@ -205,20 +222,24 @@ void Game::Update()
 
 void Game::Clear()
 {
-	/** ゲームクリアの画像にスコアを渡すための変数 */
-	int ClearfinalScore = 0;
-	if (m_score)
+	/** ここでスコアを取得する */
+	int ClearfinalScore = m_score ? m_score->GetScore() : 0;
+
+	/** 牛の救出数を取得する変数 */
+	int ClearfinalRescue = m_cowNumberOfRescues ? m_cowNumberOfRescues->GetNumberOfRescues() : 0;
+
+	/** スコアと牛の救出数を削除することによって二重削除を防ぐ */
+	if (m_score && !m_score->IsDead())
 	{
-		ClearfinalScore = m_score->GetScore();
+		DeleteGO(m_score);
+		m_score = nullptr;
 	}
 
-	/** ゲームクリアの画像に牛の救出数を渡すための変数 */
-	int ClearfinalRescue = 0;
-	if (m_cowNumberOfRescues)
+	if (m_cowNumberOfRescues && !m_cowNumberOfRescues->IsDead())
 	{
-		ClearfinalRescue = m_cowNumberOfRescues->GetNumberOfRescues();
+		DeleteGO(m_cowNumberOfRescues);
+		m_cowNumberOfRescues = nullptr;
 	}
-
 	/** ゲームクリアの画像を呼び出す */
 	m_gameClear = NewGO<GameClear>(0, "gameClear");
 
@@ -231,22 +252,28 @@ void Game::Clear()
 	DeleteGO(m_inGameBGM);
 	
 	DeleteGO(this);
+	return;
 }
 
 void Game::Death()
 {
 	/** ここでスコアを取得 */
-	int finalScore = 0;
-	if (m_score)
-	{
-		finalScore = m_score->GetScore();
-	}
+	int finalScore = m_score ? m_score->GetScore() : 0;
 
 	/** 牛の救出数を取得する変数 */
-	int finalRescue= 0;
-	if (m_cowNumberOfRescues)
+	int finalRescue = m_cowNumberOfRescues ? m_cowNumberOfRescues->GetNumberOfRescues() : 0;
+
+	/** スコアと牛の救出数を削除することによって二重削除を防ぐ */
+	if (m_score && !m_score->IsDead())
 	{
-		finalRescue = m_cowNumberOfRescues->GetNumberOfRescues();
+		DeleteGO(m_score);
+		m_score = nullptr;
+	}
+
+	if (m_cowNumberOfRescues && !m_cowNumberOfRescues->IsDead())
+	{
+		DeleteGO(m_cowNumberOfRescues);
+		m_cowNumberOfRescues = nullptr;
 	}
 
 	/** ゲームオーバーの画像を呼び出す */
@@ -261,6 +288,7 @@ void Game::Death()
 	DeleteGO(m_inGameBGM);
 	
 	DeleteGO(this);
+	return;
 }
 
 void Game::ReMoveCow(Cow* cow)

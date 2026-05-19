@@ -75,6 +75,11 @@ namespace
 
 bool CowNumberOfRescues::Start()
 {
+    m_numberOfRescues = 0;
+    tens = 0;
+    ones = 0;
+    m_isResult = false;
+
 	/** 数のUIを左右全てに読み込む */
 	for (int i = 0; i < 10; i++)
     {

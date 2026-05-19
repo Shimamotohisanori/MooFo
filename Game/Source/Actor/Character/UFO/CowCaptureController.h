@@ -30,17 +30,39 @@ public:
 	void SetCapturing(bool flag)
 	{
 		m_isCapturing = flag;
+		if (flag)
+		{
+			m_state = Capture;
+		}
 	}
 
 	/** 捕獲終了の処理を行う関数 */
 	void EndCaptured()
 	{
-		if (m_ufoLightEffect)
+		/** UFOの光のエフェクトが存在しない場合は何もしない */
+		if (m_ufoLightEffect == nullptr)
 		{
-			m_ufoLightEffect->Stop();
+			return;
 		}
 
+		/** 既に死んでるなら何もしない */
+		if (m_ufoLightEffect->IsDead())
+		{
+			m_ufoLightEffect = nullptr;
+			return;
+		}
+
+		m_ufoLightEffect->Stop();
+
+		DeleteGO(m_ufoLightEffect);
+
+		m_isCapturing = false;
+
 		m_ufoLightEffect = nullptr;
+
+		m_state = Wait;
+
+		m_timer = m_waitTimer;
 	}
 
 	enum UFOLightState
@@ -57,8 +79,17 @@ public:
 	/** UFOが光を出すまでの時間をカウントする関数 */
 	void CountTimer();
 
-	/** 秒数の描画処理 */
-	void CountSpriteUI();
+	/** タイマーの値を取得する関数 */
+	float GetTimer() const
+	{
+		return m_timer;
+	}
+
+	/** 光が出ているかどうかのフラグの取得関数 */
+	bool IsEmitting() const
+	{
+		return m_isEmitting;
+	}
 
 
 private:
@@ -68,20 +99,10 @@ private:
 	/** UFOの光を出す関数 */
 	void PlayLightEffect();
 
+	/** アップデートできるかどうかを判断する関数 */
+	bool CanUFOLightUpdate();
 
-private:
-	
-	/** 光が出ているときに表示する数字のスプライトレンダー */
-	SpriteRender m_LightApperNumberSpriteRender[5];
-	
-	/** 「光の発射まで」を表示するスプライトレンダー */
-	SpriteRender m_LightApperSpriteRender;
-
-	/** 「秒」を表示するスプライトレンダー */
-	SpriteRender m_secondsSpriteRender;
-	
-	/** 現在の秒数 */
-	uint8_t m_currentCount = 0;
+private:	
 		
 	/** 光が出るまでの時間 */
 	float m_waitTimer = 5.0f;
@@ -105,13 +126,13 @@ private:
 	UFO* m_ufo = nullptr;
 
 	/** ポーズ */
-	Pause* m_pause;
+	Pause* m_pause = nullptr;
 
 	/** カウントダウン */
-	CountDown* m_countdown;
+	CountDown* m_countdown = nullptr;
 
 	/** ゲーム */
-	Game* m_game;
+	Game* m_game = nullptr;
 
 	/** UFOの光のエフェクト */
 	EffectEmitter* m_ufoLightEffect = nullptr;

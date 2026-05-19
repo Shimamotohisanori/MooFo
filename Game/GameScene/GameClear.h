@@ -39,25 +39,25 @@ private:
 	SpriteRender m_gameClearPressTitleSpriteRender;
 
 	/** ゲームクリアのBGMとSEを管理するサウンドマネージャー */
-	SoundManager* m_clearSound;
+	SoundManager* m_clearSound = nullptr;
 
 	/** ゲームクリアのBGM */
-	SoundSource* m_clearBGM;
+	SoundSource* m_clearBGM = nullptr;
 
 	/** ゲームクリアのSE */
-	SoundSource* m_decisionSE;
+	SoundSource* m_decisionSE = nullptr;
 
 	/** スコアクラスのポインタ */
-	Score* m_score;
+	Score* m_score = nullptr;
 
 	/** 救出数クラスのポインタ */
-	CowNumberOfRescues* m_cowNumberOfRescues;
+	CowNumberOfRescues* m_cowNumberOfRescues = nullptr;
 
 	/** ゲームクリアからタイトルシーンに移行するためのローディングシーン */
-	LoadingScene* m_loadingScene;
+	LoadingScene* m_loadingScene = nullptr;
 
 	/** タイトルシーンに移行するときのタイトルクラスのポインタ */
-	Title* m_title;
+	Title* m_title = nullptr;
 
 	enum enGameClearState
 	{
@@ -69,10 +69,10 @@ private:
 	enGameClearState m_gameClearState = FadeIn;
 
 	/** 最終スコアを保存する変数 */
-	uint8_t m_finalScore;
+	int m_finalScore;
 
 	/** 最終救出数を保存する変数 */
-	uint8_t m_finalRescue;
+	int m_finalRescue;
 
 	/** α値の変数 */
 	float m_gameClearAlpha = 1.0f;

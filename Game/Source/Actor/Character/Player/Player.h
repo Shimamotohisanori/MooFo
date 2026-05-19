@@ -82,6 +82,9 @@ private:
 	/** ループを引っ張る関数*/
 	void PullRope();
 
+	/** アップデートできるかどうかを判断する関数 */
+	bool CanPlayerUpdate();
+
 private:
 	/** プレイヤーモデル */
 	ModelRender m_playerModelRender;
@@ -102,22 +105,22 @@ private:
 	SpriteRender m_pullRopeSpriteRB;
 
 	/** ロープ */
-	Rope* m_rope;
+	Rope* m_rope = nullptr;
 
 	/** ゲームクラス */
-	Game* m_game;
+	Game* m_game = nullptr;
 
 	/** カウントダウン */
-	CountDown* m_countDown;
+	CountDown* m_countDown = nullptr;
 
 	/** ポーズ */
-	Pause* m_pause;
+	Pause* m_pause = nullptr;
 
 	/** ロープを投げる音 */
-	SoundSource* m_throwRopeSE;
+	SoundSource* m_throwRopeSE = nullptr;
 
 	/** 牛 */
-	Cow* m_cow;
+	Cow* m_cow = nullptr;
 
 	/** プレイヤーの状態 */
 	uint8_t m_playerState = 0;

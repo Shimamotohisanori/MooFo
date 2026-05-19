@@ -40,6 +40,11 @@ namespace
 
 bool Map::Start()
 {
+	/** それぞれのポジションを見つける。*/
+	m_ufos = FindGOs<UFO>("UFO");
+	m_player = FindGO<Player>("player");
+	m_game = FindGO<Game>("game");
+
 	m_pause = FindGO<Pause>("pause");
 
 	/** ミニマップの背景 */
@@ -58,12 +63,18 @@ bool Map::Start()
 	for (int i = 0; i < COW_NUM; i++)
 	{
 		m_cowSprite[i].Init(COW_ICON_PATH, 25.0f, 25.0f);
+		
+		/** 最初は牛のアイコンは表示させない。 */
+		m_isCowImage[i] = false;
 	}
 
 	/** UFOをミニマップ内に出現させる。 */
 	for (int i = 0; i < UFO_NUM; i++)
 	{
 		m_ufoSprite[i].Init(UFO_ICON_PATH, 50.0f, 50.0f);
+
+		/** 最初はUFOのアイコンは表示させない。 */
+		m_isUFOImage[i] = false;
 	}
 
 	/* ビックリマークをUFOが牛を捕まえたときに表示させる。
@@ -72,14 +83,11 @@ bool Map::Start()
 	for (int i = 0; i < UFO_NUM; i++)
 	{
 		m_dangerSprite[i].Init(DANGER_ICON_PATH, 30.0f, 30.0f);
+
+		/** 最初はビックリマークのアイコンは表示させない。 */
+		m_isdanger[i] = false;
 	}
 
-
-	/** それぞれのポジションを見つける。*/
-	//m_cows = FindGOs<Cow>("cow");
-	m_ufos = FindGOs<UFO>("UFO");
-	m_player = FindGO<Player>("player");
-	m_game = FindGO<Game>("game");
 	return true;
 }
 void Map::Update()
@@ -286,44 +294,6 @@ void Map::Render(RenderContext& rc)
 	}
 
 	m_outLineSprite.Draw(rc);
-	//if (m_pause->GetIsPause() == false)
-	//{
-
-	//	m_mapSprite.SetMulColor(Vector4{ 1.0f,1.0f,1.0f,0.7f });
-	//	m_mapSprite.Draw(rc);
-	//	m_playerSprite.Draw(rc);
-
-	//	/** 牛を描画させる */
-	//	for (int i = 0; i < m_cows.size(); i++)
-	//	{
-	//		/** もしミニマップないに牛がいたら(true) */
-	//		if (m_isCowImage[i])
-	//		{
-	//			m_cowSprite[i].Draw(rc);
-	//		}
-	//	}
-
-	//	for (int i = 0; i < m_ufos.size(); i++)
-	//	{
-	//		if (m_isUFOImage[i])
-	//		{
-	//			m_ufoSprite[i].Draw(rc);
-	//		}
-	//	}
-
-	//	float flash = (sinf(m_flashTImer * 4.0f) + 1.0f) * 0.5f;
-
-	//	for (int i = 0; i < m_ufos.size(); i++)
-	//	{
-	//		if (m_isdanger[i])
-	//		{
-	//			m_dangerSprite[i].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, flash));
-
-	//			m_dangerSprite[i].Draw(rc);
-	//		}
-	//	}
-
-	//	m_outLineSprite.Draw(rc);
-	//}
+	
 }
 

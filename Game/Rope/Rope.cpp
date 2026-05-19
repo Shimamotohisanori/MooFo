@@ -2,7 +2,6 @@
 #include "Rope.h"
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "GameCamera/GameCamera.h"
-#include "Source/Actor/Character/UFO/UFO.h"
 #include "Source/Actor/Character/Player/Player.h"
 
 namespace
@@ -76,6 +75,13 @@ void Rope::Update()
 {
 	/** プレイヤーが存在しないなら処理しない */
 	if (!m_player) return;
+
+	/** Dead になった牛のポインタをリセット */
+	if (m_hitCow != nullptr && m_hitCow->IsDead())
+	{
+		m_isHitCow = false;
+		m_hitCow = nullptr;
+	}
 
 	/** プレイヤーがロープを投げる処理 */
 	PlayerThrowsRope();
@@ -213,7 +219,11 @@ void Rope::StretchRope()
 void Rope::RotateStretchRope()
 {
 	if (m_hitCow == nullptr) return;
-
+	if (m_hitCow->IsDead())
+	{
+		m_hitCow = nullptr;
+		return;
+	}
 	/** ロープの位置から牛の位置へのベクトルを求める */
 	Vector3 start = m_ropePos;
 	Vector3 end = m_hitCow->GetPosition();

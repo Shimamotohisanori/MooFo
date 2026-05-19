@@ -8,7 +8,6 @@
 #include "Source/Actor/Character/UFO/UFO.h"
 #include "GameCamera/GameCamera.h"
 #include "nature/SkyCube.h"
-#include "EffectManager/EffectManager.h"
 
 namespace
 {
@@ -207,25 +206,37 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		m_tempCows.push_back(cow);
 	} break;
 	
-		/** UFOを生成(4体分) */
-
+		/** もしUFOが消えていなかったら残っているUFOを消す */
 	case 12:
+	{
+		auto ufos = FindGOs<UFO>("UFO");
+		for (auto ufo : ufos)
+		{
+			if (ufo && !ufo->IsDead())
+			{
+				DeleteGO(ufo);
+			}
+		}
+		break;
+	}
+
+		/** UFOを生成(4体分) */
 	case 13:
 	case 14:
 	case 15:
+	case 16:
 	{
-		int index = m_loadStep - 12;
-
-		UFO* ufo = NewGO<UFO>(0, UFO_INFOMATIONS[index].objectName.c_str());
-		ufo->SetPosition(UFO_INFOMATIONS[index].pos);
-		} break;
+		int index = m_loadStep - 13;
+		if (index >= 0 && index < 4)
+		{
+			UFO* ufo = NewGO<UFO>(0, "UFO");
+			ufo->SetPosition(UFO_INFOMATIONS[index].pos);
+			m_tempUFOs.push_back(ufo);
+		}
+	} break;
 
 		/** ゲームカメラを生成 */
-	case 16: NewGO<GameCamera>(0, "gameCamera"); break;
-
-		/** エフェクトマネージャーを生成 */
-	case 17: NewGO<EffectManager>(0, "effectManager"); break;
-
+	case 17: NewGO<GameCamera>(0, "gameCamera"); break;
 		/** スカイキューブを生成 */
 	case 18:
 	{
@@ -252,6 +263,9 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		{
 			game->GetAliveCows().push_back(cow);
 		}
+		
+		/** ロードしたUFOをゲームに渡す */
+		game->SetUFOList(m_tempUFOs);
 
 		DeleteGO(this);
 		return;
