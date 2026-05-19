@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include"SoundManager/SoundManager.h"
 #include "DummyCow.h"
+#include "EffectManager/EffectManager.h"
 
 namespace
 {
@@ -34,7 +35,19 @@ bool DummyCow::Start()
 	m_dummyCowModelRender.Init(FILEPATH,animationClips,EnAnimation_Num, enModelUpAxisZ);
 	m_dummyCowModelRender.SetPosition(m_position);
 	m_dummyCowModelRender.SetRotation(m_rotation);
+
+	m_heartEffect = NewGO<nsK2EngineLow::EffectEmitter>(0);
+	m_heartEffect->Init((int)EffectID::EffectID_HeartEffect);
+
+	m_heartEffect->SetPosition(m_position);
+
+	m_heartEffect->SetScale({ 20.0f,20.0f,20.0f });
 	
+	m_heartEffect->Play();
+	m_heartEffect->Update();
+
+	
+
 	return true;
 }
 
