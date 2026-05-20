@@ -251,7 +251,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		sky->SetScale(10000.0f);
 
 		/** IBL 設定 */
-		g_renderingEngine->SetAmbientByIBLTexture(sky->GetTextureFilePath(), 0.8f);
+		g_renderingEngine->SetAmbientByIBLTexture(sky->GetTextureFilePath(), 0.05f);
 	} break;
 
 		/** ゲーム本体を生成 */

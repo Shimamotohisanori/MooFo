@@ -61,5 +61,8 @@ private:
 
 	/**牛を救出した後のSE */
 	SoundSource* m_RescueCowSE = nullptr;
+
+	/** ハートのエフェクト */
+	EffectEmitter* m_heartEffect;
 };
 
