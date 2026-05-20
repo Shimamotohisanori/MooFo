@@ -8,7 +8,7 @@ class Pause;
 class Game;
 class SoundManager;
 class DummyCow;
-class CowCaptureController;
+class Timer;
 class Cow : public Character
 {
 public:
@@ -134,9 +134,14 @@ private:
 
 	/** ゲーム */
 	Game* m_game = nullptr;
+	
+	/** タイマー */
+	Timer* m_timer = nullptr;
+
 	/** 牛の鳴き声のSE*/
 	SoundSource* m_CowCrySE = nullptr;
 
+	/** 偽の牛 */
 	DummyCow* m_dummyCow = nullptr;
 
 	/* 牛のサウンドマネージャー**/

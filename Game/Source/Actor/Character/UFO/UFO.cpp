@@ -62,7 +62,12 @@ UFO::UFO()
 UFO::~UFO()
 {
 	/** UFOの光のエフェクトが存在する場合は削除する */
-	m_cowCaptureController = nullptr;
+	if (m_cowCaptureController)
+	{
+		DeleteGO(m_cowCaptureController);
+		m_cowCaptureController = nullptr;
+	}
+	
 }
 
 

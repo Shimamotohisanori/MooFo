@@ -3,6 +3,7 @@
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "GameCamera/GameCamera.h"
 #include "Source/Actor/Character/Player/Player.h"
+#include "GameTimer/Timer.h"
 
 namespace
 {
@@ -73,6 +74,22 @@ bool Rope::Start()
 
 void Rope::Update()
 {
+	m_timer = FindGO<Timer>("timer");
+	
+	/** タイマーが存在しないなら処理しない */
+	if (m_timer == nullptr) return;
+
+	/** タイマーが1秒未満なら処理しない */
+	if (m_timer->GetTimer() < 1.0f)
+	{
+		if (m_hitCow != nullptr && m_hitCow->IsDead())
+		{
+			m_isHitCow = false;
+			m_hitCow = nullptr;
+		}
+		return;
+	}
+
 	/** プレイヤーが存在しないなら処理しない */
 	if (!m_player) return;
 

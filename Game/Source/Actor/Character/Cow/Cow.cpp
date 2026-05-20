@@ -11,6 +11,7 @@
 #include "GameScene/Game.h"
 #include"SoundManager/SoundManager.h"
 #include "DummyCow.h"
+#include "GameTimer/Timer.h"
 
 namespace
 {
@@ -67,7 +68,7 @@ bool Cow::Start()
 
 void Cow::Update()
 {
-	
+
 	/** アップデートできるかどうかを判断する関数 */
 	if (!CanUpdate())
 	{
@@ -328,12 +329,12 @@ void Cow::CapturedByPlayer()
 
 			/** コンボを増やす */
 			Combo* combo = FindGO<Combo>("combo");
-			Game* game = FindGO<Game>("game");
-			if (game && combo)
+			m_game = FindGO<Game>("game");
+			if (m_game && combo)
 			{
 				combo->AddCombo();
 				combo->AddScore(100);
-				game->ReMoveCow(this);
+				m_game->ReMoveCow(this);
 			}
 
 			/** 牛の救出数を増やす */
@@ -352,9 +353,9 @@ void Cow::CapturedByPlayer()
 			m_dummyCow->SetRotation(m_transform.GetRotation());
 			/** ジャンプアニメーションを再生*/
 			m_dummyCow->PlayJumpAnimtion();
-			if (game)
+			if (m_game)
 			{
-				game->SetDuumyCow(m_dummyCow);
+				m_game->SetDuumyCow(m_dummyCow);
 			}
 
 			/** 牛を削除 */
@@ -417,12 +418,14 @@ bool Cow::CanUpdate()
 	m_rope = FindGO<Rope>("rope");
 	m_pause = FindGO<Pause>("pause");
 	m_game = FindGO<Game>("game");
+	m_timer = FindGO<Timer>("timer");
 	/** どれかが存在しないときは処理しないようにするため早期リターン */
 	if (m_pause == nullptr ||
 		m_countdown == nullptr ||
 		m_player == nullptr ||
 		m_rope == nullptr ||
-		m_game == nullptr
+		m_game == nullptr ||
+		m_timer == nullptr
 		)
 	{
 		return false;
@@ -454,6 +457,12 @@ bool Cow::CanUpdate()
 
 	/** カウントダウン中のときは処理しないようにするため早期リターン */
 	if (m_countdown->GetCountDown())
+	{
+		return false;
+	}
+
+	/** タイマーが一秒未満なら処理しないようにするため早期リターン */
+	if (m_timer->GetTimer() < 1.0f)
 	{
 		return false;
 	}

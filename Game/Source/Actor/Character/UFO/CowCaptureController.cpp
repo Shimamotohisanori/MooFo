@@ -127,8 +127,9 @@ void CowCaptureController::PlayLightEffect()
 	if (m_state == Emit || m_state == Capture)
 	{
 		/** 既存のエフェクトを破棄する */
-		if (m_ufoLightEffect)
+		if (m_ufoLightEffect && !m_ufoLightEffect->IsDead())
 		{
+			m_ufoLightEffect->Stop();
 			DeleteGO(m_ufoLightEffect);
 			m_ufoLightEffect = nullptr;
 		}

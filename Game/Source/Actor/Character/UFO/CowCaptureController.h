@@ -72,9 +72,6 @@ public:
 		Capture/** 捕獲中 */
 	};
 	UFOLightState m_state = Wait;
-
-	/** 捕獲している牛の数 */
-	static int m_capturingCount;
 		
 	/** UFOが光を出すまでの時間をカウントする関数 */
 	void CountTimer();
