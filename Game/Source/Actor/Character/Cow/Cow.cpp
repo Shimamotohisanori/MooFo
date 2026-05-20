@@ -11,7 +11,7 @@
 #include "GameScene/Game.h"
 #include"SoundManager/SoundManager.h"
 #include "DummyCow.h"
-#include "Source/Actor/Character/UFO/CowCaptureController.h"
+#include "GameTimer/Timer.h"
 
 namespace
 {
@@ -58,7 +58,8 @@ Cow::~Cow()
 
 bool Cow::Start()
 {
-  m_CowSound  = FindGO<SoundManager>("soundmanager");
+	m_CowSound  = FindGO<SoundManager>("soundmanager");
+	m_cowmodelRender.SetRaytracingWorld(false);
 	m_cowmodelRender.Init(COW_MOCEL_FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
 	m_cowmodelRender.SetPosition(m_transform.GetPosition());
 	m_cowmodelRender.Update();
@@ -67,38 +68,9 @@ bool Cow::Start()
 
 void Cow::Update()
 {
-	m_player = FindGO<Player>("player");
-	m_countdown = FindGO<CountDown>("countdown");
-	m_rope = FindGO<Rope>("rope");
-	m_pause = FindGO<Pause>("pause");
-	m_game = FindGO<Game>("game");
-	m_cowCaptureController = FindGO<CowCaptureController>("cowcapturecontroller");
 
-	/** どれかが存在しないときは処理しないようにするため早期リターン */
-	if (m_pause == nullptr ||
-		m_countdown == nullptr ||
-		m_player == nullptr ||
-		m_rope == nullptr ||
-		m_game == nullptr ||
-		m_cowCaptureController == nullptr)
-	{
-		return;
-	}
-
-	/** タイムアウトしているときは牛を動かさないようにするため早期リターン */
-	if (m_game->GetIsTimeOut())
-	{
-		return;
-	}
-
-	/* ポーズ中は牛を動かさないようにするため早期リターン */
-	if (m_pause->GetIsPause())
-	{
-		return;
-	}
-
-	/** カウントダウン中は牛を動かさないようにするため早期リターン */
-	if (m_countdown->GetCountDown())
+	/** アップデートできるかどうかを判断する関数 */
+	if (!CanUpdate())
 	{
 		return;
 	}
@@ -136,6 +108,26 @@ void Cow::Update()
 	/** モデルの更新 */
 	m_cowmodelRender.Update();
 
+	/** 削除予約されているなら */
+	if (m_isPendingKill)
+	{
+		/** Ropeとの紐づけ解除 */
+		if (m_rope && m_rope->GetHitCow() == this)
+		{
+			m_rope->SetIsHitCow(false);
+			m_rope->SetHitCow(nullptr);
+		}
+
+		/** UFOとの紐づけ解除 */
+		if (m_takingUFO)
+		{
+			m_takingUFO->SetIsCowTakeAwayed(false);
+			m_takingUFO->ReMoveTargetCow();
+		}
+
+		DeleteGO(this);
+		return;
+	}
 }
 
 
@@ -319,17 +311,9 @@ void Cow::CapturedByPlayer()
 		/** 距離が一定以下なら捕獲される */
 		if (dir.Length() < 50.0f)
 		{
-			/** 自分がロープに紐づいてる時だけフラグをおろす */
-			if (m_rope && m_rope->GetHitCow() == this)
-			{
-				m_rope->SetIsHitCow(false);
-				m_rope->SetHitCow(nullptr);
-			}
 
 			if (m_takingUFO)
 			{
-				m_takingUFO->SetIsCowTakeAwayed(false);
-				m_takingUFO->ReMoveTargetCow();
 				/** 牛捕獲コントローラーの捕獲フラグを下ろす */
 				m_takingUFO->GetCowCaptureController()->SetCapturing(false);
 				/** 牛捕獲コントローラーの捕獲終了の処理を行う関数を呼ぶ*/
@@ -345,12 +329,12 @@ void Cow::CapturedByPlayer()
 
 			/** コンボを増やす */
 			Combo* combo = FindGO<Combo>("combo");
-			Game* game = FindGO<Game>("game");
-			if (game && combo)
+			m_game = FindGO<Game>("game");
+			if (m_game && combo)
 			{
 				combo->AddCombo();
 				combo->AddScore(100);
-				game->ReMoveCow(this);
+				m_game->ReMoveCow(this);
 			}
 
 			/** 牛の救出数を増やす */
@@ -369,12 +353,16 @@ void Cow::CapturedByPlayer()
 			m_dummyCow->SetRotation(m_transform.GetRotation());
 			/** ジャンプアニメーションを再生*/
 			m_dummyCow->PlayJumpAnimtion();
-			if (game)
+			if (m_game)
 			{
-				game->SetDuumyCow(m_dummyCow);
+				m_game->SetDuumyCow(m_dummyCow);
 			}
+
 			/** 牛を削除 */
-			DeleteGO(this);
+			m_isCaptured = false;
+			m_isDeadFlag = true;
+			RequestKill();
+
 			return;
 		}
 	}
@@ -421,6 +409,71 @@ void Cow::AvoidPlayer()
 		m_transform.SetRotation(m_transform.GetRotation());
 	}
 
+}
+
+bool Cow::CanUpdate()
+{
+	m_player = FindGO<Player>("player");
+	m_countdown = FindGO<CountDown>("countdown");
+	m_rope = FindGO<Rope>("rope");
+	m_pause = FindGO<Pause>("pause");
+	m_game = FindGO<Game>("game");
+	m_timer = FindGO<Timer>("timer");
+	/** どれかが存在しないときは処理しないようにするため早期リターン */
+	if (m_pause == nullptr ||
+		m_countdown == nullptr ||
+		m_player == nullptr ||
+		m_rope == nullptr ||
+		m_game == nullptr ||
+		m_timer == nullptr
+		)
+	{
+		return false;
+	}
+
+	/** 死んでいるときは処理しないようにするため早期リターン */
+	if (m_isDeadFlag)
+	{
+		return false;
+	}
+
+	/** ロープに捕まっているときは処理しないようにするため早期リターン */
+	if (IsDead())
+	{
+		return false;
+	}
+
+	/** タイムアウトのときは処理しないようにするため早期リターン */
+	if (m_game->GetIsTimeOut())
+	{
+		return false;
+	}
+
+	/** ポーズ中のときは処理しないようにするため早期リターン */
+	if (m_pause->GetIsPause())
+	{
+		return false;
+	}
+
+	/** カウントダウン中のときは処理しないようにするため早期リターン */
+	if (m_countdown->GetCountDown())
+	{
+		return false;
+	}
+
+	/** タイマーが一秒未満なら処理しないようにするため早期リターン */
+	if (m_timer->GetTimer() < 1.0f)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+void Cow::RequestKill()
+{
+	/** 牛の削除フラグを立てる */
+	m_isPendingKill = true;
 }
 
 void Cow::PlayAnimation()

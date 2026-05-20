@@ -69,6 +69,11 @@ void GameCamera::Update()
 		return;
 	}
 
+	if (m_player == nullptr || m_rope == nullptr || m_cow == nullptr)
+	{
+		return;
+	}
+
 	Follow();
 	FollowRope();
 	CheckCameraHitCow();

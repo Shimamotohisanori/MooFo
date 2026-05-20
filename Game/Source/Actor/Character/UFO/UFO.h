@@ -72,6 +72,9 @@ private:
 	/** UFOが制限区域を出ないようにする関数 */
 	void ClampToArea(Vector3& pos);
 
+	/** UFOのアップデートができるかどうかを判断する関数 */
+	bool CanUFOUpdate();
+
 private:
 	ModelRender m_ufomodelRender;
 	
@@ -79,21 +82,21 @@ private:
 	
 	float m_moveSpeed = 50.0f;//移動速度
 
-	uint8_t m_moveTimer = 0;//移動タイマー
+	float m_moveTimer = 0.0f;//移動タイマー
 	
-	CountDown* m_countdown;
+	CountDown* m_countdown = nullptr;
 
 	/** UFOに見つかった牛 */
 	Cow* m_targetCow = nullptr;
 
 	/** ゲームシーン */
-	Game* m_game;
+	Game* m_game = nullptr;
 
 	/*スコア*/
-	Score* m_score;
+	Score* m_score = nullptr;
 
 	/** UFOの牛捕獲コントローラー */
-	CowCaptureController* m_cowCaptureController;
+	CowCaptureController* m_cowCaptureController = nullptr;
 	
 	/** ポーズ */
 	Pause* m_pause = nullptr;

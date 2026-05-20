@@ -17,7 +17,7 @@ class Map;
 class DummyCow;
 class Combo;
 class AddTimerUI;
-class EffectManager;
+class UFOLightUI;
 
 /** UFOの情報をまとめる構造体 */
 struct UFOinfo
@@ -66,7 +66,7 @@ public:
 
 	bool m_isSound;
 
-	/** UFO立の取得関数 */
+	/** UFO達の取得関数 */
 	std::vector<UFO*> GetUFOs()
 	{
 		/** UFOのリストを作成して返す */
@@ -85,6 +85,16 @@ public:
 
 		/** UFOのリストを返す */
 		return m_ufos;
+	}
+
+	/** UFOの配列をセットする関数 */
+	void SetUFOList(const std::vector<UFO*>& ufos)
+	{
+		/** UFOの配列に引数で渡されたUFOのリストをセットする */
+		for (int i = 0; i < ufos.size() && i < EnUFO_Num; i++)
+		{
+			m_UFO[i] = ufos[i];
+		}
 	}
 
 	/** タイムアウトフラグの取得関数 */
@@ -158,8 +168,13 @@ private:
 
 	/** タイマー追加UI */
 	AddTimerUI* m_addTimerUI;
-	/** ダミーの牛*/
+	
+	/** ダミーの牛 */
 	DummyCow* m_dummyCow = nullptr;
+	
+	/** 牛のライトUI */
+	UFOLightUI* m_ufoLightUI = nullptr;
+
 	/** 終了画像 */
 	SpriteRender m_timeOutImage;
 
@@ -178,9 +193,6 @@ private:
 
 	/** UFOの配列 */
 	UFO* m_UFO[EnUFO_Num];
-
-	/** エフェクトマネージャー */
-	EffectManager* m_effectManager;
 
 	/** タイムアウトの画像のスケール */
 	Vector3 m_timeOutImageScale = Vector3(0.5f, 0.5f, 1.0f);

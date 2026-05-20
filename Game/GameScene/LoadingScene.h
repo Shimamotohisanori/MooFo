@@ -3,6 +3,7 @@
 class Cow;
 class CountDown;
 class GameCamera;
+class UFO;
 /** ローディングシーンのクラス*/
 class LoadingScene : public IGameObject
 {
@@ -67,6 +68,9 @@ private:
 
 	/** ロードするゲームオブジェクト(牛)のリスト*/
 	std::vector<Cow*> m_tempCows;
+
+	/** ロードするゲームオブジェクト(UFO)のリスト*/
+	std::vector<UFO*> m_tempUFOs;
 
 	/** 現在表示している画像*/
 	uint8_t m_currentImage = 0;

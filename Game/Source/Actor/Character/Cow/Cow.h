@@ -8,7 +8,7 @@ class Pause;
 class Game;
 class SoundManager;
 class DummyCow;
-class CowCaptureController;
+class Timer;
 class Cow : public Character
 {
 public:
@@ -92,6 +92,15 @@ public:
 		return m_takingUFO;
 	}
 		
+	/** 牛が死んだフラグを取得する関数 */
+	bool GetIsDeadFlag()
+	{
+		return m_isDeadFlag;
+	}
+
+	/** 牛を削除予定を見る関数 */
+	void RequestKill();
+
 
 private:
 	/** プレイヤーに引っ張られる関数 */
@@ -103,16 +112,19 @@ private:
 	/** プレイヤーから逃げる関数 */
 	void AvoidPlayer();
 	
+	/** アップデートできるかどうかを判断する関数 */
+	bool CanUpdate();
+
 
 private:
 	/** ロープ */
-	Rope* m_rope;
+	Rope* m_rope = nullptr;
 
 	/** プレイヤー */
-	Player* m_player;
+	Player* m_player = nullptr;
 
 	/** カウントダウン */
-	CountDown* m_countdown;
+	CountDown* m_countdown = nullptr;
 
 	/** UFO */
 	UFO* m_takingUFO = nullptr;
@@ -122,16 +134,18 @@ private:
 
 	/** ゲーム */
 	Game* m_game = nullptr;
-	/** 牛の鳴き声のSE*/
-	SoundSource* m_CowCrySE;
+	
+	/** タイマー */
+	Timer* m_timer = nullptr;
 
+	/** 牛の鳴き声のSE*/
+	SoundSource* m_CowCrySE = nullptr;
+
+	/** 偽の牛 */
 	DummyCow* m_dummyCow = nullptr;
 
 	/* 牛のサウンドマネージャー**/
-	SoundManager* m_CowSound;
-
-	/** 牛捕獲コントローラー */
-	CowCaptureController* m_cowCaptureController = nullptr;
+	SoundManager* m_CowSound = nullptr;
 
 	enum EnCowState
 	{
@@ -156,7 +170,7 @@ private:
 	float m_moveSpeed = 50.0f;
 
 	/** 牛の移動時間 */
-	uint8_t m_moveTimer = 0;
+	float m_moveTimer = 0;
 
 	/** 牛が移動しているかどうか */
 	bool m_isMove = false;
@@ -170,6 +184,12 @@ private:
 	/** 牛がUFOに連れ去られているかどうか */
 	bool m_isTakeAwayed = false;
 	
+	/** 牛が死んだフラグ */
+	bool m_isDeadFlag = false;
+
+	/** 牛の削除フラグ */
+	bool m_isPendingKill = false;
+
 	enum EnAnimation
 	{
 		EnAnimation_Idle,

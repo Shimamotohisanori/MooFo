@@ -61,7 +61,13 @@ UFO::UFO()
 
 UFO::~UFO()
 {
-	DeleteGO(m_cowCaptureController);
+	/** UFOの光のエフェクトが存在する場合は削除する */
+	if (m_cowCaptureController)
+	{
+		DeleteGO(m_cowCaptureController);
+		m_cowCaptureController = nullptr;
+	}
+	
 }
 
 
@@ -71,6 +77,7 @@ bool UFO::Start()
 
 	/** それぞれのUFOに自分自身を設定 */
 	m_cowCaptureController->SetUFO(this);
+	m_ufomodelRender.SetRaytracingWorld(false);
 	m_ufomodelRender.Init(UFO_MODEL_FILEPATH);
 	m_ufomodelRender.SetScale(UFO_SCALE,UFO_SCALE,UFO_SCALE);
 	m_ufomodelRender.SetPosition(m_transform.GetPosition());
@@ -82,31 +89,9 @@ bool UFO::Start()
 
 void UFO::Update()
 {
-	m_game = FindGO<Game>("game");
-	m_countdown = FindGO<CountDown>("countdown");
-	m_pause = FindGO<Pause>("pause");
-	m_score = FindGO<Score>("score");
 
-	/** UFOがゲームシーンに存在していないときは処理をしない */
-	if(m_pause == nullptr || m_countdown == nullptr || m_game == nullptr)
-	{
-		return;
-	}
-
-	/** タイムアウトしているときはUFOを動かさない */
-	if (m_game->GetIsTimeOut())
-	{
-		return;
-	}
-
-	/** ポーズ中はUFOを動かさない */
-	if (m_pause->GetIsPause())
-	{
-		return;
-	}
-
-	/** カウントダウン中はUFOを動かさない */
-	if (m_countdown->GetCountDown())
+	/** アップデートできるかどうかを判断する */
+	if (!CanUFOUpdate())
 	{
 		return;
 	}
@@ -296,12 +281,13 @@ void UFO::TakeAwayTheCow()
 			game->ReMoveCow(m_targetCow);
 		}
 
-		/** 牛を削除 */
-		DeleteGO(m_targetCow);
+		/** 牛を削除予定に入れる */
+		m_targetCow->RequestKill();
 
 		/** 状態をリセットする */
 		m_targetCow = nullptr;
 		m_isCowTakeAwayed = false;
+		m_isChasing = false;
 
 		return;
 	}
@@ -485,6 +471,40 @@ void UFO::ClampToArea(Vector3& pos)
 		pos.z = AREA_MAX_Z;
 		m_moveDir.z *= -1;
 	}
+}
+
+bool UFO::CanUFOUpdate()
+{
+	m_game = FindGO<Game>("game");
+	m_countdown = FindGO<CountDown>("countdown");
+	m_pause = FindGO<Pause>("pause");
+	m_score = FindGO<Score>("score");
+
+	/** UFOがゲームシーンに存在していないときは処理をしない */
+	if (m_pause == nullptr || m_countdown == nullptr || m_game == nullptr)
+	{
+		return false;
+	}
+
+	/** タイムアウトしているときはUFOを動かさない */
+	if (m_game->GetIsTimeOut())
+	{
+		return false;
+	}
+
+	/** ポーズ中はUFOを動かさない */
+	if (m_pause->GetIsPause())
+	{
+		return false;
+	}
+
+	/** カウントダウン中はUFOを動かさない */
+	if (m_countdown->GetCountDown())
+	{
+		return false;
+	}
+
+	return true;
 }
 
 

@@ -111,19 +111,11 @@ bool Player::Start()
 
 void Player::Update()
 {
-	m_game = FindGO<Game>("game");
-	m_countDown = FindGO<CountDown>("countdown");
-	m_pause = FindGO<Pause>("pause");
-
 	/*アニメーション*/
 	PlayAnimation();
 
-	if (m_pause == nullptr ||
-		m_countDown == nullptr ||
-		m_game == nullptr ||
-		m_game->GetIsTimeOut() ||
-		m_pause->GetIsPause() ||
-		m_countDown->GetCountDown())
+	/*アップデートできるかどうかを判断する関数*/
+	if (!CanPlayerUpdate())
 	{
 		return;
 	}
@@ -306,6 +298,25 @@ void Player::PullRope()
 			}
 		}
 	}
+}
+
+bool Player::CanPlayerUpdate()
+{
+	m_game = FindGO<Game>("game");
+	m_countDown = FindGO<CountDown>("countdown");
+	m_pause = FindGO<Pause>("pause");
+
+	if (m_pause == nullptr ||
+		m_countDown == nullptr ||
+		m_game == nullptr ||
+		m_game->GetIsTimeOut() ||
+		m_pause->GetIsPause() ||
+		m_countDown->GetCountDown())
+	{
+		return false;
+	}
+
+	return true;
 }
 
 void Player::ManageState()

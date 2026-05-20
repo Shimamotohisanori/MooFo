@@ -29,16 +29,16 @@ private:
 	SpriteRender m_titlePressStartSpriteRender;
 
 	/** タイトルのBGMとSEを管理するサウンドマネージャー */
-	SoundManager* m_soundManager;
+	SoundManager* m_soundManager = nullptr;
 
 	/** タイトルのBGM */
-	SoundSource* m_titleBGM;
+	SoundSource* m_titleBGM = nullptr;
 
 	/** タイトルのSE */
-	SoundSource* m_titleSE;
+	SoundSource* m_titleSE = nullptr;
 
 	/** タイトルからローディングシーンに移行するためのローディングシーン */
-	LoadingScene* m_loadingScene;
+	LoadingScene* m_loadingScene = nullptr;
 
 	/** タイトルの状態を管理する列挙型 */
 	enum enTitleState

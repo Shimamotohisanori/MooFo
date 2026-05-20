@@ -41,22 +41,22 @@ private:
 	SpriteRender m_gameOverPressTitleSpriteRender;
 
 	/** ゲームオーバーのBGMとSEを管理するサウンドマネージャー */
-	SoundManager* m_deathSound;
+	SoundManager* m_deathSound = nullptr;
 
 	/** スコアクラスのポインタ */
-	Score* m_score;
+	Score* m_score = nullptr;
 
 	/** 救出数クラスのポインタ */
-	CowNumberOfRescues* m_cowNumberOfRescues;
+	CowNumberOfRescues* m_cowNumberOfRescues = nullptr;
 
 	/** ゲームオーバーのBGM */
-	SoundSource* m_deathBGM;
+	SoundSource* m_deathBGM = nullptr;
 
 	/** ゲームオーバーのSE */
-	SoundSource* m_decisionSE;
+	SoundSource* m_decisionSE = nullptr;
 
 	/** ゲームオーバーからタイトルシーンに移行するためのローディングシーン */
-	LoadingScene* m_loadingScene;
+	LoadingScene* m_loadingScene = nullptr;
 
 	/** タイトルシーンに移行するときのタイトルクラスのポインタ */
 	enum enGameOverState
@@ -69,10 +69,10 @@ private:
 	enGameOverState m_gameOverState = FadeIn;
 
 	/** スコアの最終値 */
-	uint8_t m_finalScore;
+	int m_finalScore;
 
 	/** 救出数の最終値 */
-	uint8_t m_finalRescue = 0;
+	int m_finalRescue = 0;
 
 	/** α値の変数 */
 	float m_gameOverAlpha = 1.0f;

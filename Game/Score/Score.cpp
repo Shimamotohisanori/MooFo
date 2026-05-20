@@ -32,7 +32,10 @@ Score::~Score()
 bool Score::Start()
 {
 	m_score = 0;
+	
+	m_displayScore = 0;
 
+	m_isResult = false;
 	/** 最初は絶対更新するためここを - 1する */
 	m_prevScore = -1;
 
@@ -192,7 +195,14 @@ void Score::SetResult(bool isResult)
 
 void Score::SetScore(int score)
 {
+	/** スコアを直接反映する */
 	m_score = score;
+
+	/** 表示用スコアも同期 */
+	m_displayScore = score;
+
+	/** 強制更新 */
+	m_prevScore = -1;
 }
 
 
