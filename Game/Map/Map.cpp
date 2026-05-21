@@ -7,22 +7,22 @@
 #include "Pause/Pause.h"
 namespace
 {
-	/** ミニマップのスプライトのパス */
+	/** �~�j�}�b�v�̃X�v���C�g�̃p�X */
 	const char* MAP_SPRITE_PATH = "Assets/sprite/MapUI/MapIcon.dds";
 
-	/** プレイヤーのアイコンのファイルパス */
+	/** �v���C���[�̃A�C�R���̃t�@�C���p�X */
 	const char* PLAYER_ICON_PATH = "Assets/sprite/MapUI/PlayerIcon.dds";
 
-	/** 牛のアイコンのファイルパス */
+	/** ���̃A�C�R���̃t�@�C���p�X */
 	const char* COW_ICON_PATH = "Assets/sprite/MapUI/CowIcon.dds";
 
-	/** UFOのアイコンのファイルパス */
+	/** UFO�̃A�C�R���̃t�@�C���p�X */
 	const char* UFO_ICON_PATH = "Assets/sprite/MapUI/UFOIcon.dds";
 
-	/** ビックリマークのファイルパス */
+	/** �r�b�N���}�[�N�̃t�@�C���p�X */
 	const char* DANGER_ICON_PATH = "Assets/sprite/MapUI/Danger.dds";
 
-	/** ミニマップの外枠のファイルパス */
+	/** �~�j�}�b�v�̊O�g�̃t�@�C���p�X */
 	const char* OUTLINE_ICON_PATH = "Assets/sprite/MapUI/OutLine.dds";
 
 	Vector3 MAP_CENTER_POSITION = Vector3(704.0f, -300.0f, 0.0f);
@@ -33,172 +33,161 @@ namespace
 	constexpr float MAP_RADIUS = 180.0f;
 	constexpr float LIMITED_RANGE_IMAGE = 400.0f;
 
-	/** マジックナンバー処理 */
+	/** �}�W�b�N�i���o�[���� */
 	constexpr int COW_NUM = 10;
 	constexpr int UFO_NUM = 4;
 }
 
 bool Map::Start()
 {
-	/** それぞれのポジションを見つける。*/
-	m_ufos = FindGOs<UFO>("UFO");
-	m_player = FindGO<Player>("player");
-	m_game = FindGO<Game>("game");
-
 	m_pause = FindGO<Pause>("pause");
 
-	/** ミニマップの背景 */
+	/** �~�j�}�b�v�̔w�i */
 	m_mapSprite.Init(MAP_SPRITE_PATH, 400.0f, 400.0f);
 	m_mapSprite.SetPosition(MAP_CENTER_POSITION);
 
-	/** ミニマップの中心(プレイヤー) */
+	/** �~�j�}�b�v�̒��S(�v���C���[) */
 	m_playerSprite.Init(PLAYER_ICON_PATH, 50.0f, 50.0f);
 	m_playerSprite.SetPosition(MAP_CENTER_POSITION);
 
-	/** ミニマップの外枠 */
+	/** �~�j�}�b�v�̊O�g */
 	m_outLineSprite.Init(OUTLINE_ICON_PATH, 532.0f, 532.0f);
 	m_outLineSprite.SetPosition(MAP_OUTLINE_POSITION);
 
-	/** 牛をミニマップ内に出現させる。 */
+	/** �����~�j�}�b�v���ɏo��������B */
 	for (int i = 0; i < COW_NUM; i++)
 	{
 		m_cowSprite[i].Init(COW_ICON_PATH, 25.0f, 25.0f);
-		
-		/** 最初は牛のアイコンは表示させない。 */
-		m_isCowImage[i] = false;
 	}
 
-	/** UFOをミニマップ内に出現させる。 */
+	/** UFO���~�j�}�b�v���ɏo��������B */
 	for (int i = 0; i < UFO_NUM; i++)
 	{
 		m_ufoSprite[i].Init(UFO_ICON_PATH, 50.0f, 50.0f);
-
-		/** 最初はUFOのアイコンは表示させない。 */
-		m_isUFOImage[i] = false;
 	}
 
-	/* ビックリマークをUFOが牛を捕まえたときに表示させる。
-	 * UFOが起点となるためUFO_NUMを使用する
+	/* �r�b�N���}�[�N��UFO������߂܂����Ƃ��ɕ\��������B
+	 * UFO���N�_�ƂȂ邽��UFO_NUM���g�p����
 	 */
 	for (int i = 0; i < UFO_NUM; i++)
 	{
 		m_dangerSprite[i].Init(DANGER_ICON_PATH, 30.0f, 30.0f);
-
-		/** 最初はビックリマークのアイコンは表示させない。 */
-		m_isdanger[i] = false;
 	}
 
+
+	/** ���ꂼ��̃|�W�V������������B*/
+	//m_cows = FindGOs<Cow>("cow");
+	m_ufos = FindGOs<UFO>("UFO");
+	m_player = FindGO<Player>("player");
+	m_game = FindGO<Game>("game");
 	return true;
 }
 void Map::Update()
 {
-	/** ゲームオブジェクトが見つからなかったら処理を行わない。 */
+	/** �Q�[���I�u�W�F�N�g��������Ȃ������珈�����s��Ȃ��B */
 	if (m_game == nullptr || m_player == nullptr) return;
 
-	/** フラッシュタイマーの更新 */
+	/** �t���b�V���^�C�}�[�̍X�V */
 	m_flashTImer += g_gameTime->GetFrameDeltaTime();
 
-
-	/** 生きている牛のリストを取得する。 */
+	/** �����Ă��鋍�̃��X�g���擾����B */
 	auto& cows = m_game->GetAliveCows();
 
-	/** プレイヤーのワールド座標を取得する。 */
+	/** �v���C���[�̃��[���h���W���擾����B */
 	Vector3 playerPos = m_player->GetPosition();
 
-	/** カメラがどの方向を向いているか取得する。 */
+	/** �J�������ǂ̕����������Ă��邩�擾����B */
 	Vector3 forward = g_camera3D->GetForward();
 
 	/*
-	 *  カメラの向きを角度に変換する。
-	 *  atan2はXとYの方向がどの角度かを返す関数
+	 *  �J�����̌������p�x�ɕϊ�����B
+	 *  atan2��X��Y�̕������ǂ̊p�x����Ԃ��֐�
 	 */
 	m_mapAngle = atan2(-forward.x, forward.z);
 
-
-	/** 全フラグをリセット */
+	/** �S�t���O�����Z�b�g */
 	for (int i = 0; i < COW_NUM; i++)
 	{
 		m_isCowImage[i] = false;
 	}
 
-	/** 牛のアイコン */
-	/** 牛の数が牛のアイコンの数より多い場合
-	牛のアイコンの数までしか処理を行わない。 */
+	/** ���̃A�C�R�� */
+	/** ���̐������̃A�C�R���̐���葽���ꍇ
+	���̃A�C�R���̐��܂ł����������s��Ȃ��B */
 	int cowCount = min((int)cows.size(), COW_NUM);
 	for (int i = 0; i < cowCount; i++)
 	{
-		/** 死んでいる牛とUFOに連れて行かれた牛はマップに表示させない。 */
+		/** ����ł��鋍��UFO�ɘA��čs���ꂽ���̓}�b�v�ɕ\�������Ȃ��B */
 		if (cows[i]->IsDead()) continue;
 		if (cows[i]->GetIsTakeAwayed()) continue;
 
-		/** 牛のワールド座標を取得する。 */
+		/** ���̃��[���h���W���擾����B */
 		Vector3 cowPos = cows[i]->GetPosition();
 		Vector3 mapPos;
 
-		/** マップに表示する範囲に牛やUFOがいたら */
+		/** �}�b�v�ɕ\������͈͂ɋ���UFO�������� */
 		if (WorldPositionConvertToMapPosition(playerPos, cowPos, mapPos))
 		{
-			/** マップに表示するように設定する。 */
+			/** �}�b�v�ɕ\������悤�ɐݒ肷��B */
 			m_isCowImage[i] = true;
 
-			/** SpriteRenderに座標を設定 */
+			/** SpriteRender�ɍ��W��ݒ� */
 			m_cowSprite[i].SetPosition(mapPos);
 		}
-
 	}
 
-	/** UFOのアイコン */
+	/** UFO�̃A�C�R�� */
 	for (int i = 0; i < (int)m_ufos.size(); i++)
 	{
-		/** UFOが牛を吸い込んだら */
+		/** UFO�������z�����񂾂� */
 		if (m_ufos[i]->GetIsCowTakeAwayed())
 		{
-			/** UFOの描画を消す */
+			/** UFO�̕`������� */
 			m_isUFOImage[i] = false;
 
-			/** 代わりにビックリマークを描画させる */
+			/** ����Ƀr�b�N���}�[�N��`�悳���� */
 			Vector3 pos = m_ufos[i]->GetPosition();
 			Vector3 mapPos;
 
-			/** マップに表示する範囲に牛やUFOがいたら */
+			/** �}�b�v�ɕ\������͈͂ɋ���UFO�������� */
 			if (WorldPositionConvertToMapPosition(playerPos, pos, mapPos))
 			{
-				/** マップに表示するように設定する。 */
+				/** �}�b�v�ɕ\������悤�ɐݒ肷��B */
 				m_dangerSprite[i].SetPosition(mapPos);
 
-				/** ビックリマークを描画させる。 */
+				/** �r�b�N���}�[�N��`�悳����B */
 				m_isdanger[i] = true;
 			}
 			else
 			{
-				/** そうじゃなかったら描画しない。 */
+				/** ��������Ȃ�������`�悵�Ȃ��B */
 				m_isdanger[i] = false;
 			}
 			continue;
 		}
 
-		/** UFOが牛を吸い込んでいない場合通常のUFOを描画させる。 */
+		/** UFO�������z������ł��Ȃ��ꍇ�ʏ��UFO��`�悳����B */
 		Vector3 ufoPos = m_ufos[i]->GetPosition();
 		Vector3 mapPos;
 
-		/** ミニマップ内にUFOがいたら */
+		/** �~�j�}�b�v����UFO�������� */
 		if (WorldPositionConvertToMapPosition(playerPos, ufoPos, mapPos))
 		{
-			/** ミニマップ内にUFOと座標をセットする。 */
+			/** �~�j�}�b�v����UFO�ƍ��W���Z�b�g����B */
 			m_isUFOImage[i] = true;
 			m_ufoSprite[i].SetPosition(mapPos);
 		}
 		else
 		{
-			/** そうじゃなかったら描画しない。 */
+			/** ��������Ȃ�������`�悵�Ȃ��B */
 			m_isUFOImage[i] = false;
 		}
 
-		/* ビックリマークは描画しない。 */
+		/* �r�b�N���}�[�N�͕`�悵�Ȃ��B */
 		m_isdanger[i] = false;
 	}
 
-	/** 描画更新処理 */
+	/** �`��X�V���� */
 	m_mapSprite.Update();
 	m_playerSprite.Update();
 
@@ -214,41 +203,40 @@ void Map::Update()
 
 	m_outLineSprite.Update();
 
-	
+
 }
 bool Map::WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3 cowPosition, Vector3& mapPosition)
 {
-	/** Y座標はマップの座標とは関係ないので、0にする。 */
+	/** Y���W�̓}�b�v�̍��W�Ƃ͊֌W�Ȃ��̂ŁA0�ɂ���B */
 	worldCenterPosition.y = 0.0f;
 	cowPosition.y = 0.0f;
 	Vector3 cowDiff = cowPosition - worldCenterPosition;
-	/** マップの中心のプレイヤーとの距離が一定以上離れていたら */
+	/** �}�b�v�̒��S�̃v���C���[�Ƃ̋��������ȏ㗣��Ă����� */
 	if (cowDiff.LengthSq() >= LIMITED_RANGE_IMAGE * LIMITED_RANGE_IMAGE)
 	{
-		/** 表示しないようにする。 */
+		/** �\�����Ȃ��悤�ɂ���B */
 		return false;
 	}
 
-	/** ベクトルの長さを取得 */
+	/** �x�N�g���̒������擾 */
 	float cowLength = cowDiff.Length();
 
 	Quaternion rot;
 
-	/** Y軸周りにマップを回転させるクォータニオンを作っている。 */
+	/** Y������Ƀ}�b�v����]������N�H�[�^�j�I��������Ă���B */
 	rot.SetRotationY(m_mapAngle);
 
-	/** ベクトルに向かう。 */
-	 
-	
+	/** �x�N�g���Ɍ������B */
+
 	rot.Apply(cowDiff);
 
-	/** ベクトルを正規化する。 */
+	/** �x�N�g���𐳋K������B */
 	cowDiff.Normalize();
 
-	/** マップの大きさ/距離制限で。	ベクトルをマップ座標系に変換する。*/
+	/** �}�b�v�̑傫��/���������ŁB	�x�N�g�����}�b�v���W�n�ɕϊ�����B*/
 	cowDiff *= cowLength * MAP_RADIUS / LIMITED_RANGE_IMAGE;
 
-	/** マップの中央座標と上記ベクトルを加算する。 */
+	/** �}�b�v�̒������W�Ə�L�x�N�g�������Z����B */
 	mapPosition = Vector3(MAP_CENTER_POSITION.x + cowDiff.x, MAP_CENTER_POSITION.y + cowDiff.z, 0.0f);
 
 
@@ -266,8 +254,7 @@ void Map::Render(RenderContext& rc)
 	m_mapSprite.Draw(rc);
 	m_playerSprite.Draw(rc);
 
-
-	/** 牛アイコンの描画 */
+	/** ���A�C�R���̕`�� */
 	int cowCount = min((int)cows.size(), COW_NUM);
 	for (int i = 0; i < cowCount; i++)
 	{
@@ -277,7 +264,7 @@ void Map::Render(RenderContext& rc)
 		}
 	}
 
-	/** UFOアイコンの描画 */
+	/** UFO�A�C�R���̕`�� */
 	for (int i = 0; i < (int)m_ufos.size(); i++)
 	{
 		if (m_isUFOImage[i])
@@ -286,7 +273,7 @@ void Map::Render(RenderContext& rc)
 		}
 	}
 
-	/** ビックリマークの描画 */
+	/** �r�b�N���}�[�N�̕`�� */
 	float flash = (sinf(m_flashTImer * 4.0f) + 1.0f) * 0.5f;
 	for (int i = 0; i < (int)m_ufos.size(); i++)
 	{
@@ -298,6 +285,4 @@ void Map::Render(RenderContext& rc)
 	}
 
 	m_outLineSprite.Draw(rc);
-	
 }
-
