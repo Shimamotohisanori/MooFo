@@ -351,7 +351,7 @@ void Player::PlayAnimation()
 	{
 	case 0:
 		/** 待機アニメーション */
-		m_playerModelRender.PlayAnimation(enAnimationClip_Idle);
+		m_playerModelRender.PlayAnimation(enAnimationClip_Idle,0.15f);
 
 		m_playerModelRender.Update();
 		break;
@@ -359,19 +359,19 @@ void Player::PlayAnimation()
 		//走るアニメーション
 		/** 走るアニメーション */
 		
-			m_playerModelRender.PlayAnimation(enAnimationClip_Run);
+			m_playerModelRender.PlayAnimation(enAnimationClip_Run,0.15f);
 
 			m_playerModelRender.Update();
 		break;
 	case 2:
 		/** 縄を引っ張るアニメーション(左) */
-		m_playerModelRender.PlayAnimation(enAnimationClip_PullLeft);
+		m_playerModelRender.PlayAnimation(enAnimationClip_PullLeft,0.15f);
 
 		m_playerModelRender.Update();
 		break;
 	case 3:
 		/** 縄を引っ張るアニメーション(右) */
-		m_playerModelRender.PlayAnimation(enAnimationClip_PullRight);
+		m_playerModelRender.PlayAnimation(enAnimationClip_PullRight,0.15f);
 
 		m_playerModelRender.Update();
 		break;
