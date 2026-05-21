@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 class Player;
 class Cow;
 class UFO;
@@ -6,14 +6,13 @@ class Pause;
 class Game;
 class Map : public IGameObject
 {
- public:
+public:
 	Map() {}
 	~Map() {}
 	bool Start();
 	void Update();
-    void Render(RenderContext& rc);
-	
-	/** ç‰›ã‚’å‰Šé™¤ã™ã‚‹é–¢æ•° */
+	void Render(RenderContext& rc);
+	/** ‹‚ğíœ‚·‚éŠÖ” */
 	/*void RemoveCow(Cow* cow)
 	{
 		auto iter = std::find(m_cows.begin(), m_cows.end(), cow);
@@ -24,49 +23,46 @@ class Map : public IGameObject
 	}*/
 
 private:
-	/** ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã‹ã‚‰ãƒãƒƒãƒ—åº§æ¨™ç³»ã«å¤‰æ› */
+	/** ƒ[ƒ‹ƒhÀ•WŒn‚©‚çƒ}ƒbƒvÀ•WŒn‚É•ÏŠ· */
 	bool WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3 cowPosition, Vector3& mapPosition);
 
-	/** vectorå‹ã§ç‰›ã¨UFOã®æ•°å€¤ã‚’å…¥ã‚Œã¦ã„ã‚‹ã€‚ */
+	/** vectorŒ^‚Å‹‚ÆUFO‚Ì”’l‚ğ“ü‚ê‚Ä‚¢‚éB */
 	//std::vector<Cow*> m_cows;
 	Game* m_game;
 
 	std::vector<UFO*> m_ufos;
 
-	/** ãƒãƒƒãƒ—ã®ç”»åƒ */
+	/** ƒ}ƒbƒv‚Ì‰æ‘œ */
 	SpriteRender m_mapSprite;
 
-	/** ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ */
+	/** ƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚Ì‰æ‘œ */
 	SpriteRender m_playerSprite;
 
-	/** ç‰›ã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ */
+	/** ‹ƒAƒCƒRƒ“‚Ì‰æ‘œ */
 	SpriteRender m_cowSprite[10];
 
-	/** UFOã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ */
+	/** UFOƒAƒCƒRƒ“‚Ì‰æ‘œ */
 	SpriteRender m_ufoSprite[4];
 
-	/** å±é™ºã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ */
+	/** ŠëŒ¯ƒAƒCƒRƒ“‚Ì‰æ‘œ */
 	SpriteRender m_dangerSprite[4];
 
-	/** ã‚¢ã‚¦ãƒˆãƒ©ã‚¤ãƒ³ã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ */
+	/** ƒAƒEƒgƒ‰ƒCƒ“ƒAƒCƒRƒ“‚Ì‰æ‘œ */
 	SpriteRender m_outLineSprite;
 
-	/** ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒã‚¤ãƒ³ã‚¿ */
+	/** ƒvƒŒƒCƒ„[‚Ìƒ|ƒCƒ“ƒ^ */
 	Player* m_player = nullptr;
 
-	/** ãƒãƒ¼ã‚ºã®ãƒã‚¤ãƒ³ã‚¿ */
-	Pause* m_pause   = nullptr;
-  
-	/** ãƒãƒƒãƒ—ã®å›è»¢è§’åº¦ */
+	/** ƒ|[ƒY‚Ìƒ|ƒCƒ“ƒ^ */
+	Pause* m_pause = nullptr;
+	/** ƒ}ƒbƒv‚Ì‰ñ“]Šp“x */
 	float m_mapAngle = 0.0f;
 
 	float m_flashTImer = 0.0f;
 
-	/** ãƒãƒƒãƒ—å†…ã«è¡¨ç¤ºã•ã‚Œã¦ã„ã‚‹UIãŒã„ã‚‹ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚° */
+	/** ƒ}ƒbƒv“à‚É•\¦‚³‚ê‚Ä‚¢‚éUI‚ª‚¢‚é‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO */
 	bool m_isCowImage[10];
 	bool m_isUFOImage[4];
 	bool m_isdanger[4];
 
 };
-
-
