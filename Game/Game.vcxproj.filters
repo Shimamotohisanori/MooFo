@@ -85,6 +85,9 @@
     <ClCompile Include="EffectManager\EffectManager.cpp">
       <Filter>EffectManager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Actor\Character\UFO\UFOLightUI.cpp">
+      <Filter>Source\Actor\Character\UFO</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -170,6 +173,9 @@
     </ClInclude>
     <ClInclude Include="EffectManager\EffectManager.h">
       <Filter>EffectManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\UFO\UFOLightUI.h">
+      <Filter>Source\Actor\Character\UFO</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

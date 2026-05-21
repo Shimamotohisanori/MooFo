@@ -48,7 +48,7 @@ private:
 	bool m_isPlaying = false;
   
 	/** SEの削除がアニメーションの削除と重ならないように遅らすための変数*/
-	uint8_t m_deleteDelay = 0;
+	int m_deleteDelay = 0;
 
 	/** ジャンプアニメーションの再生を要求するフラグ */
 	bool m_requestPlayJump = false;
@@ -57,10 +57,10 @@ private:
 	/**牛の削除予約*/
 	bool m_isDelete = false;
 	/** サウンドマネージャー*/
-	SoundManager* m_DummyCowSE;
+	SoundManager* m_DummyCowSE = nullptr;
 
 	/**牛を救出した後のSE */
-	SoundSource* m_RescueCowSE;
+	SoundSource* m_RescueCowSE = nullptr;
 
 	/** ハートのエフェクト */
 	EffectEmitter* m_heartEffect;

@@ -44,8 +44,15 @@ GameClear::GameClear()
 
 GameClear::~GameClear()
 {
-	DeleteGO(m_score);
-	DeleteGO(m_cowNumberOfRescues);
+	if (m_score != nullptr)
+	{
+		DeleteGO(m_score);
+	}
+
+	if(m_cowNumberOfRescues != nullptr)
+	{
+		DeleteGO(m_cowNumberOfRescues);
+	}
 }
 
 

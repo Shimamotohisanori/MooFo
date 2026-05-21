@@ -33,7 +33,7 @@ DummyCow::~DummyCow()
 bool DummyCow::Start()
 {
 	m_DummyCowSE = FindGO<SoundManager>("soundmanager");
-	
+	m_dummyCowModelRender.SetRaytracingWorld(false);
 	/** モデルの初期化*/
 	m_dummyCowModelRender.Init(FILEPATH,animationClips,EnAnimation_Num, enModelUpAxisZ);
 	m_dummyCowModelRender.SetPosition(m_position);
@@ -59,8 +59,6 @@ bool DummyCow::Start()
 	
 	m_heartEffect->Play();
 	m_heartEffect->Update();
-
-	
 
 	return true;
 }

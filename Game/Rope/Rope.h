@@ -5,6 +5,7 @@
 */
 class Player;
 class Cow;
+class Timer;
 class Rope : public IGameObject
 {
 public:
@@ -98,10 +99,13 @@ private:
 
 private:
 	/** プレイヤー */
-	Player* m_player;
+	Player* m_player = nullptr;
 
 	/** 牛 */
 	Cow* m_hitCow = nullptr;
+
+	/** タイマー */
+	Timer* m_timer = nullptr;
 
 	/** 牛リスト */
 	std::vector<Cow* > m_cowList;

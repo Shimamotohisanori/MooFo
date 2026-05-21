@@ -3,8 +3,9 @@
 #include<InitGUID.h>
 #include<dxgidebug.h>
 #include "GameScene/Game.h"
-#include"GameScene/Title.h"
+#include "GameScene/Title.h"
 #include "SoundManager/SoundManager.h"
+#include "EffectManager/EffectManager.h"
 #include <time.h>
 
 void ReportLiveObjects()
@@ -36,6 +37,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	NewGO<Title>(0, "title");
 
 	NewGO<SoundManager>(0, "soundmanager");
+
+	NewGO<EffectManager>(0, "effectManager");
 
 	srand(time(nullptr));
 	//////////////////////////////////////
