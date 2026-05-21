@@ -268,11 +268,21 @@ void Rope::RotateStretchRope()
 
 void Rope::RotateRope()
 {
+	/** カメラの前にモデルを出す */
+	GameCamera* gameCamera = FindGO<GameCamera>("gameCamera");
+
+	if(gameCamera == nullptr) return;
+
+	/** 牛に当たっているかのフラグがtrueならこの処理はしない */
+	if (gameCamera->GetIsCowCaptured())
+	{
+		return;
+	}
+
 	/** ロープを投げている最中なら */
 	if (m_isThrowRope)
 	{
-		/** カメラの前にモデルを出す */
-		GameCamera* gameCamera = FindGO<GameCamera>("gameCamera");
+		
 		
 		/** カメラの前方向を取得 */
 		Vector3 camForward = gameCamera->GetCameraForward();

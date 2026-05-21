@@ -189,6 +189,9 @@ void GameCamera::FollowRope()
 
 	if (!m_rope) return;
 
+	/** 牛を捕まえた後はロープに追従する処理を行わない */
+	if (m_isCowCaptured) return;
+
 	/** ロープが投げられたら一回だけ実行 */
 	if (m_rope->GetIsThrowRope() && !m_isRopeCameraStarted)
 	{
