@@ -171,16 +171,6 @@ void Game::Update()
 		m_inGameBGM = m_inGameSound->PlayingBGM(SoundBGM::enInGameBGM, true);
 		m_isSound = true;
 	}
-  
-	/** ダミーの牛を削除する*/
-	if (m_dummyCow != nullptr)
-	{
-		if (m_dummyCow->GetDelete())
-		{
-			DeleteGO(m_dummyCow);
-			m_dummyCow = nullptr;
-		}
-	}
 
 	/** ポーズ中はゲーム処理をしない */
 	if (m_pause->IsActive())

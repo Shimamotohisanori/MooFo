@@ -19,11 +19,6 @@ public:
 	{
 		m_rotation = rot;
 	}
-
-	bool GetDelete()const 
-	{
-		return m_isDelete;
-	}
 	
 	/** ジャンプアニメーションを再生する関数 */
 	void PlayJumpAnimtion();
@@ -52,10 +47,10 @@ private:
 
 	/** ジャンプアニメーションの再生を要求するフラグ */
 	bool m_requestPlayJump = false;
+	
 	/** 牛の救出SEを流すためのフラグ*/
 	bool m_RescueSE = false;
-	/**牛の削除予約*/
-	bool m_isDelete = false;
+
 	/** サウンドマネージャー*/
 	SoundManager* m_DummyCowSE = nullptr;
 
