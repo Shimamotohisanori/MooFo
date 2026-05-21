@@ -87,13 +87,13 @@ void DummyCow::Update()
      }
 	/** モデル更新*/
 	m_dummyCowModelRender.Update();
-  /** ジャンプアニメーション中なら */
+	 /** ジャンプアニメーション中なら */
 	if (m_isPlaying &&!m_dummyCowModelRender.IsPlayingAnimation())
 	{
 		m_deleteDelay++;
 		if (m_deleteDelay > 5)
 		{
-			m_isDelete = true;
+			DeleteGO(this);
 		}
 		
 	   return;
