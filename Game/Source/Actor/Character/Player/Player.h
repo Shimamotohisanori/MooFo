@@ -82,6 +82,9 @@ private:
 	/** ループを引っ張る関数*/
 	void PullRope();
 
+	/** 走るSEの管理関数 */
+	void PlayRunSE();
+
 	/** アップデートできるかどうかを判断する関数 */
 	bool CanPlayerUpdate();
 
@@ -122,6 +125,9 @@ private:
 	/** ロープを引っ張る音 */
 	SoundSource* m_pullRopeSE = nullptr;
 
+	/** プレイヤーが走る音 */
+	SoundSource* m_runSE = nullptr;
+
 	/** 牛 */
 	Cow* m_cow = nullptr;
 
@@ -151,6 +157,9 @@ private:
 
 	/** 縄を引っ張っているアニメーションが交互に呼び出されているか確認するフラグ */
 	bool m_isPullAnimation = false;
+
+	/** 走るSEが再生中かどうか */
+	bool m_isPlayRunSE = false;
 
 	/** アニメーション */
 	enum EnPlayAnimation

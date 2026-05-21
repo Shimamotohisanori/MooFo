@@ -133,7 +133,9 @@ void Player::Update()
 	/*プレイヤーが動いているかどうかのフラグを設定する*/
 	m_isMoving = (m_moveSpeed.LengthSq() >= 0.0001f);
 
-	
+	/** 走るSEの処理 */
+	PlayRunSE();
+
 	m_playerModelRender.Update();
 }
 
@@ -219,6 +221,46 @@ void Player::Rotation()
 
 		//モデルの回転をキャラクターの回転に合わせる
 		m_playerModelRender.SetRotation(m_transform.GetRotation());
+	}
+}
+
+void Player::PlayRunSE()
+{
+	/** 牛を引っ張っている時はSEを止める */
+	if (m_rope->GetIsHitCow())
+	{
+		if (m_isPlayRunSE && m_runSE != nullptr)
+		{
+			m_runSE->Stop();
+			m_isPlayRunSE = false;
+		}
+
+		return;
+	}
+
+	/** 移動中なら */
+	if (m_isMoving)
+	{
+		/** まだ再生していないなら再生させる。 */
+		if (!m_isPlayRunSE)
+		{
+			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+
+			/** trueでSEをループ再生させる。 */
+			m_runSE = soundManager->PlayingSE(SoundSE::enRunSE, true);
+
+			m_isPlayRunSE = true;
+		}
+	}
+	else
+	{
+		/** 止まったらSE停止 */
+		if (m_isPlayRunSE && m_runSE != nullptr)
+		{
+			m_runSE->Stop();
+
+			m_isPlayRunSE = false;
+		}
 	}
 }
 
