@@ -85,6 +85,7 @@ public:
 
 		/** UFOのリストを返す */
 		return m_ufos;
+
 	}
 
 	/** UFOの配列をセットする関数 */

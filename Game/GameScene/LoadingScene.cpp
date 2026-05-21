@@ -226,6 +226,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	case 15:
 	case 16:
 	{
+
 		int index = m_loadStep - 13;
 		if (index >= 0 && index < 4)
 		{
