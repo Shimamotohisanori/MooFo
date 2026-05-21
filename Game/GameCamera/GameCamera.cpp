@@ -189,6 +189,9 @@ void GameCamera::FollowRope()
 
 	if (!m_rope) return;
 
+	/** 牛を捕まえた後はロープに追従する処理を行わない */
+	if (m_isCowCaptured) return;
+
 	/** ロープが投げられたら一回だけ実行 */
 	if (m_rope->GetIsThrowRope() && !m_isRopeCameraStarted)
 	{
@@ -312,15 +315,49 @@ void GameCamera::HitCow()
 	/** ターゲットは牛 */
 	Vector3 target = hitCow->GetPosition() + Vector3(0.0f, 80.0f, 0.0f);
 
-	/** カメラ位置更新 */
-	Vector3 pos =
-		hitCow->GetPosition() +
-		Vector3(0.0f, COW_CAMERA_UP, COW_CAMERA_BACK);
+	/** 右スティック入力 */
+	float x = g_pad[0]->GetRStickXF();
+	float y = g_pad[0]->GetRStickYF();
 
-	/** カメラ位置と注視点が一致しないようにする保険 */
-	if ((pos - target).LengthSq() < 0.0001f)
+	Quaternion rot;
+
+	/** Y軸回転 */
+	rot.SetRotationDeg(Vector3::AxisY, 1.3f * x);
+	rot.Apply(m_cameraPos);
+
+	/** forward計算 */
+	Vector3 forward = m_cameraPos;
+
+	/** 前方向が極端に小さい場合は
+	 * デフォルトの前方向を使用して正規化する */
+	if (forward.LengthSq() > 0.0001f)
 	{
-		pos.z -= 50.0f;
+		forward.Normalize();
+
+	}
+	else
+	{
+		forward = Vector3(0, 0, 1);
+	}
+
+	/** カメラの上方向は常にY軸方向とする */
+	Vector3 up = Vector3::AxisY;
+
+	/** カメラの右方向を算出 */
+	Vector3 right;
+	right.Cross(up, forward);
+	right.Normalize();
+
+	/** 上下回転 */
+	rot.SetRotationDeg(right, 1.3f * y);
+	rot.Apply(m_cameraPos);
+
+	/** 牛を中心に下カメラ位置 */
+	Vector3 pos = target + m_cameraPos;
+
+	/** 地面に潜るのを防止する */
+	if (pos.y < MIN_CAMERA_HEIGHT) {
+		pos.y = MIN_CAMERA_HEIGHT;
 	}
 
 	g_camera3D->SetTarget(target);
