@@ -68,6 +68,26 @@ bool Cow::Start()
 
 void Cow::Update()
 {
+	/** 削除予約されているなら */
+	if (m_isPendingKill)
+	{
+		/** Ropeとの紐づけ解除 */
+		if (m_rope && m_rope->GetHitCow() == this)
+		{
+			m_rope->SetIsHitCow(false);
+			m_rope->SetHitCow(nullptr);
+		}
+
+		/** UFOとの紐づけ解除 */
+		if (m_takingUFO)
+		{
+			m_takingUFO->SetIsCowTakeAwayed(false);
+			m_takingUFO->ReMoveTargetCow();
+		}
+
+		DeleteGO(this);
+		return;
+	}
 
 	/** アップデートできるかどうかを判断する関数 */
 	if (!CanUpdate())
@@ -107,27 +127,6 @@ void Cow::Update()
 
 	/** モデルの更新 */
 	m_cowmodelRender.Update();
-
-	/** 削除予約されているなら */
-	if (m_isPendingKill)
-	{
-		/** Ropeとの紐づけ解除 */
-		if (m_rope && m_rope->GetHitCow() == this)
-		{
-			m_rope->SetIsHitCow(false);
-			m_rope->SetHitCow(nullptr);
-		}
-
-		/** UFOとの紐づけ解除 */
-		if (m_takingUFO)
-		{
-			m_takingUFO->SetIsCowTakeAwayed(false);
-			m_takingUFO->ReMoveTargetCow();
-		}
-
-		DeleteGO(this);
-		return;
-	}
 }
 
 

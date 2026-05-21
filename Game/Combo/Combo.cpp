@@ -148,8 +148,8 @@ void Combo::AddCombo()
 {
 	m_combo++;
 	
-	/** 5秒以内に牛を救出出来ればコンボ継続 */
-	m_comboTimer = 6000.0f;
+	/** 10秒以内に牛を救出出来ればコンボ継続 */
+	m_comboTimer = 10.0f;
 
 	m_isViewComboSprite = true;
 
@@ -191,9 +191,14 @@ void Combo::AddScore(int score)
 	{
 		multiplier = 2;
 	}
-	if (m_score)
+
+	/** スコアを加算する */
+	Score* scoreobject = FindGO<Score>("score");
+
+	/** スコアオブジェクトが存在するならスコアを加算する */
+	if (scoreobject)
 	{
-		m_score->AddScore(score * multiplier);
+		scoreobject->AddScore(score * multiplier);
 	}
 }
 
