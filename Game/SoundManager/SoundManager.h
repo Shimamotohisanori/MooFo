@@ -28,6 +28,7 @@ enum SoundSE
 	enCountDownSE,
 	enTimeOutSE,
 	enRescueCowSE,
+	enRopePullSE,
 	enSENum
 };
 

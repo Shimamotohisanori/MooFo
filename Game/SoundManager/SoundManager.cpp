@@ -34,6 +34,7 @@ namespace
 		"CountDownSE",
 		"TimeOutSE",
 		"RescueCowSE",
+		"RopePullSE",
 	};
 }
 

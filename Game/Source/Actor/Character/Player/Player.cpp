@@ -74,7 +74,6 @@ Player::Player()
 
 Player::~Player()
 {
-	//DeleteGO(m_throwRopeSE);
 
 	DeleteGO(m_rope);
 }
@@ -295,6 +294,13 @@ void Player::PullRope()
 				}
 
 				m_isPullAnimation = !m_isPullAnimation;
+
+				if (m_isPullAnimation || !m_isPullAnimation)
+				{
+					SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+					m_pullRopeSE = soundManager->PlayingSE(SoundSE::enRopePullSE, false);
+				}
+				
 			}
 		}
 	}

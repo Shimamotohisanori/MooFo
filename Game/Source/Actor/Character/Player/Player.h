@@ -119,6 +119,9 @@ private:
 	/** ロープを投げる音 */
 	SoundSource* m_throwRopeSE = nullptr;
 
+	/** ロープを引っ張る音 */
+	SoundSource* m_pullRopeSE = nullptr;
+
 	/** 牛 */
 	Cow* m_cow = nullptr;
 
