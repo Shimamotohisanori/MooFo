@@ -23,7 +23,10 @@ DummyCow::DummyCow()
 
 DummyCow::~DummyCow()
 {
-
+	if (m_heartEffect)
+	{
+		DeleteGO(m_heartEffect);
+	}
 }
 
 
@@ -39,9 +42,20 @@ bool DummyCow::Start()
 	m_heartEffect = NewGO<nsK2EngineLow::EffectEmitter>(0);
 	m_heartEffect->Init((int)EffectID::EffectID_HeartEffect);
 
-	m_heartEffect->SetPosition(m_position);
+	/** 牛の前方向を取得する。 */
+	Vector3 forward = Vector3::AxisZ;
 
-	m_heartEffect->SetScale({ 20.0f,20.0f,20.0f });
+	/** 回転の値を位置に変換することで、前方向を常に見る。 */
+	m_rotation.Apply(forward);
+
+	/** 方向を正規化する。 */
+	forward.Normalize();
+
+	Vector3 heartPos = Vector3{ m_position.x,m_position.y + 50.0f,m_position.z } + forward * 80.0f;
+
+	m_heartEffect->SetPosition(heartPos);
+
+	m_heartEffect->SetScale({ 10.0f,10.0f,10.0f });
 	
 	m_heartEffect->Play();
 	m_heartEffect->Update();
