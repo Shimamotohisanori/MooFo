@@ -30,6 +30,7 @@ enum SoundSE
 	enRescueCowSE,
 	enRopePullSE,
 	enRunSE,
+	enPauseSE,
 	enSENum
 };
 

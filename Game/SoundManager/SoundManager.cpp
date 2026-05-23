@@ -35,7 +35,9 @@ namespace
 		"TimeOutSE",
 		"RescueCowSE",
 		"RopePullSE",
-		"RunSE"
+		"RunSE",
+		"PauseSE"
+
 	};
 }
 

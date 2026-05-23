@@ -185,6 +185,8 @@ void Game::Update()
 		{
 			return;
 		}
+
+		m_pauseSE = m_inGameSound->PlayingSE(SoundSE::enPauseSE, false);
 		DeleteGO(m_inGameBGM);
 
 		/** ポーズ画面をアクティブにする */

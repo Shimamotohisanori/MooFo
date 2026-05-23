@@ -158,6 +158,8 @@ private:
 	/** タイムアウト時のSE */
 	SoundSource* m_timeOutSE;
 
+	SoundSource* m_pauseSE;
+
 	/** スコア */
 	Score* m_score;
 
