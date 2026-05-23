@@ -282,15 +282,12 @@ void Rope::RotateRope()
 	/** ロープを投げている最中なら */
 	if (m_isThrowRope)
 	{
-		
-		
 		/** カメラの前方向を取得 */
 		Vector3 camForward = gameCamera->GetCameraForward();
 
 		/** カメラの前にロープを出す */
 		Vector3 camPos = gameCamera->GetCameraPosition();
 		Vector3 ropePos = camPos + camForward * 50.0f;
-		m_rollModelRender.SetPosition(ropePos);
 
 		/** モデルの回転補正90度回転 */
 		Quaternion fixRot;
@@ -305,7 +302,10 @@ void Rope::RotateRope()
 		/** ロープをスピンさせるための回転 */
 		Quaternion spinRot;
 		spinRot.SetRotation(Vector3::AxisY, m_ropeAnimationTime * 10.0f);
-		m_ropeRot *= spinRot * fixRot;
+		m_ropeRot *= spinRot * fixRot;		
+
+		/** ロープの位置と回転を反映 */
+		m_rollModelRender.SetPosition(ropePos);
 
 		m_rollModelRender.SetRotation(m_ropeRot);
 	}

@@ -253,8 +253,8 @@ void Cow::ManageState()
 
 void Cow::PulledByPlayer()
 {
-	/** 捕まってない牛は絶対に引っ張られない */
-	if (!m_isCaptured)
+	/** 捕まってない牛もしくはタイムアウトしている場合は引っ張られない */
+	if (!m_isCaptured || m_game->GetIsTimeOut())
 	{
 		return;
 	}

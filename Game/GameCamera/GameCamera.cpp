@@ -257,39 +257,42 @@ void GameCamera::CheckCameraHitCow()
 	if (!m_rope->GetIsThrowRope()) return;
 
 	/** 牛を捕まえた後は牛に当たる処理を行わない */
-	if (m_isCowCaptured) return;
+if (m_isCowCaptured) return;
 
-	/** カメラ位置 */
-	Vector3 camPos = g_camera3D->GetPosition();
+/** カメラ位置 */
+Vector3 camPos = g_camera3D->GetPosition();
 
-	/** 全ての牛を取得する */
-	auto cows = FindGOs<Cow>("cow");
+/** 全ての牛を取得する */
+auto cows = FindGOs<Cow>("cow");
 
-	for (auto cow : cows)
+for (auto cow : cows)
+{
+	if (!cow) continue;
+
+	float dist = (cow->GetPosition() - camPos).Length();
+
+	/** 牛とカメラの距離が一定以下で牛がUFOに連れて行かれた状態ならロープが当たった扱いにする */
+	if (dist < COW_HIT_DISTANCE && cow->GetIsTakeAwayed())
 	{
-		if (!cow) continue;
+		/** ロープが当たった扱いにする */
+		m_rope->OnHitCow(cow);
 
-		float dist = (cow->GetPosition() - camPos).Length();
+		/** 牛を捕まえたフラグを立てる */
+		m_isCowCaptured = true;
 
-		/** 牛とカメラの距離が一定以下で牛がUFOに連れて行かれた状態ならロープが当たった扱いにする */
-		if (dist < COW_HIT_DISTANCE && cow->GetIsTakeAwayed())
+		/** 牛捕獲カメラ初期位置 */
+		m_hitCowCameraPos = m_cameraPos;
+
+		/** 牛を捕まえた音を再生 */
+		SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+		if (soundManager)
 		{
-			/** ロープが当たった扱いにする */
-			m_rope->OnHitCow(cow);
-
-			/** 牛を捕まえたフラグを立てる */
-			m_isCowCaptured = true;
-
-			/** 牛を捕まえた音を再生 */
-			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
-			if (soundManager)
-			{
-				m_cowCatchSE = soundManager->PlayingSE(SoundSE::enCowCatchSE, false);
-			}
-
-			return;
+			m_cowCatchSE = soundManager->PlayingSE(SoundSE::enCowCatchSE, false);
 		}
+
+		return;
 	}
+}
 }
 
 
@@ -323,10 +326,10 @@ void GameCamera::HitCow()
 
 	/** Y軸回転 */
 	rot.SetRotationDeg(Vector3::AxisY, 1.3f * x);
-	rot.Apply(m_cameraPos);
+	rot.Apply(m_hitCowCameraPos);
 
 	/** forward計算 */
-	Vector3 forward = m_cameraPos;
+	Vector3 forward = m_hitCowCameraPos;
 
 	/** 前方向が極端に小さい場合は
 	 * デフォルトの前方向を使用して正規化する */
@@ -348,12 +351,38 @@ void GameCamera::HitCow()
 	right.Cross(up, forward);
 	right.Normalize();
 
+	/** 回転前保存 */
+	Vector3 toCameraPosOld = m_hitCowCameraPos;
+
 	/** 上下回転 */
 	rot.SetRotationDeg(right, 1.3f * y);
-	rot.Apply(m_cameraPos);
+	rot.Apply(m_hitCowCameraPos);
+	/** 回転後の方向 */
+	Vector3 dir = m_hitCowCameraPos;
+
+	/** 前方向が極端に小さい場合は
+	 * デフォルトの前方向を使用して正規化する */
+	if (dir.LengthSq() > 0.00001f)
+	{
+		dir.Normalize();
+	}
+
+	else
+	{
+		dir = Vector3(0, 0, -1);
+	}
+
+	/** 上下向き制限 */
+	float limit = 0.95f;
+
+	/** 真上真下を向きすぎたら戻す */
+	if (fabsf(dir.Dot(Vector3::AxisY)) > limit)
+	{
+		m_hitCowCameraPos = toCameraPosOld;
+	}
 
 	/** 牛を中心に下カメラ位置 */
-	Vector3 pos = target + m_cameraPos;
+	Vector3 pos = target + m_hitCowCameraPos;
 
 	/** 地面に潜るのを防止する */
 	if (pos.y < MIN_CAMERA_HEIGHT) {
