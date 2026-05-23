@@ -6,7 +6,7 @@
 #include "CountDown/CountDown.h"
 #include "Pause/Pause.h"
 #include "SoundManager/SoundManager.h"
-#include "Source/Actor/Character/Cow/Cow.h"
+
 namespace
 {
 	/** プレイヤーモデルのファイルパス */
