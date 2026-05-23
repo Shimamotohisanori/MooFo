@@ -18,7 +18,6 @@
 #include "nature/SkyCube.h"
 #include "Combo/Combo.h"
 #include "GameTimer/AddTimerUI.h"
-#include "Source/Actor/Character/Cow/DummyCow.h"
 #include "Source/Actor/Character/UFO/UFOLightUI.h"
 
 namespace

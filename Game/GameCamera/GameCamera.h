@@ -22,6 +22,12 @@ public:
 		m_isCowCaptured = isCowCaptured;
 	}
 
+	/** 牛に当たったかどうかのフラグ取得関数 */
+	bool GetIsCowCaptured()
+	{
+		return m_isCowCaptured;
+	}
+
 	/** カメラの位置取得関数 */
 	Vector3 GetCameraPosition()
 	{
