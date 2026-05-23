@@ -147,7 +147,7 @@ void SoundPause::ButtonCount()
 	if (m_Count == 2)
 	{
 		// スタートボタンでポーズ画面へ戻る
-		if (g_pad[0]->IsTrigger(enButtonStart))
+		if (g_pad[0]->IsTrigger(enButtonA))
 		{
 			p_decisionSE = m_choiceSound->PlayingSE(SoundSE::enDecisionSE, false);
 
