@@ -186,6 +186,7 @@ void Game::Update()
 			return;
 		}
 
+		/** 決定ボタンのSEを再生する。 */
 		m_pauseSE = m_inGameSound->PlayingSE(SoundSE::enPauseSE, false);
 		DeleteGO(m_inGameBGM);
 

@@ -103,7 +103,7 @@ void Pause::Choice()
 void Pause::Select()
 {
 	/** 決定ボタンが押された場合の処理 */
-	if (g_pad[0]->IsTrigger(enButtonStart))
+	if (g_pad[0]->IsTrigger(enButtonA))
 	{
 		/** 決定SEを鳴らす */
 		p_DecisionSE = m_choiceSound->PlayingSE(SoundSE::enDecisionSE, false);
