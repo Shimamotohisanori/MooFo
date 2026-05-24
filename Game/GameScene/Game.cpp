@@ -313,6 +313,19 @@ void Game::ReMoveCow(Cow* cow)
 	}
 }
 
+void Game::KillAllCows()
+{
+	/** 生きている牛のリストをループして全ての牛を消す */
+	for (auto cow : m_aliveCows)
+	{
+		if (cow)
+		{
+			DeleteGO(cow);
+		}
+	}
+	m_aliveCows.clear();
+}
+
 void Game::SpawnCow()
 {
 	if (m_timer->GetTimer() <= 4.0f || m_isTimeOut)

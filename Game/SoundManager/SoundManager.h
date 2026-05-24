@@ -43,10 +43,10 @@ public:
 	void Update();
 
 	/** BGMを再生する関数 */
-	float m_bgmVolume = 0.4f;
+	float m_bgmVolume = 0.3f;
 
 	/** SEを再生する関数 */
-	float m_seVolume  = 0.6f;
+	float m_seVolume  = 0.8f;
 
 	/** BGMの数 */
 	uint8_t m_bgmCount = 0;

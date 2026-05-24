@@ -361,6 +361,7 @@ bool Player::CanPlayerUpdate()
 		m_pause->GetIsPause() ||
 		m_countDown->GetCountDown())
 	{
+		m_isMoving = false;
 		return false;
 	}
 

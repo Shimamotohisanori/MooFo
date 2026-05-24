@@ -2,6 +2,7 @@
 class Game;
 class SoundPause;
 class SoundManager;
+class LoadingScene;
 class Pause : public IGameObject
 {
 public:
@@ -49,6 +50,8 @@ private:
 	bool m_isPause = false;
 
 	Game* m_game;
+
+	LoadingScene* m_loadingScene;
 	SoundPause* m_soundPause;
 
 	SpriteRender m_pauseBackGround;

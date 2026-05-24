@@ -103,11 +103,15 @@ public:
 	{
 		return m_isTimeOut;
 	}
+	
 	/** ダミーの牛のセッター*/
 	void SetDuumyCow(DummyCow* cow)
 	{
 		m_dummyCow = cow;
 	}
+
+	/** 全ての牛を削除する関数 */
+	void KillAllCows();
 
 
 private:
