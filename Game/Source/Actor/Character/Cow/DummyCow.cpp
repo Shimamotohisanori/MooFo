@@ -74,7 +74,7 @@ void DummyCow::Update()
 		if (!m_RescueSE && m_DummyCowSE != nullptr)
 		{
 			m_RescueCowSE = m_DummyCowSE->PlayingSE(SoundSE::enRescueCowSE, false);
-			m_RescueCowSE->SetVolume(5.0f);
+
 			m_RescueSE = true;
 		}
 		m_isPlaying = true;

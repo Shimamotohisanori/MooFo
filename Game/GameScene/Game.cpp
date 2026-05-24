@@ -35,21 +35,7 @@ Game::~Game()
 	/** ステージを削除 */
 	DeleteGO(m_stage);
 
-	/** SpawnCow等で増えた牛も含めて生きている牛は全て削除 */
-	for (auto cow : m_aliveCows)
-	{
-		/** 牛が存在する場合は削除する */
-		if (cow && !cow->IsDead())
-		{
-			DeleteGO(cow);
-		}
-
-		/** 牛が存在しない場合はスキップする */
-		else
-		{
-			continue;
-		}
-	}
+	
 	m_aliveCows.clear();
 
 	/** プレイヤーを削除 */
@@ -237,6 +223,17 @@ void Game::Clear()
 		DeleteGO(m_cowNumberOfRescues);
 		m_cowNumberOfRescues = nullptr;
 	}
+
+	/** 残っている牛を全部消す */
+	for (auto cow : m_aliveCows)
+	{
+		if (cow)
+		{
+			DeleteGO(cow);
+		}
+	}
+	m_aliveCows.clear();
+
 	/** ゲームクリアの画像を呼び出す */
 	m_gameClear = NewGO<GameClear>(0, "gameClear");
 
@@ -272,6 +269,16 @@ void Game::Death()
 		DeleteGO(m_cowNumberOfRescues);
 		m_cowNumberOfRescues = nullptr;
 	}
+
+	/** 残っている牛を全部消す */
+	for (auto cow : m_aliveCows)
+	{
+		if (cow)
+		{
+			DeleteGO(cow);
+		}
+	}
+	m_aliveCows.clear();
 
 	/** ゲームオーバーの画像を呼び出す */
 	m_gameOver = NewGO<GameOver>(0, "gameover");
@@ -376,7 +383,7 @@ void Game::TimeOut()
 		m_isTimeOut = true;
 
 		m_timeOutSE = m_inGameSound->PlayingSE(SoundSE::enTimeOutSE, false);
-		m_timeOutSE->SetVolume(5.0f);
+
 	}
 
 	/** タイムアウトフラグが立っているなら */

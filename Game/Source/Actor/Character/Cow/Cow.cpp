@@ -85,6 +85,16 @@ void Cow::Update()
 			m_takingUFO->ReMoveTargetCow();
 		}
 
+		// ★ Game に「この牛を aliveCows から消して」と伝える
+		if (!m_game)
+		{
+			m_game = FindGO<Game>("game");
+		}
+		if (m_game)
+		{
+			m_game->ReMoveCow(this);
+		}
+
 		DeleteGO(this);
 		return;
 	}
@@ -287,7 +297,6 @@ void Cow::PulledByPlayer()
 		if (m_CowSE == false)
 		{
 			m_CowCrySE = m_CowSound->PlayingSE(SoundSE::enCowCrySE, false);
-			m_CowCrySE->SetVolume(5.0f);
 			m_CowSE = true;
 		}
 		
