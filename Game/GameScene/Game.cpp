@@ -177,11 +177,11 @@ void Game::Update()
 		return;
 	}
 
-	/** セレクトボタンを押したら */
-	if (g_pad[0]->IsTrigger(enButtonSelect))
+	/** セレクトボタンを押していて、カウントダウン中でない場合 */
+	if (g_pad[0]->IsTrigger(enButtonSelect) && !m_countDown->GetCountDown())
 	{
-		/** カウントダウン中かタイムアウトなら */
-		if (m_countDown->GetCountDown() && m_isTimeOut)
+		/** タイムアウトなら */
+		if (m_isTimeOut)
 		{
 			return;
 		}
