@@ -98,6 +98,12 @@ public:
 		return m_isDeadFlag;
 	}
 
+	/** 牛の削除予約を取得する関数 */
+	bool GetIsPendingKill() const
+	{
+		return m_isPendingKill;
+	}
+
 	/** 牛を削除予定を見る関数 */
 	void RequestKill();
 
