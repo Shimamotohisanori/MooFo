@@ -1,10 +1,11 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Pause/Pause.h"
 #include "GameScene/Game.h"
 #include "SoundManager/SoundManager.h"
 #include "SoundPause.h"
 #include "GameScene/Title.h"
 #include "CountDown/CountDown.h"
+#include "GameScene/LoadingScene.h"
 namespace
 {
 	const char* PAUSE_BACKGROUND_PATH = "Assets/sprite/PauseUI/pauseBackGround2.dds";
@@ -127,7 +128,20 @@ void Pause::Select()
 		/** 選択している場所の番号が1のときはタイトルに戻る */
 		else if (m_countNumber == 1)
 		{
-			NewGO<Title>(0,"title");
+			/** ゲームの牛を全て削除する */
+			if (m_game)
+			{
+				m_game->KillAllCows();
+			}
+
+			m_loadingScene = NewGO<LoadingScene>(0, "loading");
+			m_loadingScene->SetLoadType(LoadingScene::LoadType::ToTitleScene);
+			m_loadingScene->SetNextScene([]()
+				{
+					/** タイトルの画像を呼び出す*/
+					NewGO<Title>(0, "title");
+				});
+
 			DeleteGO(m_game);
 			DeleteGO(this);
 		}

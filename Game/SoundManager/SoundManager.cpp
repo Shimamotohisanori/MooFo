@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "SoundManager.h"
 #include "sound/SoundEngine.h"
-#include "Pause/SoundPause.h"
 
 namespace
 {

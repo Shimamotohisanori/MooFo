@@ -2,7 +2,7 @@
 #include "SoundManager/SoundManager.h"
 #include "Title.h"
 #include "Game.h"
-#include"LoadingScene.h"
+#include "LoadingScene.h"
 
 namespace
 {
@@ -93,7 +93,6 @@ void Title::InTitle()
 			m_loadingScene = NewGO<LoadingScene>(0, "loading");
 			m_loadingScene->SetLoadType(LoadingScene::LoadType::ToGameScene);
 			DeleteGO(m_titleBGM);
-			//DeleteGO(m_titleSE);
 			m_loadingScene->SetNextScene([]()
 				{
 					NewGO<Game>(0, "game");
