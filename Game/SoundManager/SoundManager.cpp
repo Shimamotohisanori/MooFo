@@ -37,7 +37,6 @@ namespace
 		"RopePullSE",
 		"RunSE",
 		"PauseSE"
-
 	};
 }
 
@@ -70,18 +69,6 @@ SoundManager::~SoundManager()
 
 void SoundManager::Update()
 {
-	/** ポーズ画面の音量設定クラスを取得 */
-	m_soundPause = FindGO<SoundPause>("soundpause");
-
-	/** まだ存在していなければ何もしない */
-	if (m_soundPause == nullptr)
-	{
-		return;
-	}
-
-	/** ポーズ画面で設定された音量を取得 */
-	m_bgmVolume = m_soundPause->GetBGMVolume();
-	m_seVolume = m_soundPause->GetSEVolume();
 }
 
 SoundSource* SoundManager::PlayingBGM(SoundBGM number, bool isLoop)

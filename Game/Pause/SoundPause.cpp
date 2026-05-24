@@ -93,9 +93,10 @@ bool SoundPause::Start()
 
 	m_choiceSound = FindGO<SoundManager>("soundmanager");
 
-	// ★追加（超重要）
-	m_bgmVolume = GetBGMVolume();
-	m_seVolume = GetSEVolume();
+	/** SoundPauseクラスが生成されたときに
+	 *  SoundManagerの音量を参考にしてBGM,SEに反映 */
+	m_bgmVolume = m_choiceSound->m_bgmVolume;
+	m_seVolume = m_choiceSound->m_seVolume;
 
 	// ★UIに反映
 	UpdateBGMUI();
@@ -183,6 +184,10 @@ void SoundPause::Barbgm()
 			m_bgmVolume -= 0.01f;
 		}
 	}
+
+	/** BGM音量をSoundManagerに反映 */
+	m_choiceSound->m_bgmVolume = m_bgmVolume;
+
 	// UI更新
 	UpdateBGMUI();
 }
@@ -228,6 +233,9 @@ void SoundPause::Barse()
 			m_seBlackIcon.Update();
 		}
 	}
+
+	/** SE音量をSoundManagerに反映 */
+	m_choiceSound->m_seVolume = m_seVolume;
 }
 
 void SoundPause::UpdateBGMUI()

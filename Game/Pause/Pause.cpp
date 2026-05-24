@@ -4,7 +4,7 @@
 #include "SoundManager/SoundManager.h"
 #include "SoundPause.h"
 #include "GameScene/Title.h"
-
+#include "CountDown/CountDown.h"
 namespace
 {
 	const char* PAUSE_BACKGROUND_PATH = "Assets/sprite/PauseUI/pauseBackGround2.dds";
@@ -60,8 +60,8 @@ bool Pause::Start()
 
 	m_game = FindGO<Game>("game");
 	m_choiceSound = FindGO<SoundManager>("soundmanager");
-
 	
+
 	m_isPause = true;
 
 	return true;
@@ -69,6 +69,14 @@ bool Pause::Start()
 
 void Pause::Update()
 {
+	CountDown* countDown = FindGO<CountDown>("countdown");
+
+	/** カウントダウンが終わるまではポーズ画面の操作を受け付けない */
+	if (!countDown || countDown->GetCountDown())
+	{
+		return;
+	}
+
 	Choice();
 	Select();
 
