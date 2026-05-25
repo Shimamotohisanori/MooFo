@@ -101,6 +101,9 @@ private:
 	/** ポーズ */
 	Pause* m_pause = nullptr;
 
+	/** UFOが牛を吸い込むSE */
+	SoundSource* m_UFOCaptureSE = nullptr;
+
 	/** 牛を連れて行けるかどうかのフラグ */
 	bool m_isCowTakeAwayed = false;
 

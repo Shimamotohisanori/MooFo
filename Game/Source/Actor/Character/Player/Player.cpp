@@ -254,9 +254,10 @@ void Player::PlayRunSE()
 	}
 	else
 	{
-		/** 止まったらSE停止 */
+		/** 走ってるSEが再生中かつSEオブジェクトが存在しているかどうか */
 		if (m_isPlayRunSE && m_runSE != nullptr)
 		{
+			/** 止まったらSE停止 */
 			m_runSE->Stop();
 
 			m_isPlayRunSE = false;

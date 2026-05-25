@@ -10,6 +10,7 @@
 #include "Source/Actor/Character/UFO/CowCaptureController.h"
 #include "Pause/Pause.h"
 #include "Combo/Combo.h"
+#include "SoundManager/SoundManager.h";
 namespace
 {
 	/** UFOのモデルファイルパス */

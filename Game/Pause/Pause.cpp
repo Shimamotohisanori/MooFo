@@ -45,7 +45,7 @@ bool Pause::Start()
 	m_soundBlackSprite.SetPosition(SOUND_BLACKPOS);
 	m_soundBlackSprite.Update();
 
-	m_quiteBlackSprite.Init(PAUSE_BLACK_QUITE_PATH, 800.0f, 630.0f);
+	m_quiteBlackSprite.Init(PAUSE_BLACK_QUITE_PATH, 800.0f, 590.0f);
 	m_quiteBlackSprite.SetPosition(QUITE_BLACKPOS);
 	m_quiteBlackSprite.Update();
 
