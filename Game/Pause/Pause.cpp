@@ -166,6 +166,7 @@ void Pause::Render(RenderContext& rc)
 	m_resumeBlackSprite.Draw(rc);
 	m_soundBlackSprite.Draw(rc);
 
+	/** ポーズ画面で選択された位置が分かりやすいように色を透過させるようにする。 */
 	if (m_countNumber == 0)
 	{
 		m_quiteBlackSprite.SetMulColor

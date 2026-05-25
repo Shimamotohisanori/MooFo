@@ -8,6 +8,8 @@ namespace
 	const char* BGM_FILEPATH = "Assets/BGM/";
 	const char* SE_FILEPATH = "Assets/SE/";
 	const char* SOUND_FILE_FORMAT = ".wav";
+
+	/** BGMファイル名一覧 */
 	const char* BGM_FILENAME_LIST[enBGMNum] =
 	{
 		"TitleBGM",
@@ -17,6 +19,7 @@ namespace
 		"LoadBGM",
 	};
 
+	/** SEファイル名一覧 */
 	const char* SE_FILENAME_LIST[enSENum] =
 	{
 		"ChoiceSE",
@@ -42,19 +45,27 @@ namespace
 
 SoundManager::SoundManager()
 {
-
 	m_bgmCount = enBGMNum;
+
+	/** BGMファイルパスを作って登録する。 */
 	for (int i = 0; i < enBGMNum; i++)
 	{
+		/** BGMファイルパス生成 */
 		std::string bgmFile = std::string(BGM_FILEPATH) + BGM_FILENAME_LIST[i] + (SOUND_FILE_FORMAT);
 		const char* bgmFilePath = bgmFile.c_str();
+
+		/** BGM登録 */
 		g_soundEngine->ResistWaveFileBank(i, bgmFilePath);
 	}
 
+	/** SEファイルパスを作って登録する。*/
 	for (int i = 0; i < enSENum; i++)
 	{
+		/** SEファイルパス生成 */
 		std::string seFile = std::string(SE_FILEPATH) + SE_FILENAME_LIST[i] + (SOUND_FILE_FORMAT);
 		const char* seFilePath = seFile.c_str();
+
+		/** SE登録 */
 		g_soundEngine->ResistWaveFileBank(i + m_bgmCount, seFilePath);
 		
 	}

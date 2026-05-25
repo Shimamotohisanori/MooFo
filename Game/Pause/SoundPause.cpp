@@ -98,7 +98,7 @@ bool SoundPause::Start()
 	m_bgmVolume = m_choiceSound->m_bgmVolume;
 	m_seVolume = m_choiceSound->m_seVolume;
 
-	// ★UIに反映
+	/** UIに反映 */
 	UpdateBGMUI();
 	UpdateSEUI();
 
@@ -112,53 +112,57 @@ void SoundPause::Update()
 
 void SoundPause::ButtonCount()
 {
-	// ↓下キーで選択項目を進める
+	/** ↓下キーで選択項目を進める */
 	if (g_pad[0]->IsTrigger(enButtonDown))
 	{
-		m_Count++; // 選択番号を増やす
+		/** 選択番号を増やす */
+		m_Count++; 
 		p_chiceSE = m_choiceSound->PlayingSE(SoundSE::enChoiceSE, false); // カーソル移動音
 	}
 
-	// ↓上キーで選択項目を戻す
+	/** ↓上キーで選択項目を戻す */
 	if (g_pad[0]->IsTrigger(enButtonUp))
 	{
-		m_Count--; // 選択番号を減らす
+		/** 選択番号を減らす */
+		m_Count--;
 		p_chiceSE = m_choiceSound->PlayingSE(SoundSE::enChoiceSE, false);
 	}
 
-	// ↓範囲外（下限）に行ったら一番下へループ
+	/**↓範囲外（下限）に行ったら一番下へループ */
 	if (m_Count == -1)
 	{
 		m_Count = 2;
 	}
 
-	// ↓BGM音量調整モード
+	/**↓BGM音量調整モード */
 	if (m_Count == 0)
 	{
 		Barbgm();
 	}
 
-	// ↓SE音量調整モード
+	/** ↓SE音量調整モード */
 	if (m_Count == 1)
 	{
 		Barse();
 	}
 
-	// ↓「戻る」選択中
+	/** ↓「戻る」選択中 */
 	if (m_Count == 2)
 	{
-		// スタートボタンでポーズ画面へ戻る
+		/** スタートボタンでポーズ画面へ戻る */
 		if (g_pad[0]->IsTrigger(enButtonA))
 		{
 			p_decisionSE = m_choiceSound->PlayingSE(SoundSE::enDecisionSE, false);
-
-			m_pause->Activate();          // ポーズ画面を有効化
-			m_pause->SetCountNumber(0);   // カーソル初期化
-			Deactivate();                // この画面を無効化
+			/** ポーズ画面を有効化 */
+			m_pause->Activate();
+			/** カーソル初期化 */
+			m_pause->SetCountNumber(0);
+			/** この画面を無効化 */
+			Deactivate();               
 		}
 	}
 
-	// ↓範囲外（上限）に行ったら先頭へループ
+	/** ↓範囲外（上限）に行ったら先頭へループ */
 	if (m_Count == 3)
 	{
 		m_Count = 0;
@@ -167,7 +171,7 @@ void SoundPause::ButtonCount()
 
 void SoundPause::Barbgm()
 {
-	// 右キーで音量アップ（最大1.0まで）
+	/** 右キーで音量アップ（最大1.0まで）*/
 	if (m_bgmVolume < 1.0f)
 	{
 		if (g_pad[0]->IsPress(enButtonRight))
@@ -176,7 +180,7 @@ void SoundPause::Barbgm()
 		}
 	}
 
-	// 左キーで音量ダウン（最小0.0まで）
+	/** 左キーで音量ダウン（最小0.0まで）*/
 	if (m_bgmVolume > 0.001f)
 	{
 		if (g_pad[0]->IsPress(enButtonLeft))
@@ -188,41 +192,41 @@ void SoundPause::Barbgm()
 	/** BGM音量をSoundManagerに反映 */
 	m_choiceSound->m_bgmVolume = m_bgmVolume;
 
-	// UI更新
+	/** UI更新 */
 	UpdateBGMUI();
 }
 
 void SoundPause::Barse()
 {
-	// 右キーでSE音量アップ
+	/** 右キーでSE音量アップ */
 	if (m_seVolume < 1.0f)
 	{
 		if (g_pad[0]->IsPress(enButtonRight))
 		{
 			m_seVolume += 0.01f;
 
-			// アイコン位置更新
+			/** アイコン位置更新 */
 			m_seIconSprite.SetPosition(Vector3(-380.0f + m_seVolume * 750.0f, -120.0f, 0.0f));
 			m_seIconSprite.Update();
 
-			// バー更新
+			/** バー更新 */
 			m_seBlownBarSprite.SetScale(Vector3(m_seVolume, 1.0f, 0.0f));
 			m_seBlownBarSprite.Update();
 
-			// 黒アイコン更新
+			/** 黒アイコン更新 */
 			m_seBlackIcon.SetPosition(Vector3(-380.0f + m_seVolume * 750.0f, -120.0f, 0.0f));
 			m_seBlackIcon.Update();
 		}
 	}
 
-	// 左キーでSE音量ダウン
+	/** 左キーでSE音量ダウン */
 	if (m_seVolume > 0.001f)
 	{
 		if (g_pad[0]->IsPress(enButtonLeft))
 		{
 			m_seVolume -= 0.01f;
 
-			// 同様にUI更新
+			/** 同様にUI更新 */
 			m_seIconSprite.SetPosition(Vector3(-380.0f + m_seVolume * 750.0f, -120.0f, 0.0f));
 			m_seIconSprite.Update();
 
@@ -240,14 +244,18 @@ void SoundPause::Barse()
 
 void SoundPause::UpdateBGMUI()
 {
+	/** 音量に応じたアイコン座標計算 */
 	float posX = -380.0f + m_bgmVolume * 750.0f;
 
+	/** 音量アイコン更新 */
 	m_soundIconSprite.SetPosition(Vector3(posX, 75.0f, 0.0f));
 	m_soundIconSprite.Update();
 
+	/** 音量バー更新 */
 	m_blownBarSprite.SetScale(Vector3(m_bgmVolume, 1.0f, 0.0f));
 	m_blownBarSprite.Update();
 
+	/** 黒アイコン更新 */
 	m_bgmBlackIcon.SetPosition(Vector3(posX, 75.0f, 0.0f));
 	m_bgmBlackIcon.Update();
 }
@@ -278,16 +286,19 @@ void SoundPause::Render(RenderContext& rc)
 	m_bgmSprite.Draw(rc);
 	m_seSprite.Draw(rc);
 
+	/** BGM音量バー描画 */
 	if (m_bgmVolume > 0.05f)
 	{
 		m_blownBarSprite.Draw(rc);
 	}
 
+	/** SE音量バー描画 */
 	if (m_seVolume > 0.05f)
 	{
 		m_seBlownBarSprite.Draw(rc);
 	}
 
+	/** BGM選択アイコン描画 */
 	if (m_Count == 0)
 	{
 		m_soundIconSprite.Draw(rc);
@@ -297,6 +308,7 @@ void SoundPause::Render(RenderContext& rc)
 		m_bgmBlackIcon.Draw(rc);
 	}
 
+	/** SE選択中アイコン描画 */
 	if (m_Count == 1)
 	{
 		m_seIconSprite.Draw(rc);
@@ -306,6 +318,7 @@ void SoundPause::Render(RenderContext& rc)
 		m_seBlackIcon.Draw(rc);
 	}
 
+	/** 終了ボタン選択時は背景非表示 */
 	if (m_Count == 2)
 	{
 		m_blackSprite.SetMulColor
@@ -319,6 +332,7 @@ void SoundPause::Render(RenderContext& rc)
 			)
 		);
 	}
+	/** 非選択時は背景を半透明表示 */
 	else
 	{
 		m_blackSprite.SetMulColor

@@ -40,6 +40,7 @@ public:
 
 
 private:
+	/** 選択中の画面を表示させる番号 */
 	int m_countNumber = 0;
 
 	SoundManager* m_choiceSound;
