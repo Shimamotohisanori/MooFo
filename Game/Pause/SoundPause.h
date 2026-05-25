@@ -14,31 +14,37 @@ public:
 	void UpdateSEUI();
 	void Render(RenderContext& rc);
 
+	/** 選択番号設定 */
 	void SetCount(int count)
 	{
 		m_Count = count;
 	}
 
+	/** 選択番号取得 */
 	int GetCount()
 	{
 		return m_Count;
 	}
 
+	/** BGM音量設定 */
 	void SetBGMVolume(float bgm)
 	{
 		m_bgmVolume = bgm;
 	}
 
+	/** BGM音量取得 */
 	float GetBGMVolume()
 	{
 		return m_bgmVolume;
 	}
 
+	/** SE音量設定 */
 	void SetSEVolume(float se)
 	{
 		m_seVolume = se;
 	}
 
+	/** SE音量取得 */
 	float GetSEVolume()
 	{
 		return m_seVolume;
@@ -48,7 +54,10 @@ public:
 private:
 	int m_Count = 0;
 
+	/** BGMの音量 */
 	float m_bgmVolume = 0.4f;
+
+	/** SEの音量 */
 	float m_seVolume  = 0.6f;
 
 	SpriteRender m_backGroundSprite;
