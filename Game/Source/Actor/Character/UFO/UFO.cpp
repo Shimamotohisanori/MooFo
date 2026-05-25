@@ -63,6 +63,12 @@ UFO::UFO()
 
 UFO::~UFO()
 {	
+	UFOLightManager* manager = FindGO<UFOLightManager>("ufolightmanager");
+	if (manager)
+	{
+		manager->UnregisterUFO(this);
+	}
+
 }
 
 

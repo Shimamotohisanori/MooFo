@@ -17,11 +17,21 @@ public:
 	{
 		m_Controllers.push_back(controller);
 	}*/
-
+	/** UFOの管理を登録する*/
 	void RegisterUFO(UFO* ufo)
 	{
 		m_ufos.push_back(ufo);
 	}
+
+	/** UFOの管理を解除する*/
+	void UnregisterUFO(UFO* ufo)
+	{
+		m_ufos.erase(
+			std::remove(m_ufos.begin(), m_ufos.end(), ufo),
+			m_ufos.end()
+		);
+	}
+
 	/** タイマーの取得関数 */
 	float GetTimer() const
 	{
