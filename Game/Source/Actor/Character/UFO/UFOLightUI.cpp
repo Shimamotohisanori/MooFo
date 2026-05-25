@@ -1,8 +1,8 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "UFOLightUI.h"
 #include "CountDown/CountDown.h"
 #include "Pause/Pause.h"
-#include "Source/Actor/Character/UFO/CowCaptureController.h"
+#include"UFOLightManager.h"
 namespace
 {
 	/** 光が出ているときに表示する数字のスプライト */
@@ -64,25 +64,25 @@ bool UFOLightUI::Start()
 	m_secondsSpriteRender.SetPosition(Vector3(940.0f, 510.0f, 0.0f));
 	m_secondsSpriteRender.SetScale(FONT_SCALE);
 	m_secondsSpriteRender.Update();
-
+	
+	
 	return true;
 }
 
 void UFOLightUI::Update()
 {
-	if (m_controller == nullptr)
+	if (m_ufolightManager == nullptr)
 	{
-		m_controller = FindGO<CowCaptureController>("cowcapturecontroller");
+		m_ufolightManager = FindGO<UFOLightManager>("ufolightmanager");
 	}
 
-	m_pause = FindGO<Pause>("pause");
-	m_countdown = FindGO<CountDown>("countdown");
-
-	if (m_controller == nullptr)
+	if (m_ufolightManager == nullptr)
 	{
 		return;
 	}
 
+	m_pause = FindGO<Pause>("pause");
+	m_countdown = FindGO<CountDown>("countdown");
 	/** 光が出ているかどうかのフラグを取得 */
 	CountSpriteUI();
 
@@ -93,7 +93,7 @@ void UFOLightUI::Update()
 	}
 }
 
-void UFOLightUI::Render(RenderContext & rc)
+void UFOLightUI::Render(RenderContext& rc)
 {
 	if (m_pause == nullptr || m_countdown == nullptr)
 	{
@@ -109,18 +109,18 @@ void UFOLightUI::Render(RenderContext & rc)
 	{
 		return;
 	}
-
-	/** 光が出ていないときだけカウント */
-	if (!m_controller->IsEmitting())
+	/** 光が出ているときは描画を止める */
+	if (!m_ufolightManager->IsEmitting())
 	{
 		/** 光の発射までのスプライト描画 */
 		m_LightApperSpriteRender.Draw(rc);
 		/** 秒のスプライト描画 */
 		m_secondsSpriteRender.Draw(rc);
 	}
+	
 
 	/** 数字スプライトの描画*/
-	if (m_currentCount >= 0 && !m_controller->IsEmitting())
+	if (m_currentCount >= 0 && !m_ufolightManager->IsEmitting())
 	{
 		m_LightApperNumberSpriteRender[m_currentCount].Draw(rc);
 	}
@@ -129,15 +129,20 @@ void UFOLightUI::Render(RenderContext & rc)
 
 void UFOLightUI::CountSpriteUI()
 {
+	if (m_ufolightManager == nullptr)
+	{
+		return;
+	}
+
 	/** 光が出ているときは表示しない */
-	if (m_controller->IsEmitting())
+	if (m_ufolightManager->IsEmitting())
 	{
 		/** 光が出ているときはフォントを表示しない状態にする */
 		m_currentCount = -1;
 		return;
 	}
 
-	float timer = m_controller->GetTimer();
+	float timer = m_ufolightManager->GetTimer();
 
 	/** 残り秒数を計算(5→1) */
 	int seconds = static_cast<int>(std::ceilf(timer));

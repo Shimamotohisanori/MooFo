@@ -18,7 +18,7 @@ class DummyCow;
 class Combo;
 class AddTimerUI;
 class UFOLightUI;
-
+class UFOLightManager;
 /** UFOの情報をまとめる構造体 */
 struct UFOinfo
 {
@@ -181,6 +181,9 @@ private:
 	
 	/** 牛のライトUI */
 	UFOLightUI* m_ufoLightUI = nullptr;
+
+	/** UFOのライトマネージャー */
+	UFOLightManager* m_ufoLightManager = nullptr;
 
 	/** 終了画像 */
 	SpriteRender m_timeOutImage;

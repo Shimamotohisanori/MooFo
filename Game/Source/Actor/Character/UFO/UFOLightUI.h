@@ -1,8 +1,7 @@
-#pragma once
+﻿#pragma once
 class CountDown;
 class Pause;
-class CowCaptureController;
-
+class UFOLightManager;
 /** UFOの光のUIクラス */
 class UFOLightUI : public IGameObject
 {
@@ -21,7 +20,7 @@ private:
 
 private:
 	/** UFOの管理クラス */
-	CowCaptureController* m_controller = nullptr;
+	UFOLightManager* m_ufolightManager = nullptr;
 
 	/** ポーズ */
 	Pause* m_pause = nullptr;

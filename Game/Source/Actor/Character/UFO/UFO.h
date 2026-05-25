@@ -37,8 +37,8 @@ public:
 		m_isCowTakeAwayed = isCowTakeAwayed;
 	}
 
-	/** 牛を連れて行けるかどうかのフラグを取得する関数 */
-	bool GetIsCowTakeAwayed()
+	/** 捕獲中かどうかをマネージャーに通知するためのフラグ取得関数*/
+	bool GetIsCowTakeAwayed()const
 	{
 		return m_isCowTakeAwayed;
 	}
@@ -53,7 +53,7 @@ public:
 
 	bool IsLightEmitting()const
 	{
-		return m_cowCaptureController->GetIsEmitting();
+		return m_cowCaptureController.GetIsEmitting();
 	}
 	
 	
@@ -96,7 +96,7 @@ private:
 	Score* m_score = nullptr;
 
 	/** UFOの牛捕獲コントローラー */
-	CowCaptureController* m_cowCaptureController = nullptr;
+	CowCaptureController m_cowCaptureController;
 	
 	/** ポーズ */
 	Pause* m_pause = nullptr;
@@ -109,7 +109,8 @@ private:
 
 	/** 牛を追いかけるフラグ */
 	bool m_isChasing = false;
-
+	/** UFOを一度だけ設定するフラグ */
+	bool m_isSetUFO = false;
 	enum EnUFOState
 	{
 		EnUFOState_Move,
