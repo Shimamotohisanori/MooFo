@@ -4,12 +4,12 @@
 
 namespace
 {
-	/** ã‚µã‚¦ãƒ³ãƒ‰é–¢é€£ã®å®šæ•°ã‚’namespaceå†…ã«ã¾ã¨ã‚ã‚‹ */
+	/** ƒTƒEƒ“ƒhŠÖ˜A‚Ì’è”‚ğnamespace“à‚É‚Ü‚Æ‚ß‚é */
 	const char* BGM_FILEPATH = "Assets/BGM/";
 	const char* SE_FILEPATH = "Assets/SE/";
 	const char* SOUND_FILE_FORMAT = ".wav";
 
-	/** BGMãƒ•ã‚¡ã‚¤ãƒ«åä¸€è¦§ */
+	/** BGMƒtƒ@ƒCƒ‹–¼ˆê—— */
 	const char* BGM_FILENAME_LIST[enBGMNum] =
 	{
 		"TitleBGM",
@@ -19,7 +19,7 @@ namespace
 		"LoadBGM",
 	};
 
-	/** SEãƒ•ã‚¡ã‚¤ãƒ«åä¸€è¦§ */
+	/** SEƒtƒ@ƒCƒ‹–¼ˆê—— */
 	const char* SE_FILENAME_LIST[enSENum] =
 	{
 		"ChoiceSE",
@@ -47,25 +47,25 @@ SoundManager::SoundManager()
 {
 	m_bgmCount = enBGMNum;
 
-	/** BGMãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’ä½œã£ã¦ç™»éŒ²ã™ã‚‹ã€‚ */
+	/** BGMƒtƒ@ƒCƒ‹ƒpƒX‚ğì‚Á‚Ä“o˜^‚·‚éB */
 	for (int i = 0; i < enBGMNum; i++)
 	{
-		/** BGMãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ç”Ÿæˆ */
+		/** BGMƒtƒ@ƒCƒ‹ƒpƒX¶¬ */
 		std::string bgmFile = std::string(BGM_FILEPATH) + BGM_FILENAME_LIST[i] + (SOUND_FILE_FORMAT);
 		const char* bgmFilePath = bgmFile.c_str();
 
-		/** BGMç™»éŒ² */
+		/** BGM“o˜^ */
 		g_soundEngine->ResistWaveFileBank(i, bgmFilePath);
 	}
 
-	/** SEãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’ä½œã£ã¦ç™»éŒ²ã™ã‚‹ã€‚*/
+	/** SEƒtƒ@ƒCƒ‹ƒpƒX‚ğì‚Á‚Ä“o˜^‚·‚éB*/
 	for (int i = 0; i < enSENum; i++)
 	{
-		/** SEãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ç”Ÿæˆ */
+		/** SEƒtƒ@ƒCƒ‹ƒpƒX¶¬ */
 		std::string seFile = std::string(SE_FILEPATH) + SE_FILENAME_LIST[i] + (SOUND_FILE_FORMAT);
 		const char* seFilePath = seFile.c_str();
 
-		/** SEç™»éŒ² */
+		/** SE“o˜^ */
 		g_soundEngine->ResistWaveFileBank(i + m_bgmCount, seFilePath);
 		
 	}
@@ -83,34 +83,34 @@ void SoundManager::Update()
 
 SoundSource* SoundManager::PlayingBGM(SoundBGM number, bool isLoop)
 {
-	/** æ–°ã—ãéŸ³ã‚’é³´ã‚‰ã™ãŸã‚ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ */
+	/** V‚µ‚­‰¹‚ğ–Â‚ç‚·‚½‚ß‚ÌƒIƒuƒWƒFƒNƒg‚ğì¬ */
 	SoundSource* bgm = NewGO<SoundSource>(0);
 
-	/** ã©ã®BGMã‚’é³´ã‚‰ã™ã‹è¨­å®š */
+	/** ‚Ç‚ÌBGM‚ğ–Â‚ç‚·‚©İ’è */
 	bgm->Init(number);
 
-	/** éŸ³é‡ã‚’è¨­å®š */
+	/** ‰¹—Ê‚ğİ’è */
 	bgm->SetVolume(m_bgmVolume);
 
-	/** ãƒ«ãƒ¼ãƒ—å†ç”Ÿã™ã‚‹ã‹ã©ã†ã‹ã‚’æŒ‡å®šã—ã¦å†ç”Ÿ */
+	/** ƒ‹[ƒvÄ¶‚·‚é‚©‚Ç‚¤‚©‚ğw’è‚µ‚ÄÄ¶ */
 	bgm->Play(isLoop);
 
-	/** ä½œæˆã—ãŸéŸ³ã‚’è¿”ã™ */
+	/** ì¬‚µ‚½‰¹‚ğ•Ô‚· */
 	return bgm;
 }
 
 SoundSource* SoundManager::PlayingSE(SoundSE number, bool isLoop)
 {
-	/** æ–°ã—ãéŸ³ã‚’é³´ã‚‰ã™ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ */
+	/** V‚µ‚­‰¹‚ğ–Â‚ç‚·ƒIƒuƒWƒFƒNƒg‚ğì¬ */
 	SoundSource* se = NewGO<SoundSource>(0);
 
-	/** SEã¯BGMã®å¾Œã‚ã«ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ã®ã§ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’è¶³ã™ */
+	/** SE‚ÍBGM‚ÌŒã‚ë‚É“o˜^‚³‚ê‚Ä‚¢‚é‚Ì‚ÅƒIƒtƒZƒbƒg‚ğ‘«‚· */
 	se->Init(number + m_bgmCount);
 
-	/** éŸ³é‡è¨­å®š */
+	/** ‰¹—Êİ’è */
 	se->SetVolume(m_seVolume);
 
-	/** å†ç”Ÿ */
+	/** Ä¶ */
 	se->Play(isLoop);
 
 	return se;
