@@ -8,6 +8,8 @@
 #include "Source/Actor/Character/UFO/UFO.h"
 #include "GameCamera/GameCamera.h"
 #include "nature/SkyCube.h"
+#include "Source/Actor/Character/UFO/UFOLightManager.h"
+
 
 namespace
 {
@@ -205,7 +207,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		cow->SetPosition(RandomCowPos());
 		m_tempCows.push_back(cow);
 	} break;
-	
+
 		/** もしUFOが消えていなかったら残っているUFOを消す */
 	case 12:
 	{
@@ -220,14 +222,19 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		break;
 	}
 
-		/** UFOを生成(4体分) */
+		/** UFOの生成前にマネージャーを生成*/
 	case 13:
+		NewGO<UFOLightManager>(0, "ufolightmanager");
+		break;
+
+		/** UFOを生成(4体分) */
 	case 14:
 	case 15:
 	case 16:
+	case 17:
 	{
 
-		int index = m_loadStep - 13;
+		int index = m_loadStep - 14;
 		if (index >= 0 && index < 4)
 		{
 			UFO* ufo = NewGO<UFO>(0, "UFO");
@@ -237,9 +244,9 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	} break;
 
 		/** ゲームカメラを生成 */
-	case 17: NewGO<GameCamera>(0, "gameCamera"); break;
+	case 18: NewGO<GameCamera>(0, "gameCamera"); break;
 		/** スカイキューブを生成 */
-	case 18:
+	case 19:
 	{
 		
 		/** SkyCube を生成 */
@@ -256,7 +263,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	} break;
 
 		/** ゲーム本体を生成 */
-	case 19:
+	case 20:
 		Game* game =NewGO<Game>(0, "game");
 
 		/** ロードした牛をゲームに渡す */

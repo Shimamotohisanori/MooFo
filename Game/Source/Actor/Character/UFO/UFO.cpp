@@ -9,6 +9,7 @@
 #include "Score/Score.h"
 #include "Source/Actor/Character/UFO/CowCaptureController.h"
 #include "Pause/Pause.h"
+#include"UFOLightManager.h"
 #include "Combo/Combo.h"
 namespace
 {
@@ -60,23 +61,22 @@ UFO::UFO()
 
 
 UFO::~UFO()
-{
-	/** UFOの光のエフェクトが存在する場合は削除する */
-	if (m_cowCaptureController)
-	{
-		DeleteGO(m_cowCaptureController);
-		m_cowCaptureController = nullptr;
-	}
-	
+{	
 }
 
 
 bool UFO::Start()
-{
-	m_cowCaptureController =NewGO<CowCaptureController>(0,"cowcapturecontroller");
+{	
+	/** マネージャーに自分を登録する*/	
+	UFOLightManager* manager = FindGO<UFOLightManager>("ufolightmanager");
+	if (manager)
+	{
+		manager->RegisterUFO(this);
+	}	
 
-	/** それぞれのUFOに自分自身を設定 */
-	m_cowCaptureController->SetUFO(this);
+	/** コントローラーに自分自身をセット */
+	m_cowCaptureController.SetUFO(this);
+
 	m_ufomodelRender.SetRaytracingWorld(false);
 	m_ufomodelRender.Init(UFO_MODEL_FILEPATH);
 	m_ufomodelRender.SetScale(UFO_SCALE,UFO_SCALE,UFO_SCALE);
@@ -95,7 +95,7 @@ void UFO::Update()
 	{
 		return;
 	}
-
+	
 	if (m_UFOState == EnUFOState_Move)
 	{
 		/** 移動 */
@@ -104,6 +104,9 @@ void UFO::Update()
 		/** 回転 */
 		Rotation();
 	}
+
+	/** 牛捕獲コントローラーの更新 */
+	m_cowCaptureController.Update();
 
 	/**　光が出ているときだけ探す */
 	if (IsLightEmitting())
@@ -299,14 +302,14 @@ void UFO::TakeAwayTheCow()
 
 CowCaptureController* UFO::GetCowCaptureController()
 {
-	return m_cowCaptureController;
+	return &m_cowCaptureController;
 }
 
 
 void UFO::FindTheCow()
 {
 	/** 光が出ていないときは探さないようにする */
-	if (!m_cowCaptureController->GetIsEmitting()) return;
+	if (!m_cowCaptureController.GetIsEmitting()) return;
 	
 	/** 牛を連れていけるかどうかのフラグが立っていたら処理しない */
 	if (m_isCowTakeAwayed) return;
@@ -379,7 +382,7 @@ void UFO::FindTheCow()
 
 			/** いま追っている牛をtrueにして他のUFOは追尾しないようにする */
 			m_targetCow->SetIsTakeAwayed(true);
-			m_cowCaptureController->SetCapturing(true);
+			//m_cowCaptureController->SetCapturing(true);
 		}
 	}
 
@@ -479,6 +482,7 @@ bool UFO::CanUFOUpdate()
 	m_countdown = FindGO<CountDown>("countdown");
 	m_pause = FindGO<Pause>("pause");
 	m_score = FindGO<Score>("score");
+	//FindGO<CowCaptureController>("cowcapturecontroller");
 
 	/** UFOがゲームシーンに存在していないときは処理をしない */
 	if (m_pause == nullptr || m_countdown == nullptr || m_game == nullptr)
