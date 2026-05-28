@@ -840,7 +840,8 @@ DeleteGO(this);
 > <img width="1919" height="1057" alt="補完無し" src="https://github.com/user-attachments/assets/5f3ce869-ec7d-4a45-a14a-2db822809b77" />  
 
 > ### 補完あり
-> <img width="1919" height="1057" alt="補完あり" src="https://github.com/user-attachments/assets/6e2f9aff-da75-4524-82cb-d4033d3aca78" />  
+> <img width="360" height="197" alt="補完あり" src="https://github.com/user-attachments/assets/89080d09-525e-4de9-b153-9f70c5a33c4b" />  
+
 
 
 [↑目次に戻る](#toc)  
