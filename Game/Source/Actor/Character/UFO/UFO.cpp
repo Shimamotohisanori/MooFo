@@ -11,7 +11,8 @@
 #include "Pause/Pause.h"
 #include"UFOLightManager.h"
 #include "Combo/Combo.h"
-#include "SoundManager/SoundManager.h";
+#include "SoundManager/SoundManager.h"
+#include "Source/Actor/Character/Player/Player.h"
 namespace
 {
 	/** UFOのモデルファイルパス */
@@ -52,6 +53,8 @@ namespace
 
 	/** UFO同士の最低距離の二乗*/
 	constexpr float MIN_DIST_SQ = MIN_DIST * MIN_DIST;
+
+	constexpr float UFO_PLAYER_DISTANCE = 1000.0f;
 }
 
 
@@ -93,9 +96,31 @@ bool UFO::Start()
 	return true;
 }
 
-
 void UFO::Update()
 {
+	/** ポーズ中かつSEが存在していたら */
+	if (m_pause && m_pause->GetIsPause() && m_UFOCaptureSE)
+	{
+		/** SEを消す */
+		DeleteGO(m_UFOCaptureSE);
+		m_UFOCaptureSE = nullptr;
+	}
+
+	/** 牛を捕まえていなくてかつSEが存在していたら */
+	if (!m_isCowTakeAwayed && m_UFOCaptureSE)
+	{
+		/** SEを消す */
+		DeleteGO(m_UFOCaptureSE);
+		m_UFOCaptureSE = nullptr;
+	}
+
+	/** ポーズ中かつ牛を捕まえているかつSEが存在していなかったら */
+	if (m_pause && !m_pause->GetIsPause() && m_isCowTakeAwayed && !m_UFOCaptureSE)
+	{
+		/** SEを再生させる */
+		auto soundManager = FindGO<SoundManager>("soundmanager");
+		m_UFOCaptureSE = soundManager->PlayingSE(SoundSE::enUFOCaptureSE, true);
+	}
 
 	/** アップデートできるかどうかを判断する */
 	if (!CanUFOUpdate())
@@ -125,6 +150,12 @@ void UFO::Update()
 	/** 牛を連れていく関数 */
 	TakeAwayTheCow();
 
+	/** もしUFOが牛を引っ張るSEが流れていたら */
+	if (m_UFOCaptureSE)
+	{
+		/** UFOが牛を引っ張る際のSE関数 */
+		UFOSEDistance();
+	}
 	m_transform.SetPosition(Vector3{ m_transform.GetPosition().x,70.0f,m_transform.GetPosition().z });
 
 	/** モデルの位置を反映 */
@@ -265,6 +296,7 @@ void UFO::TakeAwayTheCow()
 
 		/** 牛が連れ去られたらスコアを減らす処理 */
 		m_score->DecreaseScore(100);
+
 		/** 牛の状態を連れていかれる前の状態に戻す */
 		m_targetCow->SetIsTakeAwayed(false);
 
@@ -306,6 +338,42 @@ void UFO::TakeAwayTheCow()
 
 }
 
+void UFO::UFOSEDistance()
+{
+	/** SEが再生されていなかったら早期リターンする */
+	if (m_UFOCaptureSE == nullptr)
+	{
+		return;
+	}
+
+	/** プレイヤーを見つける */
+	auto player = FindGO<Player>("player");
+
+	/** プレイヤーとUFOのポジションの距離を代入する */
+	float distance = (player->GetPosition() - m_transform.GetPosition()).Length();
+
+	/** 音量からdistanceと音量が聞こえる距離を割る */
+	float volume = 1.0f - (distance / UFO_PLAYER_DISTANCE);
+
+	if (volume < 0.0f)
+	{
+		volume = 0.0f;
+	}
+
+	if (volume > 1.0f)
+	{
+		volume = 1.0f;
+	}
+
+	auto soundManager = FindGO<SoundManager>("soundmanager");
+
+	float managerVolume = soundManager->m_seVolume;
+
+	float finalVolume = volume * managerVolume;
+
+	/** UFOが牛を引っ張るSEをSetVolumeに代入させる */
+	m_UFOCaptureSE->SetVolume(finalVolume );
+}
 
 CowCaptureController* UFO::GetCowCaptureController()
 {
@@ -496,6 +564,11 @@ bool UFO::CanUFOUpdate()
 	{
 		return false;
 	}
+
+	/*if (!m_pause->GetIsPause() && m_UFOCaptureSE && !m_UFOCaptureSE->IsPlaying())
+	{
+		m_UFOCaptureSE->Play(true);
+	}*/
 
 	/** タイムアウトしているときはUFOを動かさない */
 	if (m_game->GetIsTimeOut())

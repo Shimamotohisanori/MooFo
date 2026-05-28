@@ -72,6 +72,9 @@ private:
 	/** UFOが制限区域を出ないようにする関数 */
 	void ClampToArea(Vector3& pos);
 
+	/** UFOが牛を引っ張る際のSEの距離計算関数 */
+	void UFOSEDistance();
+
 	/** UFOのアップデートができるかどうかを判断する関数 */
 	bool CanUFOUpdate();
 
