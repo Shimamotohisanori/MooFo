@@ -341,7 +341,7 @@ if (abs(m_score - m_displayScore) < 5)
 >アウトゲーム内で、ボタンを押すとPRESS ANY BUTTONのUIが点滅するようにしました。  
 ボタンを押したことを分かりやすく表現するためです。
 >
-><img width="400" height="225" alt="タイトル点滅" src="https://github.com/user-attachments/assets/7d11b80a-cb18-4250-a3eb-06333acee737" />
+><gif width="400" height="225" alt="タイトル点滅" src="https://github.com/user-attachments/assets/7d11b80a-cb18-4250-a3eb-06333acee737" />
 
 [↑目次に戻る](#toc) 
 
