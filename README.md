@@ -250,6 +250,8 @@ Cow.cpp / .h
 
 ### ①ゲーム中のUIについて
 >ゲーム中に使うUIは統一感、見栄えの良さなどを考え、基本的に同じ青色基調のUIにしています。  
+><img width="1877" height="1001" alt="gameUI" src="https://github.com/user-attachments/assets/c00f9d88-f831-4623-86a7-9c7a7cc0a22f" />
+
 [↑目次に戻る](#toc) 
 
 ### ②ゲームスタート時のUI表現について
