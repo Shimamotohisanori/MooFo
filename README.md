@@ -236,6 +236,9 @@ Cow.cpp / .h
 ロープが一定の距離近づくと牛にロープが付きます。  
 ロープが付いた状態でRT,LTボタン連打をすることによりロープを引っ張り、一定の距離まで近づけることで牛を救出できます。
 
+>時間制限が0になるとゲームは終了し、リザルト画面(ゲームオーバー、ゲームクリア)に移ります。
+>救出数がノルマに達していない場合はゲームオーバー、達成していればゲームクリアとなります。
+
 >牛を助けるとスコアが+100され、  
 5コンボごとにスコアが+200されます。  
 
@@ -259,7 +262,7 @@ Cow.cpp / .h
 >ゲームスタート時のUIに関してはこのようにfmodf関数を使い、カウントダウンからの残りの時間を1で割った余りを取得し、それをα値やスケールの数値の変更に使うことによって、UIが透明で小さい状態から不透明で大きい状態になりを繰り返しながらカウントダウンのUIが表示されているようになっております。  
 >　<img width="500" height="300" alt="カウントダウン" src="https://github.com/user-attachments/assets/a0a01444-ba59-4bba-9fdd-1dede657e20b" />  
 
-```
+```c++
 m_countDownTime -=
 g_gameTime->GetFrameDeltaTime();
 
@@ -332,7 +335,7 @@ m_countDownStart.Update();
 ### ③スコアのUIについて
 >スコアのUIでは、この様にカウンターアニメーションを入れることにより、数字がリアルタイムで増えていく面白さを表現しました。
 
-```
+```c++
 /** Lerp関数で滑らかに値を近づける */
 /** 表示するスコアを徐々にスコアに近づける */
 /** 型変換をすることで、整数の計算を行う */m_displayScore = m_displayScore + (int)((m_score - m_displayScore) * LERP_SPEED);
@@ -381,7 +384,7 @@ if (abs(m_score - m_displayScore) < 5)
 牛の移動処理で休憩時間と移動時間を追加し、さらにそれをランダムにすることにより、より自然な牛に近い動きを再現しました。  
 ※RANDOMCOW_TIMERは定数で240になっています。
 
-```  
+```c++  
 /** タイマーが0以上なら新しい方向を決める */
 if (m_moveTimer <= 0)
 {
@@ -434,7 +437,7 @@ m_moveTimer--;
 ### ②UFOが牛を見つける挙動について  
 UFOは自身に一番近い牛を標的とし、追いかけることで、より敵らしい動きを再現しました。  
 
-```  
+```c++  
 auto cow = FindGOs<Cow>("cow");
 
 /** 最も近い牛 */
@@ -520,7 +523,7 @@ else
 プレイヤー側がロープを引っ張るボタンを押したとき、捕まっている牛がプレイヤーの位置に近づくような処理を書くことにより、ロープを左右で交互に引っ張っているような感覚を再現しました。  
 
 ### プレイヤー側の処理
-```  
+```c++  
 if (m_rope)
 {
 	//ロープが牛に当たっているとき
@@ -551,7 +554,7 @@ if (m_rope)
 
 ### 牛の処理  
 ※PULL_ROPEは定数で、8.0fという値になっています。
-```  
+```c++  
 /** プレイヤー側の左右ボタンを押したというフラグがどちらか立っていれば */
 if (m_player->GetIsRightButton1() or m_player->GetIsLeftButton1())
 {
@@ -585,7 +588,7 @@ if (m_player->GetIsRightButton1() or m_player->GetIsLeftButton1())
 ### ④ロード中にオブジェクトが生成される処理  
 ロード中に重たいオブジェクトをSwitch文で制御し、生成することにより、ゲームが開始した際のカクつきを改善し、ゲームを始めるのが早くなりました。  
 
-```  
+```c++  
 void LoadingScene::LoadGameObjectsStepByStep()
 {
     switch (m_loadStep)
@@ -696,7 +699,7 @@ m_loadStep++;
 ローディングシーンのヘッダー内でenumを使ったタイプを作り、次のシーンに遷移する際にロード画面のタイプを指定することにより、タイトル画面からゲームに遷移する際はオブジェクトを生成し、そのほかのシーンからタイトルなどに戻る際はオブジェクトを生成しないようにしました。  
 
 ###  LoadingScene.h内  
-```  
+```c++  
 
 /** 次のシーンをセットする関数*/
 void SetNextScene(std::function<void()>next);
@@ -732,7 +735,7 @@ std::function<void()> m_nextSceneLoading;
 ```  
 
 ### LoadingScene.cpp内  
-```
+```c++
 void LoadingScene::InLoading()
 {
 	float deltaTime = g_gameTime->GetFrameDeltaTime();
@@ -780,7 +783,7 @@ void LoadingScene::SetNextScene(std::function<void()>next)
 ```
 
 ### Title.cpp内  
-```  
+```c++  
 m_loadingScene = NewGO<LoadingScene>(0, "loading");
 m_loadingScene->SetLoadType(LoadingScene::LoadType::ToGameScene);
 DeleteGO(m_titleBGM);
@@ -792,7 +795,7 @@ DeleteGO(this);
 ```  
 
 ### GameClear.cpp内  
-```  
+```c++  
 m_loadingScene = NewGO<LoadingScene>(0, "loading");
 m_loadingScene->SetLoadType(LoadingScene::LoadType::ToTitleScene);
 DeleteGO(m_clearBGM);
@@ -806,7 +809,7 @@ DeleteGO(this);
 ```  
 
 ### GameOver.cpp内  
-```  
+```c++  
 m_loadingScene = NewGO<LoadingScene>(0, "loading");
 m_loadingScene->SetLoadType(LoadingScene::LoadType::ToTitleScene);
 DeleteGO(m_deathBGM);
@@ -819,7 +822,7 @@ DeleteGO(this);
 ```  
 
 ### Pause.cpp内  
-```  
+```c++  
 m_loadingScene = NewGO<LoadingScene>(0, "loading");
 m_loadingScene->SetLoadType(LoadingScene::LoadType::ToTitleScene);
 m_loadingScene->SetNextScene([]()
