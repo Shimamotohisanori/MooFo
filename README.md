@@ -238,10 +238,10 @@ Cow.cpp / .h
 >牛を助けるとスコアが+100され、  
 5コンボごとにスコアが+200されます。  
 
-><img width="360" height="203" alt="Score" src="https://github.com/user-attachments/assets/08cc5c56-7780-45b2-8795-f1a2103b5173" />  
+><img width="1919" height="1057" alt="Score" src="https://github.com/user-attachments/assets/08cc5c56-7780-45b2-8795-f1a2103b5173" />  
 
 >コンボ中は1コンボごとにゲーム時間が+3秒されます。  
-><img width="400" height="225" alt="AddTimer" src="https://github.com/user-attachments/assets/ecabf35b-3553-4765-bef4-d2ecd3604c16" />
+><img width="1919" height="1057" alt="AddTimer" src="https://github.com/user-attachments/assets/ecabf35b-3553-4765-bef4-d2ecd3604c16" />
 
 
 [↑目次に戻る](#toc) 
@@ -250,13 +250,13 @@ Cow.cpp / .h
 
 ### ①ゲーム中のUIについて
 >ゲーム中に使うUIは統一感、見栄えの良さなどを考え、基本的に同じ青色基調のUIにしています。  
-><img width="1877" height="1001" alt="gameUI" src="https://github.com/user-attachments/assets/c00f9d88-f831-4623-86a7-9c7a7cc0a22f" />
+><img width="1919" height="1057" alt="gameUI" src="https://github.com/user-attachments/assets/c00f9d88-f831-4623-86a7-9c7a7cc0a22f" />
 
 [↑目次に戻る](#toc) 
 
 ### ②ゲームスタート時のUI表現について
 >ゲームスタート時のUIに関してはこのようにfmodf関数を使い、カウントダウンからの残りの時間を1で割った余りを取得し、それをα値やスケールの数値の変更に使うことによって、UIが透明で小さい状態から不透明で大きい状態になりを繰り返しながらカウントダウンのUIが表示されているようになっております。  
-><img width="400" height="225" alt="カウントダウン" src="https://github.com/user-attachments/assets/d8cd7d5f-d46b-4f02-89f6-9b377b33bb7f" />
+><img width="1919" height="1057" alt="カウントダウン" src="https://github.com/user-attachments/assets/d8cd7d5f-d46b-4f02-89f6-9b377b33bb7f" />
 
 ```
 m_countDownTime -=
@@ -348,15 +348,15 @@ if (abs(m_score - m_displayScore) < 5)
 >アウトゲーム内で、ボタンを押すとPRESS ANY BUTTONのUIが点滅するようにしました。  
 ボタンを押したことを分かりやすく表現するためです。
 >
-><img width="400" height="225" alt="タイトル点滅" src="https://github.com/user-attachments/assets/7d11b80a-cb18-4250-a3eb-06333acee737" />
+><img width="1919" height="1057" alt="タイトル点滅" src="https://github.com/user-attachments/assets/7d11b80a-cb18-4250-a3eb-06333acee737" />
 
 [↑目次に戻る](#toc) 
 
 ### ⑤コンボした際に表示されるUIについて
 >コンボをした際に秒数が+3されてるUIが画面上部に表示されたり、画面右下にComboのUIが表示されたりするように追加しました。  
 今何コンボしていて、秒数がどれくらい増えたかを視覚で分かるようにすることによって、プレイヤーが次にどの牛を救出すればいいかを判断できるようにするためです。
-><img width="400" height="225" alt="AddTimer" src="https://github.com/user-attachments/assets/741adadc-e3ea-4197-bad0-e08ebc780755" />  
-><img width="360" height="203" alt="Score" src="https://github.com/user-attachments/assets/64a987b1-b6ec-480a-801a-7e050d9704cc" />
+><img width="1919" height="1057" alt="AddTimer" src="https://github.com/user-attachments/assets/741adadc-e3ea-4197-bad0-e08ebc780755" />  
+><img width="1919" height="1057" alt="Score" src="https://github.com/user-attachments/assets/64a987b1-b6ec-480a-801a-7e050d9704cc" />
 
 
 [↑目次に戻る](#toc)  
@@ -366,7 +366,7 @@ if (abs(m_score - m_displayScore) < 5)
 >ミニマップは「牛」「UFO」「プレイヤー」のアイコンが出ます。  
 牛がUFOに連れ去られていると、危険のマークになり、現在連れ去られている牛の場所を分かりやすくしています。  
 アイコンはミニマップの範囲外に行くと、非表示になります。
-><img width="400" height="225" alt="MapIcon" src="https://github.com/user-attachments/assets/2d78eac4-7f88-4763-8cde-f67b35ee2485" />
+><img width="1919" height="1057" alt="MapIcon" src="https://github.com/user-attachments/assets/2d78eac4-7f88-4763-8cde-f67b35ee2485" />
 
 ミニマップで表示する範囲を「円形の範囲」として定義し、  
 カメラやプレイヤーの位置に基づき、座標を変換します。  
@@ -840,10 +840,10 @@ DeleteGO(this);
 >アニメーションを再生する際に補完時間を設定することにより、アニメーションのカクつきを無くしました。  
 
 > ### 補完無し  
-> <img width="360" height="203" alt="補完無し" src="https://github.com/user-attachments/assets/5f3ce869-ec7d-4a45-a14a-2db822809b77" />  
+> <img width="1919" height="1057" alt="補完無し" src="https://github.com/user-attachments/assets/5f3ce869-ec7d-4a45-a14a-2db822809b77" />  
 
 > ### 補完あり
-> <img width="360" height="203" alt="補完あり" src="https://github.com/user-attachments/assets/6e2f9aff-da75-4524-82cb-d4033d3aca78" />  
+> <img width="1919" height="1057" alt="補完あり" src="https://github.com/user-attachments/assets/6e2f9aff-da75-4524-82cb-d4033d3aca78" />  
 
 
 [↑目次に戻る](#toc)  
