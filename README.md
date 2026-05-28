@@ -218,7 +218,9 @@ Cow.cpp / .h
 
 </details>  
 
-# 操作説明
+# 操作説明  
+> <img width="500" height="300" alt="Instructions" src="https://github.com/user-attachments/assets/ab91e125-4898-4224-8a42-4108c3d3bb52" />  
+
 [↑目次に戻る](#toc)  
 
 # ゲーム説明  
