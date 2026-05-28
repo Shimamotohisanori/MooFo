@@ -240,7 +240,7 @@ Cow.cpp / .h
 
 <img width="360" height="203" alt="Score" src="https://github.com/user-attachments/assets/08cc5c56-7780-45b2-8795-f1a2103b5173" />  
 
->コンボ中は1コンボごとにゲーム時間が+3秒されます。
+>コンボ中は1コンボごとにゲーム時間が+3秒されます。  
 ><img width="400" height="225" alt="AddTimer" src="https://github.com/user-attachments/assets/ecabf35b-3553-4765-bef4-d2ecd3604c16" />
 
 
