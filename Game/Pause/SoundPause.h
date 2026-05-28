@@ -55,10 +55,10 @@ private:
 	int m_Count = 0;
 
 	/** BGMの音量 */
-	float m_bgmVolume = 0.4f;
+	float m_bgmVolume = 0.3f;
 
 	/** SEの音量 */
-	float m_seVolume  = 0.6f;
+	float m_seVolume  = 0.8f;
 
 	SpriteRender m_backGroundSprite;
 	SpriteRender m_settingSprite;

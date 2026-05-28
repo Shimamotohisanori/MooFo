@@ -365,8 +365,14 @@ void UFO::UFOSEDistance()
 		volume = 1.0f;
 	}
 
+	auto soundManager = FindGO<SoundManager>("soundmanager");
+
+	float managerVolume = soundManager->m_seVolume;
+
+	float finalVolume = volume * managerVolume;
+
 	/** UFO‚ª‹‚ðˆø‚Á’£‚éSE‚ðSetVolume‚É‘ã“ü‚³‚¹‚é */
-	m_UFOCaptureSE->SetVolume(volume);
+	m_UFOCaptureSE->SetVolume(finalVolume );
 }
 
 CowCaptureController* UFO::GetCowCaptureController()
