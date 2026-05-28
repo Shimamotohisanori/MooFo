@@ -1,4 +1,3 @@
-<img width="400" height="225" alt="カウントダウン" src="https://github.com/user-attachments/assets/d8cd7d5f-d46b-4f02-89f6-9b377b33bb7f" />
 # MooFo
 <img width="1919" height="1057" alt="Title" src="https://github.com/user-attachments/assets/f5a60dea-35e9-4b7d-b185-9df67ec950cd" />  
 
@@ -251,7 +250,7 @@ Cow.cpp / .h
 
 ### ②ゲームスタート時のUI表現について
 >ゲームスタート時のUIに関してはこのようにfmodf関数を使い、カウントダウンからの残りの時間を1で割った余りを取得し、それをα値やスケールの数値の変更に使うことによって、UIが透明で小さい状態から不透明で大きい状態になりを繰り返しながらカウントダウンのUIが表示されているようになっております。  
->![Uploading カウントダウン.gif…]()
+><img width="400" height="225" alt="カウントダウン" src="https://github.com/user-attachments/assets/d8cd7d5f-d46b-4f02-89f6-9b377b33bb7f" />
 
 ```
 m_countDownTime -=
