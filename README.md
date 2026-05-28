@@ -238,7 +238,7 @@ Cow.cpp / .h
 >牛を助けるとスコアが+100され、  
 5コンボごとにスコアが+200されます。  
 
-<img width="360" height="203" alt="Score" src="https://github.com/user-attachments/assets/08cc5c56-7780-45b2-8795-f1a2103b5173" />  
+><img width="360" height="203" alt="Score" src="https://github.com/user-attachments/assets/08cc5c56-7780-45b2-8795-f1a2103b5173" />  
 
 >コンボ中は1コンボごとにゲーム時間が+3秒されます。  
 ><img width="400" height="225" alt="AddTimer" src="https://github.com/user-attachments/assets/ecabf35b-3553-4765-bef4-d2ecd3604c16" />
@@ -353,7 +353,9 @@ if (abs(m_score - m_displayScore) < 5)
 ### ⑤コンボした際に表示されるUIについて
 >コンボをした際に秒数が+3されてるUIが画面上部に表示されたり、画面右下にComboのUIが表示されたりするように追加しました。  
 今何コンボしていて、秒数がどれくらい増えたかを視覚で分かるようにすることによって、プレイヤーが次にどの牛を救出すればいいかを判断できるようにするためです。
-><img width="400" height="225" alt="AddTimer" src="https://github.com/user-attachments/assets/741adadc-e3ea-4197-bad0-e08ebc780755" />
+><img width="400" height="225" alt="AddTimer" src="https://github.com/user-attachments/assets/741adadc-e3ea-4197-bad0-e08ebc780755" />  
+><img width="360" height="203" alt="Score" src="https://github.com/user-attachments/assets/64a987b1-b6ec-480a-801a-7e050d9704cc" />
+
 
 [↑目次に戻る](#toc)  
 
