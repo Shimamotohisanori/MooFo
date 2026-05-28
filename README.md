@@ -837,7 +837,8 @@ DeleteGO(this);
 >アニメーションを再生する際に補完時間を設定することにより、アニメーションのカクつきを無くしました。  
 
 > ### 補完無し  
-> <img width="1919" height="1057" alt="補完無し" src="https://github.com/user-attachments/assets/5f3ce869-ec7d-4a45-a14a-2db822809b77" />  
+> <img width="1919" height="1057" alt="補完無し" src="https://github.com/user-attachments/assets/d3167b33-bb36-4048-b7c9-bdee8f1e53e4" />
+
 
 > ### 補完あり
 > <img width="1919" height="1057" alt="補完あり" src="https://github.com/user-attachments/assets/89080d09-525e-4de9-b153-9f70c5a33c4b" />  
