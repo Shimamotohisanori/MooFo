@@ -8,7 +8,7 @@
 ### 氏名 : 仙波知裕(せんばともひろ：プログラマー)
 ### 氏名 : 替地謙介(かえちけんすけ：プログラマー)
 
-GithubのURL
+GithubのURL  
 https://github.com/Shimamotohisanori/MooFo
 
 YoutubeのURL  
