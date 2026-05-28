@@ -1,7 +1,7 @@
 # MooFo
 <img width="500" height="300" alt="Title" src="https://github.com/user-attachments/assets/f5a60dea-35e9-4b7d-b185-9df67ec950cd" />  
 
-カッパ杯サマーの展示作品です
+河原電子ビジネス専門学校のゲームクリエイター科の2年生を対象として行われるチーム制作行事であるである「カッパ杯サマー」の展示作品です。
 ### 河原電子ビジネス専門学校　ゲームクリエイター科(28卒)
 
 ### 氏名 : 島本学典(しまもとひさのり：リーダー)
@@ -114,7 +114,7 @@ SoundPause.cpp / .h
 ・エフェクトシステム  
 エフェクトの読み込み・再生処理を共通化し、UFO追従エフェクトを実装。  
 EffectManager.cpp / .h  
-CowCaputureController.cpp / .h  
+CowCaptureController.cpp / .h  
 
 ・エンジンの改造  
 ライトの明るさ設定の変更、およびエフェクトを扱いやすくするためのエンジン改造。  
@@ -557,7 +557,7 @@ if (m_rope)
 ```  
 
 ### 牛の処理  
-※PULL_ROPEは定数で、8.0fという値になっています。
+※PULL_POWERは定数で、8.0fという値になっています。
 ```c++  
 /** プレイヤー側の左右ボタンを押したというフラグがどちらか立っていれば */
 if (m_player->GetIsRightButton1() or m_player->GetIsLeftButton1())
