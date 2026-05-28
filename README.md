@@ -237,7 +237,7 @@ Cow.cpp / .h
 
 >牛を助けるとスコアが+100され、  
 5コンボごとにスコアが+200されます。
-><img width="360" height="203" alt="Score" src="https://github.com/user-attachments/assets/08cc5c56-7780-45b2-8795-f1a2103b5173" />
+><img width="360" height="203" alt="Score" src="https://github.com/user-attachments/assets/08cc5c56-7780-45b2-8795-f1a2103b5173" />  
 
 >コンボ中は1コンボごとにゲーム時間が+3秒されます。  
 
