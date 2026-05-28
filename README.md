@@ -1,5 +1,5 @@
 # MooFo
-<img width="1919" height="1057" alt="Title" src="https://github.com/user-attachments/assets/f5a60dea-35e9-4b7d-b185-9df67ec950cd" />  
+<img width="500" height="300" alt="Title" src="https://github.com/user-attachments/assets/f5a60dea-35e9-4b7d-b185-9df67ec950cd" />  
 
 カッパ杯サマーの展示作品です
 ### 河原電子ビジネス専門学校　ゲームクリエイター科(28卒)
@@ -237,10 +237,10 @@ Cow.cpp / .h
 >牛を助けるとスコアが+100され、  
 5コンボごとにスコアが+200されます。  
 
-><img width="1919" height="1057" alt="Score" src="https://github.com/user-attachments/assets/832f3672-dbcb-48d9-9c37-f4e460909620" />
+><img width="500" height="300" alt="Score" src="https://github.com/user-attachments/assets/832f3672-dbcb-48d9-9c37-f4e460909620" />
 
 >コンボ中は1コンボごとにゲーム時間が+3秒されます。  
-><img width="1919" height="1057" alt="AddTimer" src="https://github.com/user-attachments/assets/a531337b-4112-442c-ac05-762527fcb095" />  
+><img width="500" height="300" alt="AddTimer" src="https://github.com/user-attachments/assets/a531337b-4112-442c-ac05-762527fcb095" />  
 
 
 [↑目次に戻る](#toc) 
@@ -249,13 +249,13 @@ Cow.cpp / .h
 
 ### ①ゲーム中のUIについて
 >ゲーム中に使うUIは統一感、見栄えの良さなどを考え、基本的に同じ青色基調のUIにしています。  
-><img width="1919" height="1057" alt="gameUI" src="https://github.com/user-attachments/assets/c00f9d88-f831-4623-86a7-9c7a7cc0a22f" />
+><img width="500" height="300" alt="gameUI" src="https://github.com/user-attachments/assets/c00f9d88-f831-4623-86a7-9c7a7cc0a22f" />
 
 [↑目次に戻る](#toc) 
 
 ### ②ゲームスタート時のUI表現について
 >ゲームスタート時のUIに関してはこのようにfmodf関数を使い、カウントダウンからの残りの時間を1で割った余りを取得し、それをα値やスケールの数値の変更に使うことによって、UIが透明で小さい状態から不透明で大きい状態になりを繰り返しながらカウントダウンのUIが表示されているようになっております。  
->　<img width="1919" height="1057" alt="カウントダウン" src="https://github.com/user-attachments/assets/a0a01444-ba59-4bba-9fdd-1dede657e20b" />  
+>　<img width="500" height="300" alt="カウントダウン" src="https://github.com/user-attachments/assets/a0a01444-ba59-4bba-9fdd-1dede657e20b" />  
 
 ```
 m_countDownTime -=
@@ -347,15 +347,15 @@ if (abs(m_score - m_displayScore) < 5)
 >アウトゲーム内で、ボタンを押すとPRESS ANY BUTTONのUIが点滅するようにしました。  
 ボタンを押したことを分かりやすく表現するためです。
 >
-><img width="1919" height="1057" alt="タイトル点滅" src="https://github.com/user-attachments/assets/7d11b80a-cb18-4250-a3eb-06333acee737" />  
+><img width="500" height="300" alt="タイトル点滅" src="https://github.com/user-attachments/assets/7d11b80a-cb18-4250-a3eb-06333acee737" />  
 
 [↑目次に戻る](#toc) 
 
 ### ⑤コンボした際に表示されるUIについて
 >コンボをした際に秒数が+3されてるUIが画面上部に表示されたり、画面右下にComboのUIが表示されたりするように追加しました。  
 今何コンボしていて、秒数がどれくらい増えたかを視覚で分かるようにすることによって、プレイヤーが次にどの牛を救出すればいいかを判断できるようにするためです。
-><img width="1919" height="1057" alt="AddTimer" src="https://github.com/user-attachments/assets/a514dc62-71f7-4210-a0b2-91c4d5955428" />  
-><img width="1919" height="1057" alt="Score" src="https://github.com/user-attachments/assets/add06973-e374-41e0-8d04-263cd6d78b3f" />
+><img width="500" height="300" alt="AddTimer" src="https://github.com/user-attachments/assets/a514dc62-71f7-4210-a0b2-91c4d5955428" />  
+><img width="500" height="300" alt="Score" src="https://github.com/user-attachments/assets/add06973-e374-41e0-8d04-263cd6d78b3f" />
 
 
 [↑目次に戻る](#toc)  
@@ -365,7 +365,7 @@ if (abs(m_score - m_displayScore) < 5)
 >ミニマップは「牛」「UFO」「プレイヤー」のアイコンが出ます。  
 牛がUFOに連れ去られていると、危険のマークになり、現在連れ去られている牛の場所を分かりやすくしています。  
 アイコンはミニマップの範囲外に行くと、非表示になります。
-><img width="1919" height="1057" alt="MapIcon" src="https://github.com/user-attachments/assets/9ecaab46-c3fd-428a-adda-699ff93e27ee" />  
+><img width="500" height="300" alt="MapIcon" src="https://github.com/user-attachments/assets/9ecaab46-c3fd-428a-adda-699ff93e27ee" />  
 
 ミニマップで表示する範囲を「円形の範囲」として定義し、  
 カメラやプレイヤーの位置に基づき、座標を変換します。  
@@ -837,11 +837,11 @@ DeleteGO(this);
 >アニメーションを再生する際に補完時間を設定することにより、アニメーションのカクつきを無くしました。  
 
 > ### 補完無し  
-> <img width="1919" height="1057" alt="補完無し" src="https://github.com/user-attachments/assets/d3167b33-bb36-4048-b7c9-bdee8f1e53e4" />
+> <img width="500" height="300" alt="補完無し" src="https://github.com/user-attachments/assets/d3167b33-bb36-4048-b7c9-bdee8f1e53e4" />
 
 
 > ### 補完あり
-> <img width="1919" height="1057" alt="補完あり" src="https://github.com/user-attachments/assets/89080d09-525e-4de9-b153-9f70c5a33c4b" />  
+> <img width="500" height="300" alt="補完あり" src="https://github.com/user-attachments/assets/89080d09-525e-4de9-b153-9f70c5a33c4b" />  
 
 
 
