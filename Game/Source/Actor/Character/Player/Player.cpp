@@ -74,6 +74,8 @@ Player::Player()
 
 Player::~Player()
 {
+	DeleteGO(m_runSE);
+	m_runSE = nullptr;
 
 	DeleteGO(m_rope);
 }

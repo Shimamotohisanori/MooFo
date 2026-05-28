@@ -27,7 +27,7 @@ namespace
 		"CowCrySE",
 		"DecisionSE",
 		"ThrowRopeSE",
-		"UFOFlyingSE",
+		"UFOCaptureSE",
 		"UFOTakeAwaySE",
 		"WalkSE",
 		"ScoreDecreaseSE",

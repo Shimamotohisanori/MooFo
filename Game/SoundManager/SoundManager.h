@@ -19,7 +19,7 @@ enum SoundSE
 	enCowCrySE,
 	enDecisionSE,
 	enThrowRopeSE,
-	enUFOFlyingSE,
+	enUFOCaptureSE,
 	enUFOTakeAwaySE,
 	enWalkSE,
 	enScoreDecreaseSE,
