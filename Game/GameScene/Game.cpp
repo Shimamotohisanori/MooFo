@@ -163,8 +163,10 @@ void Game::Update()
 		return;
 	}
 
-	/** セレクトボタンを押していて、カウントダウン中でない場合 */
-	if (g_pad[0]->IsTrigger(enButtonSelect) && !m_countDown->GetCountDown())
+	/** セレクトボタンを押していて
+	 * カウントダウン中でないかつ
+	 * タイムアウトしていない場合 */
+	if (g_pad[0]->IsTrigger(enButtonSelect) && !m_countDown->GetCountDown() && !m_isTimeOut)
 	{
 		/** タイムアウトなら */
 		if (m_isTimeOut)
@@ -390,7 +392,7 @@ void Game::SpawnCow()
 void Game::TimeOut()
 {
 	/** タイマーとタイムアウトフラグを見る*/
-	if (m_timer->GetTimer() <= 0.0f && !m_isTimeOut)
+	if (m_timer->GetTimer() < 0.0f && !m_isTimeOut)
 	{
 		/** タイムアウトフラグを立てる */
 		m_isTimeOut = true;
