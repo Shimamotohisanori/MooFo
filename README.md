@@ -1,7 +1,6 @@
 # MooFo
 <img width="500" height="300" alt="Title" src="https://github.com/user-attachments/assets/f5a60dea-35e9-4b7d-b185-9df67ec950cd" />  
 
-河原電子ビジネス専門学校のゲームクリエイター科の2年生を対象として行われるチーム制作行事である「カッパ杯サマー」の展示作品です。
 ### 河原電子ビジネス専門学校　ゲームクリエイター科(28卒)
 
 ### 氏名 : 島本学典(しまもとひさのり：リーダー兼プログラマー)
@@ -591,6 +590,7 @@ if (m_player->GetIsRightButton1() or m_player->GetIsLeftButton1())
 
 ### ④ロード中にオブジェクトが生成される処理  
 ロード中に重たいオブジェクトをSwitch文で制御し、生成することにより、ゲームが開始した際のカクつきを改善し、ゲームを始めるのが早くなりました。  
+これにより、ゲーム中のFPSが7～10FPS程改善されました。
 
 ```c++  
 void LoadingScene::LoadGameObjectsStepByStep()
@@ -853,12 +853,5 @@ DeleteGO(this);
 > <img width="500" height="300" alt="補完あり" src="https://github.com/user-attachments/assets/89080d09-525e-4de9-b153-9f70c5a33c4b" />  
 
 
-
-[↑目次に戻る](#toc)  
-
-### ⑦ロード中の生成  
-
->switch文を使うことによって、ロード中に1つずつオブジェクトを生成するようにしました。  
-これにより、ゲーム開始時に一気に生成しようとして重たくなる状況を解決しました。
 
 [↑目次に戻る](#toc)  
