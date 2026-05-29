@@ -9,7 +9,7 @@
 #include "Score/Score.h"
 #include "Source/Actor/Character/UFO/CowCaptureController.h"
 #include "Pause/Pause.h"
-#include"UFOLightManager.h"
+#include "UFOLightManager.h"
 #include "Combo/Combo.h"
 #include "SoundManager/SoundManager.h"
 #include "Source/Actor/Character/Player/Player.h"
@@ -98,29 +98,9 @@ bool UFO::Start()
 
 void UFO::Update()
 {
-	/** ポーズ中かつSEが存在していたら */
-	if (m_pause && m_pause->GetIsPause() && m_UFOCaptureSE)
-	{
-		/** SEを消す */
-		DeleteGO(m_UFOCaptureSE);
-		m_UFOCaptureSE = nullptr;
-	}
-
-	/** 牛を捕まえていなくてかつSEが存在していたら */
-	if (!m_isCowTakeAwayed && m_UFOCaptureSE)
-	{
-		/** SEを消す */
-		DeleteGO(m_UFOCaptureSE);
-		m_UFOCaptureSE = nullptr;
-	}
-
-	/** ポーズ中かつ牛を捕まえているかつSEが存在していなかったら */
-	if (m_pause && !m_pause->GetIsPause() && m_isCowTakeAwayed && !m_UFOCaptureSE)
-	{
-		/** SEを再生させる */
-		auto soundManager = FindGO<SoundManager>("soundmanager");
-		m_UFOCaptureSE = soundManager->PlayingSE(SoundSE::enUFOCaptureSE, true);
-	}
+	
+	/* UFOのサウンドを更新する関数 */
+	UpdateUFOSound();
 
 	/** アップデートできるかどうかを判断する */
 	if (!CanUFOUpdate())
@@ -457,7 +437,6 @@ void UFO::FindTheCow()
 
 			/** いま追っている牛をtrueにして他のUFOは追尾しないようにする */
 			m_targetCow->SetIsTakeAwayed(true);
-			//m_cowCaptureController->SetCapturing(true);
 		}
 	}
 
@@ -557,18 +536,12 @@ bool UFO::CanUFOUpdate()
 	m_countdown = FindGO<CountDown>("countdown");
 	m_pause = FindGO<Pause>("pause");
 	m_score = FindGO<Score>("score");
-	//FindGO<CowCaptureController>("cowcapturecontroller");
 
 	/** UFOがゲームシーンに存在していないときは処理をしない */
 	if (m_pause == nullptr || m_countdown == nullptr || m_game == nullptr)
 	{
 		return false;
 	}
-
-	/*if (!m_pause->GetIsPause() && m_UFOCaptureSE && !m_UFOCaptureSE->IsPlaying())
-	{
-		m_UFOCaptureSE->Play(true);
-	}*/
 
 	/** タイムアウトしているときはUFOを動かさない */
 	if (m_game->GetIsTimeOut())
@@ -589,6 +562,46 @@ bool UFO::CanUFOUpdate()
 	}
 
 	return true;
+}
+
+
+void UFO::UpdateUFOSound()
+{
+	/** タイムアウトしていれば */
+	if (m_game && m_game->GetIsTimeOut())
+	{
+		/** SEを消す */
+		if (m_UFOCaptureSE)
+		{
+			DeleteGO(m_UFOCaptureSE);
+			m_UFOCaptureSE = nullptr;
+		}
+		return;
+	}
+
+	/** ポーズ中かつSEが存在していたら */
+	if (m_pause && m_pause->GetIsPause() && m_UFOCaptureSE)
+	{
+		/** SEを消す */
+		DeleteGO(m_UFOCaptureSE);
+		m_UFOCaptureSE = nullptr;
+	}
+
+	/** 牛を捕まえていなくてかつSEが存在していたら */
+	if (!m_isCowTakeAwayed && m_UFOCaptureSE)
+	{
+		/** SEを消す */
+		DeleteGO(m_UFOCaptureSE);
+		m_UFOCaptureSE = nullptr;
+	}
+
+	/** ポーズ中かつ牛を捕まえているかつSEが存在していなかったら */
+	if (m_pause && !m_pause->GetIsPause() && m_isCowTakeAwayed && !m_UFOCaptureSE)
+	{
+		/** SEを再生させる */
+		auto soundManager = FindGO<SoundManager>("soundmanager");
+		m_UFOCaptureSE = soundManager->PlayingSE(SoundSE::enUFOCaptureSE, true);
+	}
 }
 
 

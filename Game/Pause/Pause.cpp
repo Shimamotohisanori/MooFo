@@ -78,6 +78,12 @@ void Pause::Update()
 		return;
 	}
 
+	/** タイムアウトしている場合はポーズ画面の操作を受け付けない */
+	if (m_game && m_game->GetIsTimeOut())
+	{
+		return;
+	}
+
 	Choice();
 	Select();
 
