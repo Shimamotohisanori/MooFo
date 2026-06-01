@@ -55,8 +55,6 @@ public:
 	{
 		return m_cowCaptureController.GetIsEmitting();
 	}
-	
-	
 
 
 private:
@@ -80,6 +78,7 @@ private:
 
 	/** UFOのサウンドを更新する関数 */
 	void UpdateUFOSound();
+
 
 private:
 	ModelRender m_ufomodelRender;

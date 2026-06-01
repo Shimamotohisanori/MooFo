@@ -85,7 +85,7 @@ void Cow::Update()
 			m_takingUFO->ReMoveTargetCow();
 		}
 
-		// ★ Game に「この牛を aliveCows から消して」と伝える
+		/** Game に「この牛を aliveCows から消して」と伝える */
 		if (!m_game)
 		{
 			m_game = FindGO<Game>("game");
