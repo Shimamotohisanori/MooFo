@@ -188,21 +188,7 @@ void Player::Move()
 	float distsance = posXZ.Length();
 
 	/** 半径を超えたら円周上に戻す */
-	if (distsance > PLAYER_MOVE_LIMIT_RADIUS)
-	{
-		/** XZ平面の正規化 */
-		posXZ.Normalize();
-
-		/** 半径を掛ける */
-		posXZ *= PLAYER_MOVE_LIMIT_RADIUS;
-
-		/** Y座標はそのまま */
-		/** XZ平面の座標を更新 */
-		position.x = posXZ.x;
-		position.z = posXZ.z;
-
-		m_transform.SetPosition(position);
-	}
+	//ssssssss
 
 
 	//モデルの座標をキャラクターコントローラーの座標に合わせる

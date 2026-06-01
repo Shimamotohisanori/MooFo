@@ -18,7 +18,9 @@ private:
 
 
 private:
-	ModelRender m_stageModelRender;
-	ModelRender m_mapStageModelRender;
+	ModelRender m_groundModelRender;
+	ModelRender m_perimeterFenceModelRender;
+	ModelRender m_innerFenceModelRender;
+	ModelRender m_mountainModelRender;
 };
 
