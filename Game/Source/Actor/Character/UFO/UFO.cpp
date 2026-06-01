@@ -157,18 +157,17 @@ void UFO::Move()
 		return;
 	}
 
+	Vector3 pos = m_transform.GetPosition();
+
 	/** 追尾中なら近くの牛の方向に少しずつ進む */
 	if (m_isChasing)
 	{
-		/** UFOの位置をposに入れる */
-		Vector3 pos = m_transform.GetPosition();
-
-		/** 追跡中でも反発処理を行う */
-		ApplyUFOAvoidance(pos);
-
 		/** 現在の位置に少しだけ移動量を足している */
 		pos += m_moveDir * m_moveSpeed * g_gameTime->GetFrameDeltaTime();
 
+		/** 追跡中でも反発処理を行う */
+		ApplyUFOAvoidance(pos);
+		
 		/** 計算した新しい位置を、実際のUFOに反映する */
 		m_transform.SetPosition(pos);
 		return;
@@ -198,18 +197,13 @@ void UFO::Move()
 			m_moveTimer = MOVE_TIME_SEC;/** 2秒ごとに方向を変える */
 		}
 	}
-	
-	Vector3 pos = m_transform.GetPosition();
-
-	/** 通常移動でも反発処理を行う */
-	ApplyUFOAvoidance(pos);
-
-	/** ポジションを更新 */
-	m_transform.SetPosition(pos);
 
 	/** ランダム方向へ移動 */
 	pos += m_moveDir * m_moveSpeed * g_gameTime->GetFrameDeltaTime();
 	
+	/** 通常移動でも反発処理を行う */
+	ApplyUFOAvoidance(pos);
+
 	/** 制限区域内に収める */
 	ClampToArea(pos);
 
@@ -491,12 +485,12 @@ void UFO::ApplyUFOAvoidance(Vector3& pos)
 			}
 
 			/** 反発する力を計算 */
-			float pushBack = (MIN_DIST - dist) * 0.2f;
+			float pushBack = (MIN_DIST - dist) * 1.0f;
 
 			pos += diff * pushBack;
 
 			/** 方向ベクトルの少しだけ補正を掛ける */
-			Vector3 newDir = m_moveDir + diff * 0.1f;
+			Vector3 newDir = m_moveDir + diff * 0.3f;
 			newDir.Normalize();
 			m_moveDir = newDir;
 		}
