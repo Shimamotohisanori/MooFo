@@ -20,8 +20,11 @@ namespace
 	constexpr float ROPE_FLY_SPEED = 5.0f;
 	constexpr float ROPE_TARGET_DISTANCE = 500.0f;
 
-	/** 牛判定 */
-	constexpr float COW_HIT_DISTANCE = 100.0f;
+	/** カメラが牛に当たったと判断する最大の距離 */
+	constexpr float COW_HIT_FAR_DISTANCE = 100.0f;
+
+	/** カメラが牛に当たったと判断する最小の距離 */
+	constexpr float COW_HIT_NEAR_DISTANCE = 20.0f;
 
 	/** 牛視点 */
 	constexpr float COW_CAMERA_UP = 80.0f;
@@ -257,42 +260,60 @@ void GameCamera::CheckCameraHitCow()
 	if (!m_rope->GetIsThrowRope()) return;
 
 	/** 牛を捕まえた後は牛に当たる処理を行わない */
-if (m_isCowCaptured) return;
+	if (m_isCowCaptured) return;
 
-/** カメラ位置 */
-Vector3 camPos = g_camera3D->GetPosition();
+	/** カメラ位置 */
+	Vector3 camPos = g_camera3D->GetPosition();
 
-/** 全ての牛を取得する */
-auto cows = FindGOs<Cow>("cow");
+	/** 全ての牛を取得する */
+	auto cows = FindGOs<Cow>("cow");
 
-for (auto cow : cows)
-{
-	if (!cow) continue;
-
-	float dist = (cow->GetPosition() - camPos).Length();
-
-	/** 牛とカメラの距離が一定以下で牛がUFOに連れて行かれた状態ならロープが当たった扱いにする */
-	if (dist < COW_HIT_DISTANCE && cow->GetIsTakeAwayed())
+	for (auto cow : cows)
 	{
-		/** ロープが当たった扱いにする */
-		m_rope->OnHitCow(cow);
+		if (!cow) continue;
 
-		/** 牛を捕まえたフラグを立てる */
-		m_isCowCaptured = true;
+		Vector3 toCow = cow->GetPosition() - camPos;
 
-		/** 牛捕獲カメラ初期位置 */
-		m_hitCowCameraPos = m_cameraPos;
+		float dist = toCow.Length();
 
-		/** 牛を捕まえた音を再生 */
-		SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
-		if (soundManager)
+		/** カメラと牛の距離が一定の範囲内で、牛が捕まえられている状態ならば */
+		if (dist < COW_HIT_NEAR_DISTANCE)
 		{
-			m_cowCatchSE = soundManager->PlayingSE(SoundSE::enCowCatchSE, false);
+			continue;
 		}
 
-		return;
+		toCow.Normalize();
+
+		/** カメラの前方向と牛への方向の内積を計算して
+		カメラの前方向に近いかどうかを判断する */
+		float dot = GetCameraForward().Dot(toCow);
+
+		if (dot < 0.8f)
+		{
+			continue;
+		}
+
+		if (dist < COW_HIT_FAR_DISTANCE && cow->GetIsTakeAwayed())
+		{
+			/** ロープが当たった扱いにする */
+			m_rope->OnHitCow(cow);
+
+			/** 牛を捕まえたフラグを立てる */
+			m_isCowCaptured = true;
+
+			/** 牛捕獲カメラ初期位置 */
+			m_hitCowCameraPos = m_cameraPos;
+
+			/** 牛を捕まえた音を再生 */
+			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+			if (soundManager)
+			{
+				m_cowCatchSE = soundManager->PlayingSE(SoundSE::enCowCatchSE, false);
+			}
+
+			return;
+		}
 	}
-}
 }
 
 
