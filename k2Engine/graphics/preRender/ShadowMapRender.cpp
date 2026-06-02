@@ -69,12 +69,13 @@ namespace nsK2Engine {
         if (lightDirection.LengthSq() < 0.001f) {
             return;
         }
-        // ライトの最大の高さをレンダラーのAABBから計算する。
+        // ライトビュープロジェクションクロップ行列を計算する。
         m_cascadeShadowMapMatrix.CalcLightViewProjectionCropMatrix(
             lightDirection,
             m_cascadeAreaRateArray,
             sceneMaxPosition,
-            sceneMinPosition
+            sceneMinPosition,
+            m_lightMaxHeight
         );
 
         int shadowMapNo = 0;
