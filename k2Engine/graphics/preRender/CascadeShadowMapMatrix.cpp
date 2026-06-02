@@ -6,7 +6,8 @@ namespace nsK2Engine {
         Vector3 lightDirection,
         float cascadeAreaRateTbl[NUM_SHADOW_MAP],
         const Vector3& sceneMaxPosition,
-        const Vector3& sceneMinPosition
+        const Vector3& sceneMinPosition,
+        float lightMaxHeight
     )
     {
         // 最大ファーは150m
@@ -16,7 +17,6 @@ namespace nsK2Engine {
         Vector3 lightTarget = g_camera3D->GetPosition();
         Vector3 lightPos = lightTarget;
         // ライトの高さは50m決め打ち。
-        float lightMaxHeight = 5000.0f;
         lightPos += (lightDirection) * (lightMaxHeight / lightDirection.y);
         //上方向を設定
         if (fabsf(lightDirection.y) > 0.9999f) {
@@ -26,19 +26,21 @@ namespace nsK2Engine {
         else {
             viewMatrix.MakeLookAt(lightPos, lightTarget, g_vec3AxisY);
         }
+        float lightToSceneDist = lightMaxHeight / max(fabsf(lightDirection.y), 0.01f);
+        float shadowFar = lightToSceneDist * 3.0f;
         Matrix projMatrix;
         projMatrix.MakeOrthoProjectionMatrix(
             5000.0f,
             5000.0f,
             1.0f,
-            maxFar
+            shadowFar
         );
 
         // 分割エリアの最大深度値を定義する
         float cascadeAreaTbl[NUM_SHADOW_MAP] = {
-            maxFar * cascadeAreaRateTbl[SHADOW_MAP_AREA_NEAR],     // 近影を映す最大深度値
-            maxFar * cascadeAreaRateTbl[SHADOW_MAP_AREA_MIDDLE],   // 中影を映す最大深度値
-            maxFar * cascadeAreaRateTbl[SHADOW_MAP_AREA_FAR] ,     // 遠影を映す最大深度値。
+            shadowFar * cascadeAreaRateTbl[SHADOW_MAP_AREA_NEAR],     // 近影を映す最大深度値
+            shadowFar * cascadeAreaRateTbl[SHADOW_MAP_AREA_MIDDLE],   // 中影を映す最大深度値
+            shadowFar * cascadeAreaRateTbl[SHADOW_MAP_AREA_FAR] ,     // 遠影を映す最大深度値。
         };
         // カメラの前方向、右方向、上方向を求める
         // 前方向と右方向はすでに計算済みなので、それを引っ張ってくる
@@ -76,28 +78,28 @@ namespace nsK2Engine {
             Vector3 vertex[8];
 
             // 近平面の右上の頂点
-            vertex[0] += nearPos + cameraUp * nearY + cameraRight * nearX;
+            vertex[0] = nearPos + cameraUp * nearY + cameraRight * nearX;
 
             // 近平面の左上の頂点
-            vertex[1] += nearPos + cameraUp * nearY + cameraRight * -nearX;
+            vertex[1] = nearPos + cameraUp * nearY + cameraRight * -nearX;
 
             // 近平面の右下の頂点
-            vertex[2] += nearPos + cameraUp * -nearY + cameraRight * nearX;
+            vertex[2] = nearPos + cameraUp * -nearY + cameraRight * nearX;
 
             // 近平面の左下の頂点
-            vertex[3] += nearPos + cameraUp * -nearY + cameraRight * -nearX;
+            vertex[3] = nearPos + cameraUp * -nearY + cameraRight * -nearX;
 
             // 遠平面の右上の頂点
-            vertex[4] += farPos + cameraUp * farY + cameraRight * farX;
+            vertex[4] = farPos + cameraUp * farY + cameraRight * farX;
 
             // 遠平面の左上の頂点
-            vertex[5] += farPos + cameraUp * farY + cameraRight * -farX;
+            vertex[5] = farPos + cameraUp * farY + cameraRight * -farX;
 
             // 遠平面の右下の頂点
-            vertex[6] += farPos + cameraUp * -farY + cameraRight * farX;
+            vertex[6] = farPos + cameraUp * -farY + cameraRight * farX;
 
             // 遠平面の左下の頂点
-            vertex[7] += farPos + cameraUp * -farY + cameraRight * -farX;
+            vertex[7] = farPos + cameraUp * -farY + cameraRight * -farX;
 
             // 8頂点をカメラ空間に変換して、近平面と遠平面を求める。
             float nearZ = FLT_MAX, farZ = -FLT_MAX;

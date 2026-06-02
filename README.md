@@ -11,7 +11,7 @@ GithubのURL
 https://github.com/Shimamotohisanori/MooFo
 
 YoutubeのURL  
-https://www.youtube.com/watch?v=W8kVCd70rKE  
+https://youtu.be/hesRwGaO47Y 
 
 # 目次
 <a id="toc"></a>
@@ -336,7 +336,8 @@ m_countDownStart.Update();
 [↑目次に戻る](#toc) 
 
 ### ③スコアのUIについて
->スコアのUIでは、この様にカウンターアニメーションを入れることにより、数字がリアルタイムで増えていく面白さを表現しました。
+>スコアのUIでは、この様にカウンターアニメーションを入れることにより、数字がリアルタイムで増えていく面白さを表現しました。  
+><img width="500" height="300" alt="ポートフォリオ素材" src="https://github.com/user-attachments/assets/747dc17b-5601-4cd3-89a0-3439d02de641" />  
 
 ```c++
 /** Lerp関数で滑らかに値を近づける */
@@ -351,7 +352,7 @@ if (abs(m_score - m_displayScore) < 5)
 ```
 [↑目次に戻る](#toc) 
 
-### ④アウトゲーム内のUiについて
+### ④アウトゲーム内のUIについて
 >アウトゲーム内で、ボタンを押すとPRESS ANY BUTTONのUIが点滅するようにしました。  
 ボタンを押したことを分かりやすく表現するためです。
 >
@@ -372,8 +373,8 @@ if (abs(m_score - m_displayScore) < 5)
 
 >ミニマップは「牛」「UFO」「プレイヤー」のアイコンが出ます。  
 牛がUFOに連れ去られていると、危険のマークになり、現在連れ去られている牛の場所を分かりやすくしています。  
-アイコンはミニマップの範囲外に行くと、非表示になります。
-><img width="500" height="300" alt="MapIcon" src="https://github.com/user-attachments/assets/9ecaab46-c3fd-428a-adda-699ff93e27ee" />  
+アイコンはミニマップの範囲外に行くと、非表示になります。  
+><img width="500" height="300" alt="MapIcon2" src="https://github.com/user-attachments/assets/437b8163-1e8f-45cd-b45e-3314b3dd8c90" />
 
 ミニマップで表示する範囲を「円形の範囲」として定義し、  
 カメラやプレイヤーの位置に基づき、座標を変換します。  
