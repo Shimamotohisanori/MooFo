@@ -18,9 +18,17 @@ private:
 
 
 private:
-	ModelRender m_groundModelRender;
+
+	/** ƒ‚ƒfƒ‹‚Ì•\Ž¦ */
+	ModelRender m_cowFoodModelRender;
 	ModelRender m_perimeterFenceModelRender;
 	ModelRender m_innerFenceModelRender;
 	ModelRender m_mountainModelRender;
+	ModelRender m_groundModelRender;
+
+	/** “–‚½‚è”»’è‚ð’Ç‰Á‚·‚é */
+	PhysicsStaticObject m_perimeterObject;
+	PhysicsStaticObject m_innerObject;
+	PhysicsStaticObject m_FoodObject;
 };
 
