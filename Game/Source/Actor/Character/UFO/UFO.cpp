@@ -13,6 +13,7 @@
 #include "Combo/Combo.h"
 #include "SoundManager/SoundManager.h"
 #include "Source/Actor/Character/Player/Player.h"
+#include "EffectManager/EffectManager.h"
 namespace
 {
 	/** UFOのモデルファイルパス */
@@ -72,6 +73,17 @@ UFO::~UFO()
 		manager->UnregisterUFO(this);
 	}
 
+	/** UFOの混乱エフェクトを停止 */
+	if (m_UFOConfusionEffect)
+	{
+		if (!m_UFOConfusionEffect->IsDead())
+		{
+			m_UFOConfusionEffect->Stop();
+			DeleteGO(m_UFOConfusionEffect);
+		}
+		m_UFOConfusionEffect = nullptr;
+	}
+
 }
 
 
@@ -117,6 +129,13 @@ void UFO::Update()
 		Rotation();
 	}
 
+	/** UFOの混乱エフェクトの位置を更新 */
+	if (m_UFOConfusionEffect)
+	{
+		Vector3 effectPos = m_transform.GetPosition();
+		effectPos.y += 350.0f;
+		m_UFOConfusionEffect->SetPosition(effectPos);
+	}
 	/** 牛捕獲コントローラーの更新 */
 	m_cowCaptureController.Update();
 
@@ -312,6 +331,25 @@ void UFO::TakeAwayTheCow()
 
 }
 
+
+void UFO::PlayEffect()
+{
+	/** 混乱エフェクトが再生中かつ、死亡していなかったら*/
+	if(m_UFOConfusionEffect&& !m_UFOConfusionEffect->IsDead())
+	{
+		m_UFOConfusionEffect->Stop();
+		DeleteGO(m_UFOConfusionEffect);
+		m_UFOConfusionEffect = nullptr;
+	}
+	/** UFOの混乱エフェクトを再生*/
+	m_UFOConfusionEffect = NewGO<nsK2EngineLow::EffectEmitter>(0);
+	m_UFOConfusionEffect->Init((int)EffectID::EffectID_UFOConfusionEffect);
+	/** 混乱エフェクトの大きさ設定*/
+	m_UFOConfusionEffect->SetScale({ 10.0f,10.0f,10.0f });
+	/** UFOの混乱エフェクトを再生する */
+	m_UFOConfusionEffect->Play();
+	//m_UFOConfusionEffect->Update();
+}
 void UFO::UFOSEDistance()
 {
 	/** SEが再生されていなかったら早期リターンする */
