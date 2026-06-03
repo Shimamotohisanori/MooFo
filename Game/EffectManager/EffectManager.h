@@ -5,6 +5,7 @@ enum class EffectID
 {
 	EffectID_UFOLight,
 	EffectID_HeartEffect,
+	EffectID_UFOConfusionEffect,
 	EffectID_Num
 };
 

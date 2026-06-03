@@ -17,4 +17,7 @@ void EffectManager::LoadEffects()
 
 	nsK2EngineLow::EffectEngine::GetInstance()
 		->ResistEffect((int)EffectID::EffectID_HeartEffect, u"Assets/Effects/heartEffect.efk");
+
+	nsK2EngineLow::EffectEngine::GetInstance()
+		->ResistEffect((int)EffectID::EffectID_UFOConfusionEffect, u"Assets/Effects/UFOConfusion.efk");
 }

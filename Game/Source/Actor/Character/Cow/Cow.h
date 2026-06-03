@@ -69,7 +69,7 @@ public:
 	}
 
 	/** 牛が捕獲されたかどうかを取得する関数 */
-	bool GetIsTakeAwayed()
+	bool GetIsTakeAwayed()const
 	{
 		return m_isTakeAwayed;
 	}
@@ -93,7 +93,7 @@ public:
 	}
 		
 	/** 牛が死んだフラグを取得する関数 */
-	bool GetIsDeadFlag()
+	bool GetIsDeadFlag()const 
 	{
 		return m_isDeadFlag;
 	}

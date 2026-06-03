@@ -26,10 +26,13 @@ public:
 		m_ufomodelRender.SetPosition(pos);
 	}
 
+
+
 	Vector3 GetPosition()
 	{
 		return m_transform.GetPosition();
 	}
+
 
 	/** 牛を連れて行けるかどうかのフラグを設定する関数 */
 	void SetIsCowTakeAwayed(bool isCowTakeAwayed)
@@ -42,7 +45,10 @@ public:
 	{
 		return m_isCowTakeAwayed;
 	}
+	/** UFOの混乱エフェクトを再生する関数 */
+	void PlayEffect();
 
+	/** UFOの牛捕獲コントローラーの取得関数 */
 	CowCaptureController* GetCowCaptureController();
 
 	/** 目標にしている牛を消す関数 */
@@ -77,6 +83,7 @@ private:
 
 	/** UFOのアップデートができるかどうかを判断する関数 */
 	bool CanUFOUpdate();
+
 
 private:
 	ModelRender m_ufomodelRender;
@@ -122,5 +129,7 @@ private:
 	};
 	/** UFOの状態 */
 	EnUFOState m_UFOState = EnUFOState_Move;
+
+	EffectEmitter* m_UFOConfusionEffect = nullptr;
 };
 

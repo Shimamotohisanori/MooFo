@@ -351,6 +351,8 @@ void Cow::CapturedByPlayer()
 			{
 				cowNumberOfRescues->AddRescue();
 			}
+			/** エフェクトを呼び出す*/
+			m_takingUFO->PlayEffect();
 
 			/** 状態をリセットする */
 			m_isTakeAwayed = false;
