@@ -9,7 +9,7 @@
 #include "Score/Score.h"
 #include "Source/Actor/Character/UFO/CowCaptureController.h"
 #include "Pause/Pause.h"
-#include"UFOLightManager.h"
+#include "UFOLightManager.h"
 #include "Combo/Combo.h"
 #include "SoundManager/SoundManager.h"
 #include "Source/Actor/Character/Player/Player.h"
@@ -110,29 +110,9 @@ bool UFO::Start()
 
 void UFO::Update()
 {
-	/** ポーズ中かつSEが存在していたら */
-	if (m_pause && m_pause->GetIsPause() && m_UFOCaptureSE)
-	{
-		/** SEを消す */
-		DeleteGO(m_UFOCaptureSE);
-		m_UFOCaptureSE = nullptr;
-	}
-
-	/** 牛を捕まえていなくてかつSEが存在していたら */
-	if (!m_isCowTakeAwayed && m_UFOCaptureSE)
-	{
-		/** SEを消す */
-		DeleteGO(m_UFOCaptureSE);
-		m_UFOCaptureSE = nullptr;
-	}
-
-	/** ポーズ中かつ牛を捕まえているかつSEが存在していなかったら */
-	if (m_pause && !m_pause->GetIsPause() && m_isCowTakeAwayed && !m_UFOCaptureSE)
-	{
-		/** SEを再生させる */
-		auto soundManager = FindGO<SoundManager>("soundmanager");
-		m_UFOCaptureSE = soundManager->PlayingSE(SoundSE::enUFOCaptureSE, true);
-	}
+	
+	/* UFOのサウンドを更新する関数 */
+	UpdateUFOSound();
 
 	/** アップデートできるかどうかを判断する */
 	if (!CanUFOUpdate())
@@ -196,18 +176,17 @@ void UFO::Move()
 		return;
 	}
 
+	Vector3 pos = m_transform.GetPosition();
+
 	/** 追尾中なら近くの牛の方向に少しずつ進む */
 	if (m_isChasing)
 	{
-		/** UFOの位置をposに入れる */
-		Vector3 pos = m_transform.GetPosition();
-
-		/** 追跡中でも反発処理を行う */
-		ApplyUFOAvoidance(pos);
-
 		/** 現在の位置に少しだけ移動量を足している */
 		pos += m_moveDir * m_moveSpeed * g_gameTime->GetFrameDeltaTime();
 
+		/** 追跡中でも反発処理を行う */
+		ApplyUFOAvoidance(pos);
+		
 		/** 計算した新しい位置を、実際のUFOに反映する */
 		m_transform.SetPosition(pos);
 		return;
@@ -237,18 +216,13 @@ void UFO::Move()
 			m_moveTimer = MOVE_TIME_SEC;/** 2秒ごとに方向を変える */
 		}
 	}
-	
-	Vector3 pos = m_transform.GetPosition();
-
-	/** 通常移動でも反発処理を行う */
-	ApplyUFOAvoidance(pos);
-
-	/** ポジションを更新 */
-	m_transform.SetPosition(pos);
 
 	/** ランダム方向へ移動 */
 	pos += m_moveDir * m_moveSpeed * g_gameTime->GetFrameDeltaTime();
 	
+	/** 通常移動でも反発処理を行う */
+	ApplyUFOAvoidance(pos);
+
 	/** 制限区域内に収める */
 	ClampToArea(pos);
 
@@ -495,7 +469,6 @@ void UFO::FindTheCow()
 
 			/** いま追っている牛をtrueにして他のUFOは追尾しないようにする */
 			m_targetCow->SetIsTakeAwayed(true);
-			//m_cowCaptureController->SetCapturing(true);
 		}
 	}
 
@@ -550,12 +523,12 @@ void UFO::ApplyUFOAvoidance(Vector3& pos)
 			}
 
 			/** 反発する力を計算 */
-			float pushBack = (MIN_DIST - dist) * 0.2f;
+			float pushBack = (MIN_DIST - dist) * 1.0f;
 
 			pos += diff * pushBack;
 
 			/** 方向ベクトルの少しだけ補正を掛ける */
-			Vector3 newDir = m_moveDir + diff * 0.1f;
+			Vector3 newDir = m_moveDir + diff * 0.3f;
 			newDir.Normalize();
 			m_moveDir = newDir;
 		}
@@ -595,18 +568,12 @@ bool UFO::CanUFOUpdate()
 	m_countdown = FindGO<CountDown>("countdown");
 	m_pause = FindGO<Pause>("pause");
 	m_score = FindGO<Score>("score");
-	//FindGO<CowCaptureController>("cowcapturecontroller");
 
 	/** UFOがゲームシーンに存在していないときは処理をしない */
 	if (m_pause == nullptr || m_countdown == nullptr || m_game == nullptr)
 	{
 		return false;
 	}
-
-	/*if (!m_pause->GetIsPause() && m_UFOCaptureSE && !m_UFOCaptureSE->IsPlaying())
-	{
-		m_UFOCaptureSE->Play(true);
-	}*/
 
 	/** タイムアウトしているときはUFOを動かさない */
 	if (m_game->GetIsTimeOut())
@@ -627,6 +594,46 @@ bool UFO::CanUFOUpdate()
 	}
 
 	return true;
+}
+
+
+void UFO::UpdateUFOSound()
+{
+	/** タイムアウトしていれば */
+	if (m_game && m_game->GetIsTimeOut())
+	{
+		/** SEを消す */
+		if (m_UFOCaptureSE)
+		{
+			DeleteGO(m_UFOCaptureSE);
+			m_UFOCaptureSE = nullptr;
+		}
+		return;
+	}
+
+	/** ポーズ中かつSEが存在していたら */
+	if (m_pause && m_pause->GetIsPause() && m_UFOCaptureSE)
+	{
+		/** SEを消す */
+		DeleteGO(m_UFOCaptureSE);
+		m_UFOCaptureSE = nullptr;
+	}
+
+	/** 牛を捕まえていなくてかつSEが存在していたら */
+	if (!m_isCowTakeAwayed && m_UFOCaptureSE)
+	{
+		/** SEを消す */
+		DeleteGO(m_UFOCaptureSE);
+		m_UFOCaptureSE = nullptr;
+	}
+
+	/** ポーズ中かつ牛を捕まえているかつSEが存在していなかったら */
+	if (m_pause && !m_pause->GetIsPause() && m_isCowTakeAwayed && !m_UFOCaptureSE)
+	{
+		/** SEを再生させる */
+		auto soundManager = FindGO<SoundManager>("soundmanager");
+		m_UFOCaptureSE = soundManager->PlayingSE(SoundSE::enUFOCaptureSE, true);
+	}
 }
 
 

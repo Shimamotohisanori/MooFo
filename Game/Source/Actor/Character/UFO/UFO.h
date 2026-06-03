@@ -61,8 +61,6 @@ public:
 	{
 		return m_cowCaptureController.GetIsEmitting();
 	}
-	
-	
 
 
 private:
@@ -83,6 +81,9 @@ private:
 
 	/** UFOのアップデートができるかどうかを判断する関数 */
 	bool CanUFOUpdate();
+  
+	/** UFOのサウンドを更新する関数 */
+	void UpdateUFOSound();
 
 
 private:

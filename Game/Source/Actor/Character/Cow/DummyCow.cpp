@@ -6,7 +6,7 @@
 namespace
 {
 	/** 牛のモデルファイルパス */
-	const char* FILEPATH = "Assets/ModelData/Cow/Model/Cow4.tkm";
+	const char* FILEPATH = "Assets/ModelData/Cow/Model/Cow5.tkm";
 
 	/** 牛のジャンプアニメーション */
 	const char* JUMP_ANIMATIOM_PATH = "Assets/ModelData/Cow/Animation/Jump.tka";

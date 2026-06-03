@@ -3,18 +3,27 @@
 namespace
 {
 
-	/** ステージのモデルファイルパス */
-	const char* STAGE_MODEL_FILE_PATH = "Assets/modelData/Stage/Stage.tkm";
+	/** 地面のモデルファイルパス */
+	const char* GROUND_FILE_PATH = "Assets/modelData/Stage/Ground.tkm";
 
-	/** ステージマップのモデルファイルパス */
-	const char* STAGEMAP_MODEL_FILE_PATH = "Assets/modelData/Stage/StageGround.tkm";
+	/** 外周フェンスのモデルファイルパス */
+	const char* PERIMETER_FILE_PATH = "Assets/modelData/Stage/PerimeterFence.tkm";
+
+	/** 内周フェンスのモデルファイルパス */
+	const char* INNER_FILE_PATH = "Assets/modelData/Stage/InnerFence.tkm";
+
+	/** 外周の山のモデルファイルパス */
+	const char* MOUNTAIN_FILE_PATH = "Assets/modelData/Stage/Mountain.tkm";
+
+	/** 牛の餌のモデルファイルパス */
+	const char* COWFOOD_FILE_PATH  = "Assets/modelData/Stage/CowFood.tkm";
 
 	/** ステージの座標 */
-	Vector3 STAGE_POS = { 0.0f, 160.0f, 0.0f };
-	
-	/** ステージマップの座標 */
-	Vector3 STAGEMAP_POS = { 0.0f,0.0f,0.0f };
+	Vector3 STAGE_POS = { 0.0f, 0.0f, 0.0f };
 
+	/** 牛の餌の座標 */
+	Vector3 COWFOOD_POS = { -1260.0f,-5.0f,-350.0f };
+	
 }
 
 
@@ -30,13 +39,35 @@ Stage::~Stage()
 
 bool Stage::Start()
 {
-	m_stageModelRender.Init(STAGE_MODEL_FILE_PATH);
-	m_stageModelRender.SetPosition(STAGE_POS);
-	m_stageModelRender.Update();
+	/** 牛の餌のモデル */
+	m_cowFoodModelRender.Init(COWFOOD_FILE_PATH);
+	m_cowFoodModelRender.SetPosition(COWFOOD_POS);
+	m_cowFoodModelRender.Update();
 
-	m_mapStageModelRender.Init(STAGEMAP_MODEL_FILE_PATH);
-	m_mapStageModelRender.SetPosition(STAGEMAP_POS);
-	m_mapStageModelRender.Update();
+	/** 外周フェンスと牛舎のモデル */
+	m_perimeterFenceModelRender.Init(PERIMETER_FILE_PATH);
+	m_perimeterFenceModelRender.SetPosition(STAGE_POS);
+	m_perimeterFenceModelRender.Update();
+
+	/** 内周フェンスのモデル */
+	m_innerFenceModelRender.Init(INNER_FILE_PATH);
+	m_innerFenceModelRender.SetPosition(STAGE_POS);
+	m_innerFenceModelRender.Update();
+
+	/** 外周の山のモデル */
+	m_mountainModelRender.Init(MOUNTAIN_FILE_PATH);
+	m_mountainModelRender.SetPosition(STAGE_POS);
+	m_mountainModelRender.Update();
+
+	/** 地面のモデル */
+	m_groundModelRender.Init(GROUND_FILE_PATH);
+	m_groundModelRender.SetPosition(STAGE_POS);
+	m_groundModelRender.Update();
+
+	/** 外周フェンス・内周フェンス・牛の餌に当たり判定をつける */
+	m_perimeterObject.CreateFromModel(m_perimeterFenceModelRender.GetModel(), m_perimeterFenceModelRender.GetModel().GetWorldMatrix());
+	m_innerObject.CreateFromModel(m_innerFenceModelRender.GetModel(), m_innerFenceModelRender.GetModel().GetWorldMatrix());
+	m_FoodObject.CreateFromModel(m_cowFoodModelRender.GetModel(), m_cowFoodModelRender.GetModel().GetWorldMatrix());
 	
 	return true;
 }
@@ -44,11 +75,15 @@ bool Stage::Start()
 
 void Stage::Update()
 {
+
 }
 
 
 void Stage::Render(RenderContext& rc)
 {
-	m_stageModelRender.Draw(rc);
-	m_mapStageModelRender.Draw(rc);
+	m_cowFoodModelRender.Draw(rc);
+	m_perimeterFenceModelRender.Draw(rc);
+	m_innerFenceModelRender.Draw(rc);
+	m_mountainModelRender.Draw(rc);
+	m_groundModelRender.Draw(rc);
 }

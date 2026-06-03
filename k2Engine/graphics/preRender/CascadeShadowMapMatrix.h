@@ -16,7 +16,8 @@ namespace nsK2Engine {
             Vector3 lightDirection,
             float cascadeAreaRateTbl[NUM_SHADOW_MAP],
             const Vector3& sceneMaxPosition,
-            const Vector3& sceneMinPosition
+            const Vector3& sceneMinPosition,
+			float lightMaxHeight = 5000.0f
         );
         /// <summary>
         /// 計算されたライトビュープロジェクションクロップ行列を取得

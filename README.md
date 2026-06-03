@@ -1,16 +1,17 @@
 # MooFo
-<img width="1919" height="1057" alt="Title" src="https://github.com/user-attachments/assets/f5a60dea-35e9-4b7d-b185-9df67ec950cd" />  
+<img width="500" height="300" alt="Title" src="https://github.com/user-attachments/assets/f5a60dea-35e9-4b7d-b185-9df67ec950cd" />  
 
-カッパ杯サマーの展示作品です
 ### 河原電子ビジネス専門学校　ゲームクリエイター科(28卒)
 
-### 氏名 : 島本学典
-### 氏名 : 仙波知裕
-### 氏名 : 替地謙介
+### 氏名 : 島本学典(しまもとひさのり：リーダー兼プログラマー)
+### 氏名 : 仙波知裕(せんばともひろ：プログラマー)
+### 氏名 : 替地謙介(かえちけんすけ：プログラマー)
 
-GithubのURL
+GithubのURL  
 https://github.com/Shimamotohisanori/MooFo
 
+YoutubeのURL  
+https://youtu.be/hesRwGaO47Y 
 
 # 目次
 <a id="toc"></a>
@@ -112,7 +113,7 @@ SoundPause.cpp / .h
 ・エフェクトシステム  
 エフェクトの読み込み・再生処理を共通化し、UFO追従エフェクトを実装。  
 EffectManager.cpp / .h  
-CowCaputureController.cpp / .h  
+CowCaptureController.cpp / .h  
 
 ・エンジンの改造  
 ライトの明るさ設定の変更、およびエフェクトを扱いやすくするためのエンジン改造。  
@@ -218,7 +219,9 @@ Cow.cpp / .h
 
 </details>  
 
-# 操作説明
+# 操作説明  
+> <img width="500" height="300" alt="Instructions" src="https://github.com/user-attachments/assets/ab91e125-4898-4224-8a42-4108c3d3bb52" />  
+
 [↑目次に戻る](#toc)  
 
 # ゲーム説明  
@@ -234,13 +237,18 @@ Cow.cpp / .h
 ロープが一定の距離近づくと牛にロープが付きます。  
 ロープが付いた状態でRT,LTボタン連打をすることによりロープを引っ張り、一定の距離まで近づけることで牛を救出できます。
 
+>時間制限が0になるとゲームは終了し、リザルト画面(ゲームオーバー、ゲームクリア)に移ります。
+>救出数がノルマに達していない場合はゲームオーバー、達成していればゲームクリアとなります。  
+
+> <img width="500" height="300" alt="ゲームの流れ" src="https://github.com/user-attachments/assets/09bec4a2-39ac-4ceb-af97-957e5734bc3b" />
+
 >牛を助けるとスコアが+100され、  
 5コンボごとにスコアが+200されます。  
 
-><img width="1919" height="1057" alt="Score" src="https://github.com/user-attachments/assets/832f3672-dbcb-48d9-9c37-f4e460909620" />
+><img width="500" height="300" alt="Score" src="https://github.com/user-attachments/assets/832f3672-dbcb-48d9-9c37-f4e460909620" />
 
 >コンボ中は1コンボごとにゲーム時間が+3秒されます。  
-><img width="1919" height="1057" alt="AddTimer" src="https://github.com/user-attachments/assets/a531337b-4112-442c-ac05-762527fcb095" />  
+><img width="500" height="300" alt="AddTimer" src="https://github.com/user-attachments/assets/a531337b-4112-442c-ac05-762527fcb095" />  
 
 
 [↑目次に戻る](#toc) 
@@ -249,15 +257,15 @@ Cow.cpp / .h
 
 ### ①ゲーム中のUIについて
 >ゲーム中に使うUIは統一感、見栄えの良さなどを考え、基本的に同じ青色基調のUIにしています。  
-><img width="1919" height="1057" alt="gameUI" src="https://github.com/user-attachments/assets/c00f9d88-f831-4623-86a7-9c7a7cc0a22f" />
+><img width="500" height="300" alt="gameUI" src="https://github.com/user-attachments/assets/c00f9d88-f831-4623-86a7-9c7a7cc0a22f" />
 
 [↑目次に戻る](#toc) 
 
 ### ②ゲームスタート時のUI表現について
 >ゲームスタート時のUIに関してはこのようにfmodf関数を使い、カウントダウンからの残りの時間を1で割った余りを取得し、それをα値やスケールの数値の変更に使うことによって、UIが透明で小さい状態から不透明で大きい状態になりを繰り返しながらカウントダウンのUIが表示されているようになっております。  
->　<img width="1919" height="1057" alt="カウントダウン" src="https://github.com/user-attachments/assets/a0a01444-ba59-4bba-9fdd-1dede657e20b" />  
+>　<img width="500" height="300" alt="カウントダウン" src="https://github.com/user-attachments/assets/a0a01444-ba59-4bba-9fdd-1dede657e20b" />  
 
-```
+```c++
 m_countDownTime -=
 g_gameTime->GetFrameDeltaTime();
 
@@ -328,9 +336,10 @@ m_countDownStart.Update();
 [↑目次に戻る](#toc) 
 
 ### ③スコアのUIについて
->スコアのUIでは、この様にカウンターアニメーションを入れることにより、数字がリアルタイムで増えていく面白さを表現しました。
+>スコアのUIでは、この様にカウンターアニメーションを入れることにより、数字がリアルタイムで増えていく面白さを表現しました。  
+><img width="500" height="300" alt="ポートフォリオ素材" src="https://github.com/user-attachments/assets/747dc17b-5601-4cd3-89a0-3439d02de641" />  
 
-```
+```c++
 /** Lerp関数で滑らかに値を近づける */
 /** 表示するスコアを徐々にスコアに近づける */
 /** 型変換をすることで、整数の計算を行う */m_displayScore = m_displayScore + (int)((m_score - m_displayScore) * LERP_SPEED);
@@ -343,19 +352,19 @@ if (abs(m_score - m_displayScore) < 5)
 ```
 [↑目次に戻る](#toc) 
 
-### ④アウトゲーム内のUiについて
+### ④アウトゲーム内のUIについて
 >アウトゲーム内で、ボタンを押すとPRESS ANY BUTTONのUIが点滅するようにしました。  
 ボタンを押したことを分かりやすく表現するためです。
 >
-><img width="1919" height="1057" alt="タイトル点滅" src="https://github.com/user-attachments/assets/7d11b80a-cb18-4250-a3eb-06333acee737" />  
+><img width="500" height="300" alt="タイトル点滅" src="https://github.com/user-attachments/assets/7d11b80a-cb18-4250-a3eb-06333acee737" />  
 
 [↑目次に戻る](#toc) 
 
 ### ⑤コンボした際に表示されるUIについて
 >コンボをした際に秒数が+3されてるUIが画面上部に表示されたり、画面右下にComboのUIが表示されたりするように追加しました。  
 今何コンボしていて、秒数がどれくらい増えたかを視覚で分かるようにすることによって、プレイヤーが次にどの牛を救出すればいいかを判断できるようにするためです。
-><img width="1919" height="1057" alt="AddTimer" src="https://github.com/user-attachments/assets/a514dc62-71f7-4210-a0b2-91c4d5955428" />  
-><img width="1919" height="1057" alt="Score" src="https://github.com/user-attachments/assets/add06973-e374-41e0-8d04-263cd6d78b3f" />
+><img width="500" height="300" alt="AddTimer" src="https://github.com/user-attachments/assets/a514dc62-71f7-4210-a0b2-91c4d5955428" />  
+><img width="500" height="300" alt="Score" src="https://github.com/user-attachments/assets/add06973-e374-41e0-8d04-263cd6d78b3f" />
 
 
 [↑目次に戻る](#toc)  
@@ -364,8 +373,8 @@ if (abs(m_score - m_displayScore) < 5)
 
 >ミニマップは「牛」「UFO」「プレイヤー」のアイコンが出ます。  
 牛がUFOに連れ去られていると、危険のマークになり、現在連れ去られている牛の場所を分かりやすくしています。  
-アイコンはミニマップの範囲外に行くと、非表示になります。
-><img width="1919" height="1057" alt="MapIcon" src="https://github.com/user-attachments/assets/9ecaab46-c3fd-428a-adda-699ff93e27ee" />  
+アイコンはミニマップの範囲外に行くと、非表示になります。  
+><img width="500" height="300" alt="MapIcon2" src="https://github.com/user-attachments/assets/437b8163-1e8f-45cd-b45e-3314b3dd8c90" />
 
 ミニマップで表示する範囲を「円形の範囲」として定義し、  
 カメラやプレイヤーの位置に基づき、座標を変換します。  
@@ -379,7 +388,7 @@ if (abs(m_score - m_displayScore) < 5)
 牛の移動処理で休憩時間と移動時間を追加し、さらにそれをランダムにすることにより、より自然な牛に近い動きを再現しました。  
 ※RANDOMCOW_TIMERは定数で240になっています。
 
-```  
+```c++  
 /** タイマーが0以上なら新しい方向を決める */
 if (m_moveTimer <= 0)
 {
@@ -432,7 +441,7 @@ m_moveTimer--;
 ### ②UFOが牛を見つける挙動について  
 UFOは自身に一番近い牛を標的とし、追いかけることで、より敵らしい動きを再現しました。  
 
-```  
+```c++  
 auto cow = FindGOs<Cow>("cow");
 
 /** 最も近い牛 */
@@ -518,7 +527,7 @@ else
 プレイヤー側がロープを引っ張るボタンを押したとき、捕まっている牛がプレイヤーの位置に近づくような処理を書くことにより、ロープを左右で交互に引っ張っているような感覚を再現しました。  
 
 ### プレイヤー側の処理
-```  
+```c++  
 if (m_rope)
 {
 	//ロープが牛に当たっているとき
@@ -548,8 +557,8 @@ if (m_rope)
 ```  
 
 ### 牛の処理  
-※PULL_ROPEは定数で、8.0fという値になっています。
-```  
+※PULL_POWERは定数で、8.0fという値になっています。
+```c++  
 /** プレイヤー側の左右ボタンを押したというフラグがどちらか立っていれば */
 if (m_player->GetIsRightButton1() or m_player->GetIsLeftButton1())
 {
@@ -582,8 +591,9 @@ if (m_player->GetIsRightButton1() or m_player->GetIsLeftButton1())
 
 ### ④ロード中にオブジェクトが生成される処理  
 ロード中に重たいオブジェクトをSwitch文で制御し、生成することにより、ゲームが開始した際のカクつきを改善し、ゲームを始めるのが早くなりました。  
+これにより、ゲーム中のFPSが7～10FPS程改善されました。
 
-```  
+```c++  
 void LoadingScene::LoadGameObjectsStepByStep()
 {
     switch (m_loadStep)
@@ -694,7 +704,7 @@ m_loadStep++;
 ローディングシーンのヘッダー内でenumを使ったタイプを作り、次のシーンに遷移する際にロード画面のタイプを指定することにより、タイトル画面からゲームに遷移する際はオブジェクトを生成し、そのほかのシーンからタイトルなどに戻る際はオブジェクトを生成しないようにしました。  
 
 ###  LoadingScene.h内  
-```  
+```c++  
 
 /** 次のシーンをセットする関数*/
 void SetNextScene(std::function<void()>next);
@@ -730,7 +740,7 @@ std::function<void()> m_nextSceneLoading;
 ```  
 
 ### LoadingScene.cpp内  
-```
+```c++
 void LoadingScene::InLoading()
 {
 	float deltaTime = g_gameTime->GetFrameDeltaTime();
@@ -778,7 +788,7 @@ void LoadingScene::SetNextScene(std::function<void()>next)
 ```
 
 ### Title.cpp内  
-```  
+```c++  
 m_loadingScene = NewGO<LoadingScene>(0, "loading");
 m_loadingScene->SetLoadType(LoadingScene::LoadType::ToGameScene);
 DeleteGO(m_titleBGM);
@@ -790,7 +800,7 @@ DeleteGO(this);
 ```  
 
 ### GameClear.cpp内  
-```  
+```c++  
 m_loadingScene = NewGO<LoadingScene>(0, "loading");
 m_loadingScene->SetLoadType(LoadingScene::LoadType::ToTitleScene);
 DeleteGO(m_clearBGM);
@@ -804,7 +814,7 @@ DeleteGO(this);
 ```  
 
 ### GameOver.cpp内  
-```  
+```c++  
 m_loadingScene = NewGO<LoadingScene>(0, "loading");
 m_loadingScene->SetLoadType(LoadingScene::LoadType::ToTitleScene);
 DeleteGO(m_deathBGM);
@@ -817,7 +827,7 @@ DeleteGO(this);
 ```  
 
 ### Pause.cpp内  
-```  
+```c++  
 m_loadingScene = NewGO<LoadingScene>(0, "loading");
 m_loadingScene->SetLoadType(LoadingScene::LoadType::ToTitleScene);
 m_loadingScene->SetNextScene([]()
@@ -837,19 +847,12 @@ DeleteGO(this);
 >アニメーションを再生する際に補完時間を設定することにより、アニメーションのカクつきを無くしました。  
 
 > ### 補完無し  
-> <img width="1919" height="1057" alt="補完無し" src="https://github.com/user-attachments/assets/d3167b33-bb36-4048-b7c9-bdee8f1e53e4" />
+> <img width="500" height="300" alt="補完無し" src="https://github.com/user-attachments/assets/d3167b33-bb36-4048-b7c9-bdee8f1e53e4" />
 
 
 > ### 補完あり
-> <img width="1919" height="1057" alt="補完あり" src="https://github.com/user-attachments/assets/89080d09-525e-4de9-b153-9f70c5a33c4b" />  
+> <img width="500" height="300" alt="補完あり" src="https://github.com/user-attachments/assets/89080d09-525e-4de9-b153-9f70c5a33c4b" />  
 
 
-
-[↑目次に戻る](#toc)  
-
-### ⑦ロード中の生成  
-
->switch文を使うことによって、ロード中に1つづつオブジェクトを生成するようにしました。  
-これにより、ゲーム開始時に一気に生成しようとして重たくなる状況を解決しました。
 
 [↑目次に戻る](#toc)  

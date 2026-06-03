@@ -55,6 +55,12 @@ namespace nsK2Engine {
             return m_cascadeShadowMapMatrix.GetLightViewProjectionCropMatrix(areaNo);
         }
         /// <summary>
+       /// 光源の高さを設定する。
+       /// 大きいほど広い範囲の影をカバーできる。
+       /// </summary>
+        void SetLightMaxHeight(float h) { m_lightMaxHeight = h; }
+        float GetLightMaxHeight() const { return m_lightMaxHeight; }
+        /// <summary>
         /// カスケードシャドウのエリア率を設定。
         /// </summary>
         /// <remark>
@@ -84,6 +90,7 @@ namespace nsK2Engine {
         RenderTarget m_shadowMaps[NUM_SHADOW_MAP];          // シャドウマップ
         std::vector< IRenderer* > m_renderers;              // シャドウマップへのレンダラーの配列。
         float m_cascadeAreaRateArray[NUM_SHADOW_MAP] = { 0.05f,0.3f, 1.0f };
+        float m_lightMaxHeight = 5000.0f;                   // 光源の高さ
         GaussianBlur m_blur[NUM_SHADOW_MAP];                // シャドウマップにブラーをかける処理。ソフトシャドウを行う際に使われます。
         bool m_isSoftShadow = false;                        // ソフトシャドウ？
     };
