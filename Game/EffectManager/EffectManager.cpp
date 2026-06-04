@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "EffectManager/EffectManager.h"
 
 bool EffectManager::Start()
@@ -18,6 +18,13 @@ void EffectManager::LoadEffects()
 	nsK2EngineLow::EffectEngine::GetInstance()
 		->ResistEffect((int)EffectID::EffectID_HeartEffect, u"Assets/Effects/heartEffect.efk");
 
+	/** 一回目のUFO混乱エフェクト*/
 	nsK2EngineLow::EffectEngine::GetInstance()
-		->ResistEffect((int)EffectID::EffectID_UFOConfusionEffect, u"Assets/Effects/UFOConfusion.efk");
+		->ResistEffect((int)EffectID::EffectID_UFOConfusionEffect_1, u"Assets/Effects/UFOConfusion_1.efk");
+	/** 二回目のUFO混乱エフェクト*/
+	nsK2EngineLow::EffectEngine::GetInstance()
+		->ResistEffect((int)EffectID::EffectID_UFOConfusionEffect_2, u"Assets/Effects/UFOConfusion_2.efk");
+	/** 三回目のUFO混乱エフェクト*/
+	nsK2EngineLow::EffectEngine::GetInstance()
+		->ResistEffect((int)EffectID::EffectID_UFOConfusionEffect_3, u"Assets/Effects/UFOConfusion_3.efk");
 }

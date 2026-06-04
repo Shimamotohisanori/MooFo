@@ -86,7 +86,8 @@ void Map::Update()
 {
 	/** ゲームオブジェクトが見つからなかったら処理を行わない。 */
 	if (m_game == nullptr || m_player == nullptr) return;
-
+	/** 毎フレームUFOのリストを更新する */
+	m_ufos = m_game->GetUFOs();
 	/** フラッシュタイマーの更新 */
 	m_flashTImer += g_gameTime->GetFrameDeltaTime();
 
