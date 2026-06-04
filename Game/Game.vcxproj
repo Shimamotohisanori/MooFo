@@ -253,6 +253,7 @@
     <ClCompile Include="Source\Actor\Character\UFO\UFO.cpp" />
     <ClCompile Include="Source\Actor\Character\UFO\UFOLightManager.cpp" />
     <ClCompile Include="Source\Actor\Character\UFO\UFOLightUI.cpp" />
+    <ClCompile Include="Source\Actor\Stage\CowFood.cpp" />
     <ClCompile Include="Source\Actor\Stage\Stage.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -265,6 +266,7 @@
   <ItemGroup>
     <ClInclude Include="Combo\Combo.h" />
     <ClInclude Include="CountDown\CountDown.h" />
+    <ClInclude Include="CowFood.h" />
     <ClInclude Include="CowNumberOfRescues\CowNumberOfRescues.h" />
     <ClInclude Include="EffectManager\EffectManager.h" />
     <ClInclude Include="GameCamera\GameCamera.h" />
@@ -291,6 +293,7 @@
     <ClInclude Include="Source\Actor\Character\UFO\UFO.h" />
     <ClInclude Include="Source\Actor\Character\UFO\UFOLightManager.h" />
     <ClInclude Include="Source\Actor\Character\UFO\UFOLightUI.h" />
+    <ClInclude Include="Source\Actor\Stage\CowFood.h" />
     <ClInclude Include="Source\Actor\Stage\Stage.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />

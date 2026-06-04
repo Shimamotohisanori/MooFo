@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Stage.h"
+#include "CowFood.h"
 namespace
 {
 
@@ -15,34 +16,25 @@ namespace
 	/** 外周の山のモデルファイルパス */
 	const char* MOUNTAIN_FILE_PATH = "Assets/modelData/Stage/Mountain.tkm";
 
-	/** 牛の餌のモデルファイルパス */
-	const char* COWFOOD_FILE_PATH  = "Assets/modelData/Stage/CowFood.tkm";
-
 	/** ステージの座標 */
 	Vector3 STAGE_POS = { 0.0f, 0.0f, 0.0f };
-
-	/** 牛の餌の座標 */
-	Vector3 COWFOOD_POS = { -1260.0f,-5.0f,-350.0f };
 	
 }
 
-
 Stage::Stage()
 {
+	NewGO<CowFood>(0, "cowfood");
 }
-
 
 Stage::~Stage()
 {
+	DeleteGO(this);
 }
-
 
 bool Stage::Start()
 {
-	/** 牛の餌のモデル */
-	m_cowFoodModelRender.Init(COWFOOD_FILE_PATH);
-	m_cowFoodModelRender.SetPosition(COWFOOD_POS);
-	m_cowFoodModelRender.Update();
+	/** 次やること、まずNEWGO作ってエフェクト出して、そのあとに牛の餌のUIとかモデルとか出して、牛が寄ってくるようにするために新しくクラス作って
+		そのあとに牛のアニメーションやらなんやら作ってね*/
 
 	/** 外周フェンスと牛舎のモデル */
 	m_perimeterFenceModelRender.Init(PERIMETER_FILE_PATH);
@@ -67,7 +59,6 @@ bool Stage::Start()
 	/** 外周フェンス・内周フェンス・牛の餌に当たり判定をつける */
 	m_perimeterObject.CreateFromModel(m_perimeterFenceModelRender.GetModel(), m_perimeterFenceModelRender.GetModel().GetWorldMatrix());
 	m_innerObject.CreateFromModel(m_innerFenceModelRender.GetModel(), m_innerFenceModelRender.GetModel().GetWorldMatrix());
-	m_FoodObject.CreateFromModel(m_cowFoodModelRender.GetModel(), m_cowFoodModelRender.GetModel().GetWorldMatrix());
 	
 	return true;
 }
@@ -81,7 +72,6 @@ void Stage::Update()
 
 void Stage::Render(RenderContext& rc)
 {
-	m_cowFoodModelRender.Draw(rc);
 	m_perimeterFenceModelRender.Draw(rc);
 	m_innerFenceModelRender.Draw(rc);
 	m_mountainModelRender.Draw(rc);
