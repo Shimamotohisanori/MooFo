@@ -16,13 +16,13 @@
 namespace
 {
 	/** 牛のモデルファイルパス */
-	const char* COW_MOCEL_FILEPATH = "Assets/modelData/Cow/Model/Cow4.tkm"; //enModelUpAxis = enModelUpAxisZ;
+	const char* COW_MOCEL_FILEPATH = "Assets/modelData/Cow/Model/Cow5.tkm"; //enModelUpAxis = enModelUpAxisZ;
 
 	/** 牛のアニメーションのファイルパス */
-	const char* IDLE_ANIMATION_FILE_PATH = "Assets/modelData/Cow/Animation/Idle2.tka";
+	const char* IDLE_ANIMATION_FILE_PATH = "Assets/modelData/Cow/Animation/Idle3.tka";
 
 	/** 牛の歩くアニメーションのファイルパス */
-	const char* WALK_ANIMATION_FILE_PATH = "Assets/modelData/Cow/Animation/Walk.tka";
+	const char* WALK_ANIMATION_FILE_PATH = "Assets/modelData/Cow/Animation/Walk2.tka";
 
 	/** プレイヤーに引っ張られるときの力 */
 	constexpr float PULL_POWER = 8.0f;
@@ -351,6 +351,8 @@ void Cow::CapturedByPlayer()
 			{
 				cowNumberOfRescues->AddRescue();
 			}
+			/** エフェクトを呼び出す*/
+			m_takingUFO->PlayEffect();
 
 			/** 状態をリセットする */
 			m_isTakeAwayed = false;

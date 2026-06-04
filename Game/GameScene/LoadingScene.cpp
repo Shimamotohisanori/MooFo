@@ -239,6 +239,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		{
 			UFO* ufo = NewGO<UFO>(0, "UFO");
 			ufo->SetPosition(UFO_INFOMATIONS[index].pos);
+			ufo->SetSlotIndex(index);
 			m_tempUFOs.push_back(ufo);
 		}
 	} break;

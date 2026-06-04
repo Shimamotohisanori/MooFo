@@ -13,6 +13,7 @@
 #include "Combo/Combo.h"
 #include "SoundManager/SoundManager.h"
 #include "Source/Actor/Character/Player/Player.h"
+#include "EffectManager/EffectManager.h"
 namespace
 {
 	/** UFOのモデルファイルパス */
@@ -72,6 +73,17 @@ UFO::~UFO()
 		manager->UnregisterUFO(this);
 	}
 
+	/** UFOの混乱エフェクトを停止 */
+	if (m_UFOConfusionEffect)
+	{
+		if (!m_UFOConfusionEffect->IsDead())
+		{
+			m_UFOConfusionEffect->Stop();
+			DeleteGO(m_UFOConfusionEffect);
+		}
+		m_UFOConfusionEffect = nullptr;
+	}
+
 }
 
 
@@ -90,15 +102,42 @@ bool UFO::Start()
 	m_ufomodelRender.SetRaytracingWorld(false);
 	m_ufomodelRender.Init(UFO_MODEL_FILEPATH);
 	m_ufomodelRender.SetScale(UFO_SCALE,UFO_SCALE,UFO_SCALE);
-	m_ufomodelRender.SetPosition(m_transform.GetPosition());
+
+	/** 出現演出中なら上方の開始位置をモデルに反映する */
+	if (m_UFOState == EnUFOState_Spawning && m_spawnStartPos.LengthSq() > 0.0f)
+	{
+		m_ufomodelRender.SetPosition(m_spawnStartPos);
+	}
+	else
+	{
+		m_ufomodelRender.SetPosition(m_transform.GetPosition());
+	}
 	m_ufomodelRender.Update();
 	
 	return true;
 }
 
+void UFO::StartSpawnAnimation(const Vector3& finalPos)
+{
+	m_spawnEndPos = finalPos;
+	/** 出現開始位置は画面上方に設定 */
+	m_spawnStartPos = finalPos;
+	/** 好みに応じて調整*/
+	m_spawnStartPos.y += 2000.0f;
+
+	/** スポーン位置を先に確定させる*/
+	m_spawnPos = finalPos;
+	/** 上の位置に配置*/
+	SetPosition(m_spawnStartPos);
+
+	m_spawnTimer = SPAWN__DURATION;
+	m_UFOState = EnUFOState_Spawning;
+}
+
+
+
 void UFO::Update()
 {
-	
 	/* UFOのサウンドを更新する関数 */
 	UpdateUFOSound();
 
@@ -108,6 +147,35 @@ void UFO::Update()
 		return;
 	}
 	
+	/** 出現演出中は通常処理をスキップ */
+	if (m_UFOState == EnUFOState_Spawning)
+	{
+		UpdateSpawning();
+		/** 降下中は光を消しておく*/
+		m_cowCaptureController.SyncState(CowCaptureController::Wait);
+		/** モデルの位置と回転を更新 */
+		m_ufomodelRender.SetPosition(m_transform.GetPosition());
+		m_ufomodelRender.SetRotation(m_transform.GetRotation());
+		m_ufomodelRender.Update();
+		return;
+	}
+	/** 上昇処理中は通常処理を飛ばす */
+	if (m_isConfusedAscemding)
+	{
+		ConfusedAscent();
+
+		/** エフェクト位置を追従*/
+		if (m_UFOConfusionEffect)
+		{
+			Vector3 effectPos = m_transform.GetPosition();
+			effectPos.y += 350.0f;
+			m_UFOConfusionEffect->SetPosition(effectPos);
+		}
+		m_ufomodelRender.SetPosition(m_transform.GetPosition());
+		m_ufomodelRender.SetRotation(m_transform.GetRotation());
+		m_ufomodelRender.Update();
+		return;
+	}
 	if (m_UFOState == EnUFOState_Move)
 	{
 		/** 移動 */
@@ -117,6 +185,13 @@ void UFO::Update()
 		Rotation();
 	}
 
+
+	if (m_UFOConfusionEffect)
+	{
+		Vector3 effectPos = m_transform.GetPosition();
+		effectPos.y += 350.0f;
+		m_UFOConfusionEffect->SetPosition(effectPos);
+	}
 	/** 牛捕獲コントローラーの更新 */
 	m_cowCaptureController.Update();
 
@@ -136,8 +211,6 @@ void UFO::Update()
 		/** UFOが牛を引っ張る際のSE関数 */
 		UFOSEDistance();
 	}
-	m_transform.SetPosition(Vector3{ m_transform.GetPosition().x,70.0f,m_transform.GetPosition().z });
-
 	/** モデルの位置を反映 */
 	m_ufomodelRender.SetPosition(m_transform.GetPosition());
 
@@ -304,6 +377,7 @@ void UFO::TakeAwayTheCow()
 		m_targetCow = nullptr;
 		m_isCowTakeAwayed = false;
 		m_isChasing = false;
+		m_failCount = 0;
 
 		return;
 	}
@@ -311,6 +385,113 @@ void UFO::TakeAwayTheCow()
 	m_targetCow->SetPosition(cowPos);
 
 }
+
+
+void UFO::PlayEffect()
+{
+	/** 混乱エフェクトが再生中かつ、死亡していなかったら*/
+	if(m_UFOConfusionEffect&& !m_UFOConfusionEffect->IsDead())
+	{
+		m_UFOConfusionEffect->Stop();
+		DeleteGO(m_UFOConfusionEffect);
+		m_UFOConfusionEffect = nullptr;
+	}
+	/** 失敗回数を増加させる(最大三回)*/
+	m_failCount++;
+
+	if (m_failCount > 3)
+	{
+		m_failCount = 3;
+	}
+
+	/** 失敗回数に応じてエフェクトを変える*/
+	EffectID effectID = EffectID::EffectID_UFOConfusionEffect_1;
+	switch (m_failCount)
+	{
+	case 1:
+		effectID = EffectID::EffectID_UFOConfusionEffect_1;
+		break;
+	case 2:
+		effectID = EffectID::EffectID_UFOConfusionEffect_2;
+		break;
+	case 3:
+		effectID = EffectID::EffectID_UFOConfusionEffect_3;
+		break;
+	}
+
+	/** エフェクトを再生する*/
+	m_UFOConfusionEffect = NewGO<nsK2EngineLow::EffectEmitter>(0);
+	m_UFOConfusionEffect->Init((int)effectID);
+	m_UFOConfusionEffect->SetScale({ 10.0f, 10.0f, 10.0f });
+	m_UFOConfusionEffect->Play();
+
+	/** 三回失敗すると上昇する*/
+	if (m_failCount == 3)
+	{
+		m_isConfusedAscemding = true;
+		m_ascentTimer = ASCENT_TIME;
+	}
+
+}
+
+void UFO::ConfusedAscent()
+{
+	/** 混乱上昇中でなければ処理しない */
+	if (!m_isConfusedAscemding)
+	{
+		return;
+	}
+	/** 上昇処理 */
+	Vector3 pos = m_transform.GetPosition();
+	pos.y += ASCENT_SPEED;
+	m_transform.SetPosition(pos);
+	/** 上昇しているときは光を出さない*/
+	m_cowCaptureController.SyncState(CowCaptureController::Wait);
+
+	/** 上昇タイマーを減らす */
+	m_ascentTimer--;
+
+	/** 上昇タイマーが0になったら上昇を終了する */
+	if (m_ascentTimer <= 0.0f)
+	{
+		Game* game = FindGO<Game>("game");
+		if(game&&m_slotIndex>=0)
+		{
+			game->RequestUFORespawn(m_slotIndex);
+		}
+		DeleteGO(this);
+	}
+}
+
+
+void UFO::UpdateSpawning()
+{
+	m_spawnTimer -= g_gameTime->GetFrameDeltaTime();
+		/** 0～1に正規化(1～0に減るので反転)*/
+		float t = 1.0f - (m_spawnTimer / SPAWN__DURATION);
+		t = max(0.0f, min(t, 1.0f));
+
+		/**イーズアウト最初は速く、終わりはゆっくり*/
+		float eased = 1.0f - (1.0f - t) * (1.0f - t);
+
+		Vector3 pos;
+		pos.x = m_spawnStartPos.x;
+		pos.y = m_spawnStartPos.y + (m_spawnEndPos.y - m_spawnStartPos.y) * eased;
+		pos.z = m_spawnStartPos.z;
+		SetPosition(pos);
+
+		/** 降下完了*/
+		if (m_spawnTimer <= 0.0f)
+		{
+			SetPosition(m_spawnEndPos);
+			/** 既存の牛を探すステートに変更*/
+			m_UFOState = EnUFOState_Move;
+		}
+		/** 演出中は通常の動きをスキップ*/
+		return;
+
+}
+
 
 void UFO::UFOSEDistance()
 {

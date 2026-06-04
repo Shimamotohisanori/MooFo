@@ -24,12 +24,26 @@ public:
 	{
 		m_transform.SetPosition(pos);
 		m_ufomodelRender.SetPosition(pos);
+
+		if (m_spawnPos.LengthSq() == 0.0f)
+		{
+			m_spawnPos = pos;
+		}
+	}
+
+	void StartSpawnAnimation(const Vector3& finalPos);
+
+
+	Vector3 GetSpawnPosition() const
+	{
+		return m_spawnPos;
 	}
 
 	Vector3 GetPosition()
 	{
 		return m_transform.GetPosition();
 	}
+
 
 	/** 牛を連れて行けるかどうかのフラグを設定する関数 */
 	void SetIsCowTakeAwayed(bool isCowTakeAwayed)
@@ -42,9 +56,22 @@ public:
 	{
 		return m_isCowTakeAwayed;
 	}
+	/** UFOの混乱エフェクトを再生する関数 */
+	void PlayEffect();
 
+	/** UFOの牛捕獲コントローラーの取得関数 */
 	CowCaptureController* GetCowCaptureController();
 
+	/** UFOの配列のインデックスを設定する関数 */
+	void SetSlotIndex(int index)
+	{
+		m_slotIndex = index;
+	}
+	/** UFOの配列のインデックスを取得する関数 */
+	int GetSlotIndex() const
+	{
+		return m_slotIndex;
+	}
 	/** 目標にしている牛を消す関数 */
 	void ReMoveTargetCow()
 	{
@@ -75,10 +102,14 @@ private:
 
 	/** UFOのアップデートができるかどうかを判断する関数 */
 	bool CanUFOUpdate();
-
+  
 	/** UFOのサウンドを更新する関数 */
 	void UpdateUFOSound();
 
+	/** 混乱後の上昇処理関数 */
+	void ConfusedAscent();
+	/** 降下処理*/
+	void UpdateSpawning();
 
 private:
 	ModelRender m_ufomodelRender;
@@ -116,13 +147,42 @@ private:
 	bool m_isChasing = false;
 	/** UFOを一度だけ設定するフラグ */
 	bool m_isSetUFO = false;
+
+	/** 出現演出*/
+	bool m_isSpawning = false;
+	float m_spawnTimer = 0.0f;
+	/** 下降演出の秒数*/
+	static constexpr float SPAWN__DURATION= 3.0f;
+	/** 演出開始位置(画面上方)*/
+	Vector3 m_spawnStartPos = Vector3::Zero;
+	/** 演出終了位置(画面中央)*/
+	Vector3 m_spawnEndPos = Vector3::Zero;
+
 	enum EnUFOState
 	{
+		EnUFOState_Spawning,
 		EnUFOState_Move,
 		EnUFOState_Idle,
 		EnUFOState_Num
 	};
+	/** UFOが牛の吸い込みに失敗した回数をカウントする変数*/
+	uint8_t m_failCount = 0;
+	/** 上昇中のフラグ*/
+	bool m_isConfusedAscemding = false;
+	/** 上昇タイマー*/
+	float m_ascentTimer = 0.0f;
+	/** 上昇速度*/
+	static constexpr float ASCENT_SPEED = 2.0f;
+	/** 上昇フレーム*/
+	static constexpr float ASCENT_TIME = 120.0f;
+	/**UFOの配列のインデックス */ 
+	int  m_slotIndex = -1;
+	/** スポーン位置*/
+	Vector3 m_spawnPos = Vector3::Zero;
+
 	/** UFOの状態 */
-	EnUFOState m_UFOState = EnUFOState_Move;
+	EnUFOState m_UFOState = EnUFOState_Spawning;
+
+	EffectEmitter* m_UFOConfusionEffect = nullptr;
 };
 
