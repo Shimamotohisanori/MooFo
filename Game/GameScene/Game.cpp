@@ -116,11 +116,15 @@ bool Game::Start()
 	/** UFOのライトUIを生成 */
 	m_ufoLightUI = NewGO<UFOLightUI>(0, "ufoLightUI");
 
-	/** UFO は名前（またはインデックス）で取得 */
-	for (int i = 0; i < EnUFO_Num; i++)
-	{
-		m_UFO[i] = FindGO<UFO>(UFO_INFOMATIONS[i].objectName.c_str());
-	}
+	///** UFO は名前（またはインデックス）で取得 */
+	//for (int i = 0; i < EnUFO_Num; i++)
+	//{
+	//	m_UFO[i] = FindGO<UFO>(UFO_INFOMATIONS[i].objectName.c_str());
+	//	if (m_UFO[i])
+	//	{
+	//		m_UFO[i]->SetSlotIndex(i);
+	//	}
+	//}
 
 	m_isSound = false;
 	m_spawnTimer = 0.0f;
@@ -187,6 +191,8 @@ void Game::Update()
 	/** 牛を生む関数 */
 	SpawnCow();
 
+
+	UpdateUFORespawn();
 	/* タイムアウト処理 */
 	TimeOut();
 
@@ -251,6 +257,19 @@ void Game::Clear()
 	return;
 }
 
+void Game::SetUFOList(const std::vector<UFO*>&ufos)
+{
+	/** UFOの配列に引数で渡されたUFOのリストをセットする */
+	for (int i = 0; i < ufos.size() && i < EnUFO_Num; i++)
+	{
+		m_UFO[i] = ufos[i];
+		if (m_UFO[i])
+		{
+			m_UFO[i]->SetSlotIndex(i);
+		}
+
+	}
+}
 void Game::Death()
 {
 	/** ここでスコアを取得 */
@@ -327,6 +346,63 @@ void Game::KillAllCows()
 	}
 	m_aliveCows.clear();
 }
+
+void Game::RequestUFORespawn(int slotIndex)
+{
+	/** スロットをnullptrにしておく(消えたUFOへの参照を切るため)*/
+	m_UFO[slotIndex] = nullptr;
+
+	UFORespawnRequest request;
+	request.SlotIndex = slotIndex;
+	request.RespawnTimer = UFO_RESPAWN_TIME;
+	m_ufoRespawnRequests.push_back(request);
+}
+
+
+void Game::UpdateUFORespawn()
+{
+	/** 復活待ちのUFOが居なければ何もしない*/
+	if (m_ufoRespawnRequests.empty())
+	{
+		return;
+	}
+
+	float dt = g_gameTime->GetFrameDeltaTime();
+
+	/** UFOの再出現リクエストをループして処理する */
+	m_ufoRespawnRequests.erase(
+		std::remove_if(
+			m_ufoRespawnRequests.begin(),
+			m_ufoRespawnRequests.end(),
+			/**  リストの要素を1個ずつ取り出して判定する。*/
+			[&](UFORespawnRequest& request)
+			{
+				request.RespawnTimer -= dt;
+				/** タイマーが0以下になったらUFOを再出現させる */
+				if (request.RespawnTimer <= 0.0f)
+				{
+					/** スロット番号の取得*/
+					int idx = request.SlotIndex;
+					UFO* ufo = NewGO<UFO>(0, "UFO");
+					//ufo->SetPosition(UFO_INFOMATIONS[idx].pos);
+					ufo->StartSpawnAnimation(UFO_INFOMATIONS[idx].pos);
+					/** UFOの情報を設定 */
+					ufo->SetSlotIndex(idx);
+					/** Gameが持つUFO配列に保存する*/
+					m_UFO[idx] = ufo;
+				   /** remove_ifはtrue = 消える false = 残る
+				   なのでUFOが再出現した場合はtrueを返してリストから削除する */
+					return true;
+				}
+				/** タイマーが0以下になっていない場合はリストに残す */
+				return false;
+		}
+		
+	),
+		m_ufoRespawnRequests.end()
+	);
+}
+
 
 void Game::SpawnCow()
 {

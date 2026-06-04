@@ -27,6 +27,15 @@ struct UFOinfo
 	/** UFOの位置を初期化する */
 	Vector3 pos = Vector3::Zero;
 };
+/** UFOの再出現リクエストをまとめる構造体 
+　　どのUFOを何秒後に再出現させるかを管理する */
+struct UFORespawnRequest
+{
+	/** 初期値を-1にする理由は、UFOの配列のインデックスとして
+	有効な値ではないことを示すため */
+	int SlotIndex = -1; // UFOの配列のインデックス
+	float RespawnTimer = 0.0f; // UFOが再出現するまでの時間
+};
 
 /** UFOの一覧 */
 const UFOinfo UFO_INFOMATIONS[] =
@@ -65,6 +74,8 @@ public:
 	void ReMoveCow(Cow* cow);
 
 	bool m_isSound;
+	/** UFOが消えた際にリクエストをする関数*/
+	void RequestUFORespawn(int slotIndex);
 
 	/** UFO達の取得関数 */
 	std::vector<UFO*> GetUFOs()
@@ -89,14 +100,7 @@ public:
 	}
 
 	/** UFOの配列をセットする関数 */
-	void SetUFOList(const std::vector<UFO*>& ufos)
-	{
-		/** UFOの配列に引数で渡されたUFOのリストをセットする */
-		for (int i = 0; i < ufos.size() && i < EnUFO_Num; i++)
-		{
-			m_UFO[i] = ufos[i];
-		}
-	}
+	void SetUFOList(const std::vector<UFO*>& ufos);
 
 	/** タイムアウトフラグの取得関数 */
 	bool GetIsTimeOut()
@@ -120,7 +124,8 @@ private:
 
 	/** タイムアウト処理 */
 	void TimeOut();
-
+	/** 消えたUFOを新しく生成させる関数 */
+	void UpdateUFORespawn();
 
 private:
 	/** ステージ */
@@ -191,6 +196,12 @@ private:
 	/** 生きている牛のリスト */
 	std::vector<Cow*> m_aliveCows;
 
+
+
+	/** UFOの再出現リクエストのリスト */
+	std::vector<UFORespawnRequest> m_ufoRespawnRequests;
+	/** リスポーン時間*/
+	static constexpr float UFO_RESPAWN_TIME = 10.0f;
 	/** UFOの配列 */
 	enum EnUFO
 	{
