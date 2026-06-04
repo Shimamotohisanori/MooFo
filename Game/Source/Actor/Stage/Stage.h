@@ -2,14 +2,13 @@
 #include "Source/Actor/Actor.h"
 
 /**
- * ステージクラス
+ * 繧ｹ繝�繝ｼ繧ｸ繧ｯ繝ｩ繧ｹ
  */
 class Stage : public Actor
 {
 public:
 	Stage();
 	~Stage();
-
 
 private:
 	bool Start() override;
@@ -19,16 +18,15 @@ private:
 
 private:
 
-	/** モデルの表示 */
-	ModelRender m_cowFoodModelRender;
+	/** 繝｢繝�繝ｫ縺ｮ陦ｨ遉ｺ */
 	ModelRender m_perimeterFenceModelRender;
 	ModelRender m_innerFenceModelRender;
 	ModelRender m_mountainModelRender;
 	ModelRender m_groundModelRender;
 
-	/** 当たり判定を追加する */
+	/** 蠖薙◆繧雁愛螳壹ｒ霑ｽ蜉縺吶ｋ */
 	PhysicsStaticObject m_perimeterObject;
 	PhysicsStaticObject m_innerObject;
-	PhysicsStaticObject m_FoodObject;
+
 };
 

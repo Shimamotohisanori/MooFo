@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "LoadingScene.h"
 #include "SoundManager/SoundManager.h"
 #include "GameScene/Game.h"
