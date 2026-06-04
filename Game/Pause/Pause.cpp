@@ -16,12 +16,12 @@ namespace
 	const char* PAUSE_BLACK_RESUME_PATH = "Assets/sprite/PauseUI/resumeGameBlack.dds";
 	const char* PAUSE_BLACK_QUITE_PATH  = "Assets/sprite/PauseUI/quiteGameBlack.dds";
 	
-	const Vector3 QUITEPOS  = { 0.0f,-100.0f,0.0f };
+	const Vector3 QUITEPOS  = { 0.0f, -75.0f,0.0f };
 	const Vector3 RESUMEPOS = { 0.0f, 150.0f,0.0f };
 	const Vector3 SOUNDPOS  = { 0.0f,-300.0f,0.0f };
 	const Vector3 QUITE_BLACKPOS  = {0.0f, 150.0f,0.0f};
-	const Vector3 RESUME_BLACKPOS = {0.0f,-110.0f,0.0f};
-	const Vector3 SOUND_BLACKPOS  = {0.0f,-300.0f,0.0f};
+	const Vector3 RESUME_BLACKPOS = {0.0f, -80.0f,0.0f};
+	const Vector3 SOUND_BLACKPOS  = {0.0f,-310.0f,0.0f};
 }
 
 bool Pause::Start()
@@ -29,7 +29,7 @@ bool Pause::Start()
 	m_pauseBackGround.Init(PAUSE_BACKGROUND_PATH,1980.0f,1080.0f);
 	m_pauseBackGround.Update();
 
-	m_quiteSprite.Init(PAUSE_QUITE_PATH,750.0f,650.0f);
+	m_quiteSprite.Init(PAUSE_QUITE_PATH,650.0f,550.0f);
 	m_quiteSprite.SetPosition(QUITEPOS);
 	m_quiteSprite.Update();
 
@@ -37,19 +37,19 @@ bool Pause::Start()
 	m_resumeSprite.SetPosition(RESUMEPOS);
 	m_resumeSprite.Update();
 
-	m_soundSprite.Init(PAUSE_SOUND_PATH,350.0f,250.0f);
+	m_soundSprite.Init(PAUSE_SOUND_PATH,650.0f,550.0f);
 	m_soundSprite.SetPosition(SOUNDPOS);
 	m_soundSprite.Update();
 
-	m_soundBlackSprite.Init(PAUSE_BLACK_SOUND_PATH, 370.0f, 250.0f);
+	m_soundBlackSprite.Init(PAUSE_BLACK_SOUND_PATH, 780.0f, 620.0f);
 	m_soundBlackSprite.SetPosition(SOUND_BLACKPOS);
 	m_soundBlackSprite.Update();
 
-	m_quiteBlackSprite.Init(PAUSE_BLACK_QUITE_PATH, 800.0f, 590.0f);
+	m_quiteBlackSprite.Init(PAUSE_BLACK_QUITE_PATH, 710.0f, 590.0f);
 	m_quiteBlackSprite.SetPosition(QUITE_BLACKPOS);
 	m_quiteBlackSprite.Update();
 
-	m_resumeBlackSprite.Init(PAUSE_BLACK_RESUME_PATH, 650.0f, 550.0f);
+	m_resumeBlackSprite.Init(PAUSE_BLACK_RESUME_PATH, 640.0f, 540.0f);
 	m_resumeBlackSprite.SetPosition(RESUME_BLACKPOS);
 	m_resumeBlackSprite.Update();
 
