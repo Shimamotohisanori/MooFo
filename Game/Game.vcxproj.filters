@@ -64,9 +64,6 @@
     <ClCompile Include="Score\Score.cpp">
       <Filter>Score</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Actor\Character\UFO\CowCaptureController.cpp">
-      <Filter>Source\Actor\Character\UFO</Filter>
-    </ClCompile>
     <ClCompile Include="Map\Map.cpp">
       <Filter>Map</Filter>
     </ClCompile>
@@ -82,17 +79,20 @@
     <ClCompile Include="Source\Actor\Character\Cow\DummyCow.cpp">
       <Filter>Source\Actor\Character\Cow</Filter>
     </ClCompile>
-    <ClCompile Include="EffectManager\EffectManager.cpp">
-      <Filter>EffectManager</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Actor\Character\UFO\UFOLightUI.cpp">
-      <Filter>Source\Actor\Character\UFO</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Actor\Character\UFO\UFOLightManager.cpp">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClCompile>
     <ClCompile Include="Source\Actor\Stage\CowFood.cpp" />
     <ClCompile Include="Source\Actor\Character\Cow\CowLuring.cpp" />
+    <ClCompile Include="Source\Actor\Character\UFO\CowCaptureController.cpp">
+      <Filter>Source\Actor\Character\UFO</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectManager\EffectManager.cpp">
+      <Filter>EffectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Actor\Character\UFO\UFOLightManager.cpp">
+      <Filter>Source\Actor\Character\UFO</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -158,9 +158,6 @@
     <ClInclude Include="Score\Score.h">
       <Filter>Score</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Actor\Character\UFO\CowCaptureController.h">
-      <Filter>Source\Actor\Character\UFO</Filter>
-    </ClInclude>
     <ClInclude Include="Map\Map.h">
       <Filter>Map</Filter>
     </ClInclude>
@@ -176,18 +173,21 @@
     <ClInclude Include="Source\Actor\Character\Cow\DummyCow.h">
       <Filter>Source\Actor\Character\Cow</Filter>
     </ClInclude>
-    <ClInclude Include="EffectManager\EffectManager.h">
-      <Filter>EffectManager</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Actor\Character\UFO\UFOLightUI.h">
-      <Filter>Source\Actor\Character\UFO</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Actor\Character\UFO\UFOLightManager.h">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClInclude>
     <ClInclude Include="CowFood.h" />
     <ClInclude Include="Source\Actor\Stage\CowFood.h" />
     <ClInclude Include="Source\Actor\Character\Cow\CowLuring.h" />
+    <ClInclude Include="Source\Actor\Character\UFO\CowCaptureController.h">
+      <Filter>Source\Actor\Character\UFO</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectManager\EffectManager.h">
+      <Filter>EffectManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Actor\Character\UFO\UFOLightManager.h">
+      <Filter>Source\Actor\Character\UFO</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

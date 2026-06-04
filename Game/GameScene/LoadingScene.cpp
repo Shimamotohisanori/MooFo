@@ -137,13 +137,19 @@ void LoadingScene::InLoading()
 		m_currentImage = (m_currentImage + 1) % 3;
 	}
 
-	/** 一定時間で次のシーンへ移行 */
-	if (m_totalTime >= m_loadingTime)
+	/** ローディングが開始していない状態で
+	ローディングの全体時間を超えたらローディング開始フラグを立てる */
+	if (m_totalTime >= m_loadingTime && !m_isLoadingStarted)
+	{
+		m_isLoadingStarted = true;
+	}
+
+	if (m_isLoadingStarted)
 	{
 		if (m_loadType == LoadType::ToGameScene)
 		{
 			/** ゲームシーンに移行するタイプのロード処理 */
-			LoadGameObjectsStepByStep(); 
+			LoadGameObjectsStepByStep();
 		}
 
 		else
@@ -186,7 +192,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		/** ロードするゲームオブジェクトをステップバイステップで生成する */
 
 		/** プレイヤーを生成 */
-	case 0: NewGO<Player>(0, "player"); break;
+	case 0:	NewGO<Player>(0, "player"); break;
 
 		/** ステージを生成 */
 	case 1: NewGO<Stage>(0, "stage"); break;
@@ -222,7 +228,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		break;
 	}
 
-		/** UFOの生成前にマネージャーを生成*/
+		/** UFOLightManagerを生成 */
 	case 13:
 		NewGO<UFOLightManager>(0, "ufolightmanager");
 		break;

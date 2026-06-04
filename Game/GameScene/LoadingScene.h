@@ -100,6 +100,9 @@ private:
 	/** フェードインしているかどうかのフラグ*/
 	bool m_isFadeIn = false;
 
+	/** ローディングが開始したかどうかのフラグ*/
+	bool m_isLoadingStarted = false;
+
 	/** ローディング中の音源 */
 	SoundSource* m_loadingSound;	
 
