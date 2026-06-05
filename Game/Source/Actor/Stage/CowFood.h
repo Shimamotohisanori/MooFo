@@ -14,8 +14,12 @@ private:
 
 	bool m_iseffect = false; 
 
+	Vector3 m_position;
+
 	/** 牛の餌のモデル */
 	ModelRender m_cowFoodModelRender;
+
+	SpriteRender m_Abutton;
 
 	/** 牛の餌の当たり判定 */
 	PhysicsStaticObject m_FoodObject;
