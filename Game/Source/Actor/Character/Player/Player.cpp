@@ -187,10 +187,6 @@ void Player::Move()
 	posXZ.y = 0.0f;
 	float distsance = posXZ.Length();
 
-	/** 半径を超えたら円周上に戻す */
-	//ssssssss
-
-
 	//モデルの座標をキャラクターコントローラーの座標に合わせる
 	m_playerModelRender.SetPosition(m_transform.GetPosition());
 }
@@ -350,6 +346,15 @@ bool Player::CanPlayerUpdate()
 		m_pause->GetIsPause() ||
 		m_countDown->GetCountDown())
 	{
+		/** 走ってるSEが再生中かつSEオブジェクトが存在しているかどうか */
+		if (m_isPlayRunSE && m_runSE != nullptr)
+		{
+			/** 止まったらSE停止 */
+			m_runSE->Stop();
+
+			m_isPlayRunSE = false;
+		}
+
 		m_isMoving = false;
 		return false;
 	}
@@ -396,10 +401,9 @@ void Player::PlayAnimation()
 	case 1:
 		//走るアニメーション
 		/** 走るアニメーション */
-		
-			m_playerModelRender.PlayAnimation(enAnimationClip_Run,0.15f);
+		m_playerModelRender.PlayAnimation(enAnimationClip_Run,0.15f);
 
-			m_playerModelRender.Update();
+		m_playerModelRender.Update();
 		break;
 	case 2:
 		/** 縄を引っ張るアニメーション(左) */

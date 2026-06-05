@@ -25,7 +25,7 @@ public:
 
 private:
 	/** 制限時間 */
-	float m_timer = 120.0f;
+	float m_timer = 10.0f;
 
 	/** 前のフレームの時間 */
 	uint8_t m_prevTime = -1;

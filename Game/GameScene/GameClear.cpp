@@ -90,7 +90,7 @@ void GameClear::Update()
 		m_score->SetResult(true);
 		m_score->SetResultType(Score::ResultType::GameClear);
 		m_score->SetScore(m_finalScore);
-		
+
 		m_isScoreSet = true;
 	}
 
@@ -111,6 +111,10 @@ void GameClear::Update()
 
 	if (m_score)
 	{
+		if (m_isScoreSet)
+		{
+			m_score->ScoreCounterAnimation();
+		}
 		m_score->Update();
 	}
 

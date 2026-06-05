@@ -23,11 +23,12 @@ namespace
 
 Stage::Stage()
 {
-	NewGO<CowFood>(0, "cowfood");
+	m_cowFood = NewGO<CowFood>(0, "cowfood");
 }
 
 Stage::~Stage()
 {
+	DeleteGO(m_cowFood);
 	DeleteGO(this);
 }
 
