@@ -199,7 +199,7 @@ void Score::SetScore(int score)
 	m_score = score;
 
 	/** 表示用スコアも同期 */
-	m_displayScore = score;
+	//m_displayScore = score;
 
 	/** 強制更新 */
 	m_prevScore = -1;

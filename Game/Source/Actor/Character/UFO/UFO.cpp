@@ -84,6 +84,12 @@ UFO::~UFO()
 		m_UFOConfusionEffect = nullptr;
 	}
 
+	/** SEを消す */
+	if (m_UFOCaptureSE)
+	{
+		DeleteGO(m_UFOCaptureSE);
+		m_UFOCaptureSE = nullptr;
+	}
 }
 
 
@@ -745,11 +751,9 @@ void UFO::UpdateUFOSound()
 	/** タイムアウトしていれば */
 	if (m_game && m_game->GetIsTimeOut())
 	{
-		/** SEを消す */
 		if (m_UFOCaptureSE)
 		{
-			DeleteGO(m_UFOCaptureSE);
-			m_UFOCaptureSE = nullptr;
+			m_UFOCaptureSE->Stop();
 		}
 		return;
 	}

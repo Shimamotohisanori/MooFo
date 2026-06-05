@@ -41,8 +41,6 @@ public:
 	}
 	ResultType m_resultType = ResultType::GameClear;
 
-
-private:
 	/** スコアのカウンターアニメーション処理 */
 	void ScoreCounterAnimation();
 
