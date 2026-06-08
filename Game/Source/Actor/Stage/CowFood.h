@@ -5,7 +5,7 @@ class CowFood : public IGameObject
 {
 public:
 	CowFood(){}
-	~CowFood(){}
+	~CowFood();
 
 	bool Start();
 	void Update();

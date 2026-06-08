@@ -122,7 +122,7 @@ bool Game::Start()
 
 	/** 牛の餌を生成 */
 	m_cowFood = NewGO<CowFood>(0, "cowfood");
-
+  
 	m_isSound = false;
 	m_spawnTimer = 0.0f;
 

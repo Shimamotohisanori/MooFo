@@ -4,6 +4,7 @@
 /**
  * ステージクラス
  */
+class CowFood;
 class Stage : public Actor
 {
 public:
@@ -27,6 +28,9 @@ private:
 	/** 当たり判定を追加する */
 	PhysicsStaticObject m_perimeterObject;
 	PhysicsStaticObject m_innerObject;
+
+	/** 牛の餌オブジェクト */
+	CowFood* m_cowFood;
 
 };
 

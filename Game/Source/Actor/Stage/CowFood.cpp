@@ -30,6 +30,12 @@ namespace
 
 }
 
+CowFood::~CowFood()
+{
+	/** 牛の餌のエフェクトを削除する。 */
+	DeleteGO(m_cowFoodEffect);
+}
+
 bool CowFood::Start()
 {
 	/** 牛の餌のモデル */

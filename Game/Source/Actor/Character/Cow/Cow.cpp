@@ -59,7 +59,9 @@ Cow::~Cow()
 bool Cow::Start()
 {
 	m_CowSound  = FindGO<SoundManager>("soundmanager");
+
 	m_cowmodelRender.SetRaytracingWorld(false);
+	m_cowCharacterController.Init(20.0f, 20.0f, m_transform.GetPosition());
 	m_cowmodelRender.Init(COW_MOCEL_FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
 	m_cowmodelRender.SetPosition(m_transform.GetPosition());
 	m_cowmodelRender.Update();
@@ -129,8 +131,12 @@ void Cow::Update()
 	/** 牛がプレイヤーに捕獲される処理 */
 	CapturedByPlayer();
 
+	/** モデルのキャラコンを反映 */
+	Vector3 pos = m_cowCharacterController.GetPosition();
+	m_transform.SetPosition(pos);
+
 	/** モデルの位置を反映 */
-	m_cowmodelRender.SetPosition(m_transform.GetPosition());
+	m_cowmodelRender.SetPosition(pos);
 	
 	/** モデルに回転を反映 */
 	m_cowmodelRender.SetRotation(m_transform.GetRotation());
@@ -168,7 +174,7 @@ void Cow::Move()
 				dir = Vector3(1, 0, 0);
 			}
 			dir.Normalize();
-			m_moveDir = dir;
+			m_moveDir = dir * 100.0f;
 			/** 1～4秒間ランダムに方向を変える */
 			m_moveTimer = rand() % RANDOMCOW_TIMER;
 			m_isMove = false;
@@ -183,40 +189,17 @@ void Cow::Move()
 				m_isMove = true;
 			}
 		}
-	/** 移動 */
-	Vector3 pos = m_transform.GetPosition();
-	/** 少しづつ位置を動かしている */
-	pos += m_moveDir * m_moveSpeed * g_gameTime->GetFrameDeltaTime();
-	/** ポジションを更新 */
+	/** 移動する距離を計算 */
+	Vector3 move = m_moveDir * m_moveSpeed * g_gameTime->GetFrameDeltaTime();
+
+	/** キャラクターコントローラーを使って移動 */
+	Vector3 pos = m_cowCharacterController.Execute(move, g_gameTime->GetFrameDeltaTime());
+
 	m_transform.SetPosition(pos);
-	/** モデルに位置を反映 */
-	m_cowmodelRender.SetPosition(m_transform.GetPosition());
+	m_cowmodelRender.SetPosition(pos);
+
 	/** タイマーを減らす */
 	m_moveTimer--;
-
-	/** 移動できる範囲を制限する */
-	/** 牛の移動範囲の中心 */
-	Vector3 center = Vector3::Zero;
-
-	/** 牛の位置から中心を引いてXZ平面上のベクトルを作る */
-	Vector3 posXZ = pos - center;
-
-	/** Y成分を0にしてXZ平面上のベクトルにする */
-	posXZ.y = 0.0f;
-
-	/** XZ平面上のベクトルの長さを求める */
-	float distance = posXZ.Length();
-
-	/** 牛の移動範囲の半径より遠くにいるときは
-	 * 牛の位置を移動範囲の端にする */
-	if (distance > COW_MOVE_LIMIT_RADIUS)
-	{
-		posXZ.Normalize();
-		pos = center + posXZ * COW_MOVE_LIMIT_RADIUS;
-
-		m_transform.SetPosition(pos);
-		m_cowmodelRender.SetPosition(pos);
-	}
 }
 void Cow::Rotation()
 {
@@ -284,12 +267,13 @@ void Cow::PulledByPlayer()
 		dir.Normalize();
 
 		/** 牛をプレイヤーのいる位置まで徐々に移動 */
-		cowPos += dir * PULL_POWER;
+		Vector3 move = Vector3::Zero;
+		move += dir * PULL_POWER * 100.0f;
+		Vector3 newPos = m_cowCharacterController.Execute(move, g_gameTime->GetFrameDeltaTime());
 
-		m_transform.SetPosition(cowPos);
+		m_transform.SetPosition(newPos);
 
-		m_cowmodelRender.SetPosition(m_transform.GetPosition());
-
+		m_cowmodelRender.SetPosition(newPos);
 		m_player->SetGetLeftButton1(false);
 		m_player->SetGetRightButton1(false);
 
@@ -410,9 +394,12 @@ void Cow::AvoidPlayer()
 		m_cowState = 2;
 
 		dir.Normalize();
-		cowPos += dir * AVOID_POWER;
-		m_transform.SetPosition(cowPos);
-		m_cowmodelRender.SetPosition(m_transform.GetPosition());
+		Vector3 move = Vector3::Zero;
+		move += dir * AVOID_POWER * 100.0f;
+		Vector3 newPos = m_cowCharacterController.Execute(move, g_gameTime->GetFrameDeltaTime());
+
+		m_transform.SetPosition(newPos);
+		m_cowmodelRender.SetPosition(newPos);
 
 		/** 逃げる方向に回転 */
 		m_transform.GetRotation().SetRotationYFromDirectionXZ(dir);
@@ -484,6 +471,20 @@ void Cow::RequestKill()
 {
 	/** 牛の削除フラグを立てる */
 	m_isPendingKill = true;
+}
+
+void Cow::TakeAwayedByUFO(Vector3 direction, float speed)
+{
+	/** 方向ベクトルにする */
+	direction.Normalize();
+
+	/** Excuteに渡すのは「速度」*/
+	Vector3 velocity = direction * speed * 30.0f;
+
+	/** UFOに連れて行かれるときは牛を上に移動させる */
+	Vector3 newPos = m_cowCharacterController.Execute(velocity, g_gameTime->GetFrameDeltaTime());
+	m_transform.SetPosition(newPos);
+	m_cowmodelRender.SetPosition(newPos);
 }
 
 void Cow::PlayAnimation()
