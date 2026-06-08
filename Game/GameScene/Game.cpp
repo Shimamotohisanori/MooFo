@@ -116,16 +116,6 @@ bool Game::Start()
 	/** UFOのライトUIを生成 */
 	m_ufoLightUI = NewGO<UFOLightUI>(0, "ufoLightUI");
 
-	///** UFO は名前（またはインデックス）で取得 */
-	//for (int i = 0; i < EnUFO_Num; i++)
-	//{
-	//	m_UFO[i] = FindGO<UFO>(UFO_INFOMATIONS[i].objectName.c_str());
-	//	if (m_UFO[i])
-	//	{
-	//		m_UFO[i]->SetSlotIndex(i);
-	//	}
-	//}
-
 	m_isSound = false;
 	m_spawnTimer = 0.0f;
 
