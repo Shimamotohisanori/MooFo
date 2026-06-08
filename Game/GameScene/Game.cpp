@@ -19,6 +19,7 @@
 #include "Combo/Combo.h"
 #include "GameTimer/AddTimerUI.h"
 #include "Source/Actor/Character/UFO/UFOLightUI.h"
+#include "Source/Actor/Stage/CowFood.h"
 
 namespace
 {
@@ -72,6 +73,9 @@ Game::~Game()
 	/** UFOのライトUI削除 */
 	DeleteGO(m_ufoLightUI);
 
+	/** 牛の餌削除 */
+	DeleteGO(m_cowFood);
+
 	/** コンボクラスの削除 */
 	if (m_combo && !m_combo->IsDead())
 	{
@@ -116,6 +120,9 @@ bool Game::Start()
 	/** UFOのライトUIを生成 */
 	m_ufoLightUI = NewGO<UFOLightUI>(0, "ufoLightUI");
 
+	/** 牛の餌を生成 */
+	m_cowFood = NewGO<CowFood>(0, "cowfood");
+  
 	m_isSound = false;
 	m_spawnTimer = 0.0f;
 
@@ -160,7 +167,7 @@ void Game::Update()
 	/** セレクトボタンを押していて
 	 * カウントダウン中でないかつ
 	 * タイムアウトしていない場合 */
-	if (g_pad[0]->IsTrigger(enButtonSelect) && !m_countDown->GetCountDown() && !m_isTimeOut)
+	if (g_pad[0]->IsTrigger(enButtonSelect) && !m_countDown->GetIsCountDown() && !m_isTimeOut)
 	{
 		/** タイムアウトなら */
 		if (m_isTimeOut)
