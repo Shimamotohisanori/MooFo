@@ -19,6 +19,7 @@
 #include "Combo/Combo.h"
 #include "GameTimer/AddTimerUI.h"
 #include "Source/Actor/Character/UFO/UFOLightUI.h"
+#include "Source/Actor/Stage/CowFood.h"
 
 namespace
 {
@@ -72,6 +73,9 @@ Game::~Game()
 	/** UFOのライトUI削除 */
 	DeleteGO(m_ufoLightUI);
 
+	/** 牛の餌削除 */
+	DeleteGO(m_cowFood);
+
 	/** コンボクラスの削除 */
 	if (m_combo && !m_combo->IsDead())
 	{
@@ -116,15 +120,8 @@ bool Game::Start()
 	/** UFOのライトUIを生成 */
 	m_ufoLightUI = NewGO<UFOLightUI>(0, "ufoLightUI");
 
-	///** UFO は名前（またはインデックス）で取得 */
-	//for (int i = 0; i < EnUFO_Num; i++)
-	//{
-	//	m_UFO[i] = FindGO<UFO>(UFO_INFOMATIONS[i].objectName.c_str());
-	//	if (m_UFO[i])
-	//	{
-	//		m_UFO[i]->SetSlotIndex(i);
-	//	}
-	//}
+	/** 牛の餌を生成 */
+	m_cowFood = NewGO<CowFood>(0, "cowfood");
 
 	m_isSound = false;
 	m_spawnTimer = 0.0f;

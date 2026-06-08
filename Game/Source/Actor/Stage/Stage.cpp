@@ -21,21 +21,8 @@ namespace
 	
 }
 
-Stage::Stage()
-{
-	NewGO<CowFood>(0, "cowfood");
-}
-
-Stage::~Stage()
-{
-	DeleteGO(this);
-}
-
 bool Stage::Start()
 {
-	/** 次やること、まずNEWGO作ってエフェクト出して、そのあとに牛の餌のUIとかモデルとか出して、牛が寄ってくるようにするために新しくクラス作って
-		そのあとに牛のアニメーションやらなんやら作ってね*/
-
 	/** 外周フェンスと牛舎のモデル */
 	m_perimeterFenceModelRender.Init(PERIMETER_FILE_PATH);
 	m_perimeterFenceModelRender.SetPosition(STAGE_POS);
