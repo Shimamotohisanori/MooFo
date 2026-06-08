@@ -246,7 +246,9 @@ void UFO::Move()
 
 		/** 追跡中でも反発処理を行う */
 		ApplyUFOAvoidance(pos);
-		
+		/** UFOは常に地面と同じ高さを保つ */
+		pos.y = m_spawnPos.y;
+
 		/** 計算した新しい位置を、実際のUFOに反映する */
 		m_transform.SetPosition(pos);
 		return;
@@ -675,7 +677,8 @@ void UFO::ApplyUFOAvoidance(Vector3& pos)
 			float pushBack = (MIN_DIST - dist) * 1.0f;
 
 			pos += diff * pushBack;
-
+			/** UFOは常に地面と同じ高さを保つ */
+			pos.y = m_spawnPos.y;
 			/** 方向ベクトルの少しだけ補正を掛ける */
 			Vector3 newDir = m_moveDir + diff * 0.3f;
 			newDir.Normalize();
@@ -753,7 +756,8 @@ void UFO::UpdateUFOSound()
 	{
 		if (m_UFOCaptureSE)
 		{
-			m_UFOCaptureSE->Stop();
+			DeleteGO(m_UFOCaptureSE);
+			m_UFOCaptureSE = nullptr;
 		}
 		return;
 	}

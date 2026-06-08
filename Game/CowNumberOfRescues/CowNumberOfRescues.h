@@ -65,9 +65,9 @@ private:
 	/** レイアウトの種類 */
 	enum LayoutType
 	{
-		InGame,
-		GameClear,
-		GameOver,
+		InGame,/**ゲーム中*/
+		GameClear,/** ゲームクリア*/
+		GameOver,/** ゲームオーバー*/
 		LayoutTypeNum
 	};
 	/** レイアウトの種類ごとのUIの大きさ */

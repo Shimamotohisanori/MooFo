@@ -12,11 +12,6 @@ public:
 	~UFOLightManager();
 	bool Start() override;
 	void Update() override;
-	/** CowCaptureControllerの管理 */
-	/*void RegisterCowCaptureController(CowCaptureController* controller)
-	{
-		m_Controllers.push_back(controller);
-	}*/
 	/** UFOの管理を登録する*/
 	void RegisterUFO(UFO* ufo)
 	{
@@ -54,16 +49,20 @@ private:
 	bool CanUpdate();
 	void CountTimer();
 private:
+	/** 光が出るまでタイマー*/
 	float m_waitTimer = 5.0f;
+	/** 光が出ているタイマー*/
 	float m_emitTimer = 5.0f;
 	float m_timer = 0.0f;
 
 	CowCaptureController::UFOLightState m_state = CowCaptureController::Wait;
 	std::vector<UFO*> m_ufos;
 	//std::vector<CowCaptureController*>m_Controllers;
-
+	/** ゲームのポインタ*/
 	Game* m_game = nullptr;
+	/** カウントダウンのポインタ*/
 	CountDown* m_countdown = nullptr;
+	/** Pauseのポインタ*/
 	Pause* m_pause = nullptr;
 };
 

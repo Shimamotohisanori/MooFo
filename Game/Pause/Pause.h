@@ -21,7 +21,7 @@ public:
 	}
 
 	/** ポーズ中に選んでいる場所の番号取得関数 */
-	int GetCountNumber()
+	int GetCountNumber()const
 	{
 		return m_countNumber;
 	}
@@ -33,7 +33,7 @@ public:
 	}
 
 	/** ポーズ中かどうかのフラグ取得関数 */
-	bool GetIsPause()
+	bool GetIsPause()const
 	{
 		return m_isPause;
 	}
@@ -43,27 +43,40 @@ private:
 	/** 選択中の画面を表示させる番号 */
 	int m_countNumber = 0;
 
-	SoundManager* m_choiceSound;
-	SoundSource* p_chiceSE;
-	SoundSource* p_DecisionSE;
+	SoundManager* m_choiceSound = nullptr;
+	SoundSource* p_chiceSE = nullptr;
+	SoundSource* p_DecisionSE = nullptr;
 
 	/** ポーズ中かどうかのフラグ*/
 	bool m_isPause = false;
+	/** ゲームのポインタ*/
+	Game* m_game = nullptr;
+	/** ローディングシーンのポインタ*/
+	LoadingScene* m_loadingScene = nullptr;
+	/** サウンドポーズのポインタ*/
+	SoundPause* m_soundPause = nullptr;
 
-	Game* m_game;
 
-	LoadingScene* m_loadingScene;
-	SoundPause* m_soundPause;
-
+	/** Pasue中に使用する画像一覧*/
+	/** Pause背景*/
 	SpriteRender m_pauseBackGround;
+	/** 「ゲームをやめる」を表示するアイコン*/
 	SpriteRender m_quiteSprite;
+	/**「ゲームに戻る」を表示するアイコン*/
 	SpriteRender m_resumeSprite;
-	SpriteRender m_soundSprite;
+	/** 「音量」を表示するアイコン*/
+	SpriteRender m_soundSprite;	
+	/** BGMやSEを調整する画面の外枠*/
 	SpriteRender m_settingSprite;
+	/** 「BGM」とテクストで表示するアイコン*/
 	SpriteRender m_bgmSprite;
+	/** 効果音を調整するアイコン*/
 	SpriteRender m_seSprite;
+	/** 音量アイコン*/
 	SpriteRender m_volumeSprite;
+	/** 音量アイコンの音量が0になっているときのアイコン*/
 	SpriteRender m_notVolumeSprite;
+	/** 選択していないときに出す黒い背景*/
 	SpriteRender m_soundBlackSprite;
 	SpriteRender m_resumeBlackSprite;
 	SpriteRender m_quiteBlackSprite;

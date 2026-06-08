@@ -22,7 +22,7 @@ public:
 	}
 
 	/** ロープを投げたかどうかのフラグを取得する関数 */
-	bool GetIsThrowRope()
+	bool GetIsThrowRope()const
 	{
 		return m_isThrowRope;
 	}
@@ -41,7 +41,7 @@ public:
 	}
 
 	/** 縄が牛に当たったかどうかのフラグを取得する関数 */
-	bool GetIsHitCow()
+	bool GetIsHitCow()const
 	{
 		return m_isHitCow;
 	}
@@ -56,7 +56,7 @@ public:
 	}
 
 	/** 当たった牛を取得する関数 */
-	Cow* GetHitCow()
+	Cow* GetHitCow()const
 	{ 
 		return m_hitCow;
 	}
@@ -117,13 +117,13 @@ private:
 	ModelRender m_rollModelRender;
 
 	/** ロープの位置*/
-	Vector3 m_ropePos;
+	Vector3 m_ropePos = Vector3::Zero;
 
 	/** ロープの回転*/
-	Quaternion m_ropeRot;
+	Quaternion m_ropeRot = Quaternion::Identity;
 
 	/** ロープのスケール*/
-	Vector3 m_ropeScale;
+	Vector3 m_ropeScale = Vector3::Zero;
 
 	/** ロープを投げたかどうかのフラグ */
 	bool m_isThrowRope = false;

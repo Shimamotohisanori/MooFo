@@ -8,6 +8,7 @@
 #include "GameScene/LoadingScene.h"
 namespace
 {
+	/** Pauseで使用するファイルパス*/
 	const char* PAUSE_BACKGROUND_PATH = "Assets/sprite/PauseUI/pauseBackGround2.dds";
 	const char* PAUSE_QUITE_PATH      = "Assets/sprite/PauseUI/quiteGame.dds";
 	const char* PAUSE_RESUME_PATH     = "Assets/sprite/PauseUI/resumeGame.dds";

@@ -23,19 +23,19 @@ public:
 	}
 
 	/** 牛に当たったかどうかのフラグ取得関数 */
-	bool GetIsCowCaptured()
+	bool GetIsCowCaptured()const 
 	{
 		return m_isCowCaptured;
 	}
 
 	/** カメラの位置取得関数 */
-	Vector3 GetCameraPosition()
+	Vector3 GetCameraPosition() const
 	{
 		return g_camera3D->GetPosition();
 	}
 
 	/** カメラの前方向の取得 */
-	Vector3 GetCameraForward()
+	Vector3 GetCameraForward() const
 	{
 		return g_camera3D->GetForward();
 	}
@@ -54,28 +54,27 @@ private:
 
 private:
 	/** プレイヤー */
-	Player* m_player;
+	Player* m_player = nullptr;
 
 	/** ロープ */
-	Rope* m_rope;
+	Rope* m_rope = nullptr;
 
 	/** 牛 */
-	Cow* m_cow;
-
+	Cow* m_cow = nullptr;
 	/** ゲーム */
-	Game* m_game;
+	Game* m_game = nullptr;
 
 	/** ロープを投げている間のカメラ位置を保存する変数 */
-	Vector3 m_cameraPos;
+	Vector3 m_cameraPos = Vector3::Zero;
 
 	/** ロープ追従開始前のカメラ位置を保存する変数 */
-	Vector3 m_savedCameraPos; 
+	Vector3 m_savedCameraPos = Vector3::Zero; 
 
 	/** ロープを投げている間のforwardを固定する */
-	Vector3 m_ropeForward;
+	Vector3 m_ropeForward = Vector3::Zero;
 
 	/** 牛捕獲時専用カメラ位置 */
-	Vector3 m_hitCowCameraPos;
+	Vector3 m_hitCowCameraPos = Vector3::Zero;
 
 	/** 牛を捕まえた時の音 */
 	SoundSource* m_cowCatchSE = nullptr;

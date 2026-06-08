@@ -31,8 +31,8 @@ public:
 	enum class ResultType
 	{
 
-		GameClear,
-		GameOver,
+		GameClear,/** ゲームクリア*/
+		GameOver,/** ゲームオーバー*/
 	};
 	
 	void SetResultType(ResultType type)

@@ -6,8 +6,8 @@
 class Transform
 {
 private:
-	Vector3 m_position;
-	Quaternion m_rotation;
+	Vector3 m_position = Vector3::Zero;
+	Quaternion m_rotation = Quaternion::Identity;
 	Vector3 m_scale;
 
 

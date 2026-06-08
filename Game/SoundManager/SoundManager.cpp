@@ -28,8 +28,6 @@ namespace
 		"DecisionSE",
 		"ThrowRopeSE",
 		"UFOCaptureSE",
-		"UFOTakeAwaySE",
-		"WalkSE",
 		"ScoreDecreaseSE",
 		"ScoreRiseSE",
 		"AddTimeSE",
