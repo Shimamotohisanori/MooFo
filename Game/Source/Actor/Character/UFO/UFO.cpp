@@ -336,8 +336,7 @@ void UFO::TakeAwayTheCow()
 	/** ‹‚ÆUFO‚Ì‹——£‚ª0.5ˆÈã‚¾‚Á‚½‚ç‹‚ðUFO‚É‹ß‚Ã‚¯‚é */
 	if (dist > 0.5f)
 	{
-		dir.Normalize();
-		cowPos += dir * CAPTURE_SPEED;
+		m_targetCow->TakeAwayedByUFO(dir, CAPTURE_SPEED);
 	}
 
 	//** ‹‚ÆUFO‚Ì‹——£‚ª0.5–¢–ž‚¾‚Á‚½‚ç‹‚ðíœ‚µA‹‚Ì‹~o”‚ðŒ¸‚ç‚· */

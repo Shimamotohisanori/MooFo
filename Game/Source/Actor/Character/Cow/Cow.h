@@ -107,6 +107,9 @@ public:
 	/** 牛を削除予定を見る関数 */
 	void RequestKill();
 
+	/** UFOに連れ去らわれる処理 */
+	void TakeAwayedByUFO(Vector3 direction, float speed);
+
 
 private:
 	/** プレイヤーに引っ張られる関数 */
@@ -165,6 +168,9 @@ private:
 	
 	/** 牛のモデルレンダラー */
 	ModelRender m_cowmodelRender;
+
+	/** 牛のキャラクターコントローラー(当たり判定) */
+	CharacterController m_cowCharacterController;
 
 	/** 牛のステート */
 	uint8_t m_cowState;
