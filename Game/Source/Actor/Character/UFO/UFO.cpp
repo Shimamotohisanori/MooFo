@@ -731,7 +731,7 @@ bool UFO::CanUFOUpdate()
 	}
 
 	/** カウントダウン中はUFOを動かさない */
-	if (m_countdown->GetCountDown())
+	if (m_countdown->GetIsCountDown())
 	{
 		return false;
 	}

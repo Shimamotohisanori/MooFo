@@ -3,6 +3,7 @@
 #include "EffectManager/EffectManager.h"
 #include "Source/Actor/Character/Player/Player.h"
 #include "Rope/Rope.h"
+#include "CountDown/CountDown.h"
 namespace
 {
 	/** 牛の餌のモデルファイルパス */
@@ -75,11 +76,17 @@ bool CowFood::Start()
 	
 	m_rope = FindGO<Rope>("rope");
 
+	m_CountDown = FindGO<CountDown>("countdown");
+
 	return true;
 }
 
 void CowFood::Update()
 {
+	if (m_CountDown->GetIsCountDown())
+	{
+		return;
+	}
 	/** プレイヤーのクラスを見つける */
 	Player* player = FindGO<Player>("player");
 
@@ -129,6 +136,8 @@ void CowFood::Update()
 
 void CowFood::CowFoodPut()
 {
+
+
 	if (!m_rope->GetIsThrowRope() && !m_rope->GetIsHitCow() && g_pad[0]->IsPress(enButtonLB2))
 	{
 		if (m_foodCount > 0 && !m_isPutPlayer)

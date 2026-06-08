@@ -73,7 +73,7 @@ void Pause::Update()
 	CountDown* countDown = FindGO<CountDown>("countdown");
 
 	/** カウントダウンが終わるまではポーズ画面の操作を受け付けない */
-	if (!countDown || countDown->GetCountDown())
+	if (!countDown || countDown->GetIsCountDown())
 	{
 		return;
 	}

@@ -1,5 +1,6 @@
 #pragma once
 class Rope;
+class CountDown;
 class CowFood : public IGameObject
 {
 public:
@@ -75,4 +76,7 @@ private:
 
 	/** 縄のクラス */
 	Rope* m_rope = nullptr;
+
+	/** カウントダウン */
+	CountDown* m_CountDown = nullptr;
 };

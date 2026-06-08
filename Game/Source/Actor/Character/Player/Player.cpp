@@ -348,7 +348,7 @@ bool Player::CanPlayerUpdate()
 		m_game == nullptr ||
 		m_game->GetIsTimeOut() ||
 		m_pause->GetIsPause() ||
-		m_countDown->GetCountDown())
+		m_countDown->GetIsCountDown())
 	{
 		m_isMoving = false;
 		return false;
