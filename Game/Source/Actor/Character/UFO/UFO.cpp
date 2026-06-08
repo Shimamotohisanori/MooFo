@@ -338,8 +338,7 @@ void UFO::TakeAwayTheCow()
 	/** 牛とUFOの距離が0.5以上だったら牛をUFOに近づける */
 	if (dist > 0.5f)
 	{
-		dir.Normalize();
-		cowPos += dir * CAPTURE_SPEED;
+		m_targetCow->TakeAwayedByUFO(dir, CAPTURE_SPEED);
 	}
 
 	//** 牛とUFOの距離が0.5未満だったら牛を削除し、牛の救出数を減らす */
@@ -740,7 +739,7 @@ bool UFO::CanUFOUpdate()
 	}
 
 	/** カウントダウン中はUFOを動かさない */
-	if (m_countdown->GetCountDown())
+	if (m_countdown->GetIsCountDown())
 	{
 		return false;
 	}

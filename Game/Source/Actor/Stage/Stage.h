@@ -8,8 +8,8 @@ class CowFood;
 class Stage : public Actor
 {
 public:
-	Stage();
-	~Stage();
+	Stage(){}
+	~Stage(){}
 
 private:
 	bool Start() override;

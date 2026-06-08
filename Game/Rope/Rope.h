@@ -27,7 +27,7 @@ public:
 		return m_isThrowRope;
 	}
 
-	/** 縄が牛に当たったかどうかのフラグを取得する関数 */
+	/** 縄が牛に当たったかどうかのフラグを設定する関数 */
 	void SetIsHitCow(bool isHitCow)
 	{
 		m_isHitCow = isHitCow;

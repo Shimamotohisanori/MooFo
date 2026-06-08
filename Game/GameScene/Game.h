@@ -19,6 +19,7 @@ class Combo;
 class AddTimerUI;
 class UFOLightUI;
 class UFOLightManager;
+class CowFood;
 /** UFOの情報をまとめる構造体 */
 struct UFOinfo
 {
@@ -188,6 +189,9 @@ private:
 
 	/** UFOのライトマネージャー */
 	UFOLightManager* m_ufoLightManager = nullptr;
+
+	/** 牛の餌 */
+	CowFood* m_cowFood = nullptr;
 
 	/** 終了画像 */
 	SpriteRender m_timeOutImage;

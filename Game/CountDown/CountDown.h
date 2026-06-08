@@ -19,7 +19,6 @@ public:
 		return m_isCountDown;
 	};
 
-
 private:
 	/** カウントダウンの数字のスプライト */
 	/** カウントダウンの3のスプライト */

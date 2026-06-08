@@ -22,18 +22,21 @@ namespace
 
 	/** 画像の大きさ */
 	/** 横幅 */
-	const int BLACKLOADING_WIDTH = 1920.0f;
-	const int LOADING_WIDTH = 1800.0f;
-	const int LOADINGWARD_WIDTH = 400.0f;
+	constexpr int BLACKLOADING_WIDTH = 1920.0f;
+	constexpr int LOADING_WIDTH = 1800.0f;
+	constexpr int LOADINGWARD_WIDTH = 400.0f;
 	
 	/** 縦幅 */
-	const int BLACKLOADING_HEIGHT = 1080.0f;
-	const int LOADING_HEIGHT = 800.0f;
-	const int LOADINGWARD_HEIGHT = 100.0f;
+	constexpr int BLACKLOADING_HEIGHT = 1080.0f;
+	constexpr int LOADING_HEIGHT = 800.0f;
+	constexpr int LOADINGWARD_HEIGHT = 100.0f;
 	
 	/** 牛のランダムスポーン範囲 */
-	const int RANDOM_SPAWN_RANGE = 500;
-	const int RANDOM_SPAWN_RANGE_DOUBLE = 800;
+	constexpr int RANDOM_SPAWN_RANGE = 500;
+	constexpr int RANDOM_SPAWN_RANGE_DOUBLE = 800;
+
+	/** 牛同士の最低距離 */
+	constexpr float MIN_DISTANCE = 15.0f; // 牛同士の最低距離
 }
 
 LoadingScene::LoadingScene()
@@ -307,10 +310,33 @@ void LoadingScene::LoadTitleOnly()
 Vector3 LoadingScene::RandomCowPos()
 {
 	Vector3 pos;
-	pos.x = (rand() % RANDOM_SPAWN_RANGE_DOUBLE) - RANDOM_SPAWN_RANGE;
-	pos.y = 0.0f;
-	pos.z = (rand() % RANDOM_SPAWN_RANGE_DOUBLE) - RANDOM_SPAWN_RANGE;
-	return pos;
+
+	while (true)
+	{
+		pos.x = (rand() % RANDOM_SPAWN_RANGE_DOUBLE) - RANDOM_SPAWN_RANGE;
+		pos.y = 0.0f;
+		pos.z = (rand() % RANDOM_SPAWN_RANGE_DOUBLE) - RANDOM_SPAWN_RANGE;
+
+		/** 牛同士の距離が近すぎないようにする */
+		bool isTooClose = false;
+
+		for (auto cow : m_tempCows)
+		{
+			/** 牛同士の距離が近すぎる場合は
+			再度ランダムな位置を生成する */
+			if ((cow->GetPosition() - pos).Length() < MIN_DISTANCE)
+			{
+				isTooClose = true;
+				break;
+			}
+		}
+
+		/** 牛同士の距離が近すぎない場合はループを抜ける */
+		if (!isTooClose)
+		{
+			return pos;;
+		}
+	}	
 }
 
 void LoadingScene::SetNextScene(std::function<void()>next)
