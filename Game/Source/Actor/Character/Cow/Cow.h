@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include"Source/Actor/Character/Character.h"
 class Rope;
 class Player;
@@ -45,7 +45,7 @@ public:
 	}
 
 	/** 牛の回転を取得する関数 */
-	Quaternion GetRotation()
+	Quaternion GetRotation() 
 	{
 		return m_transform.GetRotation();
 	}
@@ -87,7 +87,7 @@ public:
 	}
 
 	/** 対象のUFOを取得する関数 */
-	UFO* GetTakingUFO()
+	UFO* GetTakingUFO() const
 	{
 		return m_takingUFO;
 	}
@@ -158,8 +158,9 @@ private:
 
 	enum EnCowState
 	{
-		EnRotateState_MoveDir,
-		EnRotateState_Spin,
+		
+		EnRotateState_MoveDir,/** 移動*/
+		EnRotateState_Spin,/** 回転*/
 		EnRotateState_Num
 	};
 	
@@ -173,7 +174,7 @@ private:
 	CharacterController m_cowCharacterController;
 
 	/** 牛のステート */
-	uint8_t m_cowState;
+	uint8_t m_cowState = 0;;
 
 	/** 牛の移動方向 */
 	Vector3 m_moveDir = Vector3::Zero;
@@ -204,8 +205,8 @@ private:
 
 	enum EnAnimation
 	{
-		EnAnimation_Idle,
-	    EnAnimation_Walk,
+		EnAnimation_Idle,/** 待機*/
+	    EnAnimation_Walk,/** 歩き*/
 		EnAnimation_Num
 	};
 	AnimationClip animationClips[EnAnimation_Num];

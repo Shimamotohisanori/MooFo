@@ -69,7 +69,7 @@ private:
 	enGameOverState m_gameOverState = FadeIn;
 
 	/** スコアの最終値 */
-	int m_finalScore;
+	int m_finalScore = 0;
 
 	/** 救出数の最終値 */
 	int m_finalRescue = 0;

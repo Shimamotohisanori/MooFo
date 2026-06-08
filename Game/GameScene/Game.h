@@ -79,7 +79,7 @@ public:
 	void RequestUFORespawn(int slotIndex);
 
 	/** UFO達の取得関数 */
-	std::vector<UFO*> GetUFOs()
+	std::vector<UFO*> GetUFOs()const
 	{
 		/** UFOのリストを作成して返す */
 		std::vector<UFO*> m_ufos;
@@ -104,7 +104,7 @@ public:
 	void SetUFOList(const std::vector<UFO*>& ufos);
 
 	/** タイムアウトフラグの取得関数 */
-	bool GetIsTimeOut()
+	bool GetIsTimeOut()const 
 	{
 		return m_isTimeOut;
 	}
@@ -130,57 +130,56 @@ private:
 
 private:
 	/** ステージ */
-	Stage* m_stage;
+	Stage* m_stage = nullptr;
 
 	/** プレイヤー */
-	Player* m_player;
+	Player* m_player = nullptr;
 
 	/** ゲームカメラ */
-	GameCamera* m_gameCamera;
+	GameCamera* m_gameCamera = nullptr;
 
 	/** ポーズ */
-	Pause* m_pause;
+	Pause* m_pause = nullptr;
 
 	/** タイマー */
-	Timer* m_timer;
+	Timer* m_timer  = nullptr;
 
 	/** ゲームクリア */
-	GameClear* m_gameClear;
+	GameClear* m_gameClear = nullptr;
 
 	/** ゲームオーバー */
-	GameOver* m_gameOver;
+	GameOver* m_gameOver = nullptr;
 
 	/** カウントダウン */
-	CountDown* m_countDown;
+	CountDown* m_countDown = nullptr;
 
 	/** 牛の救出数 */
-	CowNumberOfRescues* m_cowNumberOfRescues;
+	CowNumberOfRescues* m_cowNumberOfRescues = nullptr;
 
 	/** ミニマップ */
-	Map* m_map;
+	Map* m_map = nullptr;
 
 	/** サウンドマネージャー */
-	SoundManager* m_inGameSound;
+	SoundManager* m_inGameSound = nullptr;
 
 	/** ゲーム中のBGM */
-	SoundSource* m_inGameBGM;
+	SoundSource* m_inGameBGM = nullptr;
 
 	/** タイムアウト時のSE */
-	SoundSource* m_timeOutSE;
+	SoundSource* m_timeOutSE = nullptr;
 
-	SoundSource* m_pauseSE;
+	SoundSource* m_pauseSE = nullptr;
 
 	/** スコア */
-	Score* m_score;
+	Score* m_score = nullptr;
 
 	/** スカイキューブ */
 	SkyCube* m_skyCube = nullptr;
-
 	/** コンボ */
-	Combo* m_combo;
+	Combo* m_combo = nullptr;
 
 	/** タイマー追加UI */
-	AddTimerUI* m_addTimerUI;
+	AddTimerUI* m_addTimerUI = nullptr;
 	
 	/** ダミーの牛 */
 	DummyCow* m_dummyCow = nullptr;

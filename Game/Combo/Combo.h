@@ -14,7 +14,7 @@ public:
 	void Render(RenderContext& rc);
 
 	/** コンボを取得する関数 */
-	int GetCombo()
+	int GetCombo()const 
 	{
 		return m_combo;
 	}
@@ -31,7 +31,7 @@ public:
 	}
 
 	/** コンボタイマーを取得する関数 */
-	float GetComboTimer()
+	float GetComboTimer()const 
 	{
 		return m_comboTimer;
 	}

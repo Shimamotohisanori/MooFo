@@ -14,73 +14,92 @@ public:
 	void UpdateSEUI();
 	void Render(RenderContext& rc);
 
-	/** é¸æŠç•ªå·è¨­å®š */
+	/** ‘I‘ğ”Ô†İ’è */
 	void SetCount(int count)
 	{
 		m_Count = count;
 	}
 
-	/** é¸æŠç•ªå·å–å¾— */
-	int GetCount()
+	/** ‘I‘ğ”Ô†æ“¾ */
+	int GetCount()const 
 	{
 		return m_Count;
 	}
 
-	/** BGMéŸ³é‡è¨­å®š */
+	/** BGM‰¹—Êİ’è */
 	void SetBGMVolume(float bgm)
 	{
 		m_bgmVolume = bgm;
 	}
 
-	/** BGMéŸ³é‡å–å¾— */
-	float GetBGMVolume()
+	/** BGM‰¹—Êæ“¾ */
+	float GetBGMVolume()const
 	{
 		return m_bgmVolume;
 	}
 
-	/** SEéŸ³é‡è¨­å®š */
+	/** SE‰¹—Êİ’è */
 	void SetSEVolume(float se)
 	{
 		m_seVolume = se;
 	}
 
-	/** SEéŸ³é‡å–å¾— */
-	float GetSEVolume()
+	/** SE‰¹—Êæ“¾ */
+	float GetSEVolume()const
 	{
 		return m_seVolume;
 	}
 
 	
 private:
+	/** ‚Ç‚±‚ğ‘I‘ğ‚µ‚Ä‚¢‚é‚©‚ğ•\‚·ƒJƒEƒ“ƒg•Ï”*/
 	int m_Count = 0;
 
-	/** BGMã®éŸ³é‡ */
+	/** BGM‚Ì‰¹—Ê */
 	float m_bgmVolume = 0.3f;
 
-	/** SEã®éŸ³é‡ */
+	/** SE‚Ì‰¹—Ê */
 	float m_seVolume  = 0.8f;
 
+	/** */
+	/** Pause‰æ–Ê‚Éo‚Ä‚­‚é”wŒi*/
 	SpriteRender m_backGroundSprite;
+	/** BGM‚âSE‚ğ’²®‚·‚é‰æ–Ê‚ÌŠO˜g*/
 	SpriteRender m_settingSprite;
+	/** ‰¹—ÊƒAƒCƒRƒ“*/
 	SpriteRender m_volumeSprite;
+	/** ‰¹—Ê‚ªo‚Ä‚¢‚È‚¢‚Æ‚«‚ÌƒAƒCƒRƒ“*/
 	SpriteRender m_notVolumeSprite;
+	/** uBGMv‚ÆƒeƒLƒXƒg‚Å•\¦‚·‚éƒAƒCƒRƒ“*/
 	SpriteRender m_bgmSprite;
+	/** uSEv‚ÆƒeƒLƒXƒg‚Å•\¦‚·‚éƒAƒCƒRƒ“*/
 	SpriteRender m_seSprite;
+	/** SE‚Ì‰¹—ÊƒAƒCƒRƒ“*/
 	SpriteRender m_seVolumeSprite;
+	/** SE‚Å‰¹—Ê‚ªo‚Ä‚¢‚È‚¢‚±‚Æ‚ğ•\‚·ƒAƒCƒRƒ“*/
 	SpriteRender m_seNotVolumeSprite;
+	/** u‚à‚Ç‚év‚ğ•¶š‚Å•\‚·ƒAƒCƒRƒ“*/
 	SpriteRender m_buttonReturnSprite;
+	/** BGM‚Ì’²®‚ğ‚·‚é‚½‚ß‚Ì’ƒF‚¢ŠÛ‚¢ƒXƒ‰ƒCƒhƒo[*/
 	SpriteRender m_soundIconSprite;
+	/** SE‚Ì’²®‚ğ‚·‚é‚½‚ß‚Ì‰©F‚¢ŠÛ‚¢ƒXƒ‰ƒCƒhƒo[*/
 	SpriteRender m_seIconSprite;
+	/** BGMESE‚ğ’²®‚·‚é‚½‚ß‚Ì×’·‚¢ƒo[*/
 	SpriteRender m_blownBarSprite;
 	SpriteRender m_seBlownBarSprite;
+	/** ŠÛ‚¢ƒXƒ‰ƒCƒhƒo[‚ª‘I‘ğ‚³‚ê‚Ä‚¢‚È‚¢‚Æ‚«‚Éo‚·ƒXƒ‰ƒCƒhƒo[*/
 	SpriteRender m_bgmBlackIcon;
 	SpriteRender m_seBlackIcon;
+	/** ‘I‚Î‚ê‚Ä‚¢‚È‚¢‚Æ‚«‚Éo‚·•‚¢‰æ‘œ*/
 	SpriteRender m_blackSprite;
-
-	SoundManager* m_choiceSound;
-	SoundSource* p_chiceSE;
-	SoundSource* p_decisionSE;
+	/** ƒTƒEƒ“ƒhƒ}ƒl[ƒWƒƒ[‚Ìƒ|ƒCƒ“ƒ^*/
+	SoundManager* m_choiceSound = nullptr;
+	/** ‘I‘ğ‚·‚é‚ÌSE‚ÌƒTƒEƒ“ƒhƒ\[ƒX‚Ìƒ|ƒCƒ“ƒ^*/
+	SoundSource* p_chiceSE = nullptr;
+	/** Œˆ’è‚·‚é‚ÌSE‚ÌƒTƒEƒ“ƒhƒ\[ƒX‚Ìƒ|ƒCƒ“ƒ^*/
+	SoundSource* p_decisionSE = nullptr;
 
 private:
-	Pause* m_pause;
+	/** ƒQ[ƒ€‚Ìƒ|ƒCƒ“ƒ^*/
+	Pause* m_pause = nullptr;
 };

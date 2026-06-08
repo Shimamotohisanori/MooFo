@@ -15,7 +15,10 @@ class Timer : public IGameObject
 	void AddTimer(float time);
 
 	/** タイマーの値を取得する関数 */
-	const float GetTimer() const { return m_timer; }
+	const float GetTimer() const
+	{
+		return m_timer;
+	}
 
 
 public:
@@ -49,9 +52,9 @@ private:
 	};
 
 	/** カウントダウン */
-	CountDown* m_countdown;
+	CountDown* m_countdown = nullptr;
 
 	/** ポーズ */
-	Pause* m_pause;
+	Pause* m_pause = nullptr;
 };
 
