@@ -2,6 +2,7 @@
 /**
  * 牛の救出数クラス
  */
+class LoadingScene;
 class CowNumberOfRescues : public IGameObject
 {
 public:

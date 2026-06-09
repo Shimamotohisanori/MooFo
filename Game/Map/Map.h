@@ -4,6 +4,7 @@ class Cow;
 class UFO;
 class Pause;
 class Game;
+class LodingScene;
 class Map : public IGameObject
 {
 public:

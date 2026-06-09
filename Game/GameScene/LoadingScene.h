@@ -25,6 +25,8 @@ public:
 	/** Loading文字のフェード処理を行う関数*/
 	void FadeLoadingText();
 
+	/** シーンが切り替わるタイミングでフェードアウト処理を行う*/
+	void FadeOutLoadingScene();
 	/** ロードするシーンのタイプ*/
 	enum LoadType
 	{
@@ -44,10 +46,16 @@ public:
 		m_loadType = loadType;
 	}
 
+	/** ローディングが終わったことを知らせる関数*/
+	bool GetLoadingEnd()const
+	{
+		return m_isFadeComplete;
+	}
 
 private:
 	/** ゲームオブジェクトをステップバイステップでロードする関数*/
 	void LoadGameObjectsStepByStep();
+	
 
 	/** タイトルのみをロードする関数 */
 	void LoadTitleOnly();
@@ -93,18 +101,26 @@ private:
 	/** Load文字フェード用の変数*/
 	/** Loadingの文字のアルファ値*/
 	float m_loadingTextAlpha = 1.0f;
-
 	/** Loadingの文字のフェード速度*/
 	float m_loadingFadeSpeed = 0.5f;
-
 	/** フェードインしているかどうかのフラグ*/
 	bool m_isFadeIn = false;
-
 	/** ローディングが開始したかどうかのフラグ*/
 	bool m_isLoadingStarted = false;
+	/** ローディングが終了したかどうかのフラグ*/
+	bool m_isLoadingEnd = false;
+	/** フェードアウトが終了したかどうかのフラグ*/
+	bool m_isFadeComplete = false;
 
+	/** Sceneの切り替え時にフェードインするための変数*/
+	/** LodingSceneのα値*/
+	float m_SceneFadeAlpha = 1.0f;
+	/** フェード速度*/
+	float m_SceneFadeSpeed = 0.5f;
+	/** Sceneがフェードアウトしているかどうかのフラグ*/
+	bool m_isSceneFadeOut = false;
 	/** ローディング中の音源 */
-	SoundSource* m_loadingSound = nullptr;	
+	SoundSource* m_loadingSound = nullptr;
 
 	//これは、LoadingSceneを呼び出すときに、次のシーンをロードする関数を引数で渡してもらうための変数。
 	/** 次のシーンをロードする関数*/

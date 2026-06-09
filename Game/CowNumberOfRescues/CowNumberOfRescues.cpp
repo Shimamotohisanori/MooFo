@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CowNumberOfRescues.h"
-
+#include "GameScene/LoadingScene.h"
 namespace
 {
 	/** 数のUIのファイルパス */
@@ -172,6 +172,12 @@ void CowNumberOfRescues::InitLayout()
 
 void CowNumberOfRescues::Render(RenderContext& renderContext)
 {
+    /**フェード完了までUIの表示を遅らす*/
+    LoadingScene* lodingScene = FindGO<LoadingScene>("loading");
+    if (lodingScene != nullptr && !lodingScene->GetLoadingEnd())
+    {
+        return;
+    }
     /** レイアウトの種類 */
 	LayoutType layoutType;
 

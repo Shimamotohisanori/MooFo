@@ -1,5 +1,6 @@
 #pragma once
 class Player;
+class LoadingScene;
 class CountDown : public IGameObject
 {
 public:
@@ -18,6 +19,7 @@ public:
 	{
 		return m_isCountDown;
 	};
+	
 
 private:
 	/** カウントダウンの数字のスプライト */
@@ -47,7 +49,8 @@ private:
 
 	/** カウントダウンが進行中かどうか */
 	bool m_isCountDown = true;
-
+	/** カウントダウンのSEを一度だけ再生させるフラグ*/
+	bool m_isPlaySE = false;
 	/** カウントダウン中に表示する数字のUIを決めるフラグ */
 	bool m_Show1 = false;
 	bool m_Show2 = false;

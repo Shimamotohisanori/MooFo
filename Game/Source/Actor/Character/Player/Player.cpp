@@ -344,7 +344,7 @@ bool Player::CanPlayerUpdate()
 		m_game == nullptr ||
 		m_game->GetIsTimeOut() ||
 		m_pause->GetIsPause() ||
-		m_countDown->GetIsCountDown())
+		m_countDown->GetCountDown())
 	{
 		/** 走ってるSEが再生中かつSEオブジェクトが存在しているかどうか */
 		if (m_isPlayRunSE && m_runSE != nullptr)

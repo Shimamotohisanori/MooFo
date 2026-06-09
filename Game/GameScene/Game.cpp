@@ -136,6 +136,7 @@ bool Game::Start()
 
 void Game::Update()
 {
+	
 	/** 生きている牛のリストをループして牛が存在するか確認する */
 	for (auto it = m_aliveCows.begin(); it != m_aliveCows.end();)
 	{
@@ -167,7 +168,7 @@ void Game::Update()
 	/** セレクトボタンを押していて
 	 * カウントダウン中でないかつ
 	 * タイムアウトしていない場合 */
-	if (g_pad[0]->IsTrigger(enButtonSelect) && !m_countDown->GetIsCountDown() && !m_isTimeOut)
+	if (g_pad[0]->IsTrigger(enButtonSelect) && !m_countDown->GetCountDown() && !m_isTimeOut)
 	{
 		/** タイムアウトなら */
 		if (m_isTimeOut)

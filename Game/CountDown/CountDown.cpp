@@ -1,7 +1,7 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "CountDown.h"
 #include "SoundManager/SoundManager.h"
-
+#include"GameScene/LoadingScene.h"
 namespace
 {
 	/** ファイルパス指定 */
@@ -35,19 +35,33 @@ bool CountDown::Start()
 	m_countDown3.Init(FILEPATH3, GAMECLEAR_WIDTH, GAMEOVER_HIGHT);
 	m_countDownStart.Init(FILEPATHStart, STARTWIDTH, STARTHIGHT);
 
-	SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
-
-	/** カウントダウンの音を再生 */
-	m_countDownSE = soundManager->PlayingSE(SoundSE::enCountDownSE, false);
+	
 
 	return true;
 }
 
 void CountDown::Update()
 {
-
+	
 	if (m_isCountDown)
 	{
+		LoadingScene* loading = FindGO<LoadingScene>("loading");
+		/** LoadingSceneが存在するかつローディングが終わるまでは待ちの状態にする*/
+		if (loading != nullptr && !loading->GetLoadingEnd())
+	    {
+		    return;
+	    }
+
+		/** SEは一度だけ再生する*/
+		if (!m_isPlaySE)
+		{
+			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+			/** カウントダウンの音を再生 */
+			m_countDownSE = soundManager->PlayingSE(SoundSE::enCountDownSE, false);
+			m_isPlaySE = true;
+		}
+		
+		/** loadingがnullptrまたはフェード完了なら進む*/
 		InCountDown();
 	}
 	
@@ -55,6 +69,7 @@ void CountDown::Update()
 
 void CountDown::InCountDown()
 {
+
 	m_countDownTime -= g_gameTime->GetFrameDeltaTime();
 
 	/** 最初は全てOFF */

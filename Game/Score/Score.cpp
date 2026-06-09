@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Score.h"
 #include "SoundManager/SoundManager.h"
-
+#include"GameScene/LoadingScene.h"
 namespace
 {
 	/** 三桁の数字を描画する画像の大きさ */
@@ -229,6 +229,12 @@ int Score::GetScore() const
 
 void Score::Render(RenderContext& rc)
 {
+	/**フェード完了までUIの表示を遅らす*/
+	LoadingScene* lodingScene = FindGO<LoadingScene>("loading");
+	if (lodingScene != nullptr && !lodingScene->GetLoadingEnd())
+	{
+		return;
+	}
 	for (int i = 0; i < 5; i++)
 	{
 		for (int j = 0; j < 10; j++)

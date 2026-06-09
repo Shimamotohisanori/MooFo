@@ -1,6 +1,7 @@
 #pragma once
 class Rope;
 class CountDown;
+class LoadingScene;
 class CowFood : public IGameObject
 {
 public:

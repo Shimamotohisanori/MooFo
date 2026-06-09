@@ -93,10 +93,12 @@ void Title::InTitle()
 			m_loadingScene = NewGO<LoadingScene>(0, "loading");
 			m_loadingScene->SetLoadType(LoadingScene::LoadType::ToGameScene);
 			DeleteGO(m_titleBGM);
-			m_loadingScene->SetNextScene([]()
-				{
-					NewGO<Game>(0, "game");
-				});
+			//m_loadingScene->SetNextScene([this]()
+			//	{
+			//		/** ゲームがNewGOされるタイミングでフェードインを入れる*/
+			//		m_loadingScene->SetFadeInScene();
+			//		//NewGO<Game>(0, "game");
+			//	});
 			DeleteGO(this);
 		}
 	}	

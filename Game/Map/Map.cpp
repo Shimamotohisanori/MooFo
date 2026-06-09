@@ -5,6 +5,7 @@
 #include "GameScene/Game.h"
 #include "Source/Actor/Character/UFO/UFO.h"
 #include "Pause/Pause.h"
+#include"GameScene/LoadingScene.h"
 namespace
 {
 	/** ミニマップのスプライトのパス */
@@ -245,6 +246,14 @@ bool Map::WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3
 }
 void Map::Render(RenderContext& rc)
 {
+	/**フェード完了までUIの表示を遅らす*/
+	LoadingScene* lodingScene = FindGO<LoadingScene>("loading");
+	if (lodingScene != nullptr && !lodingScene->GetLoadingEnd())
+	{
+		return;
+	}
+
+
 	if (m_pause == nullptr) return;
 	if (m_game == nullptr) return;
 	if (m_pause->GetIsPause()) return;
