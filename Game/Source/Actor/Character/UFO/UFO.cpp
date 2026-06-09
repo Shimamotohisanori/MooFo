@@ -84,6 +84,12 @@ UFO::~UFO()
 		m_UFOConfusionEffect = nullptr;
 	}
 
+	/** SEを消す */
+	if (m_UFOCaptureSE)
+	{
+		DeleteGO(m_UFOCaptureSE);
+		m_UFOCaptureSE = nullptr;
+	}
 }
 
 
@@ -330,8 +336,7 @@ void UFO::TakeAwayTheCow()
 	/** 牛とUFOの距離が0.5以上だったら牛をUFOに近づける */
 	if (dist > 0.5f)
 	{
-		dir.Normalize();
-		cowPos += dir * CAPTURE_SPEED;
+		m_targetCow->TakeAwayedByUFO(dir, CAPTURE_SPEED);
 	}
 
 	//** 牛とUFOの距離が0.5未満だったら牛を削除し、牛の救出数を減らす */
@@ -745,11 +750,9 @@ void UFO::UpdateUFOSound()
 	/** タイムアウトしていれば */
 	if (m_game && m_game->GetIsTimeOut())
 	{
-		/** SEを消す */
 		if (m_UFOCaptureSE)
 		{
-			DeleteGO(m_UFOCaptureSE);
-			m_UFOCaptureSE = nullptr;
+			m_UFOCaptureSE->Stop();
 		}
 		return;
 	}

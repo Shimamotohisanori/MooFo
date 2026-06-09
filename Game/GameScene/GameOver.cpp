@@ -113,6 +113,10 @@ void GameOver::Update()
 
 	if (m_score)
 	{
+		if (m_isScoreSet)
+		{
+			m_score->ScoreCounterAnimation();
+		}
 		m_score->Update();
 	}
 
