@@ -248,6 +248,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		{
 			UFO* ufo = NewGO<UFO>(0, "UFO");
 			ufo->SetPosition(UFO_INFOMATIONS[index].pos);
+			ufo->SetUFOMoveState();
 			ufo->SetSlotIndex(index);
 			m_tempUFOs.push_back(ufo);
 		}
@@ -268,13 +269,13 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		/** スケール設定 */
 		sky->SetScale(10000.0f);
 
-		/** IBL 設定 */
-		g_renderingEngine->SetAmbientByIBLTexture(sky->GetTextureFilePath(), 1.0f);
-
 		/** 方向光(ほぼ真上から差し込む光) */
 		Vector3 sunDir(0.0f, -1.0f, 0.0f);
 		sunDir.Normalize();
-		g_renderingEngine->SetDirectionLight(0, sunDir, Vector3(0.8f, 0.6f, 0.5f));
+		g_renderingEngine->SetDirectionLight(0, sunDir, Vector3(2.8f, 2.8f, 3.0f));
+
+		/** IBL 設定 */
+		g_renderingEngine->SetAmbientByIBLTexture(sky->GetTextureFilePath(), 1.0f);
 
 		/** ブルームを抑制 */
 		g_renderingEngine->SetBloomThreshold(3.0f);

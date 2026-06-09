@@ -9,12 +9,12 @@ public:
 	bool Start();
 	void Update();
 	void Render(RenderContext& rc);
-
+	/** ポジションをセットする関数*/
 	void SetPosition(Vector3 pos)
 	{
 		m_position = pos;
 	}
-
+	/** 回転をセットする関数*/
 	void SetRotation(Quaternion rot)
 	{
 		m_rotation = rot;
@@ -34,7 +34,7 @@ private:
 	/** アニメーション*/
 	enum EnCowAnimation
 	{
-		EnAnimation_Jump,
+		EnAnimation_Jump,/** ジャンプ*/
 		EnAnimation_Num,
 	}; 
 	AnimationClip animationClips[EnAnimation_Num];
@@ -58,6 +58,6 @@ private:
 	SoundSource* m_RescueCowSE = nullptr;
 
 	/** ハートのエフェクト */
-	EffectEmitter* m_heartEffect;
+	EffectEmitter* m_heartEffect = nullptr;
 };
 

@@ -69,10 +69,10 @@ private:
 	enGameClearState m_gameClearState = FadeIn;
 
 	/** 最終スコアを保存する変数 */
-	int m_finalScore;
+	int m_finalScore = 0;
 
 	/** 最終救出数を保存する変数 */
-	int m_finalRescue;
+	int m_finalRescue = 0;
 
 	/** α値の変数 */
 	float m_gameClearAlpha = 1.0f;

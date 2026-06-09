@@ -44,6 +44,11 @@ public:
 		return m_transform.GetPosition();
 	}
 
+	/** UFOの移動状態を設定する関数 */
+	void SetUFOMoveState()
+	{
+		m_UFOState = EnUFOState_Move;
+	}
 
 	/** 牛を連れて行けるかどうかのフラグを設定する関数 */
 	void SetIsCowTakeAwayed(bool isCowTakeAwayed)

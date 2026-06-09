@@ -35,9 +35,9 @@ private:
 	bool m_isAddTimer = false;
 
 	/** タイムを追加する際に出す[+]の基準位置 */
-	Vector3 m_basePosition;
+	Vector3 m_basePosition = Vector3::Zero;
 
 	/** タイムを追加する際に出す[3]の基準位置 */
-	Vector3 m_baseThreePosition;
+	Vector3 m_baseThreePosition = Vector3::Zero;
 };
 

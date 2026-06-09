@@ -14,8 +14,10 @@ public:
 	void InCountDown();
 	
 	/*カウントダウンの変数を取りたいときに使う関数*/
-	bool GetIsCountDown()const { return m_isCountDown; };
-
+	bool GetIsCountDown()const 
+	{
+		return m_isCountDown;
+	};
 
 private:
 	/** カウントダウンの数字のスプライト */

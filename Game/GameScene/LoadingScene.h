@@ -104,11 +104,11 @@ private:
 	bool m_isLoadingStarted = false;
 
 	/** ローディング中の音源 */
-	SoundSource* m_loadingSound;	
+	SoundSource* m_loadingSound = nullptr;	
 
 	//これは、LoadingSceneを呼び出すときに、次のシーンをロードする関数を引数で渡してもらうための変数。
 	/** 次のシーンをロードする関数*/
-	std::function<void()> m_nextSceneLoading;
+	std::function<void()> m_nextSceneLoading = nullptr;
 
 }; 
 

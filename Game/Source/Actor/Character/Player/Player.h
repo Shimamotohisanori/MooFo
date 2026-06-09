@@ -58,19 +58,19 @@ public:
 	}
 
 	/** 右ボタンが押されているかどうかのフラグを取得する関数 */
-	bool GetIsRightButton1()
+	bool GetIsRightButton1()const
 	{
 		return m_isRightButton1;
 	}
 
 	/** 左ボタンが押されているかどうかのフラグを取得する関数 */
-	bool GetIsLeftButton1()
+	bool GetIsLeftButton1()const
 	{
 		return m_isLeftButton1;
 	}
 	
 	/** プレイヤーが動いているかどうかのフラグを取得する関数 */
-	bool GetIsMoving()
+	bool GetIsMoving()const
 	{
 		return m_isMoving;
 	}
@@ -99,7 +99,7 @@ private:
 	CharacterController m_characterController;
 
 	/** プレイヤーの移動速度 */
-	Vector3 m_moveSpeed;
+	Vector3 m_moveSpeed = Vector3::Zero;
 
 	/** ロープを引っ張る操作の画像 */
 	SpriteRender m_pullRopeSprite;
@@ -140,7 +140,7 @@ private:
 	uint8_t m_playerState = 0;
 
 	/** 前のプレイヤーの状態 */
-	uint8_t m_prevPlayerState = -1;
+	int m_prevPlayerState = -1;
 
 	/** ロープを投げるまでのクールタイム */
 	float m_throwRopeCoolTime = 0.0f;
