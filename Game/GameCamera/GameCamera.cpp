@@ -33,6 +33,9 @@ namespace
 	/** カメラの最低高さ */
 	constexpr float MIN_CAMERA_HEIGHT = 5.0f;
 
+	/** 牛に当たったときのカメラの高さ */
+	constexpr float BACK_OFFSET = 100.0f;
+
 }
 
 GameCamera::GameCamera()
@@ -302,7 +305,9 @@ void GameCamera::CheckCameraHitCow()
 			m_isCowCaptured = true;
 
 			/** 牛捕獲カメラ初期位置 */
-			m_hitCowCameraPos = m_cameraPos;
+			/** 保存されたカメラの位置を使用することで
+			 * プレイヤーの後ろ側にカメラが配置される */
+			m_hitCowCameraPos = m_savedCameraPos;
 
 			/** 牛を捕まえた音を再生 */
 			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
