@@ -8,6 +8,7 @@ class CountDown;
 class Game;
 class Pause;
 class Cow;
+class CowFood;
 class Player : public Character
 {
 public:
@@ -88,6 +89,8 @@ private:
 	/** アップデートできるかどうかを判断する関数 */
 	bool CanPlayerUpdate();
 
+	void SquatAnimation();
+
 private:
 	/** プレイヤーモデル */
 	ModelRender m_playerModelRender;
@@ -131,6 +134,8 @@ private:
 	/** 牛 */
 	Cow* m_cow = nullptr;
 
+	CowFood* m_CowFood = nullptr;
+
 	/** プレイヤーの状態 */
 	uint8_t m_playerState = 0;
 
@@ -161,6 +166,9 @@ private:
 	/** 走るSEが再生中かどうか */
 	bool m_isPlayRunSE = false;
 
+	/** 屈むアニメーションが再生できるかどうかのフラグ */
+	bool m_isSquatAnimation = false;
+
 	/** アニメーション */
 	enum EnPlayAnimation
 	{
@@ -168,6 +176,7 @@ private:
 		enAnimationClip_Run,
 		enAnimationClip_PullLeft,
 		enAnimationClip_PullRight,
+		enAnimationClip_Squat,
 		enAnimationClip_Num,
 	};
 
