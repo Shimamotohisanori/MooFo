@@ -26,6 +26,9 @@ namespace
 	/** スラッシュのUIのファイルパス */
 	const char* SLASH_FILEPATH = "Assets/sprite/CowNumberOfRescuesUI/slash.DDS";
 
+    /** プラスのUIのファイルパス */
+	const char* PLUS_FILEPATH = "Assets/sprite/NumberUI/PlusFont.DDS";
+
 	/** 数のスプライトのサイズ */
 	const Vector2 NUMBER_SPRITE_SIZE = Vector2(40.0f, 60.0f);
 
@@ -39,14 +42,63 @@ namespace
 	const Vector3 INGAME_SPRITE_SCALE = Vector3(1.0f, 1.0f, 1.0f);
 
     /** インゲームスプライトの座標 */
+	/** 救出数 */
     const Vector3 INGAME_RESCUE_SPRITE_POSITION = Vector3(-820.0f, -360.0f, 0.0f);
-    const Vector3 INGAME_NUMBER_SPRITE_TENS_POSITION = Vector3(-670.0f, -360.0f, 0.0f);
-    const Vector3 INGAME_NUMBER_SPRITE_ONES_POSITION = Vector3(-635.0f, -360.0f, 0.0f);
-    const Vector3 INGAME_NUMBER_SPRITE_ONES_TENBELOW_POSITION = Vector3(-670.0f, -360.0f, 0.0f);
-    const Vector3 INGAME_SLASH_SPRITE_POSITION = Vector3(-590.0f, -370.0f, 0.0f);
-    const Vector3 INGAME_SLASH_SPRITE_TENBELOW_POSITION = Vector3(-590.0f, -370.0f, 0.0f);
-    const Vector3 INGAME_ONE_SPRITE_POSITION = Vector3(-540.0f, -370.0f, 0.0f);
-    const Vector3 INGAME_ZERO_SPRITE_POSITION = Vector3(-500.0f, -370.0f, 0.0f);
+	
+    /** 十の位 */
+    const Vector3 INGAME_NUMBER_SPRITE_TENS_POSITION = Vector3(-690.0f, -360.0f, 0.0f);
+	
+    /** 一の位 */
+    const Vector3 INGAME_NUMBER_SPRITE_ONES_POSITION = Vector3(-650.0f, -360.0f, 0.0f);
+	
+    /** 十の位がないときの一の位の座標 */
+    const Vector3 INGAME_NUMBER_SPRITE_ONES_TENBELOW_POSITION = Vector3(-680.0f, -360.0f, 0.0f);
+	
+    /** スラッシュ */
+    const Vector3 INGAME_SLASH_SPRITE_POSITION = Vector3(-530.0f, -370.0f, 0.0f);
+	
+    /** 十の位がないときのスラッシュの座標 */
+    const Vector3 INGAME_SLASH_SPRITE_TENBELOW_POSITION = Vector3(-620.0f, -370.0f, 0.0f);
+	
+    /** 十の位が1以下のときのスラッシュの座標 */
+	const Vector3 INGAME_SLASH_SPRITE_TWENTYBELOW_POSITION = Vector3(-490.0f, -370.0f, 0.0f);
+	
+    /** 十の位がないときのスラッシュの座標 */
+	const Vector3 INGAME_SLASH_SPRITE_SAME_TEN_POSITION = Vector3(-610.0f, -370.0f, 0.0f);
+	
+    /** 十の位がないときの1の座標 */
+    const Vector3 INGAME_ONE_SPRITE_POSITION = Vector3(-490.0f, -370.0f, 0.0f);
+	
+    /** 十の位がないときの1の座標 */
+	const Vector3 INGAME_ONE_SPRITE_TENBELOW_POSITION = Vector3(-580.0f, -370.0f, 0.0f);
+	
+	/** 十の位が1以下のときの1の座標 */
+    const Vector3 INGAME_ONE_SPRITE_TWENTYBELOW_POSITION = Vector3(-440.0f, -370.0f, 0.0f);
+	
+	/** 十の位が1と同じのときの1の座標 */
+    const Vector3 INGAME_ONE_SPRITE_SAME_TEN_POSITION = Vector3(-570.0f, -370.0f, 0.0f);
+    
+	/** 十の位がないときの0の座標 */
+    const Vector3 INGAME_ZERO_SPRITE_POSITION = Vector3(-450.0f, -370.0f, 0.0f);
+	
+	/** 十の位がないときの0の座標 */
+    const Vector3 INGAME_ZERO_SPRITE_TENBELOW_POSITION = Vector3(-540.0f, -370.0f, 0.0f);
+	
+	/** 十の位が1以下のときの0の座標 */
+    const Vector3 INGAME_ZERO_SPRITE_TWENTYBELOW_POSITION = Vector3(-400.0f, -370.0f, 0.0f);
+	
+	/** 十の位が1と同じのときの0の座標 */
+    const Vector3 INGAME_ZERO_SPRITE_SAME_TEN_POSITION = Vector3(-530.0f, -370.0f, 0.0f);
+	
+	/** 十の位がないときの追加の十の位の座標 */
+    const Vector3 INGAME_ADDITIONAL_TENS_SPRITE_POSITION = Vector3(-570.0f, -360.0f, 0.0f);
+
+	/** 十の位がないときの追加の一の位の座標 */
+	const Vector3 INGAME_ADDITIONAL_ONES_SPRITE_POSITION = Vector3(-530.0f, -360.0f, 0.0f);
+
+	/** 十の位が1以下のときの追加の一の位の座標 */
+	const Vector3 INGAME_ADDITIONAL_ONES_SPRITE_TWENTYBELOW_POSITION = Vector3(-570.0f, -360.0f, 0.0f);
+
 
     /** ゲームオーバースプライトのスケール */
 	const Vector3 GAMEOVER_SPRITE_SCALE = Vector3(1.5f, 1.5f, 1.0f);
@@ -70,7 +122,11 @@ namespace
 	const Vector3 GAMECLEAR_ONE_SPRITE_POSITION = Vector3(-310.0f, 50.0f, 0.0f);
 	const Vector3 GAMECLEAR_ZERO_SPRITE_POSITION = Vector3(-260.0f, 50.0f, 0.0f);
 
-    
+    /** プラスUIの座標 */
+    const Vector3 PLUS_SPRITE_POSITION = Vector3(-610.0f, -360.0f, 0.0f);
+
+    /** プラスUIのスケール */
+    const Vector3 PLUS_SPRITE_SCALE = Vector3(1.0f, 1.0f, 1.0f);
 }
 
 bool CowNumberOfRescues::Start()
@@ -87,20 +143,26 @@ bool CowNumberOfRescues::Start()
 
 		m_tensSprite[i].Init(m_filePath[i].c_str(), NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
 		m_onesSprite[i].Init(m_filePath[i].c_str(), NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
+		m_additionalOnesSprite[i].Init(m_filePath[i].c_str(), NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
+		m_additionalTensSprite[i].Init(m_filePath[i].c_str(), NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
     }
 
 	m_rescueSprite.Init(RESCUE_FILEPATH, RESCUE_SPRITE_SIZE.x,RESCUE_SPRITE_SIZE.y);
 
 	m_slashSprite.Init(SLASH_FILEPATH, SLASH_SPRITE_SIZE.x, SLASH_SPRITE_SIZE.y);
 
-	m_oneSprite.Init(m_filePath[1].c_str(), NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
-	m_oneSprite.SetPosition(INGAME_ONE_SPRITE_POSITION);
-	m_oneSprite.Update();
+	m_rightOneSprite.Init(m_filePath[1].c_str(), NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
+	m_rightOneSprite.SetPosition(INGAME_ONE_SPRITE_POSITION);
+	m_rightOneSprite.Update();
 
-	m_zeroSprite.Init(m_filePath[0].c_str(), NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
-	m_zeroSprite.SetPosition(INGAME_ZERO_SPRITE_POSITION);
-	m_zeroSprite.Update();
+	m_rightZeroSprite.Init(m_filePath[0].c_str(), NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
+	m_rightZeroSprite.SetPosition(INGAME_ZERO_SPRITE_POSITION);
+	m_rightZeroSprite.Update();
 
+    m_plusSprite.Init(PLUS_FILEPATH, NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
+    m_plusSprite.SetPosition(PLUS_SPRITE_POSITION);
+    m_plusSprite.SetScale(PLUS_SPRITE_SCALE);
+    m_plusSprite.Update();
     return true;
 }
 
@@ -108,8 +170,13 @@ void CowNumberOfRescues::Update()
 {
     InitLayout();
 
+	/** 救出数を十の位と一の位に分ける */
 	tens = m_numberOfRescues / 10;
 	ones = m_numberOfRescues % 10;
+
+	/** 10以上のときは追加の十の位と一の位を計算 */
+	m_additionalTens = (m_numberOfRescues - 10) / 10;
+    m_additionalOnes = (m_numberOfRescues - 10) % 10;
 }
 
 int CowNumberOfRescues::GetNumberOfRescues() const
@@ -126,11 +193,97 @@ void CowNumberOfRescues::InitLayout()
 {
     /** ゲーム中 */
     rescuePos[InGame] = INGAME_RESCUE_SPRITE_POSITION;
-    tensPos[InGame] = INGAME_NUMBER_SPRITE_TENS_POSITION;
-    onesPos[InGame] = INGAME_NUMBER_SPRITE_ONES_POSITION;
-    slashPos[InGame] = INGAME_SLASH_SPRITE_POSITION;
-    onePos[InGame] = INGAME_ONE_SPRITE_POSITION;
-    zeroPos[InGame] = INGAME_ZERO_SPRITE_POSITION;
+
+    if (m_numberOfRescues >= 10)
+    {
+        tensPos[InGame] = INGAME_NUMBER_SPRITE_TENS_POSITION;
+    }
+
+    if(m_numberOfRescues >= 10)
+    {
+        onesPos[InGame] = INGAME_NUMBER_SPRITE_ONES_POSITION;
+    }
+    else
+    {
+        onesPos[InGame] = INGAME_NUMBER_SPRITE_ONES_TENBELOW_POSITION;
+	}
+
+	if (m_numberOfRescues > 10 && m_additionalTens <= 0)
+    {
+        slashPos[InGame] = INGAME_SLASH_SPRITE_POSITION;
+    }
+
+    else if(m_numberOfRescues > 10)
+    {
+        slashPos[InGame] = INGAME_SLASH_SPRITE_TWENTYBELOW_POSITION;
+	}
+
+	else if (m_numberOfRescues == 10)
+    {
+        slashPos[InGame] = INGAME_SLASH_SPRITE_SAME_TEN_POSITION;
+    }
+
+    else
+    {
+        slashPos[InGame] = INGAME_SLASH_SPRITE_TENBELOW_POSITION;
+    }
+
+	if (m_numberOfRescues > 10 && m_additionalTens <= 0)
+    {
+        onePos[InGame] = INGAME_ONE_SPRITE_POSITION;
+    }
+
+    else if(m_numberOfRescues > 10)
+    {
+        onePos[InGame] = INGAME_ONE_SPRITE_TWENTYBELOW_POSITION;
+    }
+
+    else if (m_numberOfRescues == 10)
+    {
+        onePos[InGame] = INGAME_ONE_SPRITE_SAME_TEN_POSITION;
+	}
+
+    else
+    {
+        onePos[InGame] = INGAME_ONE_SPRITE_TENBELOW_POSITION;
+    }
+    
+    if (m_numberOfRescues > 10 && m_additionalTens <= 0)
+    {
+        zeroPos[InGame] = INGAME_ZERO_SPRITE_POSITION;
+    }
+
+    else if(m_numberOfRescues > 10)
+    {
+        zeroPos[InGame] = INGAME_ZERO_SPRITE_TWENTYBELOW_POSITION;
+	}
+
+    else if (m_numberOfRescues == 10)
+    {
+        zeroPos[InGame] = INGAME_ZERO_SPRITE_SAME_TEN_POSITION;
+	}
+
+    else
+    {
+		zeroPos[InGame] = INGAME_ZERO_SPRITE_TENBELOW_POSITION;
+    }
+
+	if (m_additionalTens >= 1)
+    {
+        additionalTensPos[InGame] = INGAME_ADDITIONAL_TENS_SPRITE_POSITION;
+    }
+
+    if (m_additionalTens >= 1)
+    {
+        additionalOnesPos[InGame] = INGAME_ADDITIONAL_ONES_SPRITE_POSITION;
+	}
+
+    else
+    {
+		additionalOnesPos[InGame] = INGAME_ADDITIONAL_ONES_SPRITE_TWENTYBELOW_POSITION;
+    }
+
+	plusPos[InGame] = PLUS_SPRITE_POSITION;
 
     rescueScale[InGame] = INGAME_SPRITE_SCALE;
 	tensScale[InGame] = INGAME_SPRITE_SCALE;
@@ -138,6 +291,9 @@ void CowNumberOfRescues::InitLayout()
     slashScale[InGame] = INGAME_SPRITE_SCALE;
 	oneScale[InGame] = INGAME_SPRITE_SCALE;
 	zeroScale[InGame] = INGAME_SPRITE_SCALE;
+	plusScale[InGame] = PLUS_SPRITE_SCALE;
+	additionalTensScale[InGame] = INGAME_SPRITE_SCALE;
+    additionalOnesScale[InGame] = INGAME_SPRITE_SCALE;
     
     /** クリア */
     rescuePos[GameClear] = GAMECLEAR_RESCUE_SPRITE_POSITION;
@@ -200,17 +356,47 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
     if (m_numberOfRescues >= 10)
     {
         /** 十の位用のスプライトの表示 */
-        m_tensSprite[tens].SetPosition(tensPos[layoutType]);
-        m_tensSprite[tens].SetScale(tensScale[layoutType]);
-        m_tensSprite[tens].Update();
-        m_tensSprite[tens].Draw(renderContext);
+        m_tensSprite[1].SetPosition(tensPos[layoutType]);
+        m_tensSprite[1].SetScale(tensScale[layoutType]);
+        m_tensSprite[1].Update();
+        m_tensSprite[1].Draw(renderContext);
     }
 
-    /** 一の位用のスプライトの表示 */
-    m_onesSprite[ones].SetPosition(onesPos[layoutType]);
-    m_onesSprite[ones].SetScale(onesScale[layoutType]);
-    m_onesSprite[ones].Update();
-    m_onesSprite[ones].Draw(renderContext);
+    if (m_numberOfRescues >= 10)
+    {
+        /** 一の位用のスプライトの表示 */
+        m_onesSprite[0].SetPosition(onesPos[layoutType]);
+        m_onesSprite[0].SetScale(onesScale[layoutType]);
+        m_onesSprite[0].Update();
+        m_onesSprite[0].Draw(renderContext);
+    }
+
+    else
+    {
+        /** 一の位用のスプライトの表示 */
+        m_onesSprite[ones].SetPosition(onesPos[layoutType]);
+        m_onesSprite[ones].SetScale(onesScale[layoutType]);
+        m_onesSprite[ones].Update();
+        m_onesSprite[ones].Draw(renderContext);
+    }
+
+	if (m_numberOfRescues >= 20)
+    {
+        /** 追加用十の位のスプライトの表示 */
+        m_additionalTensSprite[m_additionalTens].SetPosition(additionalTensPos[layoutType]);
+        m_additionalTensSprite[m_additionalTens].SetScale(additionalTensScale[layoutType]);
+        m_additionalTensSprite[m_additionalTens].Update();
+        m_additionalTensSprite[m_additionalTens].Draw(renderContext);
+    }
+
+    if (m_numberOfRescues > 10)
+    {
+		/** 追加用一の位のスプライトの表示 */
+		m_additionalOnesSprite[m_additionalOnes].SetPosition(additionalOnesPos[layoutType]);
+        m_additionalOnesSprite[m_additionalOnes].SetScale(additionalOnesScale[layoutType]);
+        m_additionalOnesSprite[m_additionalOnes].Update();
+		m_additionalOnesSprite[m_additionalOnes].Draw(renderContext);
+    }
 
     /** スラッシュの表示 */
     m_slashSprite.SetPosition(slashPos[layoutType]);
@@ -219,13 +405,24 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
     m_slashSprite.Draw(renderContext);
 
     /** 最大値（1 / 10）の表示 */
-    m_oneSprite.SetPosition(onePos[layoutType]);
-    m_oneSprite.SetScale(oneScale[layoutType]);
-    m_oneSprite.Update();
-    m_oneSprite.Draw(renderContext);
+    m_rightOneSprite.SetPosition(onePos[layoutType]);
+    m_rightOneSprite.SetScale(oneScale[layoutType]);
+    m_rightOneSprite.Update();
+    m_rightOneSprite.Draw(renderContext);
 
-    m_zeroSprite.SetPosition(zeroPos[layoutType]);
-    m_zeroSprite.SetScale(zeroScale[layoutType]);
-    m_zeroSprite.Update();
-    m_zeroSprite.Draw(renderContext);
+	/** 最大値（0 / 10）の表示 */
+    m_rightZeroSprite.SetPosition(zeroPos[layoutType]);
+    m_rightZeroSprite.SetScale(zeroScale[layoutType]);
+    m_rightZeroSprite.Update();
+    m_rightZeroSprite.Draw(renderContext);
+
+	/** 救出数が10を超えている場合 */
+    if (m_numberOfRescues > 10)
+    {
+        /** プラスの表示 */
+        m_plusSprite.SetPosition(plusPos[layoutType]);
+        m_plusSprite.SetScale(plusScale[layoutType]);
+        m_plusSprite.Update();
+        m_plusSprite.Draw(renderContext);
+    }
 }

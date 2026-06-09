@@ -90,6 +90,15 @@ private:
 	/** 0の大きさ */
 	Vector3 zeroScale[LayoutTypeNum];
 
+	/** +のスケール */
+	Vector3 plusScale[LayoutTypeNum];
+
+	/** 追加用十の位のスケール */
+	Vector3 additionalTensScale[LayoutTypeNum];
+
+	/** 追加用一の位のスケール */
+	Vector3 additionalOnesScale[LayoutTypeNum];
+
 	/** レイアウトの種類ごとのUIの座標 */
 	
 	/** 救出数 */
@@ -110,6 +119,15 @@ private:
 	/** 0の位置 */
 	Vector3 zeroPos[LayoutTypeNum];
 
+	/** +の位置 */
+	Vector3 plusPos[LayoutTypeNum];
+
+	/** 追加用十の位の位置 */
+	Vector3 additionalTensPos[LayoutTypeNum];
+
+	/** 追加用一の位の位置 */
+	Vector3 additionalOnesPos[LayoutTypeNum];
+
 	/** 救出数 */
 	uint8_t m_numberOfRescues = 0;
 
@@ -118,6 +136,12 @@ private:
 
 	/** 一の位 */
 	uint8_t ones = 0;
+
+	/** 追加用の十の位 */
+	uint8_t m_additionalTens = 0;
+
+	/** 追加用の一の位 */
+	uint8_t m_additionalOnes = 0;
 
 	/** ファイルパス */
 	std::string m_filePath[10];
@@ -128,18 +152,27 @@ private:
 	/** 一の位専用数字画像 */
 	SpriteRender m_onesSprite[10];
 
+	/** 追加の一の位の画像 */
+	SpriteRender m_additionalOnesSprite[10];
+
+	/** 追加の十の位の画像 */
+	SpriteRender m_additionalTensSprite[10];
+
 	/** 救出画像 */
 	SpriteRender m_rescueSprite;
 
 	/**「/」のUI画像 */
 	SpriteRender m_slashSprite;
 
-	/** 1の画像 */
-	SpriteRender m_oneSprite;
+	/** 右にある1の画像 */
+	SpriteRender m_rightOneSprite;
 
-	/** 5の画像 */
-	SpriteRender m_zeroSprite;
-	
+	/** 右にある0の画像 */
+	SpriteRender m_rightZeroSprite;
+
+	/** +の画像 */
+	SpriteRender m_plusSprite;
+
 	/** リザルト */
 	bool m_isResult = false;
 
