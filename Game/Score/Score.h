@@ -1,4 +1,5 @@
 #pragma once
+class LoadingScene;
 class Score :public IGameObject
 {
 public:

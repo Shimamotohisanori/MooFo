@@ -3,6 +3,7 @@
 #include "CountDown/CountDown.h"
 #include "Pause/Pause.h"
 #include"UFOLightManager.h"
+
 namespace
 {
 	/** 光が出ているときに表示する数字のスプライト */
@@ -71,6 +72,7 @@ bool UFOLightUI::Start()
 
 void UFOLightUI::Update()
 {
+	
 	if (m_ufolightManager == nullptr)
 	{
 		m_ufolightManager = FindGO<UFOLightManager>("ufolightmanager");
@@ -100,10 +102,12 @@ void UFOLightUI::Render(RenderContext& rc)
 		return;
 	}
 
-	if (m_countdown->GetIsCountDown())
+	if (m_countdown->GetCountDown())
 	{
 		return;
 	}
+
+	
 	/** Pause中は描画を止める */
 	if (m_pause->GetIsPause())
 	{

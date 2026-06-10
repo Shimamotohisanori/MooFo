@@ -149,8 +149,9 @@ void GameOver::InGameOver()
 			m_loadingScene->SetLoadType(LoadingScene::LoadType::ToTitleScene);
 			//DeleteGO(m_decisionSE);
 			DeleteGO(m_deathBGM);
-			m_loadingScene->SetNextScene([]()
+			m_loadingScene->SetNextScene([this]()
 				{
+					
 					/** タイトルの画像を呼び出す*/
 					NewGO<Title>(0, "title");
 				});

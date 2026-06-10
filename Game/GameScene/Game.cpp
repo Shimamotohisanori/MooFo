@@ -20,6 +20,7 @@
 #include "GameTimer/AddTimerUI.h"
 #include "Source/Actor/Character/UFO/UFOLightUI.h"
 #include "Source/Actor/Stage/CowFood.h"
+#include"FadeManager.h"
 
 namespace
 {
@@ -123,6 +124,9 @@ bool Game::Start()
 	/** 牛の餌を生成 */
 	m_cowFood = NewGO<CowFood>(0, "cowfood");
   
+	/** フェードのマネージャーを生成*/
+	m_fadeManager = NewGO<FadeManager>(0, "fadeManager");
+
 	m_isSound = false;
 	m_spawnTimer = 0.0f;
 
@@ -136,6 +140,7 @@ bool Game::Start()
 
 void Game::Update()
 {
+	
 	/** 生きている牛のリストをループして牛が存在するか確認する */
 	for (auto it = m_aliveCows.begin(); it != m_aliveCows.end();)
 	{
@@ -167,7 +172,7 @@ void Game::Update()
 	/** セレクトボタンを押していて
 	 * カウントダウン中でないかつ
 	 * タイムアウトしていない場合 */
-	if (g_pad[0]->IsTrigger(enButtonSelect) && !m_countDown->GetIsCountDown() && !m_isTimeOut)
+	if (g_pad[0]->IsTrigger(enButtonSelect) && !m_countDown->GetCountDown() && !m_isTimeOut)
 	{
 		/** タイムアウトなら */
 		if (m_isTimeOut)
@@ -478,10 +483,18 @@ void Game::TimeOut()
 	if (m_isTimeOut)
 	{
 		m_timeOutTimer += g_gameTime->GetFrameDeltaTime();
-		
-		/** タイムアウトから5秒以上経過しているなら */
-		if (m_timeOutTimer > 5.0f)
+		/** タイムアウトから4秒かつフェード処理をしていなかったら*/
+		if (m_timeOutTimer > 4.0f && !m_isfadeStart)
 		{
+			m_fadeManager->SetFadeIn();
+			m_isfadeStart = true;
+		}
+		/** フェードインが終わっていたら*/
+		if (m_isfadeStart && m_fadeManager->IsFadeInComplete() && !m_isFadeOut)
+		{
+			m_fadeManager->SetFadeOut();
+			m_isFadeOut = true;
+		
 			/** ゲームオーバーかゲームクリアかを判断する */
 			if (m_cowNumberOfRescues->GetNumberOfRescues() >= 10)
 			{
@@ -496,8 +509,6 @@ void Game::TimeOut()
 			}
 
 			return;
-
-			m_timeOutTimer = 0.0f;
 		}
 
 		/** タイムアウト画像の大きさを徐々に大きくする */
@@ -511,7 +522,6 @@ void Game::TimeOut()
 
 		m_timeOutImage.Update();
 	}
-
 }
 
 void Game::Render(RenderContext& rc)

@@ -4,6 +4,7 @@
 #include "Source/Actor/Character/Player/Player.h"
 #include "Rope/Rope.h"
 #include "CountDown/CountDown.h"
+#include"GameScene/LoadingScene.h"
 namespace
 {
 	/** 牛の餌のモデルファイルパス */
@@ -162,6 +163,14 @@ void CowFood::CowFoodPut()
 
 void CowFood::Render(RenderContext& rc)
 {
+	/**フェード完了までUIの表示を遅らす*/
+	LoadingScene* lodingScene = FindGO<LoadingScene>("loading");
+	if (lodingScene != nullptr && !lodingScene->GetLoadingEnd())
+	{
+		return;
+	}
+
+
 	/** 牛の餌のモデルを描画する。*/
 	m_cowFoodModelRender.Draw(rc);
 

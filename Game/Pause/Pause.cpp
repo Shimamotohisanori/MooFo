@@ -74,7 +74,7 @@ void Pause::Update()
 	CountDown* countDown = FindGO<CountDown>("countdown");
 
 	/** カウントダウンが終わるまではポーズ画面の操作を受け付けない */
-	if (!countDown || countDown->GetIsCountDown())
+	if (!countDown || countDown->GetCountDown())
 	{
 		return;
 	}
@@ -143,8 +143,9 @@ void Pause::Select()
 
 			m_loadingScene = NewGO<LoadingScene>(0, "loading");
 			m_loadingScene->SetLoadType(LoadingScene::LoadType::ToTitleScene);
-			m_loadingScene->SetNextScene([]()
+			m_loadingScene->SetNextScene([this]()
 				{
+					
 					/** タイトルの画像を呼び出す*/
 					NewGO<Title>(0, "title");
 				});

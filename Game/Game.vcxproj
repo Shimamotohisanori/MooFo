@@ -229,6 +229,7 @@
     <ClCompile Include="CountDown\CountDown.cpp" />
     <ClCompile Include="CowNumberOfRescues\CowNumberOfRescues.cpp" />
     <ClCompile Include="EffectManager\EffectManager.cpp" />
+    <ClCompile Include="FadeManager.cpp" />
     <ClCompile Include="GameCamera\GameCamera.cpp" />
     <ClCompile Include="GameScene\Game.cpp" />
     <ClCompile Include="GameScene\GameClear.cpp" />
@@ -270,6 +271,7 @@
     <ClInclude Include="CowFood.h" />
     <ClInclude Include="CowNumberOfRescues\CowNumberOfRescues.h" />
     <ClInclude Include="EffectManager\EffectManager.h" />
+    <ClInclude Include="FadeManager.h" />
     <ClInclude Include="GameCamera\GameCamera.h" />
     <ClInclude Include="GameScene\Game.h" />
     <ClInclude Include="GameScene\GameClear.h" />

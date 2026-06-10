@@ -93,6 +93,7 @@
     <ClCompile Include="Source\Actor\Character\UFO\UFOLightManager.cpp">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClCompile>
+    <ClCompile Include="FadeManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="Source\Actor\Character\UFO\UFOLightManager.h">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClInclude>
+    <ClInclude Include="FadeManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

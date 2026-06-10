@@ -20,6 +20,7 @@ class AddTimerUI;
 class UFOLightUI;
 class UFOLightManager;
 class CowFood;
+class FadeManager;
 /** UFOの情報をまとめる構造体 */
 struct UFOinfo
 {
@@ -196,11 +197,15 @@ private:
 	/** 終了画像 */
 	SpriteRender m_timeOutImage;
 
+	/** フェードマネージャーのポインタ*/
+	FadeManager* m_fadeManager = nullptr;
+
 	/** 生きている牛のリスト */
 	std::vector<Cow*> m_aliveCows;
+	/** フェード処理を開始させるフラグ*/
+	bool m_isfadeStart = false;
 
-
-
+	bool m_isFadeOut = false;
 	/** UFOの再出現リクエストのリスト */
 	std::vector<UFORespawnRequest> m_ufoRespawnRequests;
 	/** リスポーン時間*/
