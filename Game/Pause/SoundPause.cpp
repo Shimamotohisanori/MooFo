@@ -15,8 +15,8 @@ namespace
 	const Vector3 SEPOS = { 0.0f,-20.0f,0.0f };
 	const Vector3 SOUNDICONPOS = { -380.0f,75.0f,0.0f };
 	const Vector3 SE_ICONPOS = { -380.0f,-120.0f,0.0f };
-	const Vector3 BLOWNBARPOS = { -395.0f,75.0f,0.0f };
-	const Vector3 SE_BLOWNBARPOS = { -395.0f,-122.0f,0.0f };
+	const Vector3 BLOWNBARPOS = { -398.0f,79.0f,0.0f };
+	const Vector3 SE_BLOWNBARPOS = { -398.0f,-119.0f,0.0f };
 	const Vector3 BLOWNBARINITIALSCALE = { 0.0f,0.0f,0.0f };
 	const Vector2 BLOWN_BAR = { 0.0f,0.5 };
 }
@@ -65,13 +65,13 @@ bool SoundPause::Start()
 	m_seIconSprite.SetPosition(SE_ICONPOS);
 	m_seIconSprite.Update();
 
-	m_blownBarSprite.Init("Assets/sprite/PauseUI/BlownBar.dds", 790.0f, 220.0f);
+	m_blownBarSprite.Init("Assets/sprite/PauseUI/BlownBar.dds", 790.0f, 255.0f);
 	m_blownBarSprite.SetPosition(BLOWNBARPOS);
 	m_blownBarSprite.SetPivot(BLOWN_BAR);
 	m_blownBarSprite.SetScale(BLOWNBARINITIALSCALE);
 	m_blownBarSprite.Update();
 
-	m_seBlownBarSprite.Init("Assets/sprite/PauseUI/BlownBar.dds", 790.0f, 220.0f);
+	m_seBlownBarSprite.Init("Assets/sprite/PauseUI/BlownBar.dds", 790.0f, 255.0f);
 	m_seBlownBarSprite.SetPosition(SE_BLOWNBARPOS);
 	m_seBlownBarSprite.SetPivot(BLOWN_BAR);
 	m_seBlownBarSprite.SetScale(BLOWNBARINITIALSCALE);

@@ -6,25 +6,29 @@
 #include "CountDown/CountDown.h"
 #include "Pause/Pause.h"
 #include "SoundManager/SoundManager.h"
+#include "Source/Actor/Stage/CowFood.h"
 
 namespace
 {
 	/** プレイヤーモデルのファイルパス */
 	const char* PLAYER_FILEPATH = "Assets/modelData/CowBoy/CowBooy.tkm";
-	
+
 	/** アニメーションのファイルパス */
 	/** 待機アニメーション */
-	const char* ANIMATION_IDLEFILEPATH = "Assets/modelData/CowBoy/Idle.tka";
-	
+	const char* ANIMATION_IDLEFILEPATH = "Assets/animData/CowBoyAnimation/Idle.tka";
+
 	/** 走るアニメーション */
-	const char* ANIMATION_RUNFILEPATH = "Assets/modelData/CowBoy/Run.tka";
+	const char* ANIMATION_RUNFILEPATH = "Assets/animData/CowBoyAnimation/Run.tka";
 
 	/** ロープを引っ張るアニメーション(左) */
-	const char* ANIMATION_PULLLEFT_FILEPATH = "Assets/modelData/CowBoy/PullLeft.tka";
+	const char* ANIMATION_PULLLEFT_FILEPATH = "Assets/animData/CowBoyAnimation/PullLeft.tka";
 
 	/** ロープを引っ張るアニメーション(右) */
-	const char* ANIMATION_PULLRIGHT_FILEPATH = "Assets/modelData/CowBoy/PullRight.tka";
-	
+	const char* ANIMATION_PULLRIGHT_FILEPATH = "Assets/animData/CowBoyAnimation/PullRight.tka";
+
+	/** プレイヤーが屈むアニメーション */
+	const char* ANIMATION_SQUAT_FILEPATH = "Assets/animData/CowBoyAnimation/Squat.tka";
+
 	/** ロープを引っ張る画像のファイルパス */
 	const char* PULLROPEFILEPATH = "Assets/sprite/PullRopeButton/PullRope.dds";
 
@@ -39,10 +43,10 @@ namespace
 
 	/** キャラクターコントローラーの幅 */
 	constexpr float CHRACTER_CONTROLLER_WIDTH = 25.0f;
-	
+
 	/** キャラクターコントローラーの高さ */
 	constexpr float CHRACTER_CONTROLLER_HIGHT = 75.0f;
-	
+
 	/** プレイヤーの移動できる範囲の半径 */
 	constexpr float PLAYER_MOVE_LIMIT_RADIUS = 1450.0f;
 
@@ -55,51 +59,64 @@ namespace
 
 Player::Player()
 {
-	//アニメーションクリップの再生
+	/** 待機アニメーションクリップを読み込み、ループ再生に設定する */
 	animationClips[enAnimationClip_Idle].Load(ANIMATION_IDLEFILEPATH);
 	animationClips[enAnimationClip_Idle].SetLoopFlag(true);
 
+	/** 走るアニメーションクリップを読み込み、ループ再生に設定する */
 	animationClips[enAnimationClip_Run].Load(ANIMATION_RUNFILEPATH);
 	animationClips[enAnimationClip_Run].SetLoopFlag(true);
 
+	/** ロープを引っ張る(左)アニメーションクリップを読み込み、ループ再生に設定する */
 	animationClips[enAnimationClip_PullLeft].Load(ANIMATION_PULLLEFT_FILEPATH);
 	animationClips[enAnimationClip_PullLeft].SetLoopFlag(true);
 
+	/** ロープを引っ張る(右)アニメーションクリップを読み込み、ループ再生に設定する */
 	animationClips[enAnimationClip_PullRight].Load(ANIMATION_PULLRIGHT_FILEPATH);
 	animationClips[enAnimationClip_PullRight].SetLoopFlag(true);
 
-	m_playerModelRender.Init(PLAYER_FILEPATH, animationClips, enAnimationClip_Num, enModelUpAxisZ);
+	/** 屈むアニメーションクリップを読み込み、ループしない(1回だけ再生)に設定する */
+	animationClips[enAnimationClip_Squat].Load(ANIMATION_SQUAT_FILEPATH);
+	animationClips[enAnimationClip_Squat].SetLoopFlag(false);
 
+	/** プレイヤーモデルを初期化する。Z軸を上方向としてモデルを読み込む */
+	m_playerModelRender.Init(PLAYER_FILEPATH, animationClips, enAnimationClip_Num, enModelUpAxisZ);
 }
 
 Player::~Player()
 {
+	/** 走るSEオブジェクトを削除してnullptrにする */
 	DeleteGO(m_runSE);
 	m_runSE = nullptr;
 
+	/** ロープオブジェクトを削除する */
 	DeleteGO(m_rope);
 }
 
 bool Player::Start()
 {
+	/** ロープオブジェクトを生成する */
 	m_rope = NewGO<Rope>(0, "rope");
 
-    m_characterController.Init(CHRACTER_CONTROLLER_WIDTH, CHRACTER_CONTROLLER_HIGHT, m_transform.GetPosition());
+	/** キャラクターコントローラーを初期化する。幅・高さ・初期座標を渡す */
+	m_characterController.Init(CHRACTER_CONTROLLER_WIDTH, CHRACTER_CONTROLLER_HIGHT, m_transform.GetPosition());
+
+	/** モデルの座標を初期座標に合わせて更新する */
 	m_playerModelRender.SetPosition(m_transform.GetPosition());
 	m_playerModelRender.Update();
 
 	/** ロープを引っ張る画像の初期化 */
-	m_pullRopeSprite.Init(PULLROPEFILEPATH,PULLROPE_SPRITE_WIDTH,PULLROPE_SPRITE_HEIGHT);
+	m_pullRopeSprite.Init(PULLROPEFILEPATH, PULLROPE_SPRITE_WIDTH, PULLROPE_SPRITE_HEIGHT);
 	m_pullRopeSprite.SetPosition(PULLROPE_SPRITE_POS);
 	m_pullRopeSprite.Update();
 
 	/** ロープを引っ張る画像の初期化(LBを押しているとき) */
-	m_pullRopeSpriteLB.Init(PULLROPEFILEPATHLB,PULLROPE_SPRITE_WIDTH,PULLROPE_SPRITE_HEIGHT);
+	m_pullRopeSpriteLB.Init(PULLROPEFILEPATHLB, PULLROPE_SPRITE_WIDTH, PULLROPE_SPRITE_HEIGHT);
 	m_pullRopeSpriteLB.SetPosition(PULLROPE_SPRITE_POS);
 	m_pullRopeSpriteLB.Update();
 
 	/** ロープを引っ張る画像の初期化(RBを押しているとき) */
-	m_pullRopeSpriteRB.Init(PULLROPEFILEPATHRB,PULLROPE_SPRITE_WIDTH,PULLROPE_SPRITE_HEIGHT);
+	m_pullRopeSpriteRB.Init(PULLROPEFILEPATHRB, PULLROPE_SPRITE_WIDTH, PULLROPE_SPRITE_HEIGHT);
 	m_pullRopeSpriteRB.SetPosition(PULLROPE_SPRITE_POS);
 	m_pullRopeSpriteRB.Update();
 
@@ -112,77 +129,87 @@ bool Player::Start()
 
 void Player::Update()
 {
-	/*アニメーション*/
-	PlayAnimation();
+	/** CowFoodオブジェクトがまだ取得できていない場合、毎フレーム検索して取得を試みる */
+	if (m_CowFood == nullptr)
+	{
+		m_CowFood = FindGO<CowFood>("cowfood");
+	}
 
-	/*アップデートできるかどうかを判断する関数*/
+	/*アップデートできるかどうかを判断する関数 */
 	if (!CanPlayerUpdate())
 	{
 		return;
 	}
 
-	/*ロープを引っ張る処理*/
+	/*ロープを引っ張る処理 */
 	PullRope();
 	/*移動*/
 	Move();
 	/*回転*/
 	Rotation();
-	/*ロープを投げる処理*/
+	/*ロープを投げる処理 */
 	ThrowRope();
-	/*ステート管理*/
+	/*ステート管理 */
 	ManageState();
 
-	/*プレイヤーが動いているかどうかのフラグを設定する*/
+	/** 屈むアニメーション */
+	SquatAnimation();
+
+	/* プレイヤーが動いているかどうかのフラグを設定する */
 	m_isMoving = (m_moveSpeed.LengthSq() >= 0.0001f);
 
 	/** 走るSEの処理 */
 	PlayRunSE();
+
+	/* アニメーション */
+	PlayAnimation();
 
 	m_playerModelRender.Update();
 }
 
 void Player::Move()
 {
-
-	if (m_rope->GetIsThrowRope() or m_rope->GetIsHitCow())
+	/** ロープを投げているか、ロープが牛に当たっている場合は移動速度をゼロにして移動を禁止する */
+	if (m_rope->GetIsThrowRope() or m_rope->GetIsHitCow() or m_isSquatAnimation)
 	{
 		m_moveSpeed = Vector3::Zero;
-		//ロープを投げているときとロープが牛に当たっているときは移動できないようにする
+		/*ロープを投げているときとロープが牛に当たっているときは移動できないようにする */
 		return;
 	}
 
-	//左スティックの入力量を取得
+	/* 左スティックの入力量を取得 */
 	Vector3 stickL;
 	stickL.x = g_pad[0]->GetLStickXF();
 	stickL.z = g_pad[0]->GetLStickYF();
 
-	//カメラの前方向と右方向のベクトルを持ってくる
+	/* カメラの前方向と右方向のベクトルを持ってくる */
 	Vector3 forward = g_camera3D->GetForward();
-	Vector3 right   = g_camera3D->GetRight();
+	Vector3 right = g_camera3D->GetRight();
 
-	//正規化
+	/* 正規化 */
 	right.y = 0.0f;
 	forward.y = 0.0f;
 	forward.Normalize();
 	right.Normalize();
 
-	//入力量を反映
+	/* 入力量を反映 */
 	Vector3 moveDir = forward * stickL.z + right * stickL.x;
 	moveDir *= 150.0f;
 	m_moveSpeed = moveDir;
 
-	//左スティックの入力量と120.0fを乗算
-	right*= stickL.x * 150.0f;
+	/* 左スティックの入力量と150.0fを乗算 */
+	right *= stickL.x * 150.0f;
 	forward *= stickL.z * 150.0f;
 
-	//移動速度にカメラの前方向と右方向を加算
+	/* 移動速度にカメラの前方向と右方向を加算 */
 	m_moveSpeed += right + forward;
-	//キャラクターコントローラーを使って座標を移動させる
-	m_transform.GetPosition() = m_characterController.Execute(m_moveSpeed,g_gameTime->GetFrameDeltaTime());
+
+	/* キャラクターコントローラーを使って座標を移動させる */
+	m_transform.GetPosition() = m_characterController.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
 
 	Vector3 position = m_transform.GetPosition();
 
-	/** XZ平面の距離計算 */
+	/** XZ平面の距離計算(現在は使用していないが、移動範囲制限などに使える) */
 	Vector3 posXZ = position;
 	posXZ.y = 0.0f;
 	float distsance = posXZ.Length();
@@ -193,17 +220,19 @@ void Player::Move()
 
 void Player::Rotation()
 {
+	/** ロープを投げているときは回転できないようにする */
 	if (m_rope->GetIsThrowRope())
 	{
-		//ロープを投げているときは回転できないようにする
 		return;
 	}
+
+	/** 移動速度のXまたはZ成分がある程度あるときだけ回転処理を行う(停止中は回転させない) */
 	if (fabsf(m_moveSpeed.x) >= 0.0001f || fabsf(m_moveSpeed.z) >= 0.0001f)
 	{
-		//キャラクターの方向を変える
+		/* キャラクターの方向を変える */
 		m_transform.GetRotation().SetRotationYFromDirectionXZ(m_moveSpeed);
 
-		//モデルの回転をキャラクターの回転に合わせる
+		/* モデルの回転をキャラクターの回転に合わせる */
 		m_playerModelRender.SetRotation(m_transform.GetRotation());
 	}
 }
@@ -251,17 +280,19 @@ void Player::PlayRunSE()
 
 void Player::ThrowRope()
 {
+	/** クールタイムが残っている場合、デルタタイムで減算していく */
 	if (m_throwRopeCoolTime > 0.0f) {
 		m_throwRopeCoolTime -= g_gameTime->GetFrameDeltaTime();
 
-		if(m_throwRopeCoolTime < 0.0f) {
+		/** クールタイムが0未満にならないようにクランプする */
+		if (m_throwRopeCoolTime < 0.0f) {
 			m_throwRopeCoolTime = 0.0f;
 		}
 	}
 
-	if (m_rope->GetIsHitCow() or !m_rope)
+	/** ロープが存在しない、またはロープが牛に当たっているときはロープを投げられないようにする */
+	if (!m_rope or m_rope->GetIsHitCow())
 	{
-		//ロープが存在しない、ロープが牛に当たっているときはロープを投げられないようにする
 		return;
 	}
 
@@ -285,23 +316,26 @@ void Player::ThrowRope()
 
 void Player::PullRope()
 {
-
+	/** ロープオブジェクトが存在しているか確認する */
 	if (m_rope)
 	{
 		//ロープが牛に当たっているとき
 		if (m_rope->GetIsHitCow())
 		{
+			/** RB1ボタンが押されたとき */
 			if (g_pad[0]->IsTrigger(enButtonRB1))
 			{
+				/** 右ボタンフラグをON、左ボタンフラグをOFFにする */
 				m_isRightButton1 = true;
 				m_isLeftButton1 = false;
 
 				m_isRightButton1_Trigger = true;
 				m_isLeftButton1_Trigger = false;
 			}
-
+			/** LB1ボタンが押されたとき */
 			else if (g_pad[0]->IsTrigger(enButtonLB1))
 			{
+				/** 左ボタンフラグをON、右ボタンフラグをOFFにする */
 				m_isLeftButton1 = true;
 				m_isRightButton1 = false;
 
@@ -309,8 +343,10 @@ void Player::PullRope()
 				m_isRightButton1_Trigger = false;
 			}
 
+			/** RB1かLB1のどちらかが押されたとき、引っ張りアニメーションを交互に切り替える */
 			if (g_pad[0]->IsTrigger(enButtonRB1) || g_pad[0]->IsTrigger(enButtonLB1))
 			{
+				/** フラグに応じて左右の引っ張りアニメーションを交互に切り替える */
 				if (m_isPullAnimation)
 				{
 					m_playerState = 2;
@@ -320,14 +356,15 @@ void Player::PullRope()
 					m_playerState = 3;
 				}
 
+				/** 次回呼び出し時に反対のアニメーションが再生されるようにフラグを反転する */
 				m_isPullAnimation = !m_isPullAnimation;
 
+				/** ロープを引っ張るSEを再生する(条件式は常にtrueだが、SEを必ず再生させる意図) */
 				if (m_isPullAnimation || !m_isPullAnimation)
 				{
 					SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
 					m_pullRopeSE = soundManager->PlayingSE(SoundSE::enRopePullSE, false);
 				}
-				
 			}
 		}
 	}
@@ -335,10 +372,12 @@ void Player::PullRope()
 
 bool Player::CanPlayerUpdate()
 {
+	/** 毎フレーム各オブジェクトを検索して取得する */
 	m_game = FindGO<Game>("game");
 	m_countDown = FindGO<CountDown>("countdown");
 	m_pause = FindGO<Pause>("pause");
 
+	/** いずれかのオブジェクトが存在しない、またはゲーム終了・ポーズ・カウントダウン中はUpdateを止める */
 	if (m_pause == nullptr ||
 		m_countDown == nullptr ||
 		m_game == nullptr ||
@@ -369,6 +408,21 @@ void Player::ManageState()
 	{
 		return;
 	}
+
+	/** しゃがみアニメーション再生中はステートを上書きしない */
+	if (m_isSquatAnimation)
+	{
+		/** アニメーションが終了したらしゃがみフラグを下げて待機状態に戻す */
+		if (!m_playerModelRender.IsPlayingAnimation())
+		{
+			m_isSquatAnimation = false;
+			m_playerState = 0;
+		}
+		/** しゃがみ中はここで処理を抜けて、走る/待機への切り替えを防ぐ */
+		return;
+	}
+
+	/** 移動速度のXまたはZ成分が一定以上あれば走りステートにする */
 	if (fabsf(m_moveSpeed.x) >= 0.01f || fabsf(m_moveSpeed.z) >= 0.01f)
 	{
 		/** 移動しているときは走るアニメーションにする */
@@ -379,7 +433,20 @@ void Player::ManageState()
 		/** 移動していないときは待機アニメーションにする */
 		m_playerState = 0;
 	}
+}
 
+void Player::SquatAnimation()
+{
+	/** 牛の餌をおいたら */
+	if (m_CowFood->GetIsPutFood())
+	{
+		/** 屈むアニメーションを再生する */
+		m_playerState = 4;
+		/** しゃがみ中フラグを立てる */
+		m_isSquatAnimation = true;
+		/** 連続してトリガーされないようにフラグをリセットする */
+		m_CowFood->SetIsPutFood(false);
+	}
 }
 
 void Player::PlayAnimation()
@@ -389,51 +456,54 @@ void Player::PlayAnimation()
 	{
 		return;
 	}
+
+	/** 現在のステートを前のステートとして保存する */
 	m_prevPlayerState = m_playerState;
+
 	switch (m_playerState)
 	{
 	case 0:
 		/** 待機アニメーション */
-		m_playerModelRender.PlayAnimation(enAnimationClip_Idle,0.15f);
-
+		m_playerModelRender.PlayAnimation(enAnimationClip_Idle, 0.15f);
 		m_playerModelRender.Update();
 		break;
 	case 1:
-		//走るアニメーション
 		/** 走るアニメーション */
-		m_playerModelRender.PlayAnimation(enAnimationClip_Run,0.15f);
-
+		m_playerModelRender.PlayAnimation(enAnimationClip_Run, 0.15f);
 		m_playerModelRender.Update();
 		break;
 	case 2:
 		/** 縄を引っ張るアニメーション(左) */
-		m_playerModelRender.PlayAnimation(enAnimationClip_PullLeft,0.15f);
-
+		m_playerModelRender.PlayAnimation(enAnimationClip_PullLeft, 0.15f);
 		m_playerModelRender.Update();
 		break;
 	case 3:
 		/** 縄を引っ張るアニメーション(右) */
-		m_playerModelRender.PlayAnimation(enAnimationClip_PullRight,0.15f);
-
+		m_playerModelRender.PlayAnimation(enAnimationClip_PullRight, 0.15f);
 		m_playerModelRender.Update();
 		break;
-
+	case 4:
+		/** 屈むアニメーション(ループなしで1回だけ再生される) */
+		m_playerModelRender.PlayAnimation(enAnimationClip_Squat, 0.30f);
+		m_playerModelRender.Update();
+		break;
 	}
 }
 
 void Player::Render(RenderContext& rc)
 {
-		m_playerModelRender.Draw(rc);
+	/** プレイヤーモデルを描画する */
+	m_playerModelRender.Draw(rc);
 
 	/** 両方のボタンを押していなかったら */
 	if (m_rope->GetIsHitCow() && !m_isLeftButton1_Trigger && !m_isRightButton1_Trigger)
 	{
 		/** ロープを引っ張る画像の描画 */
-		m_pullRopeSprite.Draw(rc);		
+		m_pullRopeSprite.Draw(rc);
 	}
 
 	/** 右ボタンを押しているとき */
-	if(m_rope->GetIsHitCow() && m_isLeftButton1_Trigger)
+	if (m_rope->GetIsHitCow() && m_isLeftButton1_Trigger)
 	{
 		/** ロープを引っ張る画像の描画(LBを押しているとき) */
 		m_pullRopeSpriteLB.Draw(rc);

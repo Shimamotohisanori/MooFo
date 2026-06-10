@@ -15,7 +15,7 @@ public:
 	void InCountDown();
 	
 	/*カウントダウンの変数を取りたいときに使う関数*/
-	bool GetCountDown()const 
+	bool GetIsCountDown()const 
 	{
 		return m_isCountDown;
 	};

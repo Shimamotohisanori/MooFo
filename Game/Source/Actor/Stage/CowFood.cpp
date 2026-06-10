@@ -90,7 +90,7 @@ bool CowFood::Start()
 
 void CowFood::Update()
 {
-	if (m_CountDown->GetCountDown())
+	if (m_CountDown && m_CountDown->GetIsCountDown())
 	{
 		return;
 	}
@@ -129,9 +129,11 @@ void CowFood::Update()
 		m_isButtonUI = true;
 		m_Abutton.Update();
 
-		if(g_pad[0]->IsPress(enButtonA))
+
+		if(g_pad[0]->IsTrigger(enButtonA))
 		{
 			m_foodCount = 2;
+			m_isPutFood = true;
 		}
 	}
 	else
@@ -143,9 +145,7 @@ void CowFood::Update()
 
 void CowFood::CowFoodPut()
 {
-
-
-	if (!m_rope->GetIsThrowRope() && !m_rope->GetIsHitCow() && g_pad[0]->IsPress(enButtonLB2))
+	if (!m_rope->GetIsThrowRope() && !m_rope->GetIsHitCow() && g_pad[0]->IsTrigger(enButtonLB2))
 	{
 		if (m_foodCount > 0 && !m_isPutPlayer)
 		{
