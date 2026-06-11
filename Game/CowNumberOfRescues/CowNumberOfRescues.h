@@ -2,10 +2,11 @@
 /**
  * 牛の救出数クラス
  */
+class LoadingScene;
 class CowNumberOfRescues : public IGameObject
 {
 public:
-    CowNumberOfRescues() {};
+	CowNumberOfRescues() {};
 	~CowNumberOfRescues() {};
 	bool Start();
 	void Update();
@@ -32,13 +33,13 @@ public:
 
 	/** 牛の救出数を取得 */
 	int GetNumberOfRescues() const;
-	
+
 	/** セット関数 */
 	void SetNumber(int number)
 	{
 		m_numberOfRescues = number;
 	}
-	
+
 	/** リザルトをセットする関数 */
 	void SetResult(bool isResult);
 
@@ -71,10 +72,10 @@ private:
 		LayoutTypeNum
 	};
 	/** レイアウトの種類ごとのUIの大きさ */
-	
+
 	/** 救出数 */
 	Vector3 rescueScale[LayoutTypeNum];
-	
+
 	/** 十の位 */
 	Vector3 tensScale[LayoutTypeNum];
 
@@ -86,47 +87,29 @@ private:
 
 	/** 1の大きさ */
 	Vector3 oneScale[LayoutTypeNum];
-	
+
 	/** 0の大きさ */
 	Vector3 zeroScale[LayoutTypeNum];
 
-	/** +のスケール */
-	Vector3 plusScale[LayoutTypeNum];
-
-	/** 追加用十の位のスケール */
-	Vector3 additionalTensScale[LayoutTypeNum];
-
-	/** 追加用一の位のスケール */
-	Vector3 additionalOnesScale[LayoutTypeNum];
-
 	/** レイアウトの種類ごとのUIの座標 */
-	
+
 	/** 救出数 */
 	Vector3 rescuePos[LayoutTypeNum];
-	
+
 	/** 十の位 */
 	Vector3 tensPos[LayoutTypeNum];
-	
+
 	/** 一の位 */
 	Vector3 onesPos[LayoutTypeNum];
-	
+
 	/** 「/」の位置 */
 	Vector3 slashPos[LayoutTypeNum];
-	
+
 	/** 1の位置 */
 	Vector3 onePos[LayoutTypeNum];
-	
+
 	/** 0の位置 */
 	Vector3 zeroPos[LayoutTypeNum];
-
-	/** +の位置 */
-	Vector3 plusPos[LayoutTypeNum];
-
-	/** 追加用十の位の位置 */
-	Vector3 additionalTensPos[LayoutTypeNum];
-
-	/** 追加用一の位の位置 */
-	Vector3 additionalOnesPos[LayoutTypeNum];
 
 	/** 救出数 */
 	uint8_t m_numberOfRescues = 0;
@@ -137,14 +120,11 @@ private:
 	/** 一の位 */
 	uint8_t ones = 0;
 
-	/** 追加用の十の位 */
-	uint8_t m_additionalTens = 0;
-
-	/** 追加用の一の位 */
-	uint8_t m_additionalOnes = 0;
-
-	/** ファイルパス */
+	/** 普通の数字のファイルパス */
 	std::string m_filePath[10];
+
+	/** 赤い数字のファイルパス */
+	std::string m_redFilePath[10];
 
 	/** 十の位専用数字画像 */
 	SpriteRender m_tensSprite[10];
@@ -152,11 +132,11 @@ private:
 	/** 一の位専用数字画像 */
 	SpriteRender m_onesSprite[10];
 
-	/** 追加の一の位の画像 */
-	SpriteRender m_additionalOnesSprite[10];
+	/** 赤い十の位専用画像 */
+	SpriteRender m_redTensSprite[10];
 
-	/** 追加の十の位の画像 */
-	SpriteRender m_additionalTensSprite[10];
+	/** 赤い一の位専用画像 */
+	SpriteRender m_redOnesSprite[10];
 
 	/** 救出画像 */
 	SpriteRender m_rescueSprite;
@@ -164,17 +144,13 @@ private:
 	/**「/」のUI画像 */
 	SpriteRender m_slashSprite;
 
-	/** 右にある1の画像 */
-	SpriteRender m_rightOneSprite;
+	/** 1の画像 */
+	SpriteRender m_oneSprite;
 
-	/** 右にある0の画像 */
-	SpriteRender m_rightZeroSprite;
-
-	/** +の画像 */
-	SpriteRender m_plusSprite;
+	/** 5の画像 */
+	SpriteRender m_zeroSprite;
 
 	/** リザルト */
 	bool m_isResult = false;
 
 };
-
