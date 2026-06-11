@@ -93,6 +93,7 @@
     <ClCompile Include="Source\Actor\Character\UFO\UFOLightManager.cpp">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Actor\Stage\CowFoodManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="Source\Actor\Character\UFO\UFOLightManager.h">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Actor\Stage\CowFoodManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

@@ -1,10 +1,11 @@
 #pragma once
 class Rope;
 class CountDown;
+class CowFoodManager;
 class CowFood : public IGameObject
 {
 public:
-	CowFood(){}
+	CowFood() {}
 	~CowFood();
 
 	bool Start();
@@ -43,7 +44,7 @@ private:
 	uint8_t m_foodCount = 2;
 
 	/** UIを表示させるフラグ */
-	bool m_isButtonUI = false; 
+	bool m_isButtonUI = false;
 
 	/** 牛の餌が置かれたか確認するフラグ */
 	bool m_isPutFood = false;
@@ -79,4 +80,8 @@ private:
 
 	/** カウントダウン */
 	CountDown* m_CountDown = nullptr;
+
+	/** 牛の餌の管理 */
+	CowFoodManager* m_CowFoodManager = nullptr;
+
 };

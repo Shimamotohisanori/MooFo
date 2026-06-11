@@ -9,7 +9,9 @@
 #include "GameCamera/GameCamera.h"
 #include "nature/SkyCube.h"
 #include "Source/Actor/Character/UFO/UFOLightManager.h"
-
+#include "Source/Actor/Stage/CowFood.h"
+#include "Source/Actor/Stage/CowFoodManager.h"
+#include "Source/Actor/Character/Cow/CowLuring.h"
 
 namespace
 {
@@ -256,8 +258,16 @@ void LoadingScene::LoadGameObjectsStepByStep()
 
 		/** ゲームカメラを生成 */
 	case 18: NewGO<GameCamera>(0, "gameCamera"); break;
-		/** スカイキューブを生成 */
+
 	case 19:
+	{
+		/** 牛の餌を生成 */
+		NewGO<CowFood>(0, "cowfood");
+		NewGO<CowFoodManager>(0, "cowfoodmanager");
+	}
+	break;
+		/** スカイキューブを生成 */
+	case 20:
 	{
 		
 		/** SkyCube を生成 */
@@ -282,7 +292,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	} break;
 
 		/** ゲーム本体を生成 */
-	case 20:
+	case 21:
 		Game* game =NewGO<Game>(0, "game");
 
 		/** ロードした牛をゲームに渡す */

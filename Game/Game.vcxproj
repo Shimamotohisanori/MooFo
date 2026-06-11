@@ -255,6 +255,7 @@
     <ClCompile Include="Source\Actor\Character\UFO\UFOLightManager.cpp" />
     <ClCompile Include="Source\Actor\Character\UFO\UFOLightUI.cpp" />
     <ClCompile Include="Source\Actor\Stage\CowFood.cpp" />
+    <ClCompile Include="Source\Actor\Stage\CowFoodManager.cpp" />
     <ClCompile Include="Source\Actor\Stage\Stage.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -296,6 +297,7 @@
     <ClInclude Include="Source\Actor\Character\UFO\UFOLightManager.h" />
     <ClInclude Include="Source\Actor\Character\UFO\UFOLightUI.h" />
     <ClInclude Include="Source\Actor\Stage\CowFood.h" />
+    <ClInclude Include="Source\Actor\Stage\CowFoodManager.h" />
     <ClInclude Include="Source\Actor\Stage\Stage.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />

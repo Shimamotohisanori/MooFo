@@ -12,6 +12,8 @@
 #include"SoundManager/SoundManager.h"
 #include "DummyCow.h"
 #include "GameTimer/Timer.h"
+#include "Source/Actor/Stage/CowFoodManager.h"
+#include "CowLuring.h"
 
 namespace
 {
@@ -96,6 +98,9 @@ void Cow::Update()
 		{
 			m_game->ReMoveCow(this);
 		}
+
+		/** 一番近い餌を探す処理 */
+		SearchNearestFood();
 
 		DeleteGO(this);
 		return;
@@ -221,7 +226,41 @@ void Cow::Rotation()
 	}
 }
 
+void Cow::SearchNearestFood()
+{
+	CowFoodManager* cowfoodmanager = FindGO<CowFoodManager>("cowfoodmanager");
 
+	if (cowfoodmanager == nullptr)
+	{
+		return;
+	}
+
+	const auto& foodList = cowfoodmanager->GetFoodList();
+
+	if (foodList.empty())
+	{
+		m_cowfoodmanager = nullptr;
+		return;
+	}
+
+	float minDistance = FLT_MAX;
+
+	m_CowLuring = nullptr;
+
+	for (auto food : foodList)
+	{
+		Vector3 dir = food->GetPosition();
+
+		float distance = dir.Length();
+
+		if (distance < minDistance)
+		{
+			minDistance = distance;
+
+			m_cowfoodmanager = food;
+		}
+	}
+}
 
 void Cow::ManageState()
 {

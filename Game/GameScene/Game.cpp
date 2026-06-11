@@ -20,6 +20,8 @@
 #include "GameTimer/AddTimerUI.h"
 #include "Source/Actor/Character/UFO/UFOLightUI.h"
 #include "Source/Actor/Stage/CowFood.h"
+#include "Source/Actor/Stage/CowFoodManager.h"
+#include "Source/Actor/Character/Cow/CowLuring.h"
 
 namespace
 {
@@ -76,6 +78,12 @@ Game::~Game()
 	/** 牛の餌削除 */
 	DeleteGO(m_cowFood);
 
+	/** 牛の餌の管理削除 */
+	DeleteGO(m_cowFoodManager);
+
+	/** 牛の餌のモデル削除 */
+	DeleteGO(m_cowLuring);
+
 	/** コンボクラスの削除 */
 	if (m_combo && !m_combo->IsDead())
 	{
@@ -91,6 +99,10 @@ bool Game::Start()
 	m_gameCamera = FindGO<GameCamera>("gameCamera");
 	m_skyCube = FindGO<SkyCube>("skyCube");
 	m_inGameSound = FindGO<SoundManager>("soundmanager");
+	m_cowFood = FindGO<CowFood>("cowfood");
+	m_cowFoodManager = FindGO<CowFoodManager>("cowfoodmanager");
+	m_cowLuring = FindGO<CowLuring>("cowluring");
+	
 
 	/** スコアの生成 */
 	m_score = NewGO<Score>(0, "score");
@@ -119,9 +131,6 @@ bool Game::Start()
 
 	/** UFOのライトUIを生成 */
 	m_ufoLightUI = NewGO<UFOLightUI>(0, "ufoLightUI");
-
-	/** 牛の餌を生成 */
-	m_cowFood = NewGO<CowFood>(0, "cowfood");
   
 	m_isSound = false;
 	m_spawnTimer = 0.0f;

@@ -9,6 +9,8 @@ class Game;
 class SoundManager;
 class DummyCow;
 class Timer;
+class CowLuring;
+class CowFoodManager;
 class Cow : public Character
 {
 public:
@@ -120,10 +122,15 @@ private:
 
 	/** プレイヤーから逃げる関数 */
 	void AvoidPlayer();
+
+	/** 牛の餌が一番近い牛を探す関数 */
+	void SearchNearestFood();
 	
+	/** 牛の餌に近づく関数 */
+	void MoveToFood();
+
 	/** アップデートできるかどうかを判断する関数 */
 	bool CanUpdate();
-
 
 private:
 	/** ロープ */
@@ -155,6 +162,12 @@ private:
 
 	/* 牛のサウンドマネージャー**/
 	SoundManager* m_CowSound = nullptr;
+
+	/** 牛の餌 */
+	CowLuring* m_CowLuring = nullptr;
+
+	/** 牛の餌のマネージャー */
+	CowFoodManager* m_cowfoodmanager = nullptr;
 
 	enum EnCowState
 	{

@@ -4,6 +4,8 @@
 #include "Source/Actor/Character/Player/Player.h"
 #include "Rope/Rope.h"
 #include "CountDown/CountDown.h"
+#include "Source/Actor/Character/Cow/CowLuring.h"
+#include "CowFoodManager.h"
 namespace
 {
 	/** 牛の餌のモデルファイルパス */
@@ -72,6 +74,7 @@ bool CowFood::Start()
 	/** 餌のエフェクトを出す */
 	m_cowFoodEffect = NewGO<nsK2EngineLow::EffectEmitter>(0);
 
+	/** エフェクトIDを指定して初期化する */
 	m_cowFoodEffect->Init((int)EffectID::EffectID_CowFoodEffect);
 
 	/** 牛の餌のエフェクトのポジション */
@@ -80,15 +83,21 @@ bool CowFood::Start()
 	m_cowFoodEffect->SetPosition(cowFoodPos);
 	m_cowFoodEffect->SetScale(COWFOOD_EFFECT_SCALE);
 	
+	/** ロープのインスタンスを取得する */
 	m_rope = FindGO<Rope>("rope");
 
+	/** カウントダウンのインスタンスを取得する */
 	m_CountDown = FindGO<CountDown>("countdown");
+
+	/** 牛の餌マネージャーのインスタンスを取得する */
+	m_CowFoodManager = FindGO<CowFoodManager>("cowfoodmanager");
 
 	return true;
 }
 
 void CowFood::Update()
 {
+	/** カウントダウン中は処理をスキップする */
 	if (m_CountDown && m_CountDown->GetIsCountDown())
 	{
 		return;
@@ -96,6 +105,7 @@ void CowFood::Update()
 	/** プレイヤーのクラスを見つける */
 	Player* player = FindGO<Player>("player");
 
+	/** 餌を置く処理を実行する */
 	CowFoodPut();
 
 	/** もしエフェクト再生中じゃないなら */
@@ -128,7 +138,7 @@ void CowFood::Update()
 		m_isButtonUI = true;
 		m_Abutton.Update();
 
-
+		/** Aボタンが押されたら餌の数を2にセットして設置フラグを立てる */
 		if(g_pad[0]->IsTrigger(enButtonA))
 		{
 			m_foodCount = 2;
@@ -137,6 +147,7 @@ void CowFood::Update()
 	}
 	else
 	{
+		/** 距離が離れていたらボタンUIを非表示にする */
 		m_isButtonUI = false;
 	}
 	
@@ -144,17 +155,38 @@ void CowFood::Update()
 
 void CowFood::CowFoodPut()
 {
+	Player* player = FindGO<Player>("player");
+
+	if (player == nullptr)
+	{
+		return;
+	}
+
+	/** プレイヤーの座標を取得し、Y軸を0にする */
+	Vector3 pos = player->GetPosition();
+	pos.y = 0.0f;
+
+	/** ロープを投げておらず、牛に当たっておらず、LB2ボタンが押されたら */
 	if (!m_rope->GetIsThrowRope() && !m_rope->GetIsHitCow() && g_pad[0]->IsTrigger(enButtonLB2))
 	{
+		/** 餌の残数があり、まだ設置中でなければ */
 		if (m_foodCount > 0 && !m_isPutPlayer)
 		{
+			/** 餌の残数を1減らす */
 			m_foodCount -= 1;
 			m_isPutFood = true;
 			m_isPutPlayer = true;
+			
+			/** 牛の餌マネージャーに餌をスポーンさせる */
+			if (m_CowFoodManager)
+			{
+				m_CowFoodManager->SpawnFood(pos);
+			}
 		}
 	}
 	else
 	{
+		/** ボタンが離されたら設置中フラグをリセットする */
 		m_isPutPlayer = false;
 		return;
 	}
