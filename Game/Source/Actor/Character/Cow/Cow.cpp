@@ -99,9 +99,6 @@ void Cow::Update()
 			m_game->ReMoveCow(this);
 		}
 
-		/** 一番近い餌を探す処理 */
-		SearchNearestFood();
-
 		DeleteGO(this);
 		return;
 	}
@@ -117,6 +114,11 @@ void Cow::Update()
 	
 	/** プレイヤーから逃げる関数 */
 	AvoidPlayer();
+
+	/** 一番近い餌を探す処理 */
+	SearchNearestFood();
+
+	MoveToFood();
 
 	if (m_rotationState == EnRotateState_MoveDir)
 	{
@@ -249,7 +251,7 @@ void Cow::SearchNearestFood()
 
 	for (auto food : foodList)
 	{
-		Vector3 dir = food->GetPosition();
+		Vector3 dir = food->GetPosition() - GetPosition();
 
 		float distance = dir.Length();
 
@@ -257,9 +259,41 @@ void Cow::SearchNearestFood()
 		{
 			minDistance = distance;
 
-			m_cowfoodmanager = food;
+			m_CowLuring = food;
 		}
 	}
+}
+
+void Cow::MoveToFood()
+{
+	if (m_CowLuring == nullptr)
+	{
+		return;
+	}
+
+	Vector3 dir = m_CowLuring->GetPosition() - GetPosition();
+
+	dir.y = 0.0f;
+
+	float distance = dir.Length();
+
+	if (distance < 20.0f)
+	{
+		return;
+	}
+
+	dir.Normalize();
+	
+	m_moveDir = dir * 100.0f;
+
+	const float speed = 50.0f;
+
+	Vector3 pos = GetPosition();
+
+	pos += dir * speed * g_gameTime->GetFrameDeltaTime();
+
+	m_transform.SetPosition(pos);
+	m_cowmodelRender.SetPosition(pos);
 }
 
 void Cow::ManageState()
