@@ -63,6 +63,9 @@ private:
 	/** レイアウトの初期化 */
 	void InitLayout();
 
+	/** 数字UIが跳ねる処理 */
+	void BounceAnimation();
+
 	/** レイアウトの種類 */
 	enum LayoutType
 	{
@@ -74,45 +77,51 @@ private:
 	/** レイアウトの種類ごとのUIの大きさ */
 
 	/** 救出数 */
-	Vector3 rescueScale[LayoutTypeNum];
+	Vector3 m_rescueScale[LayoutTypeNum];
 
 	/** 十の位 */
-	Vector3 tensScale[LayoutTypeNum];
+	Vector3 m_tensScale[LayoutTypeNum];
 
 	/** 一の位 */
-	Vector3 onesScale[LayoutTypeNum];
+	Vector3 m_onesScale[LayoutTypeNum];
 
 	/** 「/」の大きさ */
-	Vector3 slashScale[LayoutTypeNum];
+	Vector3 m_slashScale[LayoutTypeNum];
 
 	/** 1の大きさ */
-	Vector3 oneScale[LayoutTypeNum];
+	Vector3 m_oneScale[LayoutTypeNum];
 
 	/** 0の大きさ */
-	Vector3 zeroScale[LayoutTypeNum];
+	Vector3 m_zeroScale[LayoutTypeNum];
 
 	/** レイアウトの種類ごとのUIの座標 */
 
 	/** 救出数 */
-	Vector3 rescuePos[LayoutTypeNum];
+	Vector3 m_rescuePos[LayoutTypeNum];
 
 	/** 十の位 */
-	Vector3 tensPos[LayoutTypeNum];
+	Vector3 m_tensPos[LayoutTypeNum];
 
 	/** 一の位 */
-	Vector3 onesPos[LayoutTypeNum];
+	Vector3 m_onesPos[LayoutTypeNum];
 
 	/** 「/」の位置 */
-	Vector3 slashPos[LayoutTypeNum];
+	Vector3 m_slashPos[LayoutTypeNum];
 
 	/** 1の位置 */
-	Vector3 onePos[LayoutTypeNum];
+	Vector3 m_onePos[LayoutTypeNum];
 
 	/** 0の位置 */
-	Vector3 zeroPos[LayoutTypeNum];
+	Vector3 m_zeroPos[LayoutTypeNum];
+
+	/** バウンドする値 */
+	Vector3 m_bounceValue = {0.0f, 0.0f, 0.0f};
 
 	/** 救出数 */
 	uint8_t m_numberOfRescues = 0;
+
+	/** 前の救出数 */
+	uint8_t m_oldNumberOfRescues = 0;
 
 	/**	十の位 */
 	uint8_t tens = 0;
@@ -152,5 +161,8 @@ private:
 
 	/** リザルト */
 	bool m_isResult = false;
+
+	/** 数字がバウンドしたかどうか */
+	bool m_numberBound = false;
 
 };

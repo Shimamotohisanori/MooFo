@@ -132,10 +132,12 @@ bool CowNumberOfRescues::Start()
 
 void CowNumberOfRescues::Update()
 {
-    InitLayout();
-
     tens = m_numberOfRescues / 10;
     ones = m_numberOfRescues % 10;
+
+    InitLayout();
+
+    BounceAnimation();
 }
 
 int CowNumberOfRescues::GetNumberOfRescues() const
@@ -151,49 +153,83 @@ void CowNumberOfRescues::SetResult(bool isResult)
 void CowNumberOfRescues::InitLayout()
 {
     /** ゲーム中 */
-    rescuePos[InGame] = INGAME_RESCUE_SPRITE_POSITION;
-    tensPos[InGame] = INGAME_NUMBER_SPRITE_TENS_POSITION;
-    onesPos[InGame] = INGAME_NUMBER_SPRITE_ONES_POSITION;
-    slashPos[InGame] = INGAME_SLASH_SPRITE_POSITION;
-    onePos[InGame] = INGAME_ONE_SPRITE_POSITION;
-    zeroPos[InGame] = INGAME_ZERO_SPRITE_POSITION;
+    m_rescuePos[InGame] = INGAME_RESCUE_SPRITE_POSITION;
+    m_tensPos[InGame] = INGAME_NUMBER_SPRITE_TENS_POSITION;
+    m_onesPos[InGame] = INGAME_NUMBER_SPRITE_ONES_POSITION;
+    m_slashPos[InGame] = INGAME_SLASH_SPRITE_POSITION;
+    m_onePos[InGame] = INGAME_ONE_SPRITE_POSITION;
+    m_zeroPos[InGame] = INGAME_ZERO_SPRITE_POSITION;
 
-    rescueScale[InGame] = INGAME_SPRITE_SCALE;
-    tensScale[InGame] = INGAME_SPRITE_SCALE;
-    onesScale[InGame] = INGAME_SPRITE_SCALE;
-    slashScale[InGame] = INGAME_SPRITE_SCALE;
-    oneScale[InGame] = INGAME_SPRITE_SCALE;
-    zeroScale[InGame] = INGAME_SPRITE_SCALE;
+    m_rescueScale[InGame] = INGAME_SPRITE_SCALE;
+    m_tensScale[InGame] = INGAME_SPRITE_SCALE;
+    m_onesScale[InGame] = INGAME_SPRITE_SCALE;
+    m_slashScale[InGame] = INGAME_SPRITE_SCALE;
+    m_oneScale[InGame] = INGAME_SPRITE_SCALE;
+    m_zeroScale[InGame] = INGAME_SPRITE_SCALE;
 
     /** クリア */
-    rescuePos[GameClear] = GAMECLEAR_RESCUE_SPRITE_POSITION;
-    tensPos[GameClear] = GAMECLEAR_NUMBER_SPRITE_TENS_POSITION;
-    onesPos[GameClear] = GAMECLEAR_NUMBER_SPRITE_ONES_POSITION;
-    slashPos[GameClear] = GAMECLEAR_SLASH_SPRITE_POSITION;
-    onePos[GameClear] = GAMECLEAR_ONE_SPRITE_POSITION;
-    zeroPos[GameClear] = GAMECLEAR_ZERO_SPRITE_POSITION;
+    m_rescuePos[GameClear] = GAMECLEAR_RESCUE_SPRITE_POSITION;
+    m_tensPos[GameClear] = GAMECLEAR_NUMBER_SPRITE_TENS_POSITION;
+    m_onesPos[GameClear] = GAMECLEAR_NUMBER_SPRITE_ONES_POSITION;
+    m_slashPos[GameClear] = GAMECLEAR_SLASH_SPRITE_POSITION;
+    m_onePos[GameClear] = GAMECLEAR_ONE_SPRITE_POSITION;
+    m_zeroPos[GameClear] = GAMECLEAR_ZERO_SPRITE_POSITION;
 
-    rescueScale[GameClear] = GAMECLEAR_SPRITE_SCALE;
-    tensScale[GameClear] = GAMECLEAR_SPRITE_SCALE;
-    onesScale[GameClear] = GAMECLEAR_SPRITE_SCALE;
-    slashScale[GameClear] = GAMECLEAR_SPRITE_SCALE;
-    oneScale[GameClear] = GAMECLEAR_SPRITE_SCALE;
-    zeroScale[GameClear] = GAMECLEAR_SPRITE_SCALE;
+    m_rescueScale[GameClear] = GAMECLEAR_SPRITE_SCALE;
+    m_tensScale[GameClear] = GAMECLEAR_SPRITE_SCALE;
+    m_onesScale[GameClear] = GAMECLEAR_SPRITE_SCALE;
+    m_slashScale[GameClear] = GAMECLEAR_SPRITE_SCALE;
+    m_oneScale[GameClear] = GAMECLEAR_SPRITE_SCALE;
+    m_zeroScale[GameClear] = GAMECLEAR_SPRITE_SCALE;
 
     /** オーバー */
-    rescuePos[GameOver] = GAMEOVER_RESCUE_SPRITE_POSITION;
-    tensPos[GameOver] = GAMEOVER_NUMBER_SPRITE_TENS_POSITION;
-    onesPos[GameOver] = GAMEOVER_NUMBER_SPRITE_ONES_POSITION;
-    slashPos[GameOver] = GAMEOVER_SLASH_SPRITE_POSITION;
-    onePos[GameOver] = GAMEOVER_ONE_SPRITE_POSITION;
-    zeroPos[GameOver] = GAMEOVER_ZERO_SPRITE_POSITION;
+    m_rescuePos[GameOver] = GAMEOVER_RESCUE_SPRITE_POSITION;
+    m_tensPos[GameOver] = GAMEOVER_NUMBER_SPRITE_TENS_POSITION;
+    m_onesPos[GameOver] = GAMEOVER_NUMBER_SPRITE_ONES_POSITION;
+    m_slashPos[GameOver] = GAMEOVER_SLASH_SPRITE_POSITION;
+    m_onePos[GameOver] = GAMEOVER_ONE_SPRITE_POSITION;
+    m_zeroPos[GameOver] = GAMEOVER_ZERO_SPRITE_POSITION;
 
-    rescueScale[GameOver] = GAMEOVER_SPRITE_SCALE;
-    tensScale[GameOver] = GAMEOVER_SPRITE_SCALE;
-    onesScale[GameOver] = GAMEOVER_SPRITE_SCALE;
-    slashScale[GameOver] = GAMEOVER_SPRITE_SCALE;
-    oneScale[GameOver] = GAMEOVER_SPRITE_SCALE;
-    zeroScale[GameOver] = GAMEOVER_SPRITE_SCALE;
+    m_rescueScale[GameOver] = GAMEOVER_SPRITE_SCALE;
+    m_tensScale[GameOver] = GAMEOVER_SPRITE_SCALE;
+    m_onesScale[GameOver] = GAMEOVER_SPRITE_SCALE;
+    m_slashScale[GameOver] = GAMEOVER_SPRITE_SCALE;
+    m_oneScale[GameOver] = GAMEOVER_SPRITE_SCALE;
+    m_zeroScale[GameOver] = GAMEOVER_SPRITE_SCALE;
+}
+
+void CowNumberOfRescues::BounceAnimation()
+{
+    /** 救出数が変化した場合 */
+    if (m_oldNumberOfRescues != m_numberOfRescues)
+    {
+		/** バウンドの値を設定 */
+		m_bounceValue.y = 30.0f;
+
+		/** 古い救出数を更新 */
+		m_oldNumberOfRescues = m_numberOfRescues;
+		
+		/** 数字がバウンドしたフラグを立てる */
+        m_numberBound = true;
+    }
+
+	/** 数字がバウンドしている場合 */
+	if (m_numberBound)
+	{
+        m_bounceValue.Lerp(0.25f, m_bounceValue, Vector3::Zero);
+		/** 救出数のUIの座標にバウンドの値を加算 */
+		for (int i = 0; i < LayoutTypeNum; i++)
+		{
+			m_tensPos[i].y += m_bounceValue.y;
+			m_onesPos[i].y += m_bounceValue.y;
+		}
+		/** バウンドの値が0.1以下になったらバウンド終了 */
+		if (m_bounceValue.y <= 0.1f)
+		{
+			m_bounceValue = Vector3::Zero;
+			m_numberBound = false;
+		}
+	}
 }
 
 void CowNumberOfRescues::Render(RenderContext& renderContext)
@@ -217,8 +253,8 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
     }
 
     /** 救出画像の表示 */
-    m_rescueSprite.SetPosition(rescuePos[layoutType]);
-    m_rescueSprite.SetScale(rescueScale[layoutType]);
+    m_rescueSprite.SetPosition(m_rescuePos[layoutType]);
+    m_rescueSprite.SetScale(m_rescueScale[layoutType]);
     m_rescueSprite.Update();
     m_rescueSprite.Draw(renderContext);
 
@@ -227,8 +263,8 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
     {
         /** 赤い十の位用のスプライトの表示 */
         /** 位置は通常の十の位の位置 */
-        m_redTensSprite[tens].SetPosition(tensPos[layoutType]);
-        m_redTensSprite[tens].SetScale(tensScale[layoutType]);
+        m_redTensSprite[tens].SetPosition(m_tensPos[layoutType]);
+        m_redTensSprite[tens].SetScale(m_tensScale[layoutType]);
         m_redTensSprite[tens].Update();
         m_redTensSprite[tens].Draw(renderContext);
     }
@@ -236,8 +272,8 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
     if (m_numberOfRescues == 10)
     {
         /** 十の位用のスプライトの表示 */
-        m_tensSprite[tens].SetPosition(tensPos[layoutType]);
-        m_tensSprite[tens].SetScale(tensScale[layoutType]);
+        m_tensSprite[tens].SetPosition(m_tensPos[layoutType]);
+        m_tensSprite[tens].SetScale(m_tensScale[layoutType]);
         m_tensSprite[tens].SetMulColor(
             Vector4(
                 1.0f,
@@ -253,8 +289,8 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
     {
         /** 赤い一の位用のスプライトの表示 */
 		/** 位置は通常の一の位の位置 */
-        m_redOnesSprite[ones].SetPosition(onesPos[layoutType]);
-        m_redOnesSprite[ones].SetScale(onesScale[layoutType]);
+        m_redOnesSprite[ones].SetPosition(m_onesPos[layoutType]);
+        m_redOnesSprite[ones].SetScale(m_onesScale[layoutType]);
         m_redOnesSprite[ones].Update();
         m_redOnesSprite[ones].Draw(renderContext);
     }
@@ -262,8 +298,8 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
     else
     {
         /** 一の位用のスプライトの表示 */
-        m_onesSprite[ones].SetPosition(onesPos[layoutType]);
-        m_onesSprite[ones].SetScale(onesScale[layoutType]);
+        m_onesSprite[ones].SetPosition(m_onesPos[layoutType]);
+        m_onesSprite[ones].SetScale(m_onesScale[layoutType]);
         m_onesSprite[ones].SetMulColor(
             Vector4(
                 1.0f,
@@ -279,19 +315,19 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
     if (m_numberOfRescues <= 10)
     {
         /** スラッシュの表示 */
-        m_slashSprite.SetPosition(slashPos[layoutType]);
-        m_slashSprite.SetScale(slashScale[layoutType]);
+        m_slashSprite.SetPosition(m_slashPos[layoutType]);
+        m_slashSprite.SetScale(m_slashScale[layoutType]);
         m_slashSprite.Update();
         m_slashSprite.Draw(renderContext);
 
         /** 最大値（1 / 10）の表示 */
-        m_oneSprite.SetPosition(onePos[layoutType]);
-        m_oneSprite.SetScale(oneScale[layoutType]);
+        m_oneSprite.SetPosition(m_onePos[layoutType]);
+        m_oneSprite.SetScale(m_oneScale[layoutType]);
         m_oneSprite.Update();
         m_oneSprite.Draw(renderContext);
 
-        m_zeroSprite.SetPosition(zeroPos[layoutType]);
-        m_zeroSprite.SetScale(zeroScale[layoutType]);
+        m_zeroSprite.SetPosition(m_zeroPos[layoutType]);
+        m_zeroSprite.SetScale(m_zeroScale[layoutType]);
         m_zeroSprite.Update();
         m_zeroSprite.Draw(renderContext);
     }
