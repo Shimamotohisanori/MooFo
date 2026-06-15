@@ -36,7 +36,9 @@ namespace
 		"RescueCowSE",
 		"RopePullSE",
 		"RunSE",
-		"PauseSE"
+		"PauseSE",
+		"PuthaySE",
+		"TakehaySE"
 	};
 }
 

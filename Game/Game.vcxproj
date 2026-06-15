@@ -268,7 +268,6 @@
   <ItemGroup>
     <ClInclude Include="Combo\Combo.h" />
     <ClInclude Include="CountDown\CountDown.h" />
-    <ClInclude Include="CowFood.h" />
     <ClInclude Include="CowNumberOfRescues\CowNumberOfRescues.h" />
     <ClInclude Include="EffectManager\EffectManager.h" />
     <ClInclude Include="FadeManager.h" />

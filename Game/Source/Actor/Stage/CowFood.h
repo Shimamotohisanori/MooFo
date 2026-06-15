@@ -80,4 +80,10 @@ private:
 
 	/** カウントダウン */
 	CountDown* m_CountDown = nullptr;
+
+	/** 牛の餌を置く音 */
+	SoundSource* m_puthaySE = nullptr;
+
+	/** 牛の餌を取る音 */
+	SoundSource* m_takehaySE = nullptr;
 };
