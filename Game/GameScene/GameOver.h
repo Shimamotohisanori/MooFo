@@ -3,6 +3,7 @@ class Score;
 class CowNumberOfRescues;
 class LoadingScene;
 class Title;
+class FadeManager;
 /** ゲームオーバーのクラス */
 class GameOver : public IGameObject
 {
@@ -68,6 +69,7 @@ private:
 	};
 	enGameOverState m_gameOverState = FadeIn;
 
+	FadeManager* m_fadeManager = nullptr;
 	/** スコアの最終値 */
 	int m_finalScore = 0;
 
@@ -94,5 +96,7 @@ private:
 	
 	/** 救出数をセットしたかどうかのフラグ */
 	bool m_isRescueSet = false;
+
+
 };
 

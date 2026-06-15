@@ -5,6 +5,7 @@
 #include "Title.h"
 #include "Score/Score.h"
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
+#include"FadeManager.h";
 
 namespace
 {
@@ -147,11 +148,9 @@ void GameOver::InGameOver()
 			m_isGameOverToTitleButtonPressed = false;
 			m_loadingScene = NewGO<LoadingScene>(0, "loading");
 			m_loadingScene->SetLoadType(LoadingScene::LoadType::ToTitleScene);
-			//DeleteGO(m_decisionSE);
 			DeleteGO(m_deathBGM);
-			m_loadingScene->SetNextScene([this]()
+			m_loadingScene->SetNextScene([]()
 				{
-					
 					/** タイトルの画像を呼び出す*/
 					NewGO<Title>(0, "title");
 				});

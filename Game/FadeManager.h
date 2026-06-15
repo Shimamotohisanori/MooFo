@@ -24,6 +24,8 @@ public:
 	{
 		return m_FadeAlpha <= 0.0f && !m_isFadeOut;
 	}
+
+	
 private:
 	/** フェードインする処理*/
 	void FadeIn();

@@ -3,6 +3,7 @@
  * 牛の救出数クラス
  */
 class LoadingScene;
+class Game;
 class CowNumberOfRescues : public IGameObject
 {
 public:
@@ -91,8 +92,7 @@ private:
 	/** 0の大きさ */
 	Vector3 zeroScale[LayoutTypeNum];
 
-	/** レイアウトの種類ごとのUIの座標 */
-	
+	Game* m_game = nullptr;
 	/** 救出数 */
 	Vector3 rescuePos[LayoutTypeNum];
 	

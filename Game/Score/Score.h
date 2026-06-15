@@ -1,5 +1,6 @@
 #pragma once
 class LoadingScene;
+class Game;
 class Score :public IGameObject
 {
 public:
@@ -65,7 +66,8 @@ private:
 
 	/** スコアが増える際のSE */
 	SoundSource* m_scoreRiseSE = nullptr;
-
+	/** ゲームのポインタ*/
+	Game* m_game = nullptr;
 	/** ５桁(万・千・百・十・一)の五桁を描画するスプライト */
 	SpriteRender m_digitSprite[5][10];
 	

@@ -67,9 +67,6 @@
     <ClCompile Include="Map\Map.cpp">
       <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="GameScene\LoadingScene.cpp">
-      <Filter>GameScene</Filter>
-    </ClCompile>
     <ClCompile Include="Combo\Combo.cpp">
       <Filter>Combo</Filter>
     </ClCompile>
@@ -94,6 +91,9 @@
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClCompile>
     <ClCompile Include="FadeManager.cpp" />
+    <ClCompile Include="GameScene\LoadingScene.cpp">
+      <Filter>GameTimer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -141,9 +141,6 @@
     <ClInclude Include="GameCamera\GameCamera.h">
       <Filter>GameCamera</Filter>
     </ClInclude>
-    <ClInclude Include="GameTimer\Timer.h">
-      <Filter>GameTimer</Filter>
-    </ClInclude>
     <ClInclude Include="CountDown\CountDown.h">
       <Filter>CountDown</Filter>
     </ClInclude>
@@ -190,6 +187,9 @@
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClInclude>
     <ClInclude Include="FadeManager.h" />
+    <ClInclude Include="GameTimer\Timer.h">
+      <Filter>GameTimer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

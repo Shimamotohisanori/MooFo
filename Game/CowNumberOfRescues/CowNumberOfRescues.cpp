@@ -1,6 +1,7 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "CowNumberOfRescues.h"
 #include "GameScene/LoadingScene.h"
+#include"GameScene/Game.h"
 namespace
 {
 	/** 数のUIのファイルパス */
@@ -80,6 +81,7 @@ bool CowNumberOfRescues::Start()
     ones = 0;
     m_isResult = false;
 
+   
 	/** 数のUIを左右全てに読み込む */
 	for (int i = 0; i < 10; i++)
     {
@@ -178,6 +180,19 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
     {
         return;
     }
+    /** リザルト画面以外は描画をしない*/
+    Game* game = FindGO<Game>("game");
+    if (!m_isResult)
+    {
+        
+        /** タイムアウト時にUIをでないようにする*/
+        if (game == nullptr || game->IsFadeTimeOut())
+        {
+            return;
+        }
+    }
+   
+
     /** レイアウトの種類 */
 	LayoutType layoutType;
 

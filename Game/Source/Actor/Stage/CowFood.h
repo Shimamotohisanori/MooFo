@@ -2,6 +2,7 @@
 class Rope;
 class CountDown;
 class LoadingScene;
+class Game;
 class CowFood : public IGameObject
 {
 public:
@@ -77,6 +78,8 @@ private:
 
 	/** 縄のクラス */
 	Rope* m_rope = nullptr;
+	/** ゲームクラス*/
+	Game* m_game = nullptr;
 
 	/** カウントダウン */
 	CountDown* m_CountDown = nullptr;

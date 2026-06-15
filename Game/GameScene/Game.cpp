@@ -47,7 +47,11 @@ Game::~Game()
 	DeleteGO(m_timer);
 
 	/** スコアを削除 */
-	if (m_score && !m_score->IsDead()) DeleteGO(m_score);
+	if (m_score && !m_score->IsDead())
+	{
+      DeleteGO(m_score);
+	  m_score = nullptr;
+	}
 
 	/** ゲームカメラを削除 */
 	DeleteGO(m_gameCamera);
@@ -82,6 +86,12 @@ Game::~Game()
 	{
 		DeleteGO(m_combo);
 		m_combo = nullptr;
+	}
+
+	if (m_fadeManager && !m_fadeManager->IsDead())
+	{
+		DeleteGO(m_fadeManager);
+		m_fadeManager = nullptr;
 	}
 }
 bool Game::Start()
@@ -526,6 +536,11 @@ void Game::TimeOut()
 
 void Game::Render(RenderContext& rc)
 {
+	if (IsFadeTimeOut())
+	{
+		return;
+	}
+
 	if (m_isTimeOut)
 	{
 		m_timeOutImage.Draw(rc);
