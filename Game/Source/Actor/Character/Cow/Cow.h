@@ -9,6 +9,8 @@ class Game;
 class SoundManager;
 class DummyCow;
 class Timer;
+class CowLuring;
+class CowFoodManager;
 class Cow : public Character
 {
 public:
@@ -104,6 +106,24 @@ public:
 		return m_isPendingKill;
 	}
 
+	/** 餌をターゲットにしているかどうかを設定する関数 */
+	void SetIsTargetFood(bool flag)
+	{
+		m_isTargetFood = flag;
+	}
+
+	/** 餌をターゲットにしているかどうかを取得する関数 */
+	bool GetIsTargetFood() const
+	{
+		return m_isTargetFood;
+	}
+
+	/** 現在餌を食べているかどうかを取得する関数 */
+	bool GetIsEating() const
+	{
+		return m_isEating;
+	}
+
 	/** 牛を削除予定を見る関数 */
 	void RequestKill();
 
@@ -120,10 +140,18 @@ private:
 
 	/** プレイヤーから逃げる関数 */
 	void AvoidPlayer();
+
+	/** 牛の餌が一番近い牛を探す関数 */
+	void SearchNearestFood();
 	
+	/** 牛の餌に近づく関数 */
+	void MoveToFood();
+
+	/** 牛が餌を食べる最中の関数 */
+	void Eating();
+
 	/** アップデートできるかどうかを判断する関数 */
 	bool CanUpdate();
-
 
 private:
 	/** ロープ */
@@ -156,6 +184,12 @@ private:
 	/* 牛のサウンドマネージャー**/
 	SoundManager* m_CowSound = nullptr;
 
+	/** 牛の餌 */
+	CowLuring* m_CowLuring = nullptr;
+
+	/** 牛の餌のマネージャー */
+	CowFoodManager* m_cowfoodmanager = nullptr;
+
 	enum EnCowState
 	{
 		
@@ -185,6 +219,12 @@ private:
 	/** 牛の移動時間 */
 	float m_moveTimer = 0;
 
+	/** 牛が餌を食べている間の時間 */
+	float m_eatTimer = 0.0f;
+
+	/** 牛が餌を食べているかどうかのフラグ */
+	bool m_isEating = false;
+
 	/** 牛が移動しているかどうか */
 	bool m_isMove = false;
 
@@ -202,6 +242,9 @@ private:
 
 	/** 牛の削除フラグ */
 	bool m_isPendingKill = false;
+
+	/** 近くの餌を追いかけるフラグ */
+	bool m_isTargetFood = false;
 
 	enum EnAnimation
 	{
