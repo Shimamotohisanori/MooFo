@@ -90,9 +90,11 @@
     <ClCompile Include="Source\Actor\Character\UFO\UFOLightManager.cpp">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClCompile>
-    <ClCompile Include="FadeManager.cpp" />
     <ClCompile Include="GameScene\LoadingScene.cpp">
       <Filter>GameTimer</Filter>
+    </ClCompile>
+    <ClCompile Include="FadeManager\FadeManager.cpp">
+      <Filter>FadeMaager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -185,9 +187,11 @@
     <ClInclude Include="Source\Actor\Character\UFO\UFOLightManager.h">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClInclude>
-    <ClInclude Include="FadeManager.h" />
     <ClInclude Include="GameTimer\Timer.h">
       <Filter>GameTimer</Filter>
+    </ClInclude>
+    <ClInclude Include="FadeManager\FadeManager.h">
+      <Filter>FadeMaager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +257,9 @@
     </Filter>
     <Filter Include="EffectManager">
       <UniqueIdentifier>{f8524da2-c7d8-4f71-ac89-094ca5a29087}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FadeMaager">
+      <UniqueIdentifier>{ea922d3b-8d8c-483a-a7a2-142be959ff57}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
