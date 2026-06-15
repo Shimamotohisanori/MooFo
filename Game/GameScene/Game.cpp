@@ -182,7 +182,7 @@ void Game::Update()
 	/** セレクトボタンを押していて
 	 * カウントダウン中でないかつ
 	 * タイムアウトしていない場合 */
-	if (g_pad[0]->IsTrigger(enButtonSelect) && !m_countDown->GetCountDown() && !m_isTimeOut)
+	if (g_pad[0]->IsTrigger(enButtonSelect) && !m_countDown->GetIsCountDown() && !m_isTimeOut)
 	{
 		/** タイムアウトなら */
 		if (m_isTimeOut)

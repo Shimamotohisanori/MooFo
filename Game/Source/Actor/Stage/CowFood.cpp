@@ -6,6 +6,7 @@
 #include "CountDown/CountDown.h"
 #include"GameScene/Game.h"
 #include"GameScene/LoadingScene.h"
+#include "SoundManager/SoundManager.h"
 namespace
 {
 	/** 牛の餌のモデルファイルパス */
@@ -36,6 +37,18 @@ CowFood::~CowFood()
 {
 	/** 牛の餌のエフェクトを削除する。 */
 	DeleteGO(m_cowFoodEffect);
+
+	/** 牛の餌を置く音を削除する。 */
+	if (m_puthaySE != nullptr)
+	{
+		DeleteGO(m_puthaySE);
+	}
+
+	/** 牛の餌を取る音を削除する。 */
+	if (m_takehaySE != nullptr)
+	{
+		DeleteGO(m_takehaySE);
+	}
 }
 
 bool CowFood::Start()
@@ -134,6 +147,11 @@ void CowFood::Update()
 
 		if(g_pad[0]->IsTrigger(enButtonA))
 		{
+			/** 牛の餌を取る音を再生させる。*/
+			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+
+			m_takehaySE = soundManager->PlayingSE(SoundSE::enTakehaySE, false);
+
 			m_foodCount = 2;
 			m_isPutFood = true;
 		}
@@ -151,6 +169,10 @@ void CowFood::CowFoodPut()
 	{
 		if (m_foodCount > 0 && !m_isPutPlayer)
 		{
+			/** 牛の餌を置く音を再生させる。*/
+			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+			m_puthaySE = soundManager->PlayingSE(SoundSE::enPuthaySE, false);
+
 			m_foodCount -= 1;
 			m_isPutFood = true;
 			m_isPutPlayer = true;

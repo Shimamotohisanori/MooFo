@@ -75,7 +75,7 @@ void Timer::Update()
 void Timer::TextTimer()
 {
 	/** カウントダウン中は制限時間を減らさないようにするため早期リターンをする。 */
-	if (m_countdown->GetCountDown())
+	if (m_countdown->GetIsCountDown())
 	{
 		return;
 	}
@@ -142,7 +142,7 @@ void Timer::Render(RenderContext& rc)
 	}
 
 	/** カウントダウン中は制限時間の描画を止めるために早期リターンをする */
-	if (m_countdown->GetCountDown())
+	if (m_countdown->GetIsCountDown())
 	{
 		return;
 	}
