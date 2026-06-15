@@ -26,6 +26,9 @@ namespace
 	/** ミニマップの外枠のファイルパス */
 	const char* OUTLINE_ICON_PATH = "Assets/sprite/MapUI/OutLine.dds";
 
+	/** 矢印のファイルパス*/
+	const char* ARROW_SPRITE_PATH = "Assets/sprite/MapUI/Arrow.dds";
+
 	Vector3 MAP_CENTER_POSITION = Vector3(704.0f, -300.0f, 0.0f);
 
 	Vector3 MAP_OUTLINE_POSITION = Vector3(704.0f, -302.5f, 0.0f);
@@ -37,6 +40,7 @@ namespace
 	/** マジックナンバー処理 */
 	constexpr int COW_NUM = 10;
 	constexpr int UFO_NUM = 4;
+	constexpr int ARROW_NUM = 4;
 }
 
 bool Map::Start()
@@ -73,6 +77,11 @@ bool Map::Start()
 	for (int i = 0; i < UFO_NUM; i++)
 	{
 		m_dangerSprite[i].Init(DANGER_ICON_PATH, 30.0f, 30.0f);
+	}
+	/** ビックリマークが出たときの位置を知らせるために表示させる。*/
+	for (int i = 0; i < ARROW_NUM; i++)
+	{
+		m_arrowSprite[i].Init(ARROW_SPRITE_PATH, 30.0f, 30.0f);
 	}
 
 
@@ -141,6 +150,8 @@ void Map::Update()
 	/** UFOのアイコン */
 	for (int i = 0; i < (int)m_ufos.size(); i++)
 	{
+		/** 矢印フラグをリセット*/
+		m_isArrow[i] = false;
 		/** UFOが牛を吸い込んだら */
 		if (m_ufos[i]->GetIsCowTakeAwayed())
 		{
@@ -164,6 +175,50 @@ void Map::Update()
 			{
 				/** そうじゃなかったら描画しない。 */
 				m_isdanger[i] = false;
+
+				/** プレイヤーからUFOへの方向ベクトルを作る*/
+				/** 代わりに矢印を表示させる*/
+				Vector3 diff = pos - playerPos;
+				/** Y軸は考慮しない*/
+				diff.y = 0.0f;
+
+				/** カメラの向きに合わせてdiffを回転*/
+				Quaternion rot;
+				rot.SetRotationY(m_mapAngle);
+				rot.Apply(diff);
+
+				/** diffをマップ上の方向ベクトルとして正規化*/
+				/** マップ座標系ではXはそのまま、ZをYとして扱う*/
+				float dx = diff.x;
+				float dy = diff.z;
+				/**浮動小数点数（float）の平方根を求める関数*/
+				float len = sqrtf(dx * dx + dy * dy);
+				/** 長さを1に正規化する*/
+				if (len > 0.0f)
+				{
+					dx /= len;
+					dy /= len;
+				}
+				/** 矢印の角度を計算(atan2でスプライトの回転角度を決める)*/
+				/** スプライトのデフォルトが上向き(0,1)を想定*/
+				/** atan2でベクトルの角度を求める*/
+				m_arrowAngle[i] = atan2(dy, dx);
+
+				/** 矢印をマップ円周上に配置(MAP_RADIUSの位置)*/
+				constexpr float ARROW_RADIUS = 155.0f;
+				Vector3 arrowPos = Vector3(
+					MAP_CENTER_POSITION.x + dx * ARROW_RADIUS,
+					MAP_CENTER_POSITION.y + dy * ARROW_RADIUS,
+					0.0f
+				);
+				m_arrowSprite[i].SetPosition(arrowPos);
+
+				/** Z軸回転で矢印を向ける*/
+				Quaternion arrowRot;
+				arrowRot.SetRotationZ(m_arrowAngle[i]);
+				m_arrowSprite[i].SetRotation(arrowRot);
+
+				m_isArrow[i] = true;
 			}
 			continue;
 		}
@@ -205,7 +260,10 @@ void Map::Update()
 
 	m_outLineSprite.Update();
 
-
+	for (int i = 0; i < ARROW_NUM; i++)
+	{
+		m_arrowSprite[i].Update();
+	}
 }
 bool Map::WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3 cowPosition, Vector3& mapPosition)
 {
@@ -295,6 +353,17 @@ void Map::Render(RenderContext& rc)
 		{
 			m_dangerSprite[i].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, flash));
 			m_dangerSprite[i].Draw(rc);
+		}
+	}
+
+
+	/** 矢印の描画*/
+	for (int i = 0; i < (int)m_ufos.size(); i++)
+	{
+		if (m_isArrow[i])
+		{
+			m_arrowSprite[i].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, flash));
+			m_arrowSprite[i].Draw(rc);
 		}
 	}
 
