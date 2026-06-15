@@ -92,7 +92,7 @@ namespace
 
 bool CowNumberOfRescues::Start()
 {
-    m_numberOfRescues = 9;
+    m_numberOfRescues = 0;
     tens = 0;
     ones = 0;
     m_isResult = false;

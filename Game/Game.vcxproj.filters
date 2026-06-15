@@ -177,7 +177,6 @@
     <ClInclude Include="Source\Actor\Character\UFO\UFOLightUI.h">
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClInclude>
-    <ClInclude Include="CowFood.h" />
     <ClInclude Include="Source\Actor\Stage\CowFood.h" />
     <ClInclude Include="Source\Actor\Character\Cow\CowLuring.h" />
     <ClInclude Include="Source\Actor\Character\UFO\CowCaptureController.h">

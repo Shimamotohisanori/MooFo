@@ -721,7 +721,7 @@ bool UFO::CanUFOUpdate()
 	m_score = FindGO<Score>("score");
 
 	/** UFOがゲームシーンに存在していないときは処理をしない */
-	if (m_pause == nullptr || m_countdown == nullptr || m_game == nullptr)
+	if (m_pause == nullptr || m_countdown == nullptr || m_game == nullptr || m_game->IsDead())
 	{
 		return false;
 	}
@@ -739,7 +739,7 @@ bool UFO::CanUFOUpdate()
 	}
 
 	/** カウントダウン中はUFOを動かさない */
-	if (m_countdown->GetCountDown())
+	if (m_countdown->GetIsCountDown())
 	{
 		return false;
 	}

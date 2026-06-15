@@ -34,6 +34,8 @@ enum SoundSE
 	enRopePullSE,/** ロープを引っ張るときに流すSE*/
 	enRunSE,/** プレイヤーが走る時に流すSE*/
 	enPauseSE,/* Pauseになったら流すSE**/
+	enPuthaySE,/** 牛の餌を置くときのSE*/
+	enTakehaySE,/** 牛の餌を取るときのSE*/
 	enSENum
 };
 

@@ -453,7 +453,7 @@ bool Cow::CanUpdate()
 	}
 
 	/** カウントダウン中のときは処理しないようにするため早期リターン */
-	if (m_countdown->GetCountDown())
+	if (m_countdown->GetIsCountDown())
 	{
 		return false;
 	}
