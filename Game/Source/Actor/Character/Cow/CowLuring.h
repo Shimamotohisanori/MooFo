@@ -1,6 +1,7 @@
 #pragma once
 class CowFood;
 class Player;
+class Cow;
 class CowLuring : public IGameObject
 {
 public:
@@ -27,6 +28,8 @@ private:
 	CowFood* m_cowfood;
 
 	Player* m_player;
+
+	Cow* m_cow;
 
 
 };

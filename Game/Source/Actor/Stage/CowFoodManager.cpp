@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CowFoodManager.h"
 #include "Source/Actor/Character/Cow/CowLuring.h"
+#include "Source/Actor/Character/Cow/Cow.h"
 #include "CowFood.h"
 
 bool CowFoodManager::Start()
@@ -10,7 +11,26 @@ bool CowFoodManager::Start()
 
 void CowFoodManager::Update()
 {
+	for (auto food : m_foodList)
+	{
+		SetNearestCow(food);
+	}
+}
 
+void CowFoodManager::RemoveFood(CowLuring* food)
+{
+	if (food == nullptr)
+	{
+		return;
+	}
+
+	auto it = std::find(m_foodList.begin(), m_foodList.end(), food);
+
+	if (it != m_foodList.end())
+	{
+		m_foodList.erase(it);
+		DeleteGO(food);
+	}
 }
 
 void CowFoodManager::SpawnFood(const Vector3& pos)
@@ -33,4 +53,38 @@ void CowFoodManager::SpawnFood(const Vector3& pos)
 
 	/** 一番後ろのリストに牛の餌を追加 */
 	m_foodList.push_back(food);
+}
+
+void CowFoodManager::SetNearestCow(CowLuring* food)
+{
+	auto cows = FindGOs<Cow>("cow");
+
+	for (auto cow : cows)
+	{
+		cow->SetIsTargetFood(false);
+	}
+
+	Cow* nearestCow = nullptr;
+
+	float nearestDistSq = FLT_MAX;
+
+	for (auto cow : cows)
+	{
+		Vector3 diff = cow->GetPosition() - food->GetPosition();
+
+		diff.y = 0.0f;
+
+		float distSq = diff.LengthSq();
+
+		if (distSq < nearestDistSq)
+		{
+			nearestDistSq = distSq;
+			nearestCow = cow;
+		}
+	}
+
+	if (nearestCow)
+	{
+		nearestCow->SetIsTargetFood(true);
+	}
 }

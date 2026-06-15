@@ -10,6 +10,8 @@ public:
 	bool Start();
 	void Update();
 
+	void RemoveFood(CowLuring* food);
+
 	/** 餌を生成する関数 */
 	void SpawnFood(const Vector3& pos);
 
@@ -18,6 +20,9 @@ public:
 		return m_foodList;
 	}
 private:
+
+	void SetNearestCow(CowLuring* food);
+
 	/** 牛の餌のリストを作る */
 	std::vector<CowLuring*> m_foodList;
 };

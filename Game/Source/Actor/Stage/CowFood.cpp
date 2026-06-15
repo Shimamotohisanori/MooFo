@@ -167,7 +167,8 @@ void CowFood::CowFoodPut()
 	pos.y = 0.0f;
 
 	/** ロープを投げておらず、牛に当たっておらず、LB2ボタンが押されたら */
-	if (!m_rope->GetIsThrowRope() && !m_rope->GetIsHitCow() && g_pad[0]->IsTrigger(enButtonLB2))
+	//if (!m_rope->GetIsThrowRope() && !m_rope->GetIsHitCow() && g_pad[0]->IsTrigger(enButtonLB2))
+	if (!m_rope->GetIsThrowRope() && !m_rope->GetIsHitCow() && g_pad[0]->IsTrigger(enButtonX))
 	{
 		/** 餌の残数があり、まだ設置中でなければ */
 		if (m_foodCount > 0 && !m_isPutPlayer)

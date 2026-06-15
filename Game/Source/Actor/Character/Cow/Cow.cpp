@@ -111,6 +111,12 @@ void Cow::Update()
 
 	/** アニメーションの再生 */
 	PlayAnimation();
+
+	if (m_isEating)
+	{
+		Eating();
+		return;
+	}
 	
 	/** プレイヤーから逃げる関数 */
 	AvoidPlayer();
@@ -118,14 +124,20 @@ void Cow::Update()
 	/** 一番近い餌を探す処理 */
 	SearchNearestFood();
 
-	MoveToFood();
-
-	if (m_rotationState == EnRotateState_MoveDir)
+	if (m_isTargetFood)
 	{
-		/** 移動 */
-		Move();
+		MoveToFood();
+	}
+	else
+	{
+		if (m_rotationState == EnRotateState_MoveDir)
+		{
+			/** 移動 */
+			Move();
+		}
 	}
 	
+
 	/** ステート管理 */
 	ManageState();
 	
@@ -266,6 +278,16 @@ void Cow::SearchNearestFood()
 
 void Cow::MoveToFood()
 {
+	if (m_isTakeAwayed)
+	{
+		return;
+	}
+
+	if (!m_isTargetFood)
+	{
+		return;
+	}
+
 	if (m_CowLuring == nullptr)
 	{
 		return;
@@ -279,6 +301,7 @@ void Cow::MoveToFood()
 
 	if (distance < 20.0f)
 	{
+		m_isEating = true;
 		return;
 	}
 
@@ -288,12 +311,36 @@ void Cow::MoveToFood()
 
 	const float speed = 50.0f;
 
-	Vector3 pos = GetPosition();
+	Vector3 move = dir * speed;
 
-	pos += dir * speed * g_gameTime->GetFrameDeltaTime();
+	Vector3 newPos = m_cowCharacterController.Execute(move, g_gameTime->GetFrameDeltaTime());
 
-	m_transform.SetPosition(pos);
-	m_cowmodelRender.SetPosition(pos);
+	m_transform.SetPosition(newPos);
+	m_cowmodelRender.SetPosition(newPos);
+}
+
+void Cow::Eating()
+{
+	m_eatTimer += g_gameTime->GetFrameDeltaTime();
+
+	if (m_eatTimer >= 3.0f)
+	{
+		if (m_CowLuring != nullptr)
+		{
+			// m_cowfoodmanager は Start() で初期化されていないので毎回取得する
+			CowFoodManager* mgr = FindGO<CowFoodManager>("cowfoodmanager");
+			if (mgr)
+			{
+				mgr->RemoveFood(m_CowLuring);
+			}
+			m_CowLuring = nullptr;
+		}
+
+		m_isEating = false;
+		m_isMove = false;
+		m_eatTimer = 0.0f;
+		m_isTargetFood = false;
+	}
 }
 
 void Cow::ManageState()

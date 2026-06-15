@@ -106,6 +106,16 @@ public:
 		return m_isPendingKill;
 	}
 
+	void SetIsTargetFood(bool flag)
+	{
+		m_isTargetFood = flag;
+	}
+
+	bool GetIsTargetFood() const
+	{
+		return m_isTargetFood;
+	}
+
 	/** 牛を削除予定を見る関数 */
 	void RequestKill();
 
@@ -128,6 +138,9 @@ private:
 	
 	/** 牛の餌に近づく関数 */
 	void MoveToFood();
+
+	/** 牛が餌を食べる最中の関数 */
+	void Eating();
 
 	/** アップデートできるかどうかを判断する関数 */
 	bool CanUpdate();
@@ -198,6 +211,12 @@ private:
 	/** 牛の移動時間 */
 	float m_moveTimer = 0;
 
+	/** 牛が餌を食べている間の時間 */
+	float m_eatTimer = 0.0f;
+
+	/** 牛が餌を食べているかどうかのフラグ */
+	bool m_isEating = false;
+
 	/** 牛が移動しているかどうか */
 	bool m_isMove = false;
 
@@ -215,6 +234,9 @@ private:
 
 	/** 牛の削除フラグ */
 	bool m_isPendingKill = false;
+
+	/** 近くの餌を追いかけるフラグ */
+	bool m_isTargetFood = false;
 
 	enum EnAnimation
 	{
