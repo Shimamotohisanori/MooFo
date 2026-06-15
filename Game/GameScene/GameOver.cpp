@@ -5,7 +5,7 @@
 #include "Title.h"
 #include "Score/Score.h"
 #include "CowNumberOfRescues/CowNumberOfRescues.h"
-#include"FadeManager.h";
+#include"FadeManager/FadeManager.h"
 
 namespace
 {

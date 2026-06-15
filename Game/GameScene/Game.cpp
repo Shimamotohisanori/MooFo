@@ -20,7 +20,7 @@
 #include "GameTimer/AddTimerUI.h"
 #include "Source/Actor/Character/UFO/UFOLightUI.h"
 #include "Source/Actor/Stage/CowFood.h"
-#include"FadeManager.h"
+#include"FadeManager/FadeManager.h"
 
 namespace
 {
