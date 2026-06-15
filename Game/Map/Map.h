@@ -33,6 +33,8 @@ private:
 
 	/** 危険アイコンの画像 */
 	SpriteRender m_dangerSprite[4];
+	/** 矢印アイコンの画像*/
+	SpriteRender m_arrowSprite[4];
 
 	/** アウトラインアイコンの画像 */
 	SpriteRender m_outLineSprite;
@@ -47,10 +49,12 @@ private:
 	float m_mapAngle = 0.0f;
 
 	float m_flashTImer = 0.0f;
-
+	/** 矢印の角度*/
+	float m_arrowAngle[4];
 	/** マップ内に表示されているUIがいるかどうかのフラグ */
 	bool m_isCowImage[10];
 	bool m_isUFOImage[4];
 	bool m_isdanger[4];
+	bool m_isArrow[4];
 
 };
