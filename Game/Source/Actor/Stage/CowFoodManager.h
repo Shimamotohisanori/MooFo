@@ -15,12 +15,13 @@ public:
 	/** 餌を生成する関数 */
 	void SpawnFood(const Vector3& pos);
 
+	/** 餌のリストを取得する関数 */
 	const std::vector<CowLuring*>& GetFoodList() const
 	{
 		return m_foodList;
 	}
 private:
-
+	/** 指定した餌に最も近い牛を探してターゲットフラグを立てる関数 */
 	void SetNearestCow(CowLuring* food);
 
 	/** 牛の餌のリストを作る */

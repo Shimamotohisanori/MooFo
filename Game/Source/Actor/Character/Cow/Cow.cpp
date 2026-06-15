@@ -44,11 +44,11 @@ namespace
 
 Cow::Cow()
 {
-	/** Idle */
+	/** 待機アニメーションを読み込みループ設定する */
 	animationClips[EnAnimation_Idle].Load(IDLE_ANIMATION_FILE_PATH);
 	animationClips[EnAnimation_Idle].SetLoopFlag(true);
 	
-	/** Walk */
+	/** 歩きアニメーションを読み込みループ設定する */
 	animationClips[EnAnimation_Walk].Load(WALK_ANIMATION_FILE_PATH);
 	animationClips[EnAnimation_Walk].SetLoopFlag(true);
 }
@@ -60,10 +60,16 @@ Cow::~Cow()
 
 bool Cow::Start()
 {
+	/** サウンドマネージャーを取得する */
 	m_CowSound  = FindGO<SoundManager>("soundmanager");
 
+	/** レイトレーシングを無効にする */
 	m_cowmodelRender.SetRaytracingWorld(false);
+
+	/** キャラクターコントローラーを初期化する */
 	m_cowCharacterController.Init(20.0f, 20.0f, m_transform.GetPosition());
+
+	/** 牛のモデルを初期化する */
 	m_cowmodelRender.Init(COW_MOCEL_FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
 	m_cowmodelRender.SetPosition(m_transform.GetPosition());
 	m_cowmodelRender.Update();
@@ -242,6 +248,7 @@ void Cow::Rotation()
 
 void Cow::SearchNearestFood()
 {
+	/** 牛の餌マネージャーを取得する */
 	CowFoodManager* cowfoodmanager = FindGO<CowFoodManager>("cowfoodmanager");
 
 	if (cowfoodmanager == nullptr)
@@ -251,6 +258,7 @@ void Cow::SearchNearestFood()
 
 	const auto& foodList = cowfoodmanager->GetFoodList();
 
+	/** 餌リストが空なら参照をクリアしてターゲットフラグを下ろす */
 	if (foodList.empty())
 	{
 		m_cowfoodmanager = nullptr;
@@ -259,8 +267,10 @@ void Cow::SearchNearestFood()
 
 	float minDistance = FLT_MAX;
 
+	/** 一番近くの餌を探すため一旦nullにリセットする */
 	m_CowLuring = nullptr;
 
+	/** 餌の中から最も近い牛を選ぶ */
 	for (auto food : foodList)
 	{
 		Vector3 dir = food->GetPosition() - GetPosition();
@@ -278,16 +288,19 @@ void Cow::SearchNearestFood()
 
 void Cow::MoveToFood()
 {
+	/** 牛が連れ去られている */
 	if (m_isTakeAwayed)
 	{
 		return;
 	}
 
+	/** 別の牛が近くの餌を追いかけている間は処理しない */
 	if (!m_isTargetFood)
 	{
 		return;
 	}
 
+	/** 餌がない場合は処理しない */
 	if (m_CowLuring == nullptr)
 	{
 		return;
@@ -299,6 +312,7 @@ void Cow::MoveToFood()
 
 	float distance = dir.Length();
 
+	/** 餌に20.0fに以内まで近づいたら食べる状態に移行する */
 	if (distance < 20.0f)
 	{
 		m_isEating = true;
@@ -313,6 +327,7 @@ void Cow::MoveToFood()
 
 	Vector3 move = dir * speed;
 
+	/** キャラクターコントローラーで移動後の座標を取得する */
 	Vector3 newPos = m_cowCharacterController.Execute(move, g_gameTime->GetFrameDeltaTime());
 
 	m_transform.SetPosition(newPos);
@@ -321,13 +336,15 @@ void Cow::MoveToFood()
 
 void Cow::Eating()
 {
+	/** 食べている経過時間を加算する */
 	m_eatTimer += g_gameTime->GetFrameDeltaTime();
 
-	if (m_eatTimer >= 3.0f)
+	/** 一定時間経過したら食べ終わりの処理を行う */
+	if (m_eatTimer >= 2.0f)
 	{
 		if (m_CowLuring != nullptr)
 		{
-			// m_cowfoodmanager は Start() で初期化されていないので毎回取得する
+			/** 牛の餌マネージャーから餌を削除する */
 			CowFoodManager* mgr = FindGO<CowFoodManager>("cowfoodmanager");
 			if (mgr)
 			{
@@ -336,6 +353,7 @@ void Cow::Eating()
 			m_CowLuring = nullptr;
 		}
 
+		/** 各フラグとタイマーをリセットして通常行動に戻す */
 		m_isEating = false;
 		m_isMove = false;
 		m_eatTimer = 0.0f;

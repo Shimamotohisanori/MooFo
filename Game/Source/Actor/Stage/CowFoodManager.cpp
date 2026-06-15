@@ -11,6 +11,7 @@ bool CowFoodManager::Start()
 
 void CowFoodManager::Update()
 {
+	/** 餌をターゲットにしているかどうかを取得する関数 */
 	for (auto food : m_foodList)
 	{
 		SetNearestCow(food);
@@ -19,15 +20,18 @@ void CowFoodManager::Update()
 
 void CowFoodManager::RemoveFood(CowLuring* food)
 {
+	/** nullptrなら何もしない */
 	if (food == nullptr)
 	{
 		return;
 	}
 
+	/** リストから対象の餌を検索する */
 	auto it = std::find(m_foodList.begin(), m_foodList.end(), food);
 
 	if (it != m_foodList.end())
 	{
+		/** 先にリストから除去してから餌のオブジェクトを破棄する */
 		m_foodList.erase(it);
 		DeleteGO(food);
 	}
@@ -57,6 +61,7 @@ void CowFoodManager::SpawnFood(const Vector3& pos)
 
 void CowFoodManager::SetNearestCow(CowLuring* food)
 {
+	/** シーン内の全ての牛を取得する */
 	auto cows = FindGOs<Cow>("cow");
 
 	for (auto cow : cows)
@@ -68,8 +73,10 @@ void CowFoodManager::SetNearestCow(CowLuring* food)
 
 	float nearestDistSq = FLT_MAX;
 
+	/** 食べていない牛の中から餌に最も近い牛を探す */
 	for (auto cow : cows)
 	{
+		/** 食べている最中の牛はターゲット選択から除外する */
 		Vector3 diff = cow->GetPosition() - food->GetPosition();
 
 		diff.y = 0.0f;
@@ -83,6 +90,14 @@ void CowFoodManager::SetNearestCow(CowLuring* food)
 		}
 	}
 
+	/** 食べていない牛のターゲットフラグを一旦リセットする */
+	for (auto cow : cows)
+	{
+		if (cow->GetIsEating()) continue;
+		cow->SetIsTargetFood(false);
+	}
+
+	/** 最近接の牛にターゲットフラグを立てる */
 	if (nearestCow)
 	{
 		nearestCow->SetIsTargetFood(true);

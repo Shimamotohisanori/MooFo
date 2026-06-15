@@ -106,14 +106,22 @@ public:
 		return m_isPendingKill;
 	}
 
+	/** 餌をターゲットにしているかどうかを設定する関数 */
 	void SetIsTargetFood(bool flag)
 	{
 		m_isTargetFood = flag;
 	}
 
+	/** 餌をターゲットにしているかどうかを取得する関数 */
 	bool GetIsTargetFood() const
 	{
 		return m_isTargetFood;
+	}
+
+	/** 現在餌を食べているかどうかを取得する関数 */
+	bool GetIsEating() const
+	{
+		return m_isEating;
 	}
 
 	/** 牛を削除予定を見る関数 */
