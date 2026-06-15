@@ -2,6 +2,8 @@
 class Rope;
 class CountDown;
 class CowFoodManager;
+class LoadingScene;
+class Game;
 class CowFood : public IGameObject
 {
 public:
@@ -77,6 +79,8 @@ private:
 
 	/** 縄のクラス */
 	Rope* m_rope = nullptr;
+	/** ゲームクラス*/
+	Game* m_game = nullptr;
 
 	/** カウントダウン */
 	CountDown* m_CountDown = nullptr;
@@ -84,4 +88,9 @@ private:
 	/** 牛の餌の管理 */
 	CowFoodManager* m_CowFoodManager = nullptr;
 
+	/** 牛の餌を置く音 */
+	SoundSource* m_puthaySE = nullptr;
+
+	/** 牛の餌を取る音 */
+	SoundSource* m_takehaySE = nullptr;
 };

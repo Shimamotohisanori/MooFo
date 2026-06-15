@@ -6,6 +6,9 @@
 #include "CountDown/CountDown.h"
 #include "Source/Actor/Character/Cow/CowLuring.h"
 #include "CowFoodManager.h"
+#include"GameScene/Game.h"
+#include"GameScene/LoadingScene.h"
+#include "SoundManager/SoundManager.h"
 namespace
 {
 	/** 牛の餌のモデルファイルパス */
@@ -36,6 +39,18 @@ CowFood::~CowFood()
 {
 	/** 牛の餌のエフェクトを削除する。 */
 	DeleteGO(m_cowFoodEffect);
+
+	/** 牛の餌を置く音を削除する。 */
+	if (m_puthaySE != nullptr)
+	{
+		DeleteGO(m_puthaySE);
+	}
+
+	/** 牛の餌を取る音を削除する。 */
+	if (m_takehaySE != nullptr)
+	{
+		DeleteGO(m_takehaySE);
+	}
 }
 
 bool CowFood::Start()
@@ -87,6 +102,7 @@ bool CowFood::Start()
 	m_rope = FindGO<Rope>("rope");
 
 	/** カウントダウンのインスタンスを取得する */
+	m_game = FindGO<Game>("game");
 	m_CountDown = FindGO<CountDown>("countdown");
 
 	/** 牛の餌マネージャーのインスタンスを取得する */
@@ -98,7 +114,7 @@ bool CowFood::Start()
 void CowFood::Update()
 {
 	/** カウントダウン中は処理をスキップする */
-	if (m_CountDown && m_CountDown->GetIsCountDown())
+	if (m_CountDown && m_CountDown->GetCountDown())
 	{
 		return;
 	}
@@ -141,6 +157,11 @@ void CowFood::Update()
 		/** Aボタンが押されたら餌の数を2にセットして設置フラグを立てる */
 		if(g_pad[0]->IsTrigger(enButtonA))
 		{
+			/** 牛の餌を取る音を再生させる。*/
+			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+
+			m_takehaySE = soundManager->PlayingSE(SoundSE::enTakehaySE, false);
+
 			m_foodCount = 2;
 			m_isPutFood = true;
 		}
@@ -174,6 +195,9 @@ void CowFood::CowFoodPut()
 		if (m_foodCount > 0 && !m_isPutPlayer)
 		{
 			/** 餌の残数を1減らす */
+			/** 牛の餌を置く音を再生させる。*/
+			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+			m_puthaySE = soundManager->PlayingSE(SoundSE::enPuthaySE, false);
 			m_foodCount -= 1;
 			m_isPutFood = true;
 			m_isPutPlayer = true;
@@ -195,6 +219,18 @@ void CowFood::CowFoodPut()
 
 void CowFood::Render(RenderContext& rc)
 {
+	/**フェード完了までUIの表示を遅らす*/
+	LoadingScene* lodingScene = FindGO<LoadingScene>("loading");
+	if (lodingScene != nullptr && !lodingScene->GetLoadingEnd())
+	{
+		return;
+	}
+	/** タイムアウト時は餌のUIをでないようにする*/
+	if (m_game->IsFadeTimeOut())
+	{
+		return;
+	}
+
 	/** 牛の餌のモデルを描画する。*/
 	m_cowFoodModelRender.Draw(rc);
 

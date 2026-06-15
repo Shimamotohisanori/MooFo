@@ -3,6 +3,8 @@
 #include "CountDown/CountDown.h"
 #include "Pause/Pause.h"
 #include"UFOLightManager.h"
+#include"GameScene/Game.h"
+
 namespace
 {
 	/** 光が出ているときに表示する数字のスプライト */
@@ -53,6 +55,7 @@ bool UFOLightUI::Start()
 		m_LightApperNumberSpriteRender[i].Update();
 	}
 
+	m_game = FindGO<Game>("game");
 	/** 光の発射までのスプライト初期化 */
 	m_LightApperSpriteRender.Init(LIGHT_APPEAR_SPRITE_FILEPATH, FONT_WIDTH, FONT_HEIGHT);
 	m_LightApperSpriteRender.SetPosition(Vector3(740.0f, 500.0f, 0.0f));
@@ -71,6 +74,7 @@ bool UFOLightUI::Start()
 
 void UFOLightUI::Update()
 {
+	
 	if (m_ufolightManager == nullptr)
 	{
 		m_ufolightManager = FindGO<UFOLightManager>("ufolightmanager");
@@ -100,10 +104,16 @@ void UFOLightUI::Render(RenderContext& rc)
 		return;
 	}
 
-	if (m_countdown->GetIsCountDown())
+	if (m_countdown->GetCountDown())
 	{
 		return;
 	}
+
+	if (m_game->IsFadeTimeOut())
+	{
+		return;
+	}
+	
 	/** Pause中は描画を止める */
 	if (m_pause->GetIsPause())
 	{

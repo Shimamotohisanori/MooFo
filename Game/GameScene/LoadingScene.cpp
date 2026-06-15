@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "LoadingScene.h"
 #include "SoundManager/SoundManager.h"
 #include "GameScene/Game.h"
@@ -59,8 +59,14 @@ bool LoadingScene::Start()
 	m_blackLoadingSpriteRender.Init(BLACKLODING_FILEPATH, BLACKLOADING_WIDTH, BLACKLOADING_HEIGHT);
 	m_blackLoadingSpriteRender.SetPosition(Vector3(0.0f, 0.0f, 0.0f));
 	m_blackLoadingSpriteRender.Update();
-	
-	/** スプライトの初期化 */
+	/** 最初は完全に表示しておく*/
+	m_SceneFadeAlpha = 1.0f;
+
+	/** 最初はフェードインしていない状態にしておく*/
+	m_isSceneFadeOut= false;
+
+
+	/**  スプライトの初期化 */
 	m_loadingSpriteRender[0].Init(COWHOOKLOAD_FILEPATH,LOADING_WIDTH,LOADING_HEIGHT);
 	m_loadingSpriteRender[1].Init(COWRESCUELOAD_FILEPATH,LOADING_WIDTH,LOADING_HEIGHT);
 	m_loadingSpriteRender[2].Init(GAMECLEARLOAD_FILEPATH,LOADING_WIDTH,LOADING_HEIGHT);
@@ -108,6 +114,8 @@ void LoadingScene::Update()
 	/** Loadingの文字のフェード処理 */
 	FadeLoadingText();
 
+	/** Sceneのフェード処理*/
+	FadeOutLoadingScene();
 	/**スプライトの更新 */
 	for (int i = 0; i < 3; i++)
 	{
@@ -118,15 +126,25 @@ void LoadingScene::Update()
 	m_loadingTextSpriteRender.SetMulColor(
 		Vector4(1.0f, 1.0f, 1.0f, m_loadingTextAlpha)
 	);
-
+	/** αを反映させる*/
+	m_blackLoadingSpriteRender.SetMulColor(
+		Vector4(1.0f, 1.0f, 1.0f, m_SceneFadeAlpha)
+	);
 	/** Loadingの文字の更新 */
 	m_loadingTextSpriteRender.Update();
+
+	/** Sceneの更新*/
+	m_blackLoadingSpriteRender.Update();
 	
 }
 
 
 void LoadingScene::InLoading()
 {
+	if (m_isSceneFadeOut)
+	{
+		return;
+	}
 	float deltaTime = g_gameTime->GetFrameDeltaTime();
 
 	m_timer += deltaTime;
@@ -189,6 +207,38 @@ void LoadingScene::FadeLoadingText()
 		}
 	}
 }
+
+
+
+
+void LoadingScene::FadeOutLoadingScene()
+{
+	if (!m_isSceneFadeOut)
+	{
+		return;
+	}
+	/** フェードアウト処理*/
+	if (m_isSceneFadeOut)
+	{
+		m_SceneFadeAlpha -= m_SceneFadeSpeed * g_gameTime->GetFrameDeltaTime();
+		if (m_SceneFadeAlpha <= 0.0f)
+		{
+			m_SceneFadeAlpha = 0.0f;
+			m_isSceneFadeOut = false;
+			/** フェード完了フラグをtrueにする*/
+			m_isFadeComplete = true;
+
+			/** フェード完了かつロードが完了したら削除する*/
+			if (m_isLoadingEnd)
+			{
+				DeleteGO(this);
+				return;
+			}
+		}
+		
+	}
+}
+
 
 void LoadingScene::LoadGameObjectsStepByStep()
 {
@@ -257,8 +307,9 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	} break;
 
 		/** ゲームカメラを生成 */
-	case 18: NewGO<GameCamera>(0, "gameCamera"); break;
-
+	case 18: NewGO<GameCamera>(0, "gameCamera"); 
+		break;
+		/** スカイキューブを生成 */
 	case 19:
 	{
 		/** 牛の餌を生成 */
@@ -304,7 +355,9 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		/** ロードしたUFOをゲームに渡す */
 		game->SetUFOList(m_tempUFOs);
 
-		DeleteGO(this);
+		m_isSceneFadeOut = true;
+		m_isLoadingEnd = true;
+		//DeleteGO(this);
 		return;
 	}
 
@@ -357,6 +410,10 @@ void LoadingScene::SetNextScene(std::function<void()>next)
 void LoadingScene::Render(RenderContext& rc)
 {
 	m_blackLoadingSpriteRender.Draw(rc);
+	if (m_isLoadingEnd)
+	{
+		return;
+	}
 	m_loadingSpriteRender[m_currentImage].Draw(rc);
 	m_loadingTextSpriteRender.Draw(rc);
 }

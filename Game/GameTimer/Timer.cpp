@@ -2,6 +2,7 @@
 #include "Timer.h"
 #include "CountDown/CountDown.h"
 #include "Pause/Pause.h"
+#include"GameScene/Game.h"
 
 namespace
 {
@@ -24,6 +25,7 @@ Timer::~Timer()
 
 bool Timer::Start()
 {
+	m_game = FindGO<Game>("game");
 	/** 全ての画像スプライト(30個)を初期化 */
 	for (int j = 0; j < 10; j++)
 	{
@@ -73,7 +75,7 @@ void Timer::Update()
 void Timer::TextTimer()
 {
 	/** カウントダウン中は制限時間を減らさないようにするため早期リターンをする。 */
-	if (m_countdown->GetIsCountDown())
+	if (m_countdown->GetCountDown())
 	{
 		return;
 	}
@@ -140,7 +142,7 @@ void Timer::Render(RenderContext& rc)
 	}
 
 	/** カウントダウン中は制限時間の描画を止めるために早期リターンをする */
-	if (m_countdown->GetIsCountDown())
+	if (m_countdown->GetCountDown())
 	{
 		return;
 	}
@@ -150,6 +152,11 @@ void Timer::Render(RenderContext& rc)
 	{
 		return;
 	}
+	if (m_game->IsFadeTimeOut())
+	{
+		return;
+	}
+
 	for (int i = 0; i < 3; i++)
 	{
 		for (int j = 0; j < 10; j++)

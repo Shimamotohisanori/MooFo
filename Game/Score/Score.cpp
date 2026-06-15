@@ -1,7 +1,8 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Score.h"
 #include "SoundManager/SoundManager.h"
-
+#include"GameScene/LoadingScene.h"
+#include"GameScene/Game.h"
 namespace
 {
 	/** 三桁の数字を描画する画像の大きさ */
@@ -36,8 +37,10 @@ bool Score::Start()
 	m_displayScore = 0;
 
 	m_isResult = false;
+	m_game = FindGO<Game>("game");
 	/** 最初は絶対更新するためここを - 1する */
 	m_prevScore = -1;
+
 
 	/** 全ての画像スプライト(50個)を初期化 */
 	for (int j = 0; j < 10; j++)
@@ -229,6 +232,18 @@ int Score::GetScore() const
 
 void Score::Render(RenderContext& rc)
 {
+	/**フェード完了までUIの表示を遅らす*/
+	LoadingScene* lodingScene = FindGO<LoadingScene>("loading");
+	if (lodingScene != nullptr && !lodingScene->GetLoadingEnd())
+	{
+		return;
+	}
+	/** タイムアウト時は描画しない*/
+	
+	if (m_game !=nullptr&&m_game->IsFadeTimeOut())
+	{
+		return;
+	}
 	for (int i = 0; i < 5; i++)
 	{
 		for (int j = 0; j < 10; j++)

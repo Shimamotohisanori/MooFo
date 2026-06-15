@@ -4,6 +4,7 @@
 #include "Score/Score.h"
 #include "GameTimer/AddTimerUI.h"
 #include "SoundManager/SoundManager.h"
+
 namespace
 {
 	const char* COMBO_NUMBER_FILEPATH = "Assets/sprite/NumberUI/";
@@ -69,11 +70,17 @@ bool Combo::Start()
 
 void Combo::Update()
 {
+	
 	ViewComboSprite();
 }
 
 void Combo::Render(RenderContext & rc)
 {
+	
+
+
+
+
 	/** コンボ表示フラグが立っているなら */
 	if (m_isViewComboSprite)
 	{
