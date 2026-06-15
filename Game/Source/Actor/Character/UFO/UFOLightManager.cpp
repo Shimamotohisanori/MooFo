@@ -74,7 +74,7 @@ bool UFOLightManager::CanUpdate()
 		return false;
 	}
 	/** カウントダウン中のときは処理を止める */
-	if (m_countdown->GetIsCountDown())
+	if (m_countdown->GetCountDown())
 	{
 		return false;
 	}

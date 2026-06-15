@@ -104,7 +104,7 @@ void UFOLightUI::Render(RenderContext& rc)
 		return;
 	}
 
-	if (m_countdown->GetIsCountDown())
+	if (m_countdown->GetCountDown())
 	{
 		return;
 	}
