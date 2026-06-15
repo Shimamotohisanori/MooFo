@@ -1,6 +1,7 @@
 #pragma once
 class CountDown;
 class Pause;
+class Game;
 /** タイマークラス */
 class Timer : public IGameObject
 {
@@ -56,5 +57,7 @@ private:
 
 	/** ポーズ */
 	Pause* m_pause = nullptr;
+	/** ゲームのポインタ*/
+	Game* m_game = nullptr;
 };
 

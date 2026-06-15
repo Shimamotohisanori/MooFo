@@ -252,7 +252,11 @@ void Map::Render(RenderContext& rc)
 	{
 		return;
 	}
-
+	/** タイムアウト時のフェード処理中は描画を止める*/
+	if (m_game->IsFadeTimeOut())
+	{
+		return;
+	}
 
 	if (m_pause == nullptr) return;
 	if (m_game == nullptr) return;

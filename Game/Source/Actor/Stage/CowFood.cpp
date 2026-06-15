@@ -4,6 +4,7 @@
 #include "Source/Actor/Character/Player/Player.h"
 #include "Rope/Rope.h"
 #include "CountDown/CountDown.h"
+#include"GameScene/Game.h"
 #include"GameScene/LoadingScene.h"
 #include "SoundManager/SoundManager.h"
 namespace
@@ -96,6 +97,7 @@ bool CowFood::Start()
 	
 	m_rope = FindGO<Rope>("rope");
 
+	m_game = FindGO<Game>("game");
 	m_CountDown = FindGO<CountDown>("countdown");
 
 	return true;
@@ -103,7 +105,7 @@ bool CowFood::Start()
 
 void CowFood::Update()
 {
-	if (m_CountDown && m_CountDown->GetIsCountDown())
+	if (m_CountDown && m_CountDown->GetCountDown())
 	{
 		return;
 	}
@@ -191,7 +193,11 @@ void CowFood::Render(RenderContext& rc)
 	{
 		return;
 	}
-
+	/** タイムアウト時は餌のUIをでないようにする*/
+	if (m_game->IsFadeTimeOut())
+	{
+		return;
+	}
 
 	/** 牛の餌のモデルを描画する。*/
 	m_cowFoodModelRender.Draw(rc);

@@ -115,6 +115,11 @@ public:
 	{
 		m_dummyCow = cow;
 	}
+	/** タイムアウトのフェード処理でUIを消すためのゲッター関数*/
+	bool IsFadeTimeOut()const
+	{
+		return m_isfadeStart;
+	}
 
 	/** 全ての牛を削除する関数 */
 	void KillAllCows();
