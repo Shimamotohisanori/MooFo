@@ -72,6 +72,8 @@ namespace nsK2EngineLow {
 		/// <param name="vol">ƒ{ƒŠƒ…[ƒ€B</param>
 		void SetVolume(float vol)
 		{
+			if (!m_sourceVoice)
+				return;
 			m_sourceVoice->SetVolume(vol);
 		}
 		/// <summary>
