@@ -16,21 +16,25 @@
 namespace
 {
 	/** ローディングシーンで使用する画像のファイルパス */
-	const char* COWHOOKLOAD_FILEPATH = "Assets/sprite/LoadingUI/CowhookLoad.dds";
+	const char* COWHOOKLOAD_FILEPATH =   "Assets/sprite/LoadingUI/CowHookLoad.dds";
 	const char* COWRESCUELOAD_FILEPATH = "Assets/sprite/LoadingUI/CowRescueLoad.dds";
+	const char* COWFOODLOAD_FILEPATH =   "Assets/sprite/LoadingUI/CowFoodLoad.dds";
 	const char* GAMECLEARLOAD_FILEPATH = "Assets/sprite/LoadingUI/GameClearLoad.dds";
-	const char* LOADINGTEXT_FILEPATH = "Assets/sprite/LoadingUI/LodingUI.dds";
-	const char* BLACKLODING_FILEPATH = "Assets/sprite/GameTransition/Black.dds";
+	const char* LOADINGTEXT_FILEPATH =   "Assets/sprite/LoadingUI/LodingUI.dds";
+	const char* BLACKLODING_FILEPATH =   "Assets/sprite/GameTransition/Black.dds";
 
 	/** 画像の大きさ */
 	/** 横幅 */
 	constexpr int BLACKLOADING_WIDTH = 1920.0f;
-	constexpr int LOADING_WIDTH = 1800.0f;
+	constexpr int LOADING_WIDTH = 1900.0f;
+	constexpr int COWHOOK_LOADING_WIDTH = 1800.0f;
+	constexpr int COWRESCUE_LOADING_WIDTH = 1700.0f;
 	constexpr int LOADINGWARD_WIDTH = 400.0f;
 	
 	/** 縦幅 */
 	constexpr int BLACKLOADING_HEIGHT = 1080.0f;
-	constexpr int LOADING_HEIGHT = 800.0f;
+	constexpr int LOADING_HEIGHT = 700.0f;
+	constexpr int COWRESCUE_LOADING_HEIGHT = 600.0f;
 	constexpr int LOADINGWARD_HEIGHT = 100.0f;
 	
 	/** 牛のランダムスポーン範囲 */
@@ -67,18 +71,20 @@ bool LoadingScene::Start()
 
 
 	/**  スプライトの初期化 */
-	m_loadingSpriteRender[0].Init(COWHOOKLOAD_FILEPATH,LOADING_WIDTH,LOADING_HEIGHT);
-	m_loadingSpriteRender[1].Init(COWRESCUELOAD_FILEPATH,LOADING_WIDTH,LOADING_HEIGHT);
-	m_loadingSpriteRender[2].Init(GAMECLEARLOAD_FILEPATH,LOADING_WIDTH,LOADING_HEIGHT);
+	m_loadingSpriteRender[0].Init(COWHOOKLOAD_FILEPATH,COWHOOK_LOADING_WIDTH,LOADING_HEIGHT);
+	m_loadingSpriteRender[1].Init(COWFOODLOAD_FILEPATH, LOADING_WIDTH, LOADING_HEIGHT);
+	m_loadingSpriteRender[2].Init(COWRESCUELOAD_FILEPATH,COWRESCUE_LOADING_WIDTH,COWRESCUE_LOADING_HEIGHT);
+	m_loadingSpriteRender[3].Init(GAMECLEARLOAD_FILEPATH,LOADING_WIDTH,LOADING_HEIGHT);
+	
 	
 	/** スプライトの位置を設定 */
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		m_loadingSpriteRender[i].SetPosition(Vector3(0.0f, 100.0f, 0.0f));
 	}
 	
 	/** スプライトの更新 */
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		m_loadingSpriteRender[i].Update();
 	}
@@ -117,7 +123,7 @@ void LoadingScene::Update()
 	/** Sceneのフェード処理*/
 	FadeOutLoadingScene();
 	/**スプライトの更新 */
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		m_loadingSpriteRender[i].Update();
 	}
@@ -157,7 +163,7 @@ void LoadingScene::InLoading()
 		m_timer = 0.0f;
 
 		/** 画像を順番に切り替える */
-		m_currentImage = (m_currentImage + 1) % 3;
+		m_currentImage = (m_currentImage + 1) % 4;
 	}
 
 	/** ローディングが開始していない状態で

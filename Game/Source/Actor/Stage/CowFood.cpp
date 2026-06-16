@@ -127,7 +127,6 @@ void CowFood::Update()
 	/** プレイヤーのクラスを見つける */
 	Player* player = FindGO<Player>("player");
 
-
 	/** ゲームクラスを見つける */
 	m_game = FindGO<Game>("game");
   

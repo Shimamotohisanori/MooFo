@@ -69,7 +69,7 @@ private:
 	SpriteRender m_blackLoadingSpriteRender;
 
 	/** ローディング中に使うスプライトレンダー*/
-	SpriteRender m_loadingSpriteRender[3];
+	SpriteRender m_loadingSpriteRender[4];
 
 	/** Loadingの文字のスプライトレンダー*/
 	SpriteRender m_loadingTextSpriteRender;
@@ -96,7 +96,7 @@ private:
 	float m_totalTime = 0.0f;
 
 	/**ローディングの全体時間*/
-	float m_loadingTime = 15.0f;
+	float m_loadingTime = 17.0f;
 
 	/** Load文字フェード用の変数*/
 	/** Loadingの文字のアルファ値*/

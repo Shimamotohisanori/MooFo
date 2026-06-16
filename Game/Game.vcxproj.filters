@@ -91,11 +91,11 @@
       <Filter>Source\Actor\Character\UFO</Filter>
     </ClCompile>
     <ClCompile Include="Source\Actor\Stage\CowFoodManager.cpp" />
-    <ClCompile Include="GameScene\LoadingScene.cpp">
-      <Filter>GameTimer</Filter>
-    </ClCompile>
     <ClCompile Include="FadeManager\FadeManager.cpp">
       <Filter>FadeMaager</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene\LoadingScene.cpp">
+      <Filter>GameScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
