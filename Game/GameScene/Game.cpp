@@ -23,7 +23,6 @@
 #include "Source/Actor/Stage/CowFoodManager.h"
 #include "Source/Actor/Character/Cow/CowLuring.h"
 #include"FadeManager/FadeManager.h"
-ain
 
 namespace
 {

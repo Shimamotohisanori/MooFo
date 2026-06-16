@@ -102,7 +102,6 @@ bool CowFood::Start()
 	m_rope = FindGO<Rope>("rope");
 
 	/** カウントダウンのインスタンスを取得する */
-	m_game = FindGO<Game>("game");
 	m_CountDown = FindGO<CountDown>("countdown");
 
 	/** 牛の餌マネージャーのインスタンスを取得する */
@@ -120,6 +119,9 @@ void CowFood::Update()
 	}
 	/** プレイヤーのクラスを見つける */
 	Player* player = FindGO<Player>("player");
+
+	/** ゲームクラスを見つける */
+	m_game = FindGO<Game>("game");
 
 	/** 餌を置く処理を実行する */
 	CowFoodPut();
@@ -226,7 +228,7 @@ void CowFood::Render(RenderContext& rc)
 		return;
 	}
 	/** タイムアウト時は餌のUIをでないようにする*/
-	if (m_game->IsFadeTimeOut())
+	if (!m_game || m_game->IsFadeTimeOut())
 	{
 		return;
 	}
