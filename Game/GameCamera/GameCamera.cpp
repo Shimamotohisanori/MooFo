@@ -33,6 +33,9 @@ namespace
 	/** カメラの最低高さ */
 	constexpr float MIN_CAMERA_HEIGHT = 5.0f;
 
+	/** カメラの最高の左方向位置(x座標) */
+	constexpr float MAX_CAMERA_POS_X = -1320.0f;
+
 	/** 牛に当たったときのカメラの高さ */
 	constexpr float BACK_OFFSET = 100.0f;
 
@@ -176,9 +179,15 @@ void GameCamera::Follow()
 		pos = target + Vector3(0.0f, 0.0f, -50.0f); // 適当な距離を確保
 	}
 
-	/** 地面付近にカメラがあった場合はそれ以上下に行かないようにする */
+	/** 地面に近すぎないようにする */
 	if (pos.y < MIN_CAMERA_HEIGHT) {
 		pos.y = MIN_CAMERA_HEIGHT;
+	}
+
+	/** 横方向の位置が最大値を超えないようにする */
+	if (pos.x < MAX_CAMERA_POS_X)
+	{
+		pos.x = MAX_CAMERA_POS_X;
 	}
 
 	/** メインカメラに注視点と視点を設定 */
@@ -237,6 +246,12 @@ void GameCamera::FollowRope()
 		Vector3 eye = m_player->GetPosition()
 			+ Vector3(0.0f, 0.0f, 0.0f)
 			+ m_cameraPos;
+
+		/** 横方向の位置が最大値を超えないようにする */
+		if (eye.x < MAX_CAMERA_POS_X)
+		{
+			eye.x = MAX_CAMERA_POS_X;
+		}
 
 		Vector3 target = eye + camForward * ROPE_TARGET_DISTANCE;
 
