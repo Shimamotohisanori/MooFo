@@ -210,6 +210,18 @@ void CowFood::CowFoodPut()
 		return;
 	}
 
+	/** クールタイム中ならタイマーを減らして処理をスキップ */
+	if (m_isCoolTime)
+	{
+		m_coolTime -= g_gameTime->GetFrameDeltaTime();
+
+		if (m_coolTime <= 0.0f)
+		{
+			m_isCoolTime = false;
+		}
+		return;
+	}
+
 	/** プレイヤーの座標を取得し、Y軸を0にする */
 	Vector3 pos = player->GetPosition();
 	pos.y = 0.0f;
@@ -228,6 +240,10 @@ void CowFood::CowFoodPut()
 			m_foodCount -= 1;
 			m_isPutFood = true;
 			m_isPutPlayer = true;
+
+			/** クールタイムを開始する */
+			m_isCoolTime = true;
+			m_coolTime = 4.0f;
 			
 			/** 牛の餌マネージャーに餌をスポーンさせる */
 			if (m_CowFoodManager)
