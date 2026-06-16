@@ -24,6 +24,12 @@ void EffectManager::LoadEffects()
 		u"Assets/Effects/cowFood.efk"
 	);
 
+	nsK2EngineLow::EffectEngine::GetInstance()->ResistEffect
+	(
+		(int)EffectID::EffectID_Abutton,
+		u"Assets/Effects/Abutton.efk"
+	);
+
 	/** 一回目のUFO混乱エフェクト*/
 	nsK2EngineLow::EffectEngine::GetInstance()
 		->ResistEffect((int)EffectID::EffectID_UFOConfusionEffect_1, u"Assets/Effects/UFOConfusion_1.efk");
