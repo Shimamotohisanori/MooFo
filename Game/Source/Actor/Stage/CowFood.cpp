@@ -102,7 +102,7 @@ bool CowFood::Start()
 	m_rope = FindGO<Rope>("rope");
 
 	/** カウントダウンのインスタンスを取得する */
-	m_game = FindGO<Game>("game");
+	
 	m_CountDown = FindGO<CountDown>("countdown");
 
 	/** 牛の餌マネージャーのインスタンスを取得する */
@@ -120,7 +120,7 @@ void CowFood::Update()
 	}
 	/** プレイヤーのクラスを見つける */
 	Player* player = FindGO<Player>("player");
-
+	m_game = FindGO<Game>("game");
 	/** 餌を置く処理を実行する */
 	CowFoodPut();
 
