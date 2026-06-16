@@ -534,16 +534,9 @@ void UFO::UFOSEDistance()
 	float finalVolume = volume * managerVolume;
 
 	/** UFOが牛を引っ張るSEをSetVolumeに代入させる */
-	m_UFOCaptureSE->SetVolume(finalVolume);
-
-	if (!m_UFOTakeAwaySE)
-		return;
-
-	/** 牛の鳴き声が死んでいない場合 */
-	if (!m_UFOTakeAwaySE->IsDead())
+	if (!m_UFOCaptureSE->IsDead())
 	{
-		/** UFOが牛を連れ去った瞬間のSEも同様に距離で音量を変える */
-		m_UFOTakeAwaySE->SetVolume(finalVolume);
+		m_UFOCaptureSE->SetVolume(finalVolume);
 	}
 }
 
@@ -769,11 +762,6 @@ void UFO::UpdateUFOSound()
 			m_UFOCaptureSE = nullptr;
 		}
 
-		if (m_UFOTakeAwaySE != nullptr && !m_UFOTakeAwaySE->IsDead())
-		{
-			DeleteGO(m_UFOTakeAwaySE);
-			m_UFOTakeAwaySE = nullptr;
-		}
 		return;
 	}
 
@@ -803,14 +791,17 @@ void UFO::UpdateUFOSound()
 	/** 牛を連れ去った瞬間のSEを再生 */
 	if (m_isCowTakeAwayed || m_targetCow != nullptr)
 	{
-		/** 牛が鳴いていない場合 */
-		if (!m_hasCryed)
+		if (!m_hasCryed && m_isCowTakeAwayed)
 		{
-			/** SEを再生させる */
-			auto soundManager = FindGO<SoundManager>("soundmanager");
-			m_UFOTakeAwaySE = soundManager->PlayingSE(SoundSE::enCowCrySE, false);
-			
-			/** 牛が鳴いたフラグを立てる */
+			auto player = FindGO<Player>("player");
+			float distance = (player->GetPosition() - m_transform.GetPosition()).Length();
+			float volume = max(0.0f, 1.0f - (distance / UFO_PLAYER_DISTANCE));
+
+			auto soundmanager = FindGO<SoundManager>("soundmanager");
+			auto se = soundmanager->PlayingSE(SoundSE::enCowCrySE, false);
+			se->SetVolume(volume * soundmanager->m_seVolume);
+
+			/** 鳴いた */
 			m_hasCryed = true;
 		}
 		
@@ -820,13 +811,6 @@ void UFO::UpdateUFOSound()
 	{
 		/** 牛が鳴いていない場合 */
 		m_hasCryed = false;
-
-		/** 牛を連れ去った瞬間のSEが流れていたら */
-		if (m_UFOTakeAwaySE != nullptr && !m_UFOTakeAwaySE->IsDead())
-		{
-			/** SEを消す */
-			m_UFOTakeAwaySE = nullptr;
-		}
 	}
 	
 }
