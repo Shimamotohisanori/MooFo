@@ -243,7 +243,8 @@ void CowFood::CowFoodPut()
 
 			/** クールタイムを開始する */
 			m_isCoolTime = true;
-			m_coolTime = 4.0f;
+			m_coolTime = 1.0f;
+
 			
 			/** 牛の餌マネージャーに餌をスポーンさせる */
 			if (m_CowFoodManager)

@@ -146,9 +146,6 @@ private:
 	/** UFOが牛を吸い込むSE */
 	SoundSource* m_UFOCaptureSE = nullptr;
 
-	/** UFOが牛を連れ去った瞬間のSE */
-	SoundSource* m_UFOTakeAwaySE = nullptr;
-
 	/** 牛が鳴いたかどうか */
 	bool m_hasCryed = false;
 
