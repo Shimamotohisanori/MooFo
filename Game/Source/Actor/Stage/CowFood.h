@@ -45,6 +45,12 @@ private:
 	/** 牛の餌を所持している数 */
 	uint8_t m_foodCount = 2;
 
+	/** 餌を設置した後のクールタイム */
+	float m_coolTime = 0.0f;
+
+	/** クールタイム中華どうか */
+	bool m_isCoolTime = false;
+
 	/** UIを表示させるフラグ */
 	bool m_isButtonUI = false;
 
