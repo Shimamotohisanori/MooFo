@@ -33,8 +33,8 @@ namespace
 	
 	/** 縦幅 */
 	constexpr int BLACKLOADING_HEIGHT = 1080.0f;
-	constexpr int LOADING_HEIGHT = 700.0f;
-	constexpr int COWRESCUE_LOADING_HEIGHT = 600.0f;
+	constexpr int LOADING_HEIGHT = 850.0f;
+	constexpr int COWRESCUE_LOADING_HEIGHT = 750.0f;
 	constexpr int LOADINGWARD_HEIGHT = 100.0f;
 	
 	/** 牛のランダムスポーン範囲 */
