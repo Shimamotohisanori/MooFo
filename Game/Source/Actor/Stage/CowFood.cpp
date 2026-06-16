@@ -118,7 +118,6 @@ bool CowFood::Start()
 
 void CowFood::Update()
 {
-	m_game = FindGO<Game>("game");
 
 	/** カウントダウン中は処理をスキップする */
 	if (m_CountDown && m_CountDown->GetCountDown())
@@ -128,6 +127,10 @@ void CowFood::Update()
 	/** プレイヤーのクラスを見つける */
 	Player* player = FindGO<Player>("player");
 
+
+	/** ゲームクラスを見つける */
+	m_game = FindGO<Game>("game");
+  
 	/** 餌を置く処理を実行する */
 	CowFoodPut();
 
@@ -159,6 +162,7 @@ void CowFood::Update()
 	{
 		/** ボタンのUIを表示させる。*/
 		m_isButtonUI = true;
+
 		/** 餌エフェクトを停止する */
 		if (m_cowFoodEffect->IsPlay())
 		{
@@ -170,6 +174,7 @@ void CowFood::Update()
 		{
 			m_AbuttonEffect->Play();
 		}
+    
 		/** Aボタンが押されたら餌の数を2にセットして設置フラグを立てる */
 		if(g_pad[0]->IsTrigger(enButtonA))
 		{
@@ -248,7 +253,7 @@ void CowFood::Render(RenderContext& rc)
 		return;
 	}
 	/** タイムアウト時は餌のUIをでないようにする*/
-	if (m_game->IsFadeTimeOut())
+	if (!m_game || m_game->IsFadeTimeOut())
 	{
 		return;
 	}

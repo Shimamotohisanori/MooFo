@@ -113,6 +113,7 @@ private:
 
 	/** 混乱後の上昇処理関数 */
 	void ConfusedAscent();
+	
 	/** 降下処理*/
 	void UpdateSpawning();
 
@@ -144,6 +145,12 @@ private:
 
 	/** UFOが牛を吸い込むSE */
 	SoundSource* m_UFOCaptureSE = nullptr;
+
+	/** UFOが牛を連れ去った瞬間のSE */
+	SoundSource* m_UFOTakeAwaySE = nullptr;
+
+	/** 牛が鳴いたかどうか */
+	bool m_hasCryed = false;
 
 	/** 牛を連れて行けるかどうかのフラグ */
 	bool m_isCowTakeAwayed = false;
