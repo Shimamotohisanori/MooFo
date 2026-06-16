@@ -60,9 +60,6 @@ private:
 	/** 牛の餌のモデル */
 	ModelRender m_cowFoodModelRender;
 
-	/** Aボタンを描画させる画像 */
-	SpriteRender m_Abutton;
-
 	/** 餌を描画させる画像 */
 	SpriteRender m_bucketFood;
 	SpriteRender m_bucketFood_Second;
@@ -74,6 +71,8 @@ private:
 	/** 牛の餌の当たり判定 */
 	PhysicsStaticObject m_FoodObject;
 
+	/** Aボタンのエフェクト */
+	EffectEmitter* m_AbuttonEffect;
 	/** 牛の餌のエフェクト */
 	EffectEmitter* m_cowFoodEffect;
 

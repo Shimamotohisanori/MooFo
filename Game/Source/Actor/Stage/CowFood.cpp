@@ -14,9 +14,6 @@ namespace
 	/** 牛の餌のモデルファイルパス */
 	const char* COWFOOD_FILE_PATH = "Assets/modelData/Stage/CowFood.tkm";
 
-	/** ボタンのUIのファイルパス */
-	const char* BUTTON_UI = "Assets/sprite/CowFoodUI/test.dds";
-
 	/** 牛の餌のUIのファイルパス */
 	const char* FOODBUCKET_UI = "Assets/sprite/CowFoodUI/FoodBucket.dds";
 
@@ -40,6 +37,9 @@ CowFood::~CowFood()
 	/** 牛の餌のエフェクトを削除する。 */
 	DeleteGO(m_cowFoodEffect);
 
+	/** Aボタンのエフェクトを削除する */
+	DeleteGO(m_AbuttonEffect);
+
 	/** 牛の餌を置く音を削除する。 */
 	if (m_puthaySE != nullptr)
 	{
@@ -59,9 +59,6 @@ bool CowFood::Start()
 	m_cowFoodModelRender.Init(COWFOOD_FILE_PATH);
 	m_cowFoodModelRender.SetPosition(COWFOOD_POS);
 	m_cowFoodModelRender.Update();
-
-	/** AボタンのUI */
-	m_Abutton.Init(BUTTON_UI,280.0f,108.0f);
 
 	/** 牛の餌のUI(左) */
 	m_bucketFood.Init(FOODBUCKET_UI, 100.0f, 100.0f);
@@ -97,12 +94,20 @@ bool CowFood::Start()
 
 	m_cowFoodEffect->SetPosition(cowFoodPos);
 	m_cowFoodEffect->SetScale(COWFOOD_EFFECT_SCALE);
+
+	/** AボタンのエフェクトIDを指定して初期化する */
+	m_AbuttonEffect = NewGO<nsK2EngineLow::EffectEmitter>(0);
+	m_AbuttonEffect->Init((int)EffectID::EffectID_Abutton);
+
+	Vector3 aButtonEffectPos = { COWFOOD_POS.x, COWFOOD_POS.y + 30.0f, COWFOOD_POS.z + 10.0f };
+
+	m_AbuttonEffect->SetPosition(aButtonEffectPos);
+	m_AbuttonEffect->SetScale(COWFOOD_EFFECT_SCALE);
 	
 	/** ロープのインスタンスを取得する */
 	m_rope = FindGO<Rope>("rope");
 
 	/** カウントダウンのインスタンスを取得する */
-	
 	m_CountDown = FindGO<CountDown>("countdown");
 
 	/** 牛の餌マネージャーのインスタンスを取得する */
@@ -113,6 +118,7 @@ bool CowFood::Start()
 
 void CowFood::Update()
 {
+
 	/** カウントダウン中は処理をスキップする */
 	if (m_CountDown && m_CountDown->GetCountDown())
 	{
@@ -120,7 +126,10 @@ void CowFood::Update()
 	}
 	/** プレイヤーのクラスを見つける */
 	Player* player = FindGO<Player>("player");
+
+	/** ゲームクラスを見つける */
 	m_game = FindGO<Game>("game");
+  
 	/** 餌を置く処理を実行する */
 	CowFoodPut();
 
@@ -152,8 +161,19 @@ void CowFood::Update()
 	{
 		/** ボタンのUIを表示させる。*/
 		m_isButtonUI = true;
-		m_Abutton.Update();
 
+		/** 餌エフェクトを停止する */
+		if (m_cowFoodEffect->IsPlay())
+		{
+			m_cowFoodEffect->Stop();
+		}
+
+		/** Aボタンエフェクトを再生する */
+		if (!m_AbuttonEffect->IsPlay())
+		{
+			m_AbuttonEffect->Play();
+		}
+    
 		/** Aボタンが押されたら餌の数を2にセットして設置フラグを立てる */
 		if(g_pad[0]->IsTrigger(enButtonA))
 		{
@@ -170,6 +190,12 @@ void CowFood::Update()
 	{
 		/** 距離が離れていたらボタンUIを非表示にする */
 		m_isButtonUI = false;
+
+		/** Aボタンエフェクトを停止する */
+		if (m_AbuttonEffect->IsPlay())
+		{
+			m_AbuttonEffect->Stop();
+		}
 	}
 	
 }
@@ -226,19 +252,13 @@ void CowFood::Render(RenderContext& rc)
 		return;
 	}
 	/** タイムアウト時は餌のUIをでないようにする*/
-	if (m_game->IsFadeTimeOut())
+	if (!m_game || m_game->IsFadeTimeOut())
 	{
 		return;
 	}
 
 	/** 牛の餌のモデルを描画する。*/
 	m_cowFoodModelRender.Draw(rc);
-
-	/** フラグがtrueならボタンのUIを描画させる。*/
-	if (m_isButtonUI)
-	{
-		m_Abutton.Draw(rc);
-	}
 
 	if (m_foodCount == 2)
 	{

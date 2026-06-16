@@ -313,7 +313,7 @@ void Cow::MoveToFood()
 	float distance = dir.Length();
 
 	/** 餌に20.0fに以内まで近づいたら食べる状態に移行する */
-	if (distance < 20.0f)
+	if (distance < 60.0f)
 	{
 		m_isEating = true;
 		return;

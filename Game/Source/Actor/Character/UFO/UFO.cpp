@@ -534,7 +534,17 @@ void UFO::UFOSEDistance()
 	float finalVolume = volume * managerVolume;
 
 	/** UFOが牛を引っ張るSEをSetVolumeに代入させる */
-	m_UFOCaptureSE->SetVolume(finalVolume );
+	m_UFOCaptureSE->SetVolume(finalVolume);
+
+	if (!m_UFOTakeAwaySE)
+		return;
+
+	/** 牛の鳴き声が死んでいない場合 */
+	if (!m_UFOTakeAwaySE->IsDead())
+	{
+		/** UFOが牛を連れ去った瞬間のSEも同様に距離で音量を変える */
+		m_UFOTakeAwaySE->SetVolume(finalVolume);
+	}
 }
 
 CowCaptureController* UFO::GetCowCaptureController()
@@ -753,16 +763,22 @@ void UFO::UpdateUFOSound()
 	/** タイムアウトしていれば */
 	if (m_game && m_game->GetIsTimeOut())
 	{
-		if (m_UFOCaptureSE)
+		if (m_UFOCaptureSE != nullptr && !m_UFOCaptureSE->IsDead())
 		{
 			DeleteGO(m_UFOCaptureSE);
 			m_UFOCaptureSE = nullptr;
+		}
+
+		if (m_UFOTakeAwaySE != nullptr && !m_UFOTakeAwaySE->IsDead())
+		{
+			DeleteGO(m_UFOTakeAwaySE);
+			m_UFOTakeAwaySE = nullptr;
 		}
 		return;
 	}
 
 	/** ポーズ中かつSEが存在していたら */
-	if (m_pause && m_pause->GetIsPause() && m_UFOCaptureSE)
+	if (m_pause && m_pause->GetIsPause() && m_UFOCaptureSE != nullptr)
 	{
 		/** SEを消す */
 		DeleteGO(m_UFOCaptureSE);
@@ -770,7 +786,7 @@ void UFO::UpdateUFOSound()
 	}
 
 	/** 牛を捕まえていなくてかつSEが存在していたら */
-	if (!m_isCowTakeAwayed && m_UFOCaptureSE)
+	if (!m_isCowTakeAwayed && m_UFOCaptureSE != nullptr)
 	{
 		/** SEを消す */
 		DeleteGO(m_UFOCaptureSE);
@@ -784,6 +800,35 @@ void UFO::UpdateUFOSound()
 		auto soundManager = FindGO<SoundManager>("soundmanager");
 		m_UFOCaptureSE = soundManager->PlayingSE(SoundSE::enUFOCaptureSE, true);
 	}
+	/** 牛を連れ去った瞬間のSEを再生 */
+	if (m_isCowTakeAwayed || m_targetCow != nullptr)
+	{
+		/** 牛が鳴いていない場合 */
+		if (!m_hasCryed)
+		{
+			/** SEを再生させる */
+			auto soundManager = FindGO<SoundManager>("soundmanager");
+			m_UFOTakeAwaySE = soundManager->PlayingSE(SoundSE::enCowCrySE, false);
+			
+			/** 牛が鳴いたフラグを立てる */
+			m_hasCryed = true;
+		}
+		
+	}
+
+	else
+	{
+		/** 牛が鳴いていない場合 */
+		m_hasCryed = false;
+
+		/** 牛を連れ去った瞬間のSEが流れていたら */
+		if (m_UFOTakeAwaySE != nullptr && !m_UFOTakeAwaySE->IsDead())
+		{
+			/** SEを消す */
+			m_UFOTakeAwaySE = nullptr;
+		}
+	}
+	
 }
 
 
