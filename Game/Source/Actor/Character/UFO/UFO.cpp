@@ -341,13 +341,9 @@ void UFO::TakeAwayTheCow()
 		m_targetCow->TakeAwayedByUFO(dir, CAPTURE_SPEED);
 	}
 
-	//** 牛とUFOの距離が0.5未満だったら牛を削除し、牛の救出数を減らす */
+	//** 牛とUFOの距離が0.5未満だったら牛を削除し、スコアを減らす */
 	else
 	{
-		/** 牛の救出数を減らす */
-		CowNumberOfRescues* cowNumberOfRescues = FindGO<CowNumberOfRescues>("cownumberofrescues");
-		cowNumberOfRescues->SubRescue();
-
 		/** 牛が連れ去られたらスコアを減らす処理 */
 		m_score->DecreaseScore(100);
 
