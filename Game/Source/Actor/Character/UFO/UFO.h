@@ -122,7 +122,7 @@ private:
 	
 	Vector3 m_moveDir = Vector3::Zero;//移動方向
 	
-	float m_moveSpeed = 50.0f;//移動速度
+	float m_moveSpeed = 62.5f;//移動速度
 
 	float m_moveTimer = 0.0f;//移動タイマー
 	

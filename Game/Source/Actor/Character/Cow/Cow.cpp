@@ -27,7 +27,7 @@ namespace
 	const char* WALK_ANIMATION_FILE_PATH = "Assets/modelData/Cow/Animation/Walk2.tka";
 
 	/** プレイヤーに引っ張られるときの力 */
-	constexpr float PULL_POWER = 8.0f;
+	constexpr float PULL_POWER = 13.0f;
 
 	/** プレイヤーから逃げるときの力 */
 	constexpr float COW_MOVE_LIMIT_RADIUS = 1450.0f;
@@ -617,7 +617,7 @@ void Cow::TakeAwayedByUFO(Vector3 direction, float speed)
 	direction.Normalize();
 
 	/** Excuteに渡すのは「速度」*/
-	Vector3 velocity = direction * speed * 30.0f;
+	Vector3 velocity = direction * speed * 40.0f;
 
 	/** UFOに連れて行かれるときは牛を上に移動させる */
 	Vector3 newPos = m_cowCharacterController.Execute(velocity, g_gameTime->GetFrameDeltaTime());
