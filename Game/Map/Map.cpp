@@ -81,7 +81,7 @@ bool Map::Start()
 	/** ビックリマークが出たときの位置を知らせるために表示させる。*/
 	for (int i = 0; i < ARROW_NUM; i++)
 	{
-		m_arrowSprite[i].Init(ARROW_SPRITE_PATH, 30.0f, 30.0f);
+		m_arrowSprite[i].Init(ARROW_SPRITE_PATH, 50.0f, 50.0f);
 	}
 
 
