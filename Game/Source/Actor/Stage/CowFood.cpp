@@ -9,6 +9,7 @@
 #include"GameScene/Game.h"
 #include"GameScene/LoadingScene.h"
 #include "SoundManager/SoundManager.h"
+
 namespace
 {
 	/** 牛の餌のモデルファイルパス */
@@ -107,9 +108,6 @@ bool CowFood::Start()
 	/** ロープのインスタンスを取得する */
 	m_rope = FindGO<Rope>("rope");
 
-	/** カウントダウンのインスタンスを取得する */
-	m_CountDown = FindGO<CountDown>("countdown");
-
 	/** 牛の餌マネージャーのインスタンスを取得する */
 	m_CowFoodManager = FindGO<CowFoodManager>("cowfoodmanager");
 
@@ -118,6 +116,8 @@ bool CowFood::Start()
 
 void CowFood::Update()
 {
+	/** カウントダウンのインスタンスを取得する */
+	m_CountDown = FindGO<CountDown>("countdown");
 
 	/** カウントダウン中は処理をスキップする */
 	if (m_CountDown && m_CountDown->GetCountDown())
@@ -204,6 +204,7 @@ void CowFood::Update()
 void CowFood::CowFoodPut()
 {
 	Player* player = FindGO<Player>("player");
+
 
 	if (player == nullptr)
 	{
