@@ -5,7 +5,7 @@ class CowFoodManager : public IGameObject
 {
 public:
 	CowFoodManager(){}
-	~CowFoodManager(){}
+	~CowFoodManager();
 
 	bool Start();
 	void Update();
@@ -20,6 +20,11 @@ public:
 	{
 		return m_foodList;
 	}
+
+	/** 牛の餌を全て消す関数 */
+	void ClearAllFood();
+
+
 private:
 	/** 指定した餌に最も近い牛を探してターゲットフラグを立てる関数 */
 	void SetNearestCow(CowLuring* food);

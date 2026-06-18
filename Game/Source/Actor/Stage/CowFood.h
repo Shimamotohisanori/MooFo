@@ -74,13 +74,21 @@ private:
 	SpriteRender m_bucketFood_Black;
 	SpriteRender m_bucketFood_SecondBlack;
 
+	/** 牛の餌の禁止状態のUI */
+	SpriteRender m_tabooCowFood;
+	SpriteRender m_tabooCowFood_Second;
+
 	/** 牛の餌の当たり判定 */
 	PhysicsStaticObject m_FoodObject;
 
 	/** Aボタンのエフェクト */
 	EffectEmitter* m_AbuttonEffect;
+	
 	/** 牛の餌のエフェクト */
 	EffectEmitter* m_cowFoodEffect;
+
+	/** 牛舎付近のエフェクト */
+	EffectEmitter* m_barnNearEffect = nullptr;
 
 	/** 縄のクラス */
 	Rope* m_rope = nullptr;
@@ -98,4 +106,7 @@ private:
 
 	/** 牛の餌を取る音 */
 	SoundSource* m_takehaySE = nullptr;
+
+	/** 餌禁止のエリアにいるかどうか */
+	bool m_isInTabooArea = false;
 };

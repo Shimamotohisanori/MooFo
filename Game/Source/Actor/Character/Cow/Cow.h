@@ -100,6 +100,12 @@ public:
 		return m_isDeadFlag;
 	}
 
+	/** 牛が死んだフラグを設定する関数 */
+	void SetIsDeadFlag(bool isDeadFlag)
+	{
+		m_isDeadFlag = isDeadFlag;
+	}
+
 	/** 牛の削除予約を取得する関数 */
 	bool GetIsPendingKill() const
 	{
@@ -149,6 +155,9 @@ private:
 
 	/** 牛が餌を食べる最中の関数 */
 	void Eating();
+
+	/** 牛が納屋に入る関数 */
+	void EnterBarn();
 
 	/** アップデートできるかどうかを判断する関数 */
 	bool CanUpdate();

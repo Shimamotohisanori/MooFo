@@ -43,6 +43,12 @@ namespace
 
 	/** 牛の移動時間と休憩時間 */
 	constexpr int RANDOMCOW_TIMER = 180 + 60;
+
+	/** 納屋の位置 */
+	const Vector3 BARN_POSITION = Vector3{ -1320.0f,0.0f,10.0f };
+
+	/** 納屋の半径 */
+	constexpr float BARN_RADIUS = 300.0f;
 }
 
 Cow::Cow()
@@ -99,15 +105,17 @@ void Cow::Update()
 		}
 
 		/** Game に「この牛を aliveCows から消して」と伝える */
-		if (!m_game)
+		if (!m_isDeadFlag)
 		{
-			m_game = FindGO<Game>("game");
+			if (!m_game)
+			{
+				m_game = FindGO<Game>("game");
+			}
+			if (m_game)
+			{
+				m_game->ReMoveCow(this);
+			}
 		}
-		if (m_game)
-		{
-			m_game->ReMoveCow(this);
-		}
-
 		DeleteGO(this);
 		return;
 	}
@@ -146,6 +154,8 @@ void Cow::Update()
 		}
 	}
 	
+	/** 牛が納屋に入る処理 */
+	EnterBarn();
 
 	/** ステート管理 */
 	ManageState();
@@ -372,6 +382,57 @@ void Cow::Eating()
 	}
 }
 
+void Cow::EnterBarn()
+{
+	/** 牛の位置を取得 */
+	Vector3 cowpos = m_cowCharacterController.GetPosition();
+
+	/** 納屋はステージに統合されているので
+	 * 今回はxz座標を基準にした円形の範囲を作り
+	 * その中に入ったら牛が納屋に入れる処理を作る */
+	float dx = cowpos.x - BARN_POSITION.x;
+	float dz = cowpos.z - BARN_POSITION.z;
+	float distanceSquared = dx * dx + dz * dz;
+
+	/** 納屋の半径以内に入ったら納屋に入る */
+	/** 牛を削除し、スコアや救出数を増やす */
+	if (distanceSquared <= BARN_RADIUS * BARN_RADIUS)
+	{
+		/** 状態をリセットする */
+		m_isDeadFlag = true;
+
+		/** コンボを増やす */
+		Combo* combo = FindGO<Combo>("combo");
+		m_game = FindGO<Game>("game");
+		if (combo)
+		{
+			combo->AddCombo();
+			combo->AddScore(100);
+			//m_game->ReMoveCow(this);
+		}
+
+		/** 牛の救出数を増やす */
+		CowNumberOfRescues* cowNumberOfRescues = FindGO<CowNumberOfRescues>("cownumberofrescues");
+		if (cowNumberOfRescues)
+		{
+			cowNumberOfRescues->AddRescue();
+		}
+
+		m_dummyCow = NewGO<DummyCow>(0, "dummyCow");
+		/** dummyCowに牛の情報を渡す*/
+		m_dummyCow->SetPosition(m_transform.GetPosition());
+		m_dummyCow->SetRotation(m_transform.GetRotation());
+		/** ジャンプアニメーションを再生*/
+		m_dummyCow->PlayJumpAnimtion();
+		if (m_game)
+		{
+			m_game->SetDuumyCow(m_dummyCow);
+		}
+
+		RequestKill();
+	}
+}
+
 void Cow::ManageState()
 {
 	/** ロープに捕まっているときは状態を変えない */
@@ -452,6 +513,7 @@ void Cow::CapturedByPlayer()
 		/** 距離が一定以下なら捕獲される */
 		if (dir.Length() < 50.0f)
 		{
+			m_isDeadFlag = true;
 
 			if (m_takingUFO)
 			{
@@ -471,11 +533,11 @@ void Cow::CapturedByPlayer()
 			/** コンボを増やす */
 			Combo* combo = FindGO<Combo>("combo");
 			m_game = FindGO<Game>("game");
-			if (m_game && combo)
+			if (combo)
 			{
 				combo->AddCombo();
 				combo->AddScore(100);
-				m_game->ReMoveCow(this);
+				//m_game->ReMoveCow(this);
 			}
 
 			/** 牛の救出数を増やす */
@@ -503,7 +565,6 @@ void Cow::CapturedByPlayer()
 
 			/** 牛を削除 */
 			m_isCaptured = false;
-			m_isDeadFlag = true;
 			RequestKill();
 
 			return;
@@ -624,6 +685,11 @@ void Cow::RequestKill()
 
 void Cow::TakeAwayedByUFO(Vector3 direction, float speed)
 {
+	if (direction.LengthSq() < 0.0001f)
+	{
+		return;
+	}
+
 	/** 方向ベクトルにする */
 	direction.Normalize();
 
