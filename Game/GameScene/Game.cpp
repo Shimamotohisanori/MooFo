@@ -262,7 +262,7 @@ void Game::Clear()
 	/** 残っている牛を全部消す */
 	for (auto cow : m_aliveCows)
 	{
-		if (cow)
+		if (cow && !cow->GetIsPendingKill() && !cow->GetIsDeadFlag())
 		{
 			DeleteGO(cow);
 		}
@@ -328,7 +328,7 @@ void Game::Death()
 	/** 残っている牛を全部消す */
 	for (auto cow : m_aliveCows)
 	{
-		if (cow)
+		if (cow && !cow->GetIsPendingKill() && !cow->GetIsDeadFlag())
 		{
 			DeleteGO(cow);
 		}
@@ -352,13 +352,6 @@ void Game::Death()
 
 void Game::ReMoveCow(Cow* cow)
 {
-	/** 生きている牛のリストから引数で渡された牛を消す */
-	/*auto it = std::find(m_aliveCows.begin(), m_aliveCows.end(), cow);
-	if (it != m_aliveCows.end())
-	{
-		m_aliveCows.erase(it);
-	}*/
-
 	// Rope にも通知
 	Rope* rope = FindGO<Rope>("rope");
 	if (rope && rope->GetHitCow() == cow)
