@@ -9,25 +9,42 @@ bool EffectManager::Start()
 
 void EffectManager::LoadEffects()
 {
-
+	/** UFOの光*/
 	nsK2EngineLow::EffectEngine::GetInstance()->ResistEffect(
 		(int)EffectID::EffectID_UFOLight,
 		u"Assets/Effects/UFOLight.efk"
 	);
 
+	/** 救出された牛が出すハート*/
 	nsK2EngineLow::EffectEngine::GetInstance()
 		->ResistEffect((int)EffectID::EffectID_HeartEffect, u"Assets/Effects/heartEffect.efk");
 
+	/** 牛の餌*/
 	nsK2EngineLow::EffectEngine::GetInstance()->ResistEffect
 	(
 		(int)EffectID::EffectID_CowFoodEffect,
 		u"Assets/Effects/cowFood.efk"
 	);
 
+	/** 牛の餌に近づくと表示されるAボタン */
 	nsK2EngineLow::EffectEngine::GetInstance()->ResistEffect
 	(
 		(int)EffectID::EffectID_Abutton,
 		u"Assets/Effects/Abutton.efk"
+	);
+
+	/** 牛舎付近のエリア範囲 */
+	nsK2EngineLow::EffectEngine::GetInstance()->ResistEffect
+	(
+		(int)EffectID::EffectID_Area,
+		u"Assets/Effects/Area.efk"
+	);
+
+	/** 牛が満腹状態 */
+	nsK2EngineLow::EffectEngine::GetInstance()->ResistEffect
+	(
+		(int)EffectID::EffectID_Overdose,
+		u"Assets/Effects/Overdose.efk"
 	);
 
 	/** 一回目のUFO混乱エフェクト*/
