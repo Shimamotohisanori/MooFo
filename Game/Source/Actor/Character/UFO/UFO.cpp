@@ -207,6 +207,16 @@ void UFO::Update()
 		/** ‹‚ðŒ©‚Â‚¯‚éŠÖ” */
 		FindTheCow();
 	}
+	else
+	{
+		/** ‹P‚ªÁ‚¦‚½Žž‚É’ÇÕ’†‚Ì‹‚Ì‰ð•ú‚ð‚·‚é */
+		if (m_isChasing && m_targetCow)
+		{
+			m_targetCow->SetTakingUFO(nullptr);
+			m_targetCow = nullptr;
+		}
+		m_isChasing = false;
+	}
 	
 	/** ‹‚ð˜A‚ê‚Ä‚¢‚­ŠÖ” */
 	TakeAwayTheCow();
@@ -329,6 +339,7 @@ void UFO::TakeAwayTheCow()
 	/** íœ—\’èÏ‚Ý‚Ì‹‚Ü‚½‚ÍŽ€–S‚µ‚½‹‚É‚ÍG‚ç‚È‚¢ */
 	if (m_targetCow->GetIsPendingKill() || m_targetCow->GetIsDeadFlag())
 	{
+		m_targetCow->SetTakingUFO(nullptr);
 		m_targetCow = nullptr;
 		m_isCowTakeAwayed = false;
 		m_isChasing = false;
@@ -389,6 +400,7 @@ void UFO::TakeAwayTheCow()
 		m_targetCow->RequestKill();
 
 		/** ó‘Ô‚ðƒŠƒZƒbƒg‚·‚é */
+		m_targetCow->SetTakingUFO(nullptr);
 		m_targetCow = nullptr;
 		m_isCowTakeAwayed = false;
 		m_isChasing = false;
@@ -640,6 +652,13 @@ void UFO::FindTheCow()
 	/** ‚»‚ê‚¢‚ª‚¢‚Í’Ç”ö‚µ‚È‚¢ */
 	else
 	{
+		/** ’Ç”ö‚µ‚Ä‚¢‚é‹‚ª‚¢‚½‚çA’Ç”ö‚ð‚â‚ß‚é */
+		if (m_isChasing && m_targetCow)
+		{
+			m_targetCow->SetTakingUFO(nullptr);
+			m_targetCow = nullptr;
+		}
+
 		m_isChasing = false;
 	}
 
