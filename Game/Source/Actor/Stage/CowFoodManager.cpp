@@ -2,7 +2,12 @@
 #include "CowFoodManager.h"
 #include "Source/Actor/Character/Cow/CowLuring.h"
 #include "Source/Actor/Character/Cow/Cow.h"
-#include "CowFood.h"
+
+CowFoodManager::~CowFoodManager()
+{
+	/** 牛の餌を全て消す */
+	ClearAllFood();
+}
 
 bool CowFoodManager::Start()
 {
@@ -102,4 +107,13 @@ void CowFoodManager::SetNearestCow(CowLuring* food)
 	{
 		nearestCow->SetIsTargetFood(true);
 	}
+}
+
+void CowFoodManager::ClearAllFood()
+{
+	for (auto food : m_foodList)
+	{
+		DeleteGO(food);
+	}
+	m_foodList.clear();
 }

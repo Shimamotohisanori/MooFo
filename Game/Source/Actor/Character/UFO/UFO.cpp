@@ -321,8 +321,19 @@ void UFO::Rotation()
 
 void UFO::TakeAwayTheCow()
 {
-	/** 牛を連れていけるかどうかのフラグが立っていたら処理をする */
-	if (!m_isCowTakeAwayed or m_targetCow == nullptr) return;
+	/** 牛を連れていけるかどうかのフラグが立っているか
+	* 牛本体がそもそも空ではなかったら処理をする */
+	if (!m_isCowTakeAwayed or
+		m_targetCow == nullptr) return;
+
+	/** 削除予定済みの牛または死亡した牛には触らない */
+	if (m_targetCow->GetIsPendingKill() || m_targetCow->GetIsDeadFlag())
+	{
+		m_targetCow = nullptr;
+		m_isCowTakeAwayed = false;
+		m_isChasing = false;
+		return;
+	}
 
 	/** 牛を回転状態にする */
 	m_targetCow->ChangeRotationState();
@@ -374,6 +385,7 @@ void UFO::TakeAwayTheCow()
 		}
 
 		/** 牛を削除予定に入れる */
+		m_targetCow->SetIsDeadFlag(true);
 		m_targetCow->RequestKill();
 
 		/** 状態をリセットする */
@@ -384,8 +396,6 @@ void UFO::TakeAwayTheCow()
 
 		return;
 	}
-
-	m_targetCow->SetPosition(cowPos);
 
 }
 
@@ -562,6 +572,12 @@ void UFO::FindTheCow()
 	/** 牛を一匹ずつ見る */
 	for (auto c : cow)
 	{
+		/** 削除予定済みの牛は無視 */
+		if (c->GetIsPendingKill() || c->GetIsDeadFlag())
+		{
+			continue;
+		}
+
 		/** すでに他のUFOが狙っている牛は無視 */
 		if (c->GetTakingUFO() != nullptr && c->GetTakingUFO() != this)
 		{
@@ -749,8 +765,10 @@ bool UFO::CanUFOUpdate()
 
 void UFO::UpdateUFOSound()
 {
+	Game* game = FindGO<Game>("game");
+	Pause* pause = FindGO<Pause>("pause");
 	/** タイムアウトしていれば */
-	if (m_game && m_game->GetIsTimeOut())
+	if (game && game->GetIsTimeOut())
 	{
 		if (m_UFOCaptureSE != nullptr && !m_UFOCaptureSE->IsDead())
 		{
@@ -762,7 +780,7 @@ void UFO::UpdateUFOSound()
 	}
 
 	/** ポーズ中かつSEが存在していたら */
-	if (m_pause && m_pause->GetIsPause() && m_UFOCaptureSE != nullptr)
+	if (pause && pause->GetIsPause() && m_UFOCaptureSE != nullptr)
 	{
 		/** SEを消す */
 		DeleteGO(m_UFOCaptureSE);
@@ -778,7 +796,7 @@ void UFO::UpdateUFOSound()
 	}
 
 	/** ポーズ中かつ牛を捕まえているかつSEが存在していなかったら */
-	if (m_pause && !m_pause->GetIsPause() && m_isCowTakeAwayed && !m_UFOCaptureSE)
+	if (pause && !pause->GetIsPause() && m_isCowTakeAwayed && !m_UFOCaptureSE)
 	{
 		/** SEを再生させる */
 		auto soundManager = FindGO<SoundManager>("soundmanager");

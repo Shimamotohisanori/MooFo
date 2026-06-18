@@ -32,6 +32,9 @@ namespace
 	/** 牛の餌のエフェクトの大きさ */
 	const Vector3 COWFOOD_EFFECT_SCALE = { 40.0f,40.0f,40.0f };
 
+	/** 牛舎付近に出すエフェクトの大きさ */
+	const Vector3 BARNNEAR_EFFECT_SCALE = { 80.0f,80.0f,80.0f };
+
 	/** 牛の餌を置くことができないエリアの座標 */
 	const Vector3 COWFOOD_PUT_TABOO_POS = { -1320.0f,0.0f,10.0f };
 
@@ -46,6 +49,9 @@ CowFood::~CowFood()
 
 	/** Aボタンのエフェクトを削除する */
 	DeleteGO(m_AbuttonEffect);
+
+	/** 牛舎付近のエフェクトを削除する */
+	DeleteGO(m_barnNearEffect);
 
 	/** 牛の餌を置く音を削除する。 */
 	if (m_puthaySE != nullptr)
@@ -120,7 +126,15 @@ bool CowFood::Start()
 
 	m_AbuttonEffect->SetPosition(aButtonEffectPos);
 	m_AbuttonEffect->SetScale(COWFOOD_EFFECT_SCALE);
-	
+
+	/** 牛舎付近のエフェクトを初期化する */
+	m_barnNearEffect = NewGO<nsK2EngineLow::EffectEmitter>(0);
+	m_barnNearEffect->Init((int)EffectID::EffectID_Area);
+
+	/** 牛の餌が置けない位置と牛舎付近に出すエフェクトは同じ位置にする */
+	m_barnNearEffect->SetPosition(COWFOOD_PUT_TABOO_POS);
+	m_barnNearEffect->SetScale(BARNNEAR_EFFECT_SCALE);
+
 	/** ロープのインスタンスを取得する */
 	m_rope = FindGO<Rope>("rope");
 
@@ -155,6 +169,13 @@ void CowFood::Update()
 	{
 		/** エフェクトを再生させる */
 		m_cowFoodEffect->Play();
+	}
+
+	/** もし牛舎付近のエフェクトが再生中じゃないなら */
+	if (m_barnNearEffect && !m_barnNearEffect->IsPlay())
+	{
+		/** エフェクトを再生させる */
+		m_barnNearEffect->Play();
 	}
 
 	if (player == nullptr)

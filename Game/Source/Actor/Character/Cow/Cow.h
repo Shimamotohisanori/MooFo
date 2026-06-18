@@ -100,6 +100,12 @@ public:
 		return m_isDeadFlag;
 	}
 
+	/** 牛が死んだフラグを設定する関数 */
+	void SetIsDeadFlag(bool isDeadFlag)
+	{
+		m_isDeadFlag = isDeadFlag;
+	}
+
 	/** 牛の削除予約を取得する関数 */
 	bool GetIsPendingKill() const
 	{

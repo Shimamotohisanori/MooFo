@@ -105,15 +105,17 @@ void Cow::Update()
 		}
 
 		/** Game に「この牛を aliveCows から消して」と伝える */
-		if (!m_game)
+		if (!m_isDeadFlag)
 		{
-			m_game = FindGO<Game>("game");
+			if (!m_game)
+			{
+				m_game = FindGO<Game>("game");
+			}
+			if (m_game)
+			{
+				m_game->ReMoveCow(this);
+			}
 		}
-		if (m_game)
-		{
-			m_game->ReMoveCow(this);
-		}
-
 		DeleteGO(this);
 		return;
 	}
@@ -396,14 +398,17 @@ void Cow::EnterBarn()
 	/** 牛を削除し、スコアや救出数を増やす */
 	if (distanceSquared <= BARN_RADIUS * BARN_RADIUS)
 	{
+		/** 状態をリセットする */
+		m_isDeadFlag = true;
+
 		/** コンボを増やす */
 		Combo* combo = FindGO<Combo>("combo");
 		m_game = FindGO<Game>("game");
-		if (m_game && combo)
+		if (combo)
 		{
 			combo->AddCombo();
 			combo->AddScore(100);
-			m_game->ReMoveCow(this);
+			//m_game->ReMoveCow(this);
 		}
 
 		/** 牛の救出数を増やす */
@@ -424,8 +429,6 @@ void Cow::EnterBarn()
 			m_game->SetDuumyCow(m_dummyCow);
 		}
 
-		/** 状態をリセットする */
-		m_isDeadFlag = true;
 		RequestKill();
 	}
 }
@@ -510,6 +513,7 @@ void Cow::CapturedByPlayer()
 		/** 距離が一定以下なら捕獲される */
 		if (dir.Length() < 50.0f)
 		{
+			m_isDeadFlag = true;
 
 			if (m_takingUFO)
 			{
@@ -529,11 +533,11 @@ void Cow::CapturedByPlayer()
 			/** コンボを増やす */
 			Combo* combo = FindGO<Combo>("combo");
 			m_game = FindGO<Game>("game");
-			if (m_game && combo)
+			if (combo)
 			{
 				combo->AddCombo();
 				combo->AddScore(100);
-				m_game->ReMoveCow(this);
+				//m_game->ReMoveCow(this);
 			}
 
 			/** 牛の救出数を増やす */
@@ -561,7 +565,6 @@ void Cow::CapturedByPlayer()
 
 			/** 牛を削除 */
 			m_isCaptured = false;
-			m_isDeadFlag = true;
 			RequestKill();
 
 			return;
