@@ -213,9 +213,12 @@ void UFO::Update()
 		if (m_isChasing && m_targetCow)
 		{
 			m_targetCow->SetTakingUFO(nullptr);
+			m_targetCow->SetIsTakeAwayed(false);
 			m_targetCow = nullptr;
 		}
 		m_isChasing = false;
+		m_isCowTakeAwayed = false;
+		m_failCount = 0;
 	}
 	
 	/** ‹‚ğ˜A‚ê‚Ä‚¢‚­ŠÖ” */
