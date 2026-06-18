@@ -385,9 +385,7 @@ void UFO::TakeAwayTheCow()
 		return;
 	}
 
-	/** ここ消したらクラッシュが治りました。 */
-	/** 恐らく牛の当たり判定との問題が原因 */
-	//m_targetCow->SetPosition(cowPos);
+	m_targetCow->SetPosition(cowPos);
 
 }
 

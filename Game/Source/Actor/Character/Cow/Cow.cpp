@@ -671,6 +671,11 @@ void Cow::RequestKill()
 
 void Cow::TakeAwayedByUFO(Vector3 direction, float speed)
 {
+	if (direction.LengthSq() < 0.0001f)
+	{
+		return;
+	}
+
 	/** 方向ベクトルにする */
 	direction.Normalize();
 
