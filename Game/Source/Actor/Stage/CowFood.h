@@ -83,8 +83,12 @@ private:
 
 	/** Aボタンのエフェクト */
 	EffectEmitter* m_AbuttonEffect;
+	
 	/** 牛の餌のエフェクト */
 	EffectEmitter* m_cowFoodEffect;
+
+	/** 牛舎付近のエフェクト */
+	EffectEmitter* m_barnNearEffect = nullptr;
 
 	/** 縄のクラス */
 	Rope* m_rope = nullptr;

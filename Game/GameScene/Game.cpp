@@ -234,6 +234,12 @@ void Game::Update()
 
 void Game::Clear()
 {
+	/** 牛の餌を全て消す */
+	if (m_cowFoodManager)
+	{
+		m_cowFoodManager->ClearAllFood();
+	}
+
 	/** ここでスコアを取得する */
 	int ClearfinalScore = m_score ? m_score->GetScore() : 0;
 
@@ -293,6 +299,13 @@ void Game::SetUFOList(const std::vector<UFO*>&ufos)
 }
 void Game::Death()
 {
+
+	/** 牛の餌を全て消す */
+	if (m_cowFoodManager)
+	{
+		m_cowFoodManager->ClearAllFood();
+	}
+
 	/** ここでスコアを取得 */
 	int finalScore = m_score ? m_score->GetScore() : 0;
 
@@ -340,11 +353,11 @@ void Game::Death()
 void Game::ReMoveCow(Cow* cow)
 {
 	/** 生きている牛のリストから引数で渡された牛を消す */
-	auto it = std::find(m_aliveCows.begin(), m_aliveCows.end(), cow);
+	/*auto it = std::find(m_aliveCows.begin(), m_aliveCows.end(), cow);
 	if (it != m_aliveCows.end())
 	{
 		m_aliveCows.erase(it);
-	}
+	}*/
 
 	// Rope にも通知
 	Rope* rope = FindGO<Rope>("rope");
