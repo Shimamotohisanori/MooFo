@@ -13,6 +13,7 @@
 #include "DummyCow.h"
 #include "GameTimer/Timer.h"
 #include "Source/Actor/Stage/CowFoodManager.h"
+#include "EffectManager/EffectManager.h"
 #include "CowLuring.h"
 
 namespace
@@ -25,6 +26,8 @@ namespace
 
 	/** 牛の歩くアニメーションのファイルパス */
 	const char* WALK_ANIMATION_FILE_PATH = "Assets/modelData/Cow/Animation/Walk2.tka";
+
+	const Vector3 EFFECT_SCALE = { 10.0f,10.0f,10.0f };
 
 	/** プレイヤーに引っ張られるときの力 */
 	constexpr float PULL_POWER = 13.0f;
@@ -350,6 +353,14 @@ void Cow::Eating()
 	/** 一定時間経過したら食べ終わりの処理を行う */
 	if (m_eatTimer >= 2.0f)
 	{
+		/** 満腹状態のエフェクトを再生させる。 */
+		m_overdoseEffect = NewGO<nsK2EngineLow::EffectEmitter>(0);
+		m_overdoseEffect->Init((int)EffectID::EffectID_Overdose);
+		m_overdoseEffect->SetPosition(m_CowLuring->GetPosition());
+		m_overdoseEffect->SetScale(EFFECT_SCALE);
+		m_overdoseEffect->Play();
+		m_overdoseEffect->Update();
+
 		if (m_CowLuring != nullptr)
 		{
 			/** 牛の餌マネージャーから餌を削除する */

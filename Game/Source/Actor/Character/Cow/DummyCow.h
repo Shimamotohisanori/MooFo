@@ -41,6 +41,9 @@ private:
 
 	/** アニメーションが再生中かを表すフラグ*/
 	bool m_isPlaying = false;
+
+	/** 満腹のエフェクトを出すかどうか */
+	bool m_isOverdose = false;
   
 	/** SEの削除がアニメーションの削除と重ならないように遅らすための変数*/
 	int m_deleteDelay = 0;
