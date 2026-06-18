@@ -384,6 +384,9 @@ void Cow::Eating()
 
 void Cow::EnterBarn()
 {
+	/** UFOに連れ去られている最中は納屋に入れない */
+	if (m_isTakeAwayed) return;
+
 	/** 牛の位置を取得 */
 	Vector3 cowpos = m_cowCharacterController.GetPosition();
 
