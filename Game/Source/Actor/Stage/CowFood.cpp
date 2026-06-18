@@ -4,7 +4,6 @@
 #include "Source/Actor/Character/Player/Player.h"
 #include "Rope/Rope.h"
 #include "CountDown/CountDown.h"
-#include "Source/Actor/Character/Cow/CowLuring.h"
 #include "CowFoodManager.h"
 #include"GameScene/Game.h"
 #include"GameScene/LoadingScene.h"
@@ -21,6 +20,8 @@ namespace
 	/** 牛の餌のUI(透明状態)のファイルパス */
 	const char* FOODBUCKET_BLACK_UI = "Assets/sprite/CowFoodUI/FoodBucketBlack.dds";
 
+	/** 牛の餌のUI(禁止状態)のファイルパス */
+	const char* TABOO_COWFOOD_UI = "Assets/sprite/CowFoodUI/TabooCowFood.dds";
 	/** 牛の餌の座標 */
 	const Vector3 COWFOOD_POS = { -1260.0f,-5.0f,-350.0f };
 
@@ -31,6 +32,11 @@ namespace
 	/** 牛の餌のエフェクトの大きさ */
 	const Vector3 COWFOOD_EFFECT_SCALE = { 40.0f,40.0f,40.0f };
 
+	/** 牛の餌を置くことができないエリアの座標 */
+	const Vector3 COWFOOD_PUT_TABOO_POS = { -1320.0f,0.0f,10.0f };
+
+	/** 牛の餌を置くことができないエリアの半径 */
+	constexpr float COWFOOD_PUT_TABOO_RADIUS = 300.0f;
 }
 
 CowFood::~CowFood()
@@ -80,6 +86,16 @@ bool CowFood::Start()
 	m_bucketFood_SecondBlack.Init(FOODBUCKET_BLACK_UI, 100.0f, 100.0f);
 	m_bucketFood_SecondBlack.SetPosition(FOODUI_SECOND_POS);
 	m_bucketFood_SecondBlack.Update();
+
+	/** 牛の餌の禁止状態UI(左) */
+	m_tabooCowFood.Init(TABOO_COWFOOD_UI, 100.0f, 100.0f);
+	m_tabooCowFood.SetPosition(FOODUI_POS);
+	m_tabooCowFood.Update();
+
+	/** 牛の餌の禁止状態UI(右) */
+	m_tabooCowFood_Second.Init(TABOO_COWFOOD_UI, 100.0f, 100.0f);
+	m_tabooCowFood_Second.SetPosition(FOODUI_SECOND_POS);
+	m_tabooCowFood_Second.Update();
 
 	/** 牛の餌の当たり判定をつける */
 	m_FoodObject.CreateFromModel(m_cowFoodModelRender.GetModel(), m_cowFoodModelRender.GetModel().GetWorldMatrix());
@@ -205,6 +221,24 @@ void CowFood::CowFoodPut()
 {
 	Player* player = FindGO<Player>("player");
 
+	/** 牛の餌を置くことができないエリアにいるかどうかの判定 */
+	float taboodx = player->GetPosition().x - COWFOOD_PUT_TABOO_POS.x;
+	float taboodz = player->GetPosition().z - COWFOOD_PUT_TABOO_POS.z;
+
+	/** プレイヤーと牛の餌を置くことができないエリアの距離 */
+	float taboorenge = sqrtf(taboodx * taboodx + taboodz * taboodz);
+
+	/** 牛の餌を置くことができないエリアから離れているなら処理を辞める */
+	if (taboorenge < COWFOOD_PUT_TABOO_RADIUS)
+	{
+		/** 牛の餌を置くことができないエリアにいるフラグを立てる */
+		m_isInTabooArea = true;
+		return;
+	}
+	else
+	{
+		m_isInTabooArea = false;
+	}
 
 	if (player == nullptr)
 	{
@@ -281,11 +315,27 @@ void CowFood::Render(RenderContext& rc)
 
 	if (m_foodCount == 2)
 	{
+		/** 牛の餌を置くことができないエリアにいる場合は禁止状態のUIを描画する */
+		if (m_isInTabooArea)
+		{
+			m_tabooCowFood.Draw(rc);
+			m_tabooCowFood_Second.Draw(rc);
+			return;
+		}
+
 		m_bucketFood.Draw(rc);
 		m_bucketFood_Second.Draw(rc);
 	}
 	else if (m_foodCount == 1)
 	{
+		/** 牛の餌を置くことができないエリアにいる場合は禁止状態のUIを描画する */
+		if (m_isInTabooArea)
+		{
+			m_tabooCowFood.Draw(rc);
+			m_bucketFood_SecondBlack.Draw(rc);
+			return;
+		}
+
 		m_bucketFood.Draw(rc);
 		m_bucketFood_SecondBlack.Draw(rc);
 	}
