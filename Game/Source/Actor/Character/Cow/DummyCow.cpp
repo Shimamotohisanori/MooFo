@@ -57,7 +57,7 @@ bool DummyCow::Start()
 
 	m_heartEffect->SetPosition(heartPos);
 
-	m_heartEffect->SetScale({ 10.0f,10.0f,10.0f });
+	m_heartEffect->SetScale(EFFECT_SCALE);
 	
 	m_heartEffect->Play();
 	m_heartEffect->Update();
