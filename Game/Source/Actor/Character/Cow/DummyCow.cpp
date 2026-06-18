@@ -10,14 +10,16 @@ namespace
 
 	/** 牛のジャンプアニメーション */
 	const char* JUMP_ANIMATIOM_PATH = "Assets/ModelData/Cow/Animation/Jump.tka";
+
+	const Vector3 EFFECT_SCALE = { 10.0f,10.0f,10.0f };
 }
 
 
 DummyCow::DummyCow()
 {
 	/** ジャンプアニメーションのみロードする */
-	animationClips[EnAnimation_Jump].Load(JUMP_ANIMATIOM_PATH);
-	animationClips[EnAnimation_Jump].SetLoopFlag(false);
+		animationClips[EnAnimation_Jump].Load(JUMP_ANIMATIOM_PATH);
+		animationClips[EnAnimation_Jump].SetLoopFlag(false);
 }
 
 

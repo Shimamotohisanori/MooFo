@@ -190,6 +190,9 @@ private:
 	/** 牛の餌のマネージャー */
 	CowFoodManager* m_cowfoodmanager = nullptr;
 
+	/** 満腹状態のエフェクト */
+	EffectEmitter* m_overdoseEffect = nullptr;
+
 	enum EnCowState
 	{
 		
