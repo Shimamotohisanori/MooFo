@@ -164,7 +164,7 @@ void Combo::AddCombo()
 	if (m_combo >= 2)
 	{
 		m_timer = FindGO<Timer>("timer");
-		if (m_timer)
+		if (m_timer&&m_timer->GetTimer()>=5)
 		{
 			//コンボすると３秒追加
 			m_timer->AddTimer(3.0f);

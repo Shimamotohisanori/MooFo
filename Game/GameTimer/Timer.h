@@ -2,6 +2,7 @@
 class CountDown;
 class Pause;
 class Game;
+class FadeManager;
 /** タイマークラス */
 class Timer : public IGameObject
 {
@@ -29,35 +30,55 @@ public:
 
 private:
 	/** 制限時間 */
-	float m_timer = 120.0f;
+	float m_timer = 40.0f;
+	/** 点滅タイマー*/
+	float m_flashTimer = 1.0f;
+	/** フェード速度*/
+	float m_FadeSpeed = 0.8f;
 
+	float m_FadeTimerAlpha = 1.0f;
+
+	
+
+	/** カウントアニメーション用タイマー*/
+	float m_animTimer = 0.0f;
+	/** α値*/
+	float m_animAlpha = 1.0f;
+	/** スケール*/
+	float m_animScale = 0.8f;
+
+	/**点滅中の数字インデックス*/ 
+	int   m_flashDigits[3] = { 0, 0, 0 }; 
+	
 	/** 前のフレームの時間 */
-	uint8_t m_prevTime = -1;
+	int m_prevTime = -1;
 
 	/** 三桁(百・十・一)を描画するスプライト */
 	SpriteRender m_digitSprite[3][10];
-	
-	/** 数字の画像をロード */
-	const char* m_digitPaths[10] =
-	{
-		"Assets/sprite/NumberUI/MooFoNumberUI0.dds",
-		"Assets/sprite/NumberUI/MooFoNumberUI1.dds",
-		"Assets/sprite/NumberUI/MooFoNumberUI2.dds",
-		"Assets/sprite/NumberUI/MooFoNumberUI3.dds",
-		"Assets/sprite/NumberUI/MooFoNumberUI4.dds",
-		"Assets/sprite/NumberUI/MooFoNumberUI5.dds",
-		"Assets/sprite/NumberUI/MooFoNumberUI6.dds",
-		"Assets/sprite/NumberUI/MooFoNumberUI7.dds",
-		"Assets/sprite/NumberUI/MooFoNumberUI8.dds",
-		"Assets/sprite/NumberUI/MooFoNumberUI9.dds",
-	};
 
+	SpriteRender m_redDigitSprite[3][10];
+	
 	/** カウントダウン */
 	CountDown* m_countdown = nullptr;
-
+	/** サウンドマネージャーのポインタ*/
+	SoundSource* m_TimerSE = nullptr;
 	/** ポーズ */
 	Pause* m_pause = nullptr;
 	/** ゲームのポインタ*/
 	Game* m_game = nullptr;
+	/** 点滅しているかどうかのフラグ*/
+	bool  m_isFlash = false;
+
+	/** カウントアニメーションしているかどうかのフラグ*/
+	bool m_isAnim = false;
+	/** タイマーの残り秒数が５秒になっているかどうかのフラグ*/
+	bool m_isFiveTimer = false;
+
+	/** カウントタイマーが終わったかどうかのフラグ*/
+	bool m_isEndCountTimer = false;
+	/** ５秒前に再生するSEが流れたかどうかのフラグ*/
+	bool m_isPlaySE = false;
+	/** フェードインしているかどうかのフラグ*/
+	bool m_isFadeIn = false;
 };
 

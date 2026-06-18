@@ -38,7 +38,8 @@ namespace
 		"RunSE",
 		"PauseSE",
 		"PuthaySE",
-		"TakehaySE"
+		"TakehaySE",
+		"TimerEndFive"
 	};
 }
 
