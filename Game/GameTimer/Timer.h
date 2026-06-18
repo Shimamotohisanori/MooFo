@@ -2,6 +2,7 @@
 class CountDown;
 class Pause;
 class Game;
+class FadeManager;
 /** タイマークラス */
 class Timer : public IGameObject
 {
@@ -29,9 +30,15 @@ public:
 
 private:
 	/** 制限時間 */
-	float m_timer = 15.0f;
+	float m_timer = 40.0f;
 	/** 点滅タイマー*/
 	float m_flashTimer = 1.0f;
+	/** フェード速度*/
+	float m_FadeSpeed = 0.8f;
+
+	float m_FadeTimerAlpha = 1.0f;
+
+	
 
 	/** カウントアニメーション用タイマー*/
 	float m_animTimer = 0.0f;
@@ -53,7 +60,8 @@ private:
 	
 	/** カウントダウン */
 	CountDown* m_countdown = nullptr;
-
+	/** サウンドマネージャーのポインタ*/
+	SoundSource* m_TimerSE = nullptr;
 	/** ポーズ */
 	Pause* m_pause = nullptr;
 	/** ゲームのポインタ*/
@@ -68,5 +76,9 @@ private:
 
 	/** カウントタイマーが終わったかどうかのフラグ*/
 	bool m_isEndCountTimer = false;
+	/** ５秒前に再生するSEが流れたかどうかのフラグ*/
+	bool m_isPlaySE = false;
+	/** フェードインしているかどうかのフラグ*/
+	bool m_isFadeIn = false;
 };
 

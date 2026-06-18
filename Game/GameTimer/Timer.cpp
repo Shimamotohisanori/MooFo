@@ -3,6 +3,8 @@
 #include "CountDown/CountDown.h"
 #include "Pause/Pause.h"
 #include"GameScene/Game.h"
+#include"SoundManager/SoundManager.h"
+#include"FadeManager/FadeManager.h"
 
 namespace
 {
@@ -158,31 +160,26 @@ void Timer::TextTimer()
 			m_redDigitSprite[2][i].SetScale({ 0,0,0, });
 
 		}
-		/** 30秒以下で赤色のタイマーに変える*/
-		if (time <= 30)
+		if (time > 0 && time <= 5)
 		{
-			/** 赤色のタイマーのみ表示する*/
-			m_redDigitSprite[0][hundreds].SetScale({ 0.8f,0.8f,0.8f });
-			m_redDigitSprite[1][tens].SetScale({ 0.8f,0.8f,0.8f });
-			m_redDigitSprite[2][ones].SetScale({ 0.8f,0.8f,0.8f });
+			/** カウントアニメーション中も一の位を更新する */
+			m_flashDigits[2] = ones;
+		}
 
-			/** 位置設定 */
+		else if (time >= 6 && time <= 30)
+		{
+
+			/** 位置設定と点滅対象の記録だけ行う */
 			m_redDigitSprite[0][hundreds].SetPosition({ -100.0f,480.0f,0.0f });
 			m_redDigitSprite[1][tens].SetPosition({ 0.0f,480.0f,0.0f });
 			m_redDigitSprite[2][ones].SetPosition({ 100.0f,480.0f,0.0f });
-		
 
-			/** 点滅対象のインデックスを保存する*/
 			m_flashDigits[0] = hundreds;
 			m_flashDigits[1] = tens;
 			m_flashDigits[2] = ones;
 
-			m_isFlash = true;
-			m_flashTimer = 1.0f;
-
-
 		}
-		else 
+		else  if (time > 30)
 		{
 			/** 白いタイマーの表示*/
 			/** 必要な数字だけ表示 該当する数字だけON */
@@ -195,15 +192,58 @@ void Timer::TextTimer()
 			m_digitSprite[1][tens].SetPosition({ 0.0f,480.0f,0.0f });
 			m_digitSprite[2][ones].SetPosition({ 100.0f,480.0f,0.0f });
 		}
+	}
+	if (time >= 6 && time <= 30)
+	{
+		if (m_isFadeIn)
+		{
+			m_FadeTimerAlpha += m_FadeSpeed * g_gameTime->GetFrameDeltaTime();
+			if (m_FadeTimerAlpha >=1.0f)
+			{
+				m_FadeTimerAlpha = 1.0f;
+				m_isFadeIn = false;
+			}
+		}
+		else
+		{
+			m_FadeTimerAlpha -= m_FadeSpeed * g_gameTime->GetFrameDeltaTime();
+			if (m_FadeTimerAlpha <= 0.0f)
+			{
+				m_FadeTimerAlpha = 0.0f;
+				m_isFadeIn = true;
+			}
+		}
 
-	
 
+		Vector3 scale = { 0.8f,0.8f,0.8f };
+
+		m_redDigitSprite[0][m_flashDigits[0]].SetScale(scale);
+		m_redDigitSprite[1][m_flashDigits[1]].SetScale(scale);
+		m_redDigitSprite[2][m_flashDigits[2]].SetScale(scale);
+
+		m_redDigitSprite[0][m_flashDigits[0]].SetMulColor(Vector4(1.0f, 1.0f, 1.0, m_FadeTimerAlpha));
+		m_redDigitSprite[1][m_flashDigits[1]].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, m_FadeTimerAlpha));
+		m_redDigitSprite[2][m_flashDigits[2]].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, m_FadeTimerAlpha));
+		
 		
 	}
+	
+		
+	
 
-	/** 10秒以下のカウントアニメーション処理*/
+	/** 5秒以下のカウントアニメーション処理*/
 	if (time <= 5)
 	{
+		if (!m_isPlaySE)
+		{
+			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+
+			/** SEを再生*/
+			m_TimerSE = soundManager->PlayingSE(SoundSE::enTimerEndFive, false);
+			m_isPlaySE = true;
+
+		}
+
 		m_isFiveTimer = true;
 		/** 1秒ごとに0～1を繰り返すローカルのタイムを作る*/
 		float localTime = fmodf(m_timer, 1.0f);
