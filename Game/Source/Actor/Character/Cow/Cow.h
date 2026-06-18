@@ -150,6 +150,9 @@ private:
 	/** 牛が餌を食べる最中の関数 */
 	void Eating();
 
+	/** 牛が納屋に入る関数 */
+	void EnterBarn();
+
 	/** アップデートできるかどうかを判断する関数 */
 	bool CanUpdate();
 

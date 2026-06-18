@@ -4,7 +4,6 @@
 #include "Source/Actor/Character/Player/Player.h"
 #include "Rope/Rope.h"
 #include "CountDown/CountDown.h"
-#include "Source/Actor/Character/Cow/CowLuring.h"
 #include "CowFoodManager.h"
 #include"GameScene/Game.h"
 #include"GameScene/LoadingScene.h"
@@ -31,6 +30,11 @@ namespace
 	/** 牛の餌のエフェクトの大きさ */
 	const Vector3 COWFOOD_EFFECT_SCALE = { 40.0f,40.0f,40.0f };
 
+	/** 牛の餌を置くことができないエリアの座標 */
+	const Vector3 COWFOOD_PUT_TABOO_POS = { -1320.0f,0.0f,10.0f };
+
+	/** 牛の餌を置くことができないエリアの半径 */
+	constexpr float COWFOOD_PUT_TABOO_RADIUS = 300.0f;
 }
 
 CowFood::~CowFood()
@@ -205,6 +209,18 @@ void CowFood::CowFoodPut()
 {
 	Player* player = FindGO<Player>("player");
 
+	/** 牛の餌を置くことができないエリアにいるかどうかの判定 */
+	float taboodx = player->GetPosition().x - COWFOOD_PUT_TABOO_POS.x;
+	float taboodz = player->GetPosition().z - COWFOOD_PUT_TABOO_POS.z;
+
+	/** プレイヤーと牛の餌を置くことができないエリアの距離 */
+	float taboorenge = sqrtf(taboodx * taboodx + taboodz * taboodz);
+
+	/** 牛の餌を置くことができないエリアから離れているなら処理を辞める */
+	if (taboorenge < COWFOOD_PUT_TABOO_RADIUS)
+	{
+		return;
+	}
 
 	if (player == nullptr)
 	{
