@@ -30,7 +30,9 @@ public:
 
 private:
 	/** 制限時間 */
-	float m_timer = 40.0f;
+	float m_timer = 120.0f;
+	/** 点滅タイマー*/
+	float m_flashTimer = 1.0f;
 
 	/** フェード速度*/
 	float m_FadeSpeed = 0.8f;
