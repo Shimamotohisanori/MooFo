@@ -2,7 +2,6 @@
 class Score;
 class CowNumberOfRescues;
 class LoadingScene;
-class Title;
 /** ゲームクリアのクラス */
 class GameClear :public IGameObject
 {
@@ -55,9 +54,6 @@ private:
 
 	/** ゲームクリアからタイトルシーンに移行するためのローディングシーン */
 	LoadingScene* m_loadingScene = nullptr;
-
-	/** タイトルシーンに移行するときのタイトルクラスのポインタ */
-	Title* m_title = nullptr;
 
 	enum enGameClearState
 	{

@@ -1,7 +1,5 @@
 #pragma once
 #include "sound/SoundSource.h"
-class SoundPause;
-
 enum SoundBGM
 {
 	/** タイトルBGM*/
@@ -57,9 +55,6 @@ public:
 
 	/** BGMの数 */
 	uint8_t m_bgmCount = 0;
-
-	/** ポーズ中にサウンド操作をするクラスのポインタ */
-	SoundPause* m_soundPause = nullptr;
 
 	/** BGMを再生する関数 */
 	SoundSource* PlayingBGM(SoundBGM number, bool isLoop = true);

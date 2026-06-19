@@ -49,8 +49,6 @@ bool Combo::Start()
 {
 	m_timer = FindGO<Timer>("timer");
 
-	m_score = FindGO<Score>("score");
-
 	//コンボ画像の初期化
 	m_comboSprite.Init(COMBO_SPRITE_FILEPATH, 200.0f, 200.0f);
 	m_comboSprite.SetPosition(COMBO_SPRITE_INITIAL_POSITION);

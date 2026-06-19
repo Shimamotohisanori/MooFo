@@ -56,7 +56,6 @@ private:
 	/** サウンドポーズのポインタ*/
 	SoundPause* m_soundPause = nullptr;
 
-
 	/** Pasue中に使用する画像一覧*/
 	/** Pause背景*/
 	SpriteRender m_pauseBackGround;
@@ -66,16 +65,6 @@ private:
 	SpriteRender m_resumeSprite;
 	/** 「音量」を表示するアイコン*/
 	SpriteRender m_soundSprite;	
-	/** BGMやSEを調整する画面の外枠*/
-	SpriteRender m_settingSprite;
-	/** 「BGM」とテクストで表示するアイコン*/
-	SpriteRender m_bgmSprite;
-	/** 効果音を調整するアイコン*/
-	SpriteRender m_seSprite;
-	/** 音量アイコン*/
-	SpriteRender m_volumeSprite;
-	/** 音量アイコンの音量が0になっているときのアイコン*/
-	SpriteRender m_notVolumeSprite;
 	/** 選択していないときに出す黒い背景*/
 	SpriteRender m_soundBlackSprite;
 	SpriteRender m_resumeBlackSprite;

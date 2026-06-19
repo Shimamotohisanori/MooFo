@@ -1,7 +1,6 @@
 #pragma once
 class Player;
 class Rope;
-class Cow;
 class Game;
 class GameCamera : public IGameObject
 {
@@ -59,8 +58,6 @@ private:
 	/** ロープ */
 	Rope* m_rope = nullptr;
 
-	/** 牛 */
-	Cow* m_cow = nullptr;
 	/** ゲーム */
 	Game* m_game = nullptr;
 

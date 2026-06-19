@@ -18,7 +18,6 @@ class DummyCow;
 class Combo;
 class AddTimerUI;
 class UFOLightUI;
-class UFOLightManager;
 class CowFood;
 class CowFoodManager;
 class CowLuring;
@@ -195,9 +194,6 @@ private:
 	
 	/** 牛のライトUI */
 	UFOLightUI* m_ufoLightUI = nullptr;
-
-	/** UFOのライトマネージャー */
-	UFOLightManager* m_ufoLightManager = nullptr;
 
 	/** 牛の餌 */
 	CowFood* m_cowFood = nullptr;
