@@ -160,7 +160,7 @@ private:
 	/** 1の画像 */
 	SpriteRender m_oneSprite;
 
-	/** 5の画像 */
+	/** 0の画像 */
 	SpriteRender m_zeroSprite;
 
 	/** リザルト */

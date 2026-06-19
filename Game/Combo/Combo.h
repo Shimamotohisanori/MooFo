@@ -1,6 +1,5 @@
 #pragma once
 class Timer;
-class Score;
 class AddTimerUI;
 /** コンボクラス */
 class Combo : public IGameObject
@@ -64,9 +63,6 @@ private:
 
 	/** コンボ画像 */
 	SpriteRender m_comboSprite;
-
-	/** スコア */
-	Score* m_score = nullptr;
 
 	/** タイマー */
 	Timer* m_timer = nullptr;
