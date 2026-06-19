@@ -49,6 +49,9 @@ namespace
 
 	/** 納屋の半径 */
 	constexpr float BARN_RADIUS = 300.0f;
+
+	/** 牛とプレイヤーの距離 */
+	constexpr float COW_PLAYER_DISTANCE = 1000.0f;
 }
 
 Cow::Cow()
@@ -64,7 +67,11 @@ Cow::Cow()
 
 Cow::~Cow()
 {
-
+	/** 牛が餌を食べる音の再生を止める */
+	if (m_cowEatSE)
+	{
+		DeleteGO(m_cowEatSE);
+	}
 }
 
 bool Cow::Start()
@@ -133,6 +140,15 @@ void Cow::Update()
 	{
 		Eating();
 		return;
+	}
+	else
+	{
+		/** 牛が餌を食べている音の再生を止める */
+		if (m_cowEatSE)
+		{
+			DeleteGO(m_cowEatSE);
+			m_cowEatSE = nullptr;
+		}
 	}
 	
 	/** プレイヤーから逃げる関数 */
@@ -365,6 +381,23 @@ void Cow::Eating()
 	/** 食べている経過時間を加算する */
 	m_eatTimer += g_gameTime->GetFrameDeltaTime();
 
+	auto soundmanager = FindGO<SoundManager>("soundmanager");
+
+	/** 牛が餌を食べている音の再生 */
+	if (m_cowEatSE == nullptr)
+	{
+		m_cowEatSE = soundmanager->PlayingSE(SoundSE::enEatCowFoodSE, true);	
+	}
+
+	/** 牛が餌を食べている音の距離によるボリューム調整 */
+	if (m_cowEatSE)
+	{
+		auto player = FindGO<Player>("player");
+		float distance = (player->GetPosition() - m_transform.GetPosition()).Length();
+		float volume = max(0.0f, 1.0f - (distance / COW_PLAYER_DISTANCE));
+		m_cowEatSE->SetVolume(volume * soundmanager->m_seVolume);
+	}
+
 	/** 一定時間経過したら食べ終わりの処理を行う */
 	if (m_eatTimer >= 2.0f)
 	{
@@ -506,7 +539,7 @@ void Cow::PulledByPlayer()
 		/** 牛の鳴き声効果音を流す*/
 		if (m_CowSE == false)
 		{
-			m_CowCrySE = m_CowSound->PlayingSE(SoundSE::enCowCrySE, false);
+			m_cowCrySE = m_CowSound->PlayingSE(SoundSE::enCowCrySE, false);
 			m_CowSE = true;
 		}
 		

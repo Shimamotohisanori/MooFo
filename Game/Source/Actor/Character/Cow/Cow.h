@@ -185,7 +185,10 @@ private:
 	Timer* m_timer = nullptr;
 
 	/** 牛の鳴き声のSE*/
-	SoundSource* m_CowCrySE = nullptr;
+	SoundSource* m_cowCrySE = nullptr;
+
+	/** 牛が餌を食べるときのSE */
+	SoundSource* m_cowEatSE = nullptr;
 
 	/** 偽の牛 */
 	DummyCow* m_dummyCow = nullptr;
