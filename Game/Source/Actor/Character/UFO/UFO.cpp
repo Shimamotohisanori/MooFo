@@ -152,7 +152,7 @@ void UFO::Update()
 	{
 		return;
 	}
-	
+
 	/** 出現演出中は通常処理をスキップ */
 	if (m_UFOState == EnUFOState_Spawning)
 	{
@@ -217,7 +217,6 @@ void UFO::Update()
 			m_targetCow = nullptr;
 		}
 		m_isChasing = false;
-		m_isCowTakeAwayed = false;
 		m_failCount = 0;
 	}
 	
@@ -230,6 +229,7 @@ void UFO::Update()
 		/** UFOが牛を引っ張る際のSE関数 */
 		UFOSEDistance();
 	}
+
 	/** モデルの位置を反映 */
 	m_ufomodelRender.SetPosition(m_transform.GetPosition());
 
