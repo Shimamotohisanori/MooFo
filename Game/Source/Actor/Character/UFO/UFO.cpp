@@ -40,10 +40,10 @@ namespace
 	constexpr float CAPTURE_RANGE = 30.0f;
 
 	/**移動可能エリア（柵の内側）*/
-	constexpr float AREA_MIN_X = -1300.0f;
-	constexpr float AREA_MAX_X = 1300.0f;
-	constexpr float AREA_MIN_Z = -600.0f;
-	constexpr float AREA_MAX_Z = 500.0f;
+	constexpr float AREA_MIN_X = -1400.0f;
+	constexpr float AREA_MAX_X = 1400.0f;
+	constexpr float AREA_MIN_Z = -1400.0f;
+	constexpr float AREA_MAX_Z = 1400.0f;
 
 	/** UFO同士の回避処理のための距離の二乗と力 */
 	constexpr float UFO_AVOID_RANGE_SQ = 1500.0f;
@@ -218,7 +218,7 @@ void UFO::Update()
 			m_targetCow = nullptr;
 		}
 		m_isChasing = false;
-		m_failCount = 0;
+		
 	}
 	
 	/** 牛を連れていく関数 */
@@ -635,6 +635,7 @@ void UFO::FindTheCow()
 
 		/** 牛の方向を作る */
 		Vector3 dir = nearestCow->GetPosition() - m_transform.GetPosition();
+		dir.y = 0.0f;
 		dir.Normalize();
 
 		/** dirの方向に進むようにセットする */
