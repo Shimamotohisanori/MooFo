@@ -171,6 +171,20 @@ void Cow::Update()
 
 	/** モデルのキャラコンを反映 */
 	Vector3 pos = m_cowCharacterController.GetPosition();
+
+	/** 連れ去られていない場合はY座標を固定する */
+	if (!m_isTakeAwayed)
+	{
+
+		/** キャラコンのY座標が0.01f以上になったら0に戻す */
+		if (pos.y > 0.01f)
+		{
+			pos.y = 0.0f;
+			m_transform.SetPosition(pos);
+			m_cowCharacterController.SetPosition(pos);
+		}
+	}
+
 	m_transform.SetPosition(pos);
 
 	/** モデルの位置を反映 */
@@ -186,12 +200,11 @@ void Cow::Update()
 
 void Cow::Move()
 {
+	/** 削除予約されている、もしくは死んでいるなら移動しない */
+	if (m_isPendingKill || m_isDeadFlag) return;
 
 	/** ロープに捕まっているときは移動しない */
-	if (m_isCaptured)
-	{
-		return;
-	}
+	if (m_isCaptured) return;
 
 	/** タイマーが0以上なら新しい方向を決める */
 	if (m_moveTimer <= 0)
