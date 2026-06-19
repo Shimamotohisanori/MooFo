@@ -1,8 +1,5 @@
 #include "stdafx.h"
 #include "CowLuring.h"
-#include "Source/Actor/Stage/CowFood.h"
-#include "Source/Actor/Character/Player/Player.h"
-#include "Source/Actor/Character/Cow/Cow.h" 
 
 namespace
 {

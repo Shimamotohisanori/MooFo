@@ -68,7 +68,6 @@ void GameCamera::Update()
 {
 	m_player = FindGO<Player>("player");
 	m_rope = FindGO<Rope>("rope");
-	m_cow = FindGO<Cow>("cow");
 	m_game = FindGO<Game>("game");
 
 	/** タイムアウトしているときはカメラを動かさない */
@@ -77,7 +76,7 @@ void GameCamera::Update()
 		return;
 	}
 
-	if (m_player == nullptr || m_rope == nullptr || m_cow == nullptr)
+	if (m_player == nullptr || m_rope == nullptr)
 	{
 		return;
 	}

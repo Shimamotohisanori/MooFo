@@ -2,8 +2,6 @@
 class Score;
 class CowNumberOfRescues;
 class LoadingScene;
-class Title;
-class FadeManager;
 /** ゲームオーバーのクラス */
 class GameOver : public IGameObject
 {
@@ -69,7 +67,6 @@ private:
 	};
 	enGameOverState m_gameOverState = FadeIn;
 
-	FadeManager* m_fadeManager = nullptr;
 	/** スコアの最終値 */
 	int m_finalScore = 0;
 
@@ -87,9 +84,6 @@ private:
 
 	/** ボタンを押したときのフラグ */
 	bool m_isGameOverToTitleButtonPressed = false;
-
-	/** 削除要求フラグ */
-	bool m_isDeleteRequest = false;
 
 	/** スコアをセットしたかどうかのフラグ */
 	bool m_isScoreSet = false;

@@ -33,7 +33,7 @@ namespace
 	const Vector3 COWFOOD_EFFECT_SCALE = { 40.0f,40.0f,40.0f };
 
 	/** 牛舎付近に出すエフェクトの大きさ */
-	const Vector3 BARNNEAR_EFFECT_SCALE = { 80.0f,80.0f,80.0f };
+	const Vector3 BARNNEAR_EFFECT_SCALE = { 160.0f,160.0f,160.0f };
 
 	/** 牛の餌を置くことができないエリアの座標 */
 	const Vector3 COWFOOD_PUT_TABOO_POS = { -1320.0f,0.0f,10.0f };

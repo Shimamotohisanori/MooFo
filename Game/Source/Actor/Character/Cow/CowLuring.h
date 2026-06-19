@@ -29,16 +29,5 @@ private:
 
 	/** 干し草のモデルレンダラー */
 	ModelRender m_hayModelRender;
-
-	/** 牛の餌クラス */
-	CowFood* m_cowfood;
-
-	/** プレイヤークラス */
-	Player* m_player;
-
-	/** 牛クラス */
-	Cow* m_cow;
-
-
 };
 
