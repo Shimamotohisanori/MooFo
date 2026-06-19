@@ -37,6 +37,7 @@ enum SoundSE
 	enPuthaySE,/** 牛の餌を置くときのSE*/
 	enTakehaySE,/** 牛の餌を取るときのSE*/
 	enTimerEndFive,/** 制限時間が残り５秒の時に流すSE*/
+	enEatCowFoodSE,/** 牛の餌を食べるときのSE*/
 	enSENum
 };
 

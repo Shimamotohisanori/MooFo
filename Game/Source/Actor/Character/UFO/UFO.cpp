@@ -55,6 +55,7 @@ namespace
 	/** UFO“¯m‚ÌÅ’á‹——£‚Ì“ñæ*/
 	constexpr float MIN_DIST_SQ = MIN_DIST * MIN_DIST;
 
+	/** UFO‚ÆƒvƒŒƒCƒ„[‚Ì‹——£ */
 	constexpr float UFO_PLAYER_DISTANCE = 1000.0f;
 }
 
