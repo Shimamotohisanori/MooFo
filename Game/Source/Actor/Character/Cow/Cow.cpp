@@ -105,7 +105,9 @@ void Cow::Update()
 		}
 
 		/** UFOとの紐づけ解除 */
-		if (m_takingUFO)
+		/** 連れ去られた牛が削除されるときに
+		UFOのフラグをfalseにする */
+		if (m_takingUFO && m_isTakeAwayed)
 		{
 			m_takingUFO->SetIsCowTakeAwayed(false);
 			m_takingUFO->ReMoveTargetCow();
@@ -447,6 +449,7 @@ void Cow::EnterBarn()
 	/** 牛を削除し、スコアや救出数を増やす */
 	if (distanceSquared <= BARN_RADIUS * BARN_RADIUS)
 	{
+
 		/** 状態をリセットする */
 		m_isDeadFlag = true;
 
