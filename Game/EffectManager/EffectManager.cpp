@@ -9,6 +9,7 @@ bool EffectManager::Start()
 
 void EffectManager::LoadEffects()
 {
+
 	/** UFOの光*/
 	nsK2EngineLow::EffectEngine::GetInstance()->ResistEffect(
 		(int)EffectID::EffectID_UFOLight,
@@ -56,4 +57,8 @@ void EffectManager::LoadEffects()
 	/** 三回目のUFO混乱エフェクト*/
 	nsK2EngineLow::EffectEngine::GetInstance()
 		->ResistEffect((int)EffectID::EffectID_UFOConfusionEffect_3, u"Assets/Effects/UFOConfusion_3.efk");
+
+	/** 牛が削除されるときのエフェクト*/
+	nsK2EngineLow::EffectEngine::GetInstance()
+		->ResistEffect((int)EffectID::EffectID_CowDeleteEffect, u"Assets/Effects/CowDeleteEffect.efk");
 }
