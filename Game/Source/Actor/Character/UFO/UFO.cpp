@@ -3,7 +3,6 @@
 #include "CountDown/CountDown.h"
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "GameScene/Game.h"
-#include "CowNumberOfRescues/CowNumberOfRescues.h"
 #include "Rope/Rope.h"
 #include "GameCamera/GameCamera.h"
 #include "Score/Score.h"
@@ -372,6 +371,14 @@ void UFO::TakeAwayTheCow()
 	{
 		/** 牛が連れ去られたらスコアを減らす処理 */
 		m_score->DecreaseScore(100);
+
+		/** 牛が消えるときのエフェクトをUFOの位置で再生 */
+		auto* deleteEffect = NewGO<nsK2EngineLow::EffectEmitter>(0);
+		deleteEffect->Init((int)EffectID::EffectID_CowDeleteEffect);
+		deleteEffect->SetPosition(m_transform.GetPosition() + Vector3(0.0f, 150.0f,0.0f));
+		deleteEffect->SetScale({ 0.5f, 0.5f, 0.5f });
+		deleteEffect->Play();
+		deleteEffect->Update();
 
 		/** 牛の状態を連れていかれる前の状態に戻す */
 		m_targetCow->SetIsTakeAwayed(false);

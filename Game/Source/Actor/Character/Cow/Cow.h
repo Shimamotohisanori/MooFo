@@ -159,6 +159,9 @@ private:
 	/** 牛が納屋に入る関数 */
 	void EnterBarn();
 
+	/** 牛の大きさの更新関数 */
+	void UpdateScale();
+
 	/** アップデートできるかどうかを判断する関数 */
 	bool CanUpdate();
 
@@ -236,6 +239,12 @@ private:
 
 	/** 牛が餌を食べている間の時間 */
 	float m_eatTimer = 0.0f;
+
+	/** 出現時のスケール */
+	float m_spawnScale = 0.0f;
+
+	/** 出現演出中のフラグ */
+	bool m_isSpawning = true;
 
 	/** 牛が餌を食べているかどうかのフラグ */
 	bool m_isEating = false;

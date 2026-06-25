@@ -44,15 +44,18 @@ private:
 
 	/** 満腹のエフェクトを出すかどうか */
 	bool m_isOverdose = false;
-  
-	/** SEの削除がアニメーションの削除と重ならないように遅らすための変数*/
-	int m_deleteDelay = 0;
 
 	/** ジャンプアニメーションの再生を要求するフラグ */
 	bool m_requestPlayJump = false;
 	
 	/** 牛の救出SEを流すためのフラグ*/
 	bool m_RescueSE = false;
+
+	/** 縮小中フラグ */
+	bool m_isShrinking = false;
+
+	/** 縮小スケール */
+	float m_shrinkScale = 1.0f;
 
 	/** サウンドマネージャー*/
 	SoundManager* m_DummyCowSE = nullptr;

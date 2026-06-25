@@ -52,6 +52,12 @@ namespace
 
 	/** 牛とプレイヤーの距離 */
 	constexpr float COW_PLAYER_DISTANCE = 1000.0f;
+
+	/** UFOが牛を捕獲する高さ */
+	constexpr float UFO_CATCH_HEIGHT = 400.0f;
+
+	/** 牛の最小スケール */
+	constexpr float COW_MIN_SCALE = 0.1f;
 }
 
 Cow::Cow()
@@ -88,6 +94,8 @@ bool Cow::Start()
 	/** 牛のモデルを初期化する */
 	m_cowmodelRender.Init(COW_MOCEL_FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
 	m_cowmodelRender.SetPosition(m_transform.GetPosition());
+	/** 出現時はスケールを0にする */
+	m_cowmodelRender.SetScale(Vector3(0.0f, 0.0f, 0.0f));
 	m_cowmodelRender.Update();
 	return true;
 }
@@ -210,6 +218,9 @@ void Cow::Update()
 	
 	/** モデルに回転を反映 */
 	m_cowmodelRender.SetRotation(m_transform.GetRotation());
+
+	/** 牛の大きさを更新 */
+	UpdateScale();
 
 	/** モデルの更新 */
 	m_cowmodelRender.Update();
@@ -485,6 +496,45 @@ void Cow::EnterBarn()
 	}
 }
 
+void Cow::UpdateScale()
+{
+	/** 出現中は徐々に大きくなる */
+	if (m_isSpawning)
+	{
+		m_spawnScale += 0.05f;
+
+		/** 1.0倍以上になったら1.0倍に固定して出現中フラグを下ろす */
+		if(m_spawnScale >= 1.0f)
+		{
+			m_spawnScale = 1.0f;
+			m_isSpawning = false;
+		}
+
+		m_cowmodelRender.SetScale(Vector3(m_spawnScale, m_spawnScale, m_spawnScale));
+		return;
+	}
+
+	/** UFOに連れ去られていない時はスケールを元に戻す */
+	if (!m_isTakeAwayed)
+	{
+		m_cowmodelRender.SetScale(Vector3(1.0f, 1.0f, 1.0f));
+		return;
+	}
+
+	/** 牛の現在のY座標を取得 */
+	float currentheight = m_transform.GetPosition().y;
+
+	/** 0.0~1.0に正規化 (地上=0.0, UFOが牛を捕獲する高さ=1.0) */
+	float t = currentheight / UFO_CATCH_HEIGHT;
+	t = max(0.0f, min(1.0f, t));
+
+	/** 地上なら1.0倍、UFOに近づくにつれて0.0倍に近づく */
+	float scale = 1.0f - t;
+	scale = max(scale, COW_MIN_SCALE);
+
+	m_cowmodelRender.SetScale(Vector3(scale, scale, scale));
+}
+
 void Cow::ManageState()
 {
 	/** ロープに捕まっているときは状態を変えない */
@@ -589,7 +639,6 @@ void Cow::CapturedByPlayer()
 			{
 				combo->AddCombo();
 				combo->AddScore(100);
-				//m_game->ReMoveCow(this);
 			}
 
 			/** 牛の救出数を増やす */
@@ -746,7 +795,7 @@ void Cow::TakeAwayedByUFO(Vector3 direction, float speed)
 	direction.Normalize();
 
 	/** Excuteに渡すのは「速度」*/
-	Vector3 velocity = direction * speed * 40.0f;
+	Vector3 velocity = direction * speed * 45.0f;
 
 	/** UFOに連れて行かれるときは牛を上に移動させる */
 	Vector3 newPos = m_cowCharacterController.Execute(velocity, g_gameTime->GetFrameDeltaTime());

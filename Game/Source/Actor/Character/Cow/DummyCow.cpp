@@ -92,13 +92,29 @@ void DummyCow::Update()
 	 /** ジャンプアニメーション中なら */
 	if (m_isPlaying &&!m_dummyCowModelRender.IsPlayingAnimation())
 	{
-		m_deleteDelay++;
-		if (m_deleteDelay > 5)
+		m_isShrinking = true;
+
+		if (m_isShrinking)
 		{
-			DeleteGO(this);
+			// 毎フレームスケールを縮小する
+			m_shrinkScale -= 0.05f;
+
+			if (m_shrinkScale < 0.0f)
+			{
+				m_shrinkScale = 0.0f;
+			}
+
+			m_dummyCowModelRender.SetScale(
+				Vector3(m_shrinkScale, m_shrinkScale, m_shrinkScale)
+			);
+
+			// スケールが0になったら削除
+			if (m_shrinkScale <= 0.0f)
+			{
+				DeleteGO(this);
+			}
 		}
-		
-	   return;
+		return;
 	}
 	
 }
