@@ -23,26 +23,37 @@ namespace
 	const Vector3 HIT_COW_ROLL_ROPE_SCALE = { 1.0f, 1.0f, 1.0f };
 
 	/** プレイヤーの右手からロープが出る位置のオフセット */
-	const float ROPE_OFFSET_RIGHT = 10.0f;
+	constexpr float ROPE_OFFSET_RIGHT = 10.0f;
 
 	/** プレイヤーの前からロープが出る位置のオフセット */
-	const float ROPE_OFFSET_FORWARD = 0.5f;
+	constexpr float ROPE_OFFSET_FORWARD = 0.5f;
 
 	/** プレイヤーの上からロープが出る位置のオフセット */
-	const float ROPE_OFFSET_UP = 30.0f;
+	constexpr float ROPE_OFFSET_UP = 30.0f;
 
 	/** 牛の位置の少し上を狙うためのオフセット */
-	const float ROPE_AIM_UP_OFFSET = 30.0f;
+	constexpr float ROPE_AIM_UP_OFFSET = 30.0f;
 
 	/** ロープの伸び縮みのスケールを求めるための距離にかける係数 */
-	const float ROPE_SCALE_FACTOR = 0.05f;
+	constexpr float ROPE_SCALE_FACTOR = 0.055f;
 
 	/** ロープの伸び縮みのスケールの最小値 */
-	const float ROPE_MIN_SCALE_Z = 0.002f;
+	constexpr float ROPE_MIN_SCALE_Z = 0.002f;
 
 	/** ロープが牛に当たったとみなす距離 */
-	const float ROPE_HIT_DISTANCE = 50.0f;
+	constexpr float ROPE_HIT_DISTANCE = 50.0f;
 
+	/** ロープのたるみアニメーション継続時間 */
+	constexpr float ROPE_SLACK_DURATION = 0.8f;
+
+	/** ロープのたるみアニメーションの時間をスケールする係数 */
+	constexpr float DELTA_TIME_SCALE = 5.0f;
+
+	/** UFOが牛を捕獲する高さ */
+	constexpr float UFO_CATCH_HEIGHT = 400.0f;
+
+	/** 牛が連れ去られる時のロープの最小スケール */
+	constexpr float COW_MIN_SCALE = 0.1f;
 }
 
 
@@ -63,6 +74,17 @@ bool Rope::Start()
 {
 	m_ropeModelRender.Init(ROPE_MODEL_FILEPATH);
 	m_rollModelRender.Init(CAPTURED_COW_FILEPATH);
+
+	/** セグメント初期化 */
+	for (int i = 0; i < ROPE_SEGMENT_COUNT; ++i)
+	{
+		m_ropeSegments[i].Init(ROPE_MODEL_FILEPATH);
+		/** ロード完了を待つために一度Updateを呼ぶ */
+		m_ropeSegments[i].SetPosition(Vector3(0.0f, 0.0f, 0.0f));
+		m_ropeSegments[i].SetScale(Vector3(0.0f, 0.0f, 0.0f));
+		m_ropeSegments[i].Update();
+	}
+
 	m_player = FindGO<Player>("player");
 	m_ropeScale = ROPE_INITIAL_SCALE;
 	m_ropeModelRender.SetScale(m_ropeScale);
@@ -104,7 +126,7 @@ void Rope::Update()
 	PlayerThrowsRope();
 
 	/** ロープアニメーション(ロープを投げた時のフラグ)がfalseなら */
-	if (!m_isThrowRope)
+	if (!m_isThrowRope && !m_isHitCow)
 	{
 		/** プレイヤーの右手の位置のロープが常にある関数 */
 		FollowRightHand();
@@ -115,11 +137,28 @@ void Rope::Update()
 
 	if (m_isHitCow && m_hitCow != nullptr)
 	{
-		/** 伸び縮みするロープの回転に関する関数 */
-		RotateStretchRope();
-		
-		/** ロープの伸び縮みに関する関数 */
-		StretchRope();
+
+		/** たるみを時間経過で50から0に減らす */
+		if (m_ropeSlackTime < ROPE_SLACK_DURATION)
+		{
+			m_ropeSlackTime += g_gameTime->GetFrameDeltaTime() / DELTA_TIME_SCALE;
+			
+			float t = m_ropeSlackTime / ROPE_SLACK_DURATION;
+			
+			/** イーズアウト：最初ゆっくり、後半はビシっと戻る */
+			t = 1.0f - (1.0f - t) * (1.0f - t);
+			m_ropeSlack = 50.0f * (1.0f - t);
+		}
+		else
+		{
+			m_ropeSlack = 0.0f;
+		}
+
+		/** 既存のStretchRope/RotateStretchRopeの代わりに */
+		/** セグメントの位置の計算関数 */		
+		CalcCatenarySegments();
+		/** セグメントの更新 */
+		UpdateSegments();
 
 		/** 牛の位置と回転を取得 */
 		Vector3 cowPos = m_hitCow->GetPosition();
@@ -130,10 +169,36 @@ void Rope::Update()
 		m_rollModelRender.SetPosition(cowPos);
 		m_rollModelRender.SetRotation(cowRot);
 
+		/** 牛が連れ去られている時はロープのスケールを変える */
+		if (m_hitCow->GetIsTakeAwayed())
+		{
+			/** 牛の高さを取得 */
+			float currentHeight = m_hitCow->GetPosition().y;
+
+			/** 牛の高さをUFO_CATCH_HEIGHTで割って0~1に正規化 */
+			float t = currentHeight / UFO_CATCH_HEIGHT;
+
+			/** 0~1の範囲に制限 */
+			t = max(0.0f, min(1.0f, t));
+
+			/** 牛がUFOに近づくにつれてロープのスケールを小さくする */
+			float scale = max(1.0f - t, COW_MIN_SCALE);
+			m_rollModelRender.SetScale(Vector3(scale, scale, scale));
+
+			/** スケールが小さくなるにつれてロープの位置を下げる */
+			cowPos.y -= (1.0f - scale) * 30.0f;
+			m_rollModelRender.SetPosition(cowPos);
+		}
+		else
+		{
+			/** 通常時はHIT_COW_ROLL_ROPE_SCALEに戻す */
+			m_rollModelRender.SetScale(HIT_COW_ROLL_ROPE_SCALE);
+		}
+
 	}
 
 	/** 牛に当たっているかのフラグがtrueなら */
-	if (m_isThrowRope or m_isHitCow) {
+	if (m_isThrowRope) {
 		m_rollModelRender.SetScale(HIT_COW_ROLL_ROPE_SCALE);
 	}
 
@@ -148,6 +213,10 @@ void Rope::OnHitCow(Cow* cow)
 	m_hitCow = cow;
 
 	cow->SetIsCaptured(true);
+
+	/** 牛を捕まえた瞬間にたるみをリセット */
+	m_ropeSlack = 50.0f;
+	m_ropeSlackTime = 0.0f;
 }
 
 
@@ -208,64 +277,6 @@ void Rope::FollowRightHand()
 }
 
 
-void Rope::StretchRope()
-{
-
-	if (!m_isHitCow || m_hitCow == nullptr) return;
-
-	/** ロープの位置と牛の位置から距離を求める */
-	Vector3 ropePos = m_ropePos;
-	Vector3 cowPos = m_hitCow->GetPosition();
-
-	float distance = (cowPos - ropePos).Length();
-
-	/** ロープの伸び縮みのスケールを求める */
-	/** ロープの伸び縮みのスケールは距離に
-	 * ROPE_SCALE_FACTORをかけた値とROPE_MIN_SCALE_Zのうち
-	 * 大きい方にする */
-	float ropeScaleZ = max(distance * ROPE_SCALE_FACTOR, ROPE_MIN_SCALE_Z);
-
-	m_ropeScale = Vector3(1.0f, 1.0f, ropeScaleZ);
-
-	/** 伸び縮みだけ */
-	m_ropeModelRender.SetScale(m_ropeScale);
-
-}
-
-
-void Rope::RotateStretchRope()
-{
-	if (m_hitCow == nullptr) return;
-	if (m_hitCow->IsDead())
-	{
-		m_hitCow = nullptr;
-		return;
-	}
-	/** ロープの位置から牛の位置へのベクトルを求める */
-	Vector3 start = m_ropePos;
-	Vector3 end = m_hitCow->GetPosition();
-	
-	/** 牛の位置の少し上を狙う */
-	end.y += ROPE_AIM_UP_OFFSET;
-
-	/** ベクトルを正規化する */
-	Vector3 dir = end - start;
-	dir.Normalize();
-
-	/** ロープの初期の向きはZ軸方向なので
-	 *Z軸をベクトルdirの方向に回転させるクォータニオンを求める
-	 */
-	Vector3 forward = Vector3::AxisZ;
-
-	Quaternion rot;
-	rot.SetRotation(forward, dir);
-
-	m_ropeRot = rot;
-	m_ropeModelRender.SetRotation(m_ropeRot);
-
-}
-
-
 void Rope::RotateRope()
 {
 	/** カメラの前にモデルを出す */
@@ -311,16 +322,111 @@ void Rope::RotateRope()
 	}
 }
 
+void Rope::CalcCatenarySegments()
+{
+	/** 牛に当たっていないなら処理しない */
+	if (m_hitCow == nullptr) return;
+
+	/** プレイヤーの手元 */
+	Vector3 start = m_ropePos;
+
+	/** 牛の少し上 */
+	Vector3 end = m_hitCow->GetPosition();
+	end.y += ROPE_AIM_UP_OFFSET;
+
+	/** 牛が連れ去られている時は
+	終点をスケール補正後の位置に合わせる */
+	if (m_hitCow->GetIsTakeAwayed())
+	{
+		float currentHeight = m_hitCow->GetPosition().y;
+		float t = currentHeight / UFO_CATCH_HEIGHT;
+		t = max(0.0f, min(1.0f, t));
+		float scale = max(1.0f - t, COW_MIN_SCALE);
+
+		/** m_rollModelRender と同じ位置計算 */
+		end.y -= (1.0f - scale) * 30.0f;
+	}
+
+	/** 終点を少し手前にずらして貫通を防ぐ */
+	Vector3 dir = end - start;
+	dir.Normalize();
+
+	/** 終点を20ユニット手前にずらす */
+	/** この20は調整してください */
+	end -= dir * 20.0f; 
+
+
+	/** セグメントの位置を計算 */
+	/** これをすることでロープの形状を計算する */
+	for (int i = 0; i <= ROPE_SEGMENT_COUNT; i++)
+	{
+		/** 線形補間の割合を計算 */
+		float t = (float)i / (float)ROPE_SEGMENT_COUNT;
+
+		/** 線形補間でXZ方向は均等に分割 */
+		Vector3 pos = start + (end - start) * t;
+
+		/** 放物線でY方向に垂れ下がりを計算 */
+		/** t=0とt=1の端点では0, 中間(0.5)では最大値 */
+		float sag = m_ropeSlack * t * (1.0f - t) * 4.0f;
+		pos.y -= sag;
+
+		/** 計算したセグメントの位置を保存 */
+		m_ropeSegmentPositions[i] = pos;
+	}
+}
+
+void Rope::UpdateSegments()
+{
+	/** セグメントの位置を計算 */
+	for (int i = 0; i < ROPE_SEGMENT_COUNT; i++)
+	{
+		/** セグメントの開始位置と終了位置を取得 */
+		Vector3 segStart = m_ropeSegmentPositions[i];
+		Vector3 segEnd = m_ropeSegmentPositions[i + 1];
+
+		/** セグメントの中心位置 */
+		Vector3 center = (segStart + segEnd) * 0.5f;
+
+		/** セグメントの向き */
+		Vector3 dir = segEnd - segStart;
+		float   len = dir.Length();
+		dir.Normalize();
+
+		/** Z軸をdirに向ける回転 */
+		Quaternion rot;
+		rot.SetRotation(Vector3::AxisZ, dir);
+
+		/** スケール：Z方向にセグメントの長さ分だけ伸ばす */
+		float scaleZ = max(len * ROPE_SCALE_FACTOR, ROPE_MIN_SCALE_Z);
+		Vector3 scale(1.0f, 1.0f, scaleZ);
+
+		/** セグメントのモデルレンダーに反映 */
+		m_ropeSegments[i].SetPosition(center);
+		m_ropeSegments[i].SetRotation(rot);
+		m_ropeSegments[i].SetScale(scale);
+		m_ropeSegments[i].Update();
+	}
+}
+
 
 void Rope::Render(RenderContext& rc)
 {
 	
 	m_rollModelRender.Draw(rc);
 
-	/** ロープを投げている最中か
-	牛に当たっているならロープモデルを描画する */
-	if (m_isThrowRope or m_isHitCow)
+	/** ロープを投げている最中ならロープモデルを描画する */
+	if (m_isThrowRope)
 	{
 		m_ropeModelRender.Draw(rc);
+	}
+
+	else if (m_isHitCow)
+	{
+		/** 牛に当たっているならセグメントを描画する */
+		for (int i = 0; i < ROPE_SEGMENT_COUNT; i++)
+		{
+			m_ropeSegments[i].Draw(rc);
+		}
 	}
 }

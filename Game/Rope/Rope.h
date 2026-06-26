@@ -87,15 +87,14 @@ private:
 	/** プレイヤーの右手の位置のロープが常にある関数 */
 	void FollowRightHand();
 
-	/** ロープの伸び縮みに関する関数 */
-	void StretchRope();
-
-	/** 伸び縮みするロープの回転に関する関数 */
-	void RotateStretchRope();
-
 	/** ロープの回転に関する関数 */
 	void RotateRope();
 
+	/** セグメントの位置の計算関数 */
+	void CalcCatenarySegments();
+
+	/** セグメントの更新 */
+	void UpdateSegments();
 
 private:
 	/** プレイヤー */
@@ -110,19 +109,28 @@ private:
 	/** 牛リスト */
 	std::vector<Cow* > m_cowList;
 
+	/** セグメント数 */
+	static const int ROPE_SEGMENT_COUNT = 10;
+
 	/** ロープモデルレンダー */
 	ModelRender m_ropeModelRender;
+
+	/** セグメントごとのモデルレンダー */
+	ModelRender m_ropeSegments[ROPE_SEGMENT_COUNT];
 
 	/** 牛を捕まえた時のロープモデルレンダー */
 	ModelRender m_rollModelRender;
 
+	/** セグメントごとの位置 */
+	Vector3 m_ropeSegmentPositions[ROPE_SEGMENT_COUNT + 1];
+
 	/** ロープの位置*/
 	Vector3 m_ropePos = Vector3::Zero;
 
-	/** ロープの回転*/
+	/** ロープの回転 */
 	Quaternion m_ropeRot = Quaternion::Identity;
 
-	/** ロープのスケール*/
+	/** ロープのスケール */
 	Vector3 m_ropeScale = Vector3::Zero;
 
 	/** ロープを投げたかどうかのフラグ */
@@ -136,5 +144,11 @@ private:
 
 	/** ロープアニメーション時間 */
 	float m_ropeAnimationTime = 0.0f;
+
+	/** ロープの垂れ下がり度 */
+	float m_ropeSlack = 50.0f;
+
+	/** ロープのたるみアニメーション時間 */
+	float m_ropeSlackTime = 0.0f;
 };
 
