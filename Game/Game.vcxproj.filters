@@ -97,6 +97,7 @@
     <ClCompile Include="GameScene\LoadingScene.cpp">
       <Filter>GameScene</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Actor\Character\Cow\CowShrinkHay.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -195,6 +196,7 @@
     <ClInclude Include="FadeManager\FadeManager.h">
       <Filter>FadeMaager</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Actor\Character\Cow\CowShrinkHay.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

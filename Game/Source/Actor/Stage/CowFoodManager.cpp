@@ -16,6 +16,21 @@ bool CowFoodManager::Start()
 
 void CowFoodManager::Update()
 {
+	/** 縮小完了した餌を削除する */
+	auto it = m_foodList.begin();
+	while (it != m_foodList.end())
+	{
+		if ((*it)->IsShrinkDone())
+		{
+			DeleteGO(*it);
+			it = m_foodList.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+
 	/** 餌をターゲットにしているかどうかを取得する関数 */
 	for (auto food : m_foodList)
 	{
