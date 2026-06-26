@@ -14,6 +14,7 @@
 #include "GameTimer/Timer.h"
 #include "Source/Actor/Stage/CowFoodManager.h"
 #include "EffectManager/EffectManager.h"
+#include "CowShrinkHay.h"
 #include "CowLuring.h"
 
 namespace
@@ -411,9 +412,14 @@ void Cow::Eating()
 		m_overdoseEffect->Play();
 		m_overdoseEffect->Update();
 
+		/** 縮小開始する */
 		if (m_CowLuring != nullptr)
 		{
-			/** 牛の餌マネージャーから餌を削除する */
+			//牛の餌を同じ位置にスポーンして縮小を任せる
+			CowShrinkHay* shrink = NewGO<CowShrinkHay>(0);
+			shrink->SetPosition(m_CowLuring->GetPosition());
+			m_CowLuring->StartShrink();
+			//餌のマネージャーを消す
 			CowFoodManager* mgr = FindGO<CowFoodManager>("cowfoodmanager");
 			if (mgr)
 			{

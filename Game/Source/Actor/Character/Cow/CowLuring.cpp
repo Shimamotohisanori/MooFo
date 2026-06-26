@@ -19,7 +19,33 @@ bool CowLuring::Start()
 
 void CowLuring::Update()
 {
+    /** スケールアニメーション中なら */
+    if (m_isScaling)
+    {
+        /** スケールを徐々に1に近づける */
+        m_scale += g_gameTime->GetFrameDeltaTime() * 2.0f;
 
+        /** 1を超えたらアニメーション終了 */
+        if (m_scale >= 1.0f)
+        {
+            m_scale = 1.0f;
+            m_isScaling = false;
+        }
+    }
+
+    else if (m_isShrinking)
+    {
+        m_scale -= g_gameTime->GetFrameDeltaTime() * 3.0f;
+        if (m_scale <= 0.0f)
+        {
+            m_scale = 0.0f;
+            m_isShrinking = false;
+        }
+    }
+
+    /** モデルにスケールを反映する */
+    m_hayModelRender.SetScale({ m_scale, m_scale, m_scale });
+    m_hayModelRender.Update();
 }
 
 void CowLuring::PutHay()

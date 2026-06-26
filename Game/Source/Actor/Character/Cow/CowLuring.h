@@ -20,9 +20,28 @@ public:
 	{
 		return m_position;
 	}
+
+	void StartShrink()
+	{
+		m_isShrinking = true;
+	}
+
+	bool IsShrinkDone() const
+	{
+		return !m_isScaling && !m_isShrinking && m_scale <= 0.0f;
+	}
 private:
 	/** 干し草を置く処理 */
 	void PutHay();
+
+	/** 現在のスケール */
+	float m_scale = 0.0f;
+
+	/** スケールアニメーション中かどうか */
+	bool m_isScaling = true;
+
+	/** 縮小中かどうかのフラグ */
+	bool m_isShrinking = false;
 
 	/** 干し草の座標 */
 	Vector3 m_position;
