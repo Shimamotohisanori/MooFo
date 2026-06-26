@@ -79,6 +79,10 @@ bool Rope::Start()
 	for (int i = 0; i < ROPE_SEGMENT_COUNT; ++i)
 	{
 		m_ropeSegments[i].Init(ROPE_MODEL_FILEPATH);
+		/** ロード完了を待つために一度Updateを呼ぶ */
+		m_ropeSegments[i].SetPosition(Vector3(0.0f, 0.0f, 0.0f));
+		m_ropeSegments[i].SetScale(Vector3(0.0f, 0.0f, 0.0f));
+		m_ropeSegments[i].Update();
 	}
 
 	m_player = FindGO<Player>("player");

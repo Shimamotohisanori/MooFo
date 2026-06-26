@@ -127,6 +127,12 @@ private:
 	/** ロープの位置*/
 	Vector3 m_ropePos = Vector3::Zero;
 
+	/** ロープの回転 */
+	Quaternion m_ropeRot = Quaternion::Identity;
+
+	/** ロープのスケール */
+	Vector3 m_ropeScale = Vector3::Zero;
+
 	/** ロープを投げたかどうかのフラグ */
 	bool m_isThrowRope = false;
 
