@@ -58,10 +58,16 @@ public:
 		m_transform.SetRotation(rot);
 	}
 
-	/** 牛が捕獲されたかどうかを設定する関数 */
+	/** 牛がプレイヤーに捕獲されたかどうかを設定する関数 */
 	void SetIsCaptured(bool isCaptured)
 	{
 		m_isCaptured = isCaptured;
+	}
+
+	/** 牛がプレイヤーに捕獲されたかどうかを取得する関数 */
+	bool GetIsCaptured() const
+	{
+		return m_isCaptured;
 	}
 
 	/** 牛のステートを回転に変更する関数 */
@@ -70,7 +76,7 @@ public:
 		m_rotationState = EnRotateState_Spin;
 	}
 
-	/** 牛が捕獲されたかどうかを取得する関数 */
+	/** 牛がUFOに捕獲されたかどうかを取得する関数 */
 	bool GetIsTakeAwayed()const
 	{
 		return m_isTakeAwayed;

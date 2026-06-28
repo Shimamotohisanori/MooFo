@@ -22,6 +22,7 @@ class CowFood;
 class CowFoodManager;
 class CowLuring;
 class FadeManager;
+class Aiming;
 
 /** UFOの情報をまとめる構造体 */
 struct UFOinfo
@@ -209,6 +210,9 @@ private:
 
 	/** フェードマネージャーのポインタ*/
 	FadeManager* m_fadeManager = nullptr;
+
+	/** 照準 */
+	Aiming* m_aiming = nullptr;
 
 	/** 生きている牛のリスト */
 	std::vector<Cow*> m_aliveCows;

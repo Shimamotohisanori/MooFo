@@ -39,6 +39,12 @@ namespace
 	/** 牛に当たったときのカメラの高さ */
 	constexpr float BACK_OFFSET = 100.0f;
 
+	/** レイの最大距離 */
+	constexpr float RAY_MAX_DISTANCE = 750.0f;
+
+	/** 牛との判定に使う球の半径 */
+	constexpr float COW_COLLISION_RADIUS = 50.0f;
+
 }
 
 GameCamera::GameCamera()
@@ -85,6 +91,7 @@ void GameCamera::Update()
 	FollowRope();
 	CheckCameraHitCow();
 	HitCow();
+	CheckAimingCow();
 }
 
 
@@ -432,6 +439,60 @@ void GameCamera::HitCow()
 	g_camera3D->SetPosition(pos);
 	g_camera3D->Update();
 
+}
+
+void GameCamera::CheckAimingCow()
+{
+	/** 牛を捕まえている時は判定しない */
+	if (m_isCowCaptured)
+	{
+		/** 照準が牛を狙っているフラグを下ろす */
+		m_isAimingCow = false;
+		return;
+	}
+
+	/** レイの始点と方向 */
+	Vector3 raystart = g_camera3D->GetPosition();
+	Vector3 raydirection = g_camera3D->GetForward();
+	raydirection.Normalize();
+
+	/** 照準が牛を狙っているフラグを下ろす */
+	m_isAimingCow = false;
+
+	auto cows = FindGOs<Cow>("cow");
+
+	for (auto cow : cows)
+	{
+		/** 牛が存在しない場合は次の牛を判定する */
+		if (!cow) continue;
+
+		/** UFOに連れ去られている牛のみ照準対象にする */
+		if (!cow->GetIsTakeAwayed()) continue;
+
+		/** レイと牛の距離を計算 */
+		/** レイ始点から牛への方向ベクトル */
+		Vector3 tocow = cow->GetPosition() - raystart;
+
+		/** レイ方向への射影距離 */
+		float projectiondist = tocow.Dot(raydirection);
+
+		/** 牛がカメラの後ろにいるなら無視 */
+		if (projectiondist < 0.0f) continue;
+
+		/** レイ距離が最大距離を超えていたら無視 */
+		if (projectiondist > RAY_MAX_DISTANCE) continue;
+
+		/** レイに最も近い点から牛の中心までの距離を計算 */
+		Vector3 closestpoint = raystart + raydirection * projectiondist;
+		float disttocenter = (closestpoint - cow->GetPosition()).Length();
+
+		/** 牛の半径よりも距離が近ければ照準が牛を狙っていると判断 */
+		if (disttocenter < COW_COLLISION_RADIUS)
+		{
+			m_isAimingCow = true;
+			return;
+		}
+	}
 }
 
 

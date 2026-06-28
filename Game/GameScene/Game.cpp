@@ -22,7 +22,8 @@
 #include "Source/Actor/Stage/CowFood.h"
 #include "Source/Actor/Stage/CowFoodManager.h"
 #include "Source/Actor/Character/Cow/CowLuring.h"
-#include"FadeManager/FadeManager.h"
+#include "FadeManager/FadeManager.h"
+#include "Aiming/Aiming.h"
 
 namespace
 {
@@ -89,6 +90,9 @@ Game::~Game()
 	/** 牛の餌のモデル削除 */
 	DeleteGO(m_cowLuring);
 
+	/** 照準の削除 */
+	DeleteGO(m_aiming);
+
 	/** コンボクラスの削除 */
 	if (m_combo && !m_combo->IsDead())
 	{
@@ -143,8 +147,11 @@ bool Game::Start()
 	/** UFOのライトUIを生成 */
 	m_ufoLightUI = NewGO<UFOLightUI>(0, "ufoLightUI");
   
+	/** 照準を生成 */
+	m_aiming = NewGO<Aiming>(0, "aiming");
+
 	/** フェードのマネージャーを生成*/
-	m_fadeManager = NewGO<FadeManager>(0, "fadeManager");
+	m_fadeManager = NewGO<FadeManager>(0, "fadeManager");	
 
 	m_isSound = false;
 	m_spawnTimer = 0.0f;

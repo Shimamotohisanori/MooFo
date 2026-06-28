@@ -27,6 +27,12 @@ public:
 		return m_isCowCaptured;
 	}
 
+	/** 照準が牛を狙っているかどうかのフラグ取得関数 */
+	bool GetIsAimingCow() const
+	{
+		return m_isAimingCow;
+	}
+
 	/** カメラの位置取得関数 */
 	Vector3 GetCameraPosition() const
 	{
@@ -49,6 +55,9 @@ private:
 
 	/** 牛がロープに当たったら*/
 	void HitCow();
+
+	/** 照準が牛を狙っているかどうかの確認関数 */
+	void CheckAimingCow();
 
 
 private:
@@ -81,5 +90,8 @@ private:
 
 	/** 牛に当たったかどうかのフラグ */
 	bool m_isCowCaptured = false;
+
+	/** 照準が牛を狙っているかどうかのフラグ */
+	bool m_isAimingCow = false;
 };
 
