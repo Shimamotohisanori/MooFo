@@ -61,4 +61,8 @@ void EffectManager::LoadEffects()
 	/** 牛が削除されるときのエフェクト*/
 	nsK2EngineLow::EffectEngine::GetInstance()
 		->ResistEffect((int)EffectID::EffectID_CowDeleteEffect, u"Assets/Effects/CowDeleteEffect.efk");
+
+	/** プレイヤーが汗をかくエフェクト(引っ張り時) */
+	nsK2EngineLow::EffectEngine::GetInstance()
+		->ResistEffect((int)EffectID::EffectID_PlayerSweat, u"Assets/Effects/sweat.efk");
 }

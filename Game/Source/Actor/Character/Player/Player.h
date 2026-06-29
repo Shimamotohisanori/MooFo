@@ -136,6 +136,9 @@ private:
 
 	CowFood* m_CowFood = nullptr;
 
+	/**  */
+	EffectEmitter* m_sweatEffect = nullptr;
+
 	/** ƒvƒŒƒCƒ„[‚Ìó‘Ô */
 	uint8_t m_playerState = 0;
 
