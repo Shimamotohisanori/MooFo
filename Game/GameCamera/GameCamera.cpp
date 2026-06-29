@@ -21,7 +21,7 @@ namespace
 	constexpr float ROPE_TARGET_DISTANCE = 500.0f;
 
 	/** カメラが牛に当たったと判断する最大の距離 */
-	constexpr float COW_HIT_FAR_DISTANCE = 100.0f;
+	constexpr float COW_HIT_FAR_DISTANCE = 120.0f;
 
 	/** カメラが牛に当たったと判断する最小の距離 */
 	constexpr float COW_HIT_NEAR_DISTANCE = 20.0f;
