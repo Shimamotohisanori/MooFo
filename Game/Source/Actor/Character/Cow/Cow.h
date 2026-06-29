@@ -40,6 +40,11 @@ public:
 		m_transform.SetPosition(pos);
 	}
 
+	void SetUFOAttracted(bool flag)
+	{
+		m_isUFOAttracted = flag;
+	}
+
 	/** 牛の位置を取得する関数 */
 	Vector3 GetPosition()
 	{
@@ -111,6 +116,16 @@ public:
 	{
 		m_isDeadFlag = isDeadFlag;
 	}
+	/** 回転ステートを動きに変える関数*/
+	void ResetRotationState()
+	{
+		m_rotationState = EnRotateState_MoveDir;
+	}
+	/** 牛の移動のみを行っている牛の速度を取る関数*/
+	Vector3 IsMoving()const
+	{
+		return m_moving;
+	}
 
 	/** 牛の削除予約を取得する関数 */
 	bool GetIsPendingKill() const
@@ -164,12 +179,17 @@ private:
 
 	/** 牛が納屋に入る関数 */
 	void EnterBarn();
+	/** */
+	void MoveTowardUFO(UFO* ufo);
+
+	UFO* FindNearestEmittingUFO();
 
 	/** 牛の大きさの更新関数 */
 	void UpdateScale();
 
 	/** アップデートできるかどうかを判断する関数 */
 	bool CanUpdate();
+
 
 private:
 	/** ロープ */
@@ -183,6 +203,9 @@ private:
 
 	/** UFO */
 	UFO* m_takingUFO = nullptr;
+
+	/** 現在ロックオンしているUFO(光が消えるまで固定、牛側が自発的に向かう先) */
+	UFO* m_targetUFO = nullptr;
 
 	/** ポーズ */
 	Pause* m_pause = nullptr;
@@ -236,7 +259,8 @@ private:
 
 	/** 牛の移動方向 */
 	Vector3 m_moveDir = Vector3::Zero;
-
+	/** 休憩しない牛の移動速度*/
+	Vector3 m_moving = Vector3::Zero;
 	/** 牛の移動速度 */
 	float m_moveSpeed = 50.0f;
 
@@ -275,6 +299,8 @@ private:
 
 	/** 近くの餌を追いかけるフラグ */
 	bool m_isTargetFood = false;
+	/** 牛がUFOに向かって進むフラグ*/
+	bool m_isUFOAttracted = false;
 
 	enum EnAnimation
 	{

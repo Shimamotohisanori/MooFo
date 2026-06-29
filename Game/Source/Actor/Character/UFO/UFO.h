@@ -61,6 +61,7 @@ public:
 	{
 		return m_isCowTakeAwayed;
 	}
+
 	/** UFOの混乱エフェクトを再生する関数 */
 	void PlayEffect();
 
@@ -82,12 +83,17 @@ public:
 	{
 		m_targetCow = nullptr;
 	}
-
+	/** 光が出ているかどうかを取得する関数*/
 	bool IsLightEmitting()const
 	{
 		return m_cowCaptureController.GetIsEmitting();
 	}
 
+
+	bool IsPendingKill()const
+	{
+		return m_isPendingkill;
+	}
 
 private:
 	/* 牛を連れていく関数 */
@@ -156,7 +162,10 @@ private:
 	bool m_isChasing = false;
 	/** UFOを一度だけ設定するフラグ */
 	bool m_isSetUFO = false;
-
+	/**安全に消すためのフラグ */
+	bool m_isPendingkill = false;
+	/** 一度だけ回転ステートにするフラグ*/
+	bool m_hasRotatatedTargetCow = false;
 	/** 出現演出*/
 	bool m_isSpawning = false;
 	float m_spawnTimer = 0.0f;

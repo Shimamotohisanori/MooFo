@@ -97,7 +97,7 @@ void CowCaptureController::PlayLightEffect()
 
 		/** UFO のライトは大きい方が見える */
 		m_ufoLightEffect->SetScale({ 2.0f, 3.8f, 2.0f });
-				/** UFOの光エフェクトを再生 */
+		/** UFOの光エフェクトを再生 */
 		m_ufoLightEffect->Play();
 	}
 	

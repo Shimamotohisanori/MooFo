@@ -96,6 +96,7 @@ void CowFoodManager::SetNearestCow(CowLuring* food)
 	/** 食べていない牛の中から餌に最も近い牛を探す */
 	for (auto cow : cows)
 	{
+		
 		/** 食べている最中の牛はターゲット選択から除外する */
 		Vector3 diff = cow->GetPosition() - food->GetPosition();
 

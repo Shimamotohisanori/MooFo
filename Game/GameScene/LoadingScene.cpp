@@ -272,6 +272,9 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		{
 		Cow* cow = NewGO<Cow>(0, "cow");
 		cow->SetPosition(RandomCowPos());
+		/** 0～9の数字を割り当てる*/
+		int cowIndex = m_loadStep - 2;
+		cow->SetUFOAttracted(cowIndex % 2 == 0);
 		m_tempCows.push_back(cow);
 	} break;
 
