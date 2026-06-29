@@ -7,6 +7,7 @@
 #include "Pause/Pause.h"
 #include "SoundManager/SoundManager.h"
 #include "Source/Actor/Stage/CowFood.h"
+#include "EffectManager/EffectManager.h"
 
 namespace
 {
@@ -55,6 +56,8 @@ namespace
 
 	/** ロープを引っ張る画像の高さ */
 	constexpr float PULLROPE_SPRITE_HEIGHT = 250.0f;
+
+	const Vector3 EFFECT_SCALE = {5.0f,5.0f,5.0f};
 }
 
 Player::Player()
@@ -331,6 +334,17 @@ void Player::PullRope()
 
 				m_isRightButton1_Trigger = true;
 				m_isLeftButton1_Trigger = false;
+				/** 汗をかくエフェクトを再生させる。 */
+				m_sweatEffect = NewGO<nsK2EngineLow::EffectEmitter>(0);
+				m_sweatEffect->Init((int)EffectID::EffectID_PlayerSweat);
+
+				Vector3 pos = m_transform.GetPosition();
+				Vector3 newPos = { pos.x,pos.y + 40.0f,pos.z };
+
+				m_sweatEffect->SetPosition(newPos);
+				m_sweatEffect->SetScale(EFFECT_SCALE);
+				m_sweatEffect->Play();
+				m_sweatEffect->Update();
 			}
 			/** LB1ボタンが押されたとき */
 			else if (g_pad[0]->IsTrigger(enButtonLB1))
@@ -341,6 +355,18 @@ void Player::PullRope()
 
 				m_isLeftButton1_Trigger = true;
 				m_isRightButton1_Trigger = false;
+
+				/** 汗をかくエフェクトを再生させる。 */
+				m_sweatEffect = NewGO<nsK2EngineLow::EffectEmitter>(0);
+				m_sweatEffect->Init((int)EffectID::EffectID_PlayerSweat);
+
+				Vector3 pos = m_transform.GetPosition();
+				Vector3 newPos = { pos.x,pos.y + 60.0f,pos.z };
+
+				m_sweatEffect->SetPosition(newPos);
+				m_sweatEffect->SetScale(EFFECT_SCALE);
+				m_sweatEffect->Play();
+				m_sweatEffect->Update();
 			}
 
 			/** RB1かLB1のどちらかが押されたとき、引っ張りアニメーションを交互に切り替える */
