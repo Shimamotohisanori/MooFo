@@ -352,7 +352,6 @@ void UFO::TakeAwayTheCow()
 
 	/** 牛を回転状態にする */
 	m_targetCow->ChangeRotationState();
-
 	/** UFOの位置に牛を近づける */
 	Vector3 cowPos = m_targetCow->GetPosition();
 	Vector3 ufoPos = m_transform.GetPosition();
@@ -408,7 +407,7 @@ void UFO::TakeAwayTheCow()
 		m_targetCow = nullptr;
 		m_isCowTakeAwayed = false;
 		m_isChasing = false;
-		m_failCount = 0;
+		//m_failCount = 0;
 
 		return;
 	}
@@ -488,6 +487,9 @@ void UFO::ConfusedAscent()
 		{
 			game->RequestUFORespawn(m_slotIndex);
 		}
+
+		/** 削除される前にフラグを立てる*/
+		m_isPendingkill = true;
 		DeleteGO(this);
 	}
 }

@@ -127,6 +127,8 @@ void Cow::Update()
 		return;
 	}
 
+
+		
 	/** アップデートできるかどうかを判断する関数 */
 	if (!CanUpdate())
 	{
@@ -219,13 +221,58 @@ void Cow::Move()
 	/** 削除予約されている、もしくは死んでいるなら移動しない */
 	if (m_isPendingKill || m_isDeadFlag) return;
 
+	if ((m_isTakeAwayed))
+	{
+		return;
+	}
 	/** ロープに捕まっているときは移動しない */
 	if (m_isCaptured) return;
+
+	if (m_isUFOAttracted)
+	{
+		if (m_targetUFO != nullptr)
+		{
+			if (m_targetUFO->IsPendingKill() || !m_targetUFO->IsLightEmitting() ||m_targetUFO->GetIsCowTakeAwayed())
+			{
+				m_targetUFO = nullptr;
+			}
+		}
+		/** まだターゲットになるUFOが決まっていなければここで決める*/
+		if (m_targetUFO == nullptr)
+		{
+			m_targetUFO = FindNearestEmittingUFO();
+		}
+		/** 決まっていたら、UFOに向かって歩く処理を行う。*/
+		if (m_targetUFO != nullptr)
+		{
+			MoveTowardUFO(m_targetUFO);
+			return;
+		}
+	}
 
 	/** タイマーが0以上なら新しい方向を決める */
 	if (m_moveTimer <= 0)
 	{
-		if (m_isMove)
+		if (m_isUFOAttracted)
+		{
+			Vector3 dir
+			{
+				static_cast <float>(rand() % 3 - 1),
+				0.0f,
+				static_cast <float>(rand() % 3 - 1)
+			};
+
+			/** 0,0,0,になっても休憩させずに別の方向を強制的に与える*/
+			if (dir.LengthSq() == 0)
+			{
+				dir = Vector3(1, 0, 0);
+			}
+			dir.Normalize();
+			m_moveDir = dir * 100.0f;
+			m_moveTimer = rand() % RANDOMCOW_TIMER;
+			m_isMove = true;
+		}
+		else if (m_isMove)
 		{
 			Vector3 dir
 			(
@@ -287,6 +334,76 @@ void Cow::Rotation()
 		m_transform.SetRotation(m_transform.GetRotation());
 	}
 }
+
+UFO* Cow::FindNearestEmittingUFO()
+{
+	if (m_isTakeAwayed)
+	{
+		return nullptr;
+	}
+
+	/** ゲームが空なら情報を読ませる*/
+	if (m_game == nullptr)
+	{
+		m_game = FindGO<Game>("game");
+		/** それでも空ならnullptrを返す*/
+		if (m_game == nullptr)
+		{
+			return nullptr;
+		}
+	}
+	/** UFOのリストを読み込む*/
+	std::vector<UFO*>ufos = m_game->GetUFOs();
+
+	UFO* nearestUFO = nullptr;
+	float nearestDistsq = FLT_MAX;
+
+	for (auto ufo : ufos)
+	{
+		/** ufoがnullptrなら処理を飛ばす*/
+		if (ufo == nullptr)continue;
+		/** ufoの光が出ていなければ処理を飛ばす*/	
+		if (!ufo->IsLightEmitting())continue;
+
+		/** 既に連れ去り中のUFOは対象外にする*/
+		if (ufo->GetIsCowTakeAwayed())continue;
+		float distSq = (ufo->GetPosition() - m_transform.GetPosition()).LengthSq();
+
+		if (distSq < nearestDistsq)
+		{
+			nearestDistsq = distSq;
+			nearestUFO = ufo;
+		}
+	}
+
+	return nearestUFO;
+}
+
+void Cow::MoveTowardUFO(UFO* ufo)
+{
+	
+	Vector3 toUFO = ufo->GetPosition() - m_transform.GetPosition();
+	toUFO.y = 0.0f;
+
+	if (toUFO.LengthSq() > 0.0001f)
+	{
+		toUFO.Normalize();
+	}
+	/** 回転も入れる*/
+	m_moveDir = toUFO * 100.0f;
+	m_moving = toUFO * m_moveSpeed * 2.0f;
+
+	Vector3 pos = m_cowCharacterController.Execute(m_moving, g_gameTime->GetFrameDeltaTime());
+
+	m_transform.SetPosition(pos);
+	m_cowmodelRender.SetPosition(pos);
+
+	m_isMove = true;
+	m_moveTimer = 0.0f;
+	
+}
+
+
 
 void Cow::SearchNearestFood()
 {
@@ -375,6 +492,9 @@ void Cow::MoveToFood()
 	m_transform.SetPosition(newPos);
 	m_cowmodelRender.SetPosition(newPos);
 }
+
+
+
 
 void Cow::Eating()
 {

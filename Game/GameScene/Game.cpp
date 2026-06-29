@@ -471,6 +471,7 @@ void Game::SpawnCow()
 			/** 新しい牛を生成 */
 			Cow* newCow = NewGO<Cow>(0, "cow");
 
+			
 			/** スポーン位置（例：ランダム） */
 			Vector3 pos;
 
@@ -483,8 +484,11 @@ void Game::SpawnCow()
 			pos.y = 0.0f;
 			pos.z = (rand() % (range * 2)) - range;
 
+			/** ここでUFOに向かって歩く牛を生成させる*/
+			newCow->SetUFOAttracted(rand() % 2 == 0);
+			/** UFOに向かって歩く牛の速度も適応させる*/
+			newCow->IsMoving();
 			newCow->SetPosition(pos);
-
 			/** 生きている牛リストに追加 */
 			m_aliveCows.push_back(newCow);
 		}
