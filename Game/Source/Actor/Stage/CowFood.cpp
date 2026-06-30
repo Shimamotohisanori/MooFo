@@ -7,6 +7,7 @@
 #include "CowFoodManager.h"
 #include"GameScene/Game.h"
 #include"GameScene/LoadingScene.h"
+#include"Pause/Pause.h"
 #include "SoundManager/SoundManager.h"
 
 namespace
@@ -149,8 +150,14 @@ void CowFood::Update()
 	/** カウントダウンのインスタンスを取得する */
 	m_CountDown = FindGO<CountDown>("countdown");
 
+	m_pause = FindGO<Pause>("pause");
 	/** カウントダウン中は処理をスキップする */
 	if (m_CountDown && m_CountDown->GetCountDown())
+	{
+		return;
+	}
+	/** Pause中は餌を置けないようにする*/
+	if (m_pause&& m_pause->GetIsPause())
 	{
 		return;
 	}
@@ -240,6 +247,16 @@ void CowFood::Update()
 
 void CowFood::CowFoodPut()
 {
+	/**フェード完了まで餌を置けないようにする*/
+	LoadingScene* lodingScene = FindGO<LoadingScene>("loading");
+	if (lodingScene != nullptr && !lodingScene->GetLoadingEnd())
+	{
+		return;
+	}
+
+
+	
+
 	Player* player = FindGO<Player>("player");
 
 	/** 牛の餌を置くことができないエリアにいるかどうかの判定 */

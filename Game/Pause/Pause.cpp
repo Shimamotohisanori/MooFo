@@ -59,7 +59,7 @@ bool Pause::Start()
 
 	m_soundPause->Deactivate();
 
-
+	
 	m_game = FindGO<Game>("game");
 	m_choiceSound = FindGO<SoundManager>("soundmanager");
 	
@@ -73,6 +73,7 @@ void Pause::Update()
 {
 	CountDown* countDown = FindGO<CountDown>("countdown");
 
+	
 	/** カウントダウンが終わるまではポーズ画面の操作を受け付けない */
 	if (!countDown || countDown->GetCountDown())
 	{
@@ -84,7 +85,8 @@ void Pause::Update()
 	{
 		return;
 	}
-
+	
+	
 	Choice();
 	Select();
 
@@ -166,6 +168,8 @@ void Pause::Select()
 
 void Pause::Render(RenderContext& rc)
 {
+	
+
 	m_pauseBackGround.Draw(rc);
 	m_quiteSprite.Draw(rc);
 	m_resumeSprite.Draw(rc);

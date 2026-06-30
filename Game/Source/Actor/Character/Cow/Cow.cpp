@@ -120,6 +120,7 @@ void Cow::Update()
 		{
 			m_takingUFO->SetIsCowTakeAwayed(false);
 			m_takingUFO->ReMoveTargetCow();
+			m_takingUFO = nullptr;
 		}
 
 		/** Game に「この牛を aliveCows から消して」と伝える */
@@ -249,6 +250,11 @@ void Cow::Move()
 			if (m_targetUFO->IsPendingKill() || !m_targetUFO->IsLightEmitting() ||m_targetUFO->GetIsCowTakeAwayed())
 			{
 				m_targetUFO = nullptr;
+
+			/** ターゲットを失ったら移動方向と速度をリセットし、即座に休止させる*/
+				m_moveDir = Vector3::Zero;
+				m_moveTimer = 0.0f;
+				m_isMove = false;
 			}
 		}
 		/** まだターゲットになるUFOが決まっていなければここで決める*/
@@ -404,7 +410,7 @@ void Cow::MoveTowardUFO(UFO* ufo)
 		toUFO.Normalize();
 	}
 	/** 回転も入れる*/
-	m_moveDir = toUFO * 100.0f;
+	m_moveDir = toUFO * 90.0f;
 	m_moving = toUFO * m_moveSpeed * 2.0f;
 
 	Vector3 pos = m_cowCharacterController.Execute(m_moving, g_gameTime->GetFrameDeltaTime());

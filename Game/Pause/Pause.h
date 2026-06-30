@@ -3,6 +3,7 @@ class Game;
 class SoundPause;
 class SoundManager;
 class LoadingScene;
+class Timer;
 class Pause : public IGameObject
 {
 public:
@@ -50,7 +51,8 @@ private:
 	/** ポーズ中かどうかのフラグ*/
 	bool m_isPause = false;
 	/** ゲームのポインタ*/
-	Game* m_game = nullptr;
+	Game* m_game = nullptr;	
+
 	/** ローディングシーンのポインタ*/
 	LoadingScene* m_loadingScene = nullptr;
 	/** サウンドポーズのポインタ*/
