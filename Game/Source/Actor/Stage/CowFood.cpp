@@ -38,6 +38,9 @@ namespace
 	/** 牛の餌を置くことができないエリアの座標 */
 	const Vector3 COWFOOD_PUT_TABOO_POS = { -1320.0f,0.0f,10.0f };
 
+	/** 牛の餌を置くエフェクトのスケール */
+	const Vector3 EFFECT_SCALE = { 7.5f,7.5f,7.5f };
+
 	/** 牛の餌を置くことができないエリアの半径 */
 	constexpr float COWFOOD_PUT_TABOO_RADIUS = 300.0f;
 }
@@ -288,6 +291,14 @@ void CowFood::CowFoodPut()
 		/** 餌の残数があり、まだ設置中でなければ */
 		if (m_foodCount > 0 && !m_isPutPlayer)
 		{
+			/** 牛の餌を置くエフェクトを再生させる */
+			m_foodAreaEffect = NewGO<nsK2EngineLow::EffectEmitter>(0);
+			m_foodAreaEffect->Init((int)EffectID::EffectID_FoodArea);
+			m_foodAreaEffect->SetPosition(pos);
+			m_foodAreaEffect->SetScale(EFFECT_SCALE);
+			m_foodAreaEffect->Play();
+			m_foodAreaEffect->Update();
+
 			/** 餌の残数を1減らす */
 			/** 牛の餌を置く音を再生させる。*/
 			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");

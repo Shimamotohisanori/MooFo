@@ -90,6 +90,9 @@ private:
 	/** 牛舎付近のエフェクト */
 	EffectEmitter* m_barnNearEffect = nullptr;
 
+	/** 牛の餌を置くエフェクト */
+	EffectEmitter* m_foodAreaEffect = nullptr;
+
 	/** 縄のクラス */
 	Rope* m_rope = nullptr;
 	/** ゲームクラス*/

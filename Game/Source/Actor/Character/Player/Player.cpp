@@ -338,10 +338,12 @@ void Player::PullRope()
 				m_sweatEffect = NewGO<nsK2EngineLow::EffectEmitter>(0);
 				m_sweatEffect->Init((int)EffectID::EffectID_PlayerSweat);
 
-				Vector3 pos = m_transform.GetPosition();
-				Vector3 newPos = { pos.x,pos.y + 40.0f,pos.z };
+				Vector3 pos =
+				{
+					m_transform.GetPosition().x,m_transform.GetPosition().y + 60.0f,m_transform.GetPosition().z
+				};
 
-				m_sweatEffect->SetPosition(newPos);
+				m_sweatEffect->SetPosition(pos);
 				m_sweatEffect->SetScale(EFFECT_SCALE);
 				m_sweatEffect->Play();
 				m_sweatEffect->Update();
@@ -360,10 +362,12 @@ void Player::PullRope()
 				m_sweatEffect = NewGO<nsK2EngineLow::EffectEmitter>(0);
 				m_sweatEffect->Init((int)EffectID::EffectID_PlayerSweat);
 
-				Vector3 pos = m_transform.GetPosition();
-				Vector3 newPos = { pos.x,pos.y + 60.0f,pos.z };
+				Vector3 pos = 
+				{ 
+					m_transform.GetPosition().x,m_transform.GetPosition().y + 60.0f,m_transform.GetPosition().z 
+				};
 
-				m_sweatEffect->SetPosition(newPos);
+				m_sweatEffect->SetPosition(pos);
 				m_sweatEffect->SetScale(EFFECT_SCALE);
 				m_sweatEffect->Play();
 				m_sweatEffect->Update();
