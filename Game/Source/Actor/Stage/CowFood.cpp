@@ -264,8 +264,8 @@ void CowFood::CowFoodPut()
 		return;
 	}
 
-
-	
+	/** ポーズがない場合は早期リターン */
+	if (!m_pause) return;
 
 	Player* player = FindGO<Player>("player");
 
