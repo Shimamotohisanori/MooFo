@@ -15,6 +15,7 @@ enum class EffectID
 	EffectID_CowDeleteEffect,/**牛が削除されるときのエフェクト*/
 	EffectID_PlayerSweat,/** プレイヤーが汗をかくときのエフェクト */
 	EffectID_FoodArea, /** 牛の餌を置いた際のエフェクト */
+	EffectID_AfterMeal, /** 牛が餌を食べ終わった後のエフェクト */
 	EffectID_Num
 };
 

@@ -8,7 +8,6 @@
 #include"GameScene/Game.h"
 #include"GameScene/LoadingScene.h"
 #include "SoundManager/SoundManager.h"
-#include "Source/Actor/Character/Cow/CowLuring.h"
 
 namespace
 {

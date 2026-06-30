@@ -72,4 +72,11 @@ void EffectManager::LoadEffects()
 		(
 			(int)EffectID::EffectID_FoodArea, u"Assets/Effects/foodArea.efk"
 		);
+
+	/** 牛が餌を食べ終わった後のエフェクト */
+	nsK2EngineLow::EffectEngine::GetInstance()
+		->ResistEffect
+		(
+			(int)EffectID::EffectID_AfterMeal, u"Assets/Effects/afterMeal.efk"
+		);
 }

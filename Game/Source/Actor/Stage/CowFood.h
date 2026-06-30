@@ -4,7 +4,6 @@ class CountDown;
 class CowFoodManager;
 class LoadingScene;
 class Game;
-class CowLuring;
 class CowFood : public IGameObject
 {
 public:
@@ -101,9 +100,6 @@ private:
 
 	/** カウントダウン */
 	CountDown* m_CountDown = nullptr;
-
-	/** 牛の餌のクラス */
-	CowLuring* m_cowLuring = nullptr;
 
 	/** 牛の餌の管理 */
 	CowFoodManager* m_CowFoodManager = nullptr;
