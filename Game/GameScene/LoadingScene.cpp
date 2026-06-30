@@ -269,7 +269,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	case 9:
 	case 10:
 	case 11:
-		{
+	{
 		Cow* cow = NewGO<Cow>(0, "cow");
 		cow->SetPosition(RandomCowPos());
 		/** 0～9の数字を割り当てる*/
@@ -278,7 +278,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		m_tempCows.push_back(cow);
 	} break;
 
-		/** もしUFOが消えていなかったら残っているUFOを消す */
+	/** もしUFOが消えていなかったら残っているUFOを消す */
 	case 12:
 	{
 		auto ufos = FindGOs<UFO>("UFO");
@@ -292,7 +292,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		break;
 	}
 
-		/** UFOLightManagerを生成 */
+	/** UFOLightManagerを生成 */
 	case 13:
 		NewGO<UFOLightManager>(0, "ufolightmanager");
 		break;
@@ -315,21 +315,13 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		}
 	} break;
 
-		/** ゲームカメラを生成 */
-	case 18: NewGO<GameCamera>(0, "gameCamera"); 
+	/** ゲームカメラを生成 */
+	case 18: NewGO<GameCamera>(0, "gameCamera");
 		break;
 		/** スカイキューブを生成 */
 	case 19:
 	{
-		/** 牛の餌を生成 */
-		NewGO<CowFood>(0, "cowfood");
-		NewGO<CowFoodManager>(0, "cowfoodmanager");
-	}
-	break;
-		/** スカイキューブを生成 */
-	case 20:
-	{
-		
+
 		/** SkyCube を生成 */
 		SkyCube* sky = NewGO<SkyCube>(0, "skyCube");
 
@@ -351,22 +343,27 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		g_renderingEngine->SetBloomThreshold(3.0f);
 	} break;
 
-		/** ゲーム本体を生成 */
-	case 21:
-		Game* game =NewGO<Game>(0, "game");
+	/** ゲーム本体を生成 */
+	case 20:
+	{
+		Game* game = NewGO<Game>(0, "game");
 
 		/** ロードした牛をゲームに渡す */
 		for (auto cow : m_tempCows)
 		{
 			game->GetAliveCows().push_back(cow);
 		}
-		
+
 		/** ロードしたUFOをゲームに渡す */
 		game->SetUFOList(m_tempUFOs);
-
+	}break;
+	case 21:
+		/** 牛の餌を生成 */
+		NewGO<CowFoodManager>(0, "cowfoodmanager");
+		NewGO<CowFood>(0, "cowfood");
 		m_isSceneFadeOut = true;
 		m_isLoadingEnd = true;
-		//DeleteGO(this);
+
 		return;
 	}
 

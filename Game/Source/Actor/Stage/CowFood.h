@@ -99,6 +99,9 @@ private:
 	/** ゲームクラス*/
 	Game* m_game = nullptr;
 
+	/** ポーズ画面のクラス */
+	Pause* m_pause = nullptr;
+
 	/** カウントダウン */
 	CountDown* m_CountDown = nullptr;
 

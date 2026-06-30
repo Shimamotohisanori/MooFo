@@ -103,6 +103,8 @@ private:
 	/** 決定する時のSEのサウンドソースのポインタ*/
 	SoundSource* p_decisionSE = nullptr;
 
+	
+
 private:
 	/** ゲームのポインタ*/
 	Pause* m_pause = nullptr;
