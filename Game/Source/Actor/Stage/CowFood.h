@@ -114,8 +114,6 @@ private:
 	/** 牛の餌を取る音 */
 	SoundSource* m_takehaySE = nullptr;
 
-	Pause* m_pause = nullptr;
-
 	/** 餌禁止のエリアにいるかどうか */
 	bool m_isInTabooArea = false;
 };
