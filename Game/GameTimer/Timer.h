@@ -21,7 +21,11 @@ class Timer : public IGameObject
 	{
 		return m_timer;
 	}
-
+	/** ５秒前のSEを流しているかどうかの情報を取得する関数*/
+	 bool IsFiveCountDown()const
+	{
+		return m_isFiveTimer;
+	}
 
 public:
 	/** タイマーの処理 */

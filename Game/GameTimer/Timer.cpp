@@ -234,8 +234,10 @@ void Timer::TextTimer()
 	/** 5秒以下のカウントアニメーション処理*/
 	if (time <= 5)
 	{
+		m_isFiveTimer = true;
 		if (!m_isPlaySE)
 		{
+
 			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
 
 			/** SEを再生*/
@@ -244,7 +246,7 @@ void Timer::TextTimer()
 
 		}
 
-		m_isFiveTimer = true;
+		
 		/** 1秒ごとに0～1を繰り返すローカルのタイムを作る*/
 		float localTime = fmodf(m_timer, 1.0f);
 		m_animAlpha = 1.0f - (localTime / 1.0f);

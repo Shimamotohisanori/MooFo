@@ -358,6 +358,7 @@ void UFO::TakeAwayTheCow()
 
 	Vector3 dir = ufoPos - cowPos;
 	float dist = dir.Length();
+	
 
 	/** 牛とUFOの距離が0.5以上だったら牛をUFOに近づける */
 	if (dist > 0.5f)
@@ -630,6 +631,15 @@ void UFO::FindTheCow()
 		}
 	}
 
+	/** 前回ターゲットだった牛が今回選ばれなかった場合は解放する*/ 
+	if (m_targetCow != nullptr && m_targetCow != nearestCow)
+	{
+		if (m_targetCow->GetTakingUFO() == this)
+		{
+			m_targetCow->SetTakingUFO(nullptr);
+		}
+	}
+
 	/** 近くに牛が見つかっているかどうか */
 	if (nearestCow)
 	{
@@ -641,6 +651,8 @@ void UFO::FindTheCow()
 
 		/**  追尾中だったらtrue */
 		m_isChasing = true;
+
+		m_targetCow = nearestCow;  // ★ここで明示的に更新（既存コードでも実質同じだが明確化）
 
 		/** 牛の方向を作る */
 		Vector3 dir = nearestCow->GetPosition() - m_transform.GetPosition();

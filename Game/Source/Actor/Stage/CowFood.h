@@ -4,6 +4,7 @@ class CountDown;
 class CowFoodManager;
 class LoadingScene;
 class Game;
+class Pause;
 class CowFood : public IGameObject
 {
 public:
@@ -109,6 +110,8 @@ private:
 
 	/** 牛の餌を取る音 */
 	SoundSource* m_takehaySE = nullptr;
+
+	Pause* m_pause = nullptr;
 
 	/** 餌禁止のエリアにいるかどうか */
 	bool m_isInTabooArea = false;
