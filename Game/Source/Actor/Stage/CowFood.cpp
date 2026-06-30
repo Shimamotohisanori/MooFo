@@ -8,6 +8,7 @@
 #include"GameScene/Game.h"
 #include"GameScene/LoadingScene.h"
 #include "SoundManager/SoundManager.h"
+#include "Pause/Pause.h"
 
 namespace
 {
@@ -163,6 +164,12 @@ void CowFood::Update()
 
 	/** ゲームクラスを見つける */
 	m_game = FindGO<Game>("game");
+
+	/** ポーズ画面のインスタンスを取得する */
+	if (m_pause == nullptr)
+	{
+		m_pause = FindGO<Pause>("pause");
+	}
   
 	/** 餌を置く処理を実行する */
 	CowFoodPut();
@@ -286,7 +293,8 @@ void CowFood::CowFoodPut()
 	pos.y = 0.0f;
 
 	/** ロープを投げておらず、牛に当たっておらず、LB2ボタンが押されたら */
-	if (!m_rope->GetIsThrowRope() && !m_rope->GetIsHitCow() && g_pad[0]->IsTrigger(enButtonLB2))
+	if (!m_rope->GetIsThrowRope() && !m_rope->GetIsHitCow() &&
+		!m_pause->GetIsPause() && g_pad[0]->IsTrigger(enButtonLB2))
 	{
 		/** 餌の残数があり、まだ設置中でなければ */
 		if (m_foodCount > 0 && !m_isPutPlayer)
@@ -332,6 +340,11 @@ void CowFood::Render(RenderContext& rc)
 	/**フェード完了までUIの表示を遅らす*/
 	LoadingScene* lodingScene = FindGO<LoadingScene>("loading");
 	if (lodingScene != nullptr && !lodingScene->GetLoadingEnd())
+	{
+		return;
+	}
+
+	if (m_pause && m_pause->IsActive())
 	{
 		return;
 	}
