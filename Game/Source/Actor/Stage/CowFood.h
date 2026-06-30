@@ -4,6 +4,7 @@ class CountDown;
 class CowFoodManager;
 class LoadingScene;
 class Game;
+class CowLuring;
 class CowFood : public IGameObject
 {
 public:
@@ -90,6 +91,9 @@ private:
 	/** 牛舎付近のエフェクト */
 	EffectEmitter* m_barnNearEffect = nullptr;
 
+	/** 牛の餌を置くエフェクト */
+	EffectEmitter* m_foodAreaEffect = nullptr;
+
 	/** 縄のクラス */
 	Rope* m_rope = nullptr;
 	/** ゲームクラス*/
@@ -97,6 +101,9 @@ private:
 
 	/** カウントダウン */
 	CountDown* m_CountDown = nullptr;
+
+	/** 牛の餌のクラス */
+	CowLuring* m_cowLuring = nullptr;
 
 	/** 牛の餌の管理 */
 	CowFoodManager* m_CowFoodManager = nullptr;

@@ -65,4 +65,11 @@ void EffectManager::LoadEffects()
 	/** プレイヤーが汗をかくエフェクト(引っ張り時) */
 	nsK2EngineLow::EffectEngine::GetInstance()
 		->ResistEffect((int)EffectID::EffectID_PlayerSweat, u"Assets/Effects/sweat.efk");
+
+	/** 牛の餌を置いた際のエフェクト */
+	nsK2EngineLow::EffectEngine::GetInstance()
+		->ResistEffect
+		(
+			(int)EffectID::EffectID_FoodArea, u"Assets/Effects/foodArea.efk"
+		);
 }

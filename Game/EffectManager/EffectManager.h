@@ -14,6 +14,7 @@ enum class EffectID
 	EffectID_UFOConfusionEffect_3,/**救出されたら出るUFOの混乱エフェクト(3段階目)*/
 	EffectID_CowDeleteEffect,/**牛が削除されるときのエフェクト*/
 	EffectID_PlayerSweat,/** プレイヤーが汗をかくときのエフェクト */
+	EffectID_FoodArea, /** 牛の餌を置いた際のエフェクト */
 	EffectID_Num
 };
 
