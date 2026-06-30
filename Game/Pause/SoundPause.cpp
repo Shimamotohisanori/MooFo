@@ -26,8 +26,11 @@ bool SoundPause::Start()
 	m_backGroundSprite.Init("Assets/sprite/PauseUI/pauseBackGround2.dds", 1980.0f, 1080.0f);
 	m_backGroundSprite.Update();
 
-	m_settingSprite.Init("Assets/sprite/PauseUI/setting.dds", 1200.0f, 500.0f);
+	m_settingSprite.Init("Assets/sprite/PauseUI/setting2.dds", 1200.0f, 500.0f);
 	m_settingSprite.Update();
+
+	m_grayBarSprite.Init("Assets/sprite/PauseUI/graybar.dds", 1200.0f, 500.0f);
+	m_grayBarSprite.Update();
 
 	m_buttonReturnSprite.Init("Assets/sprite/PauseUI/buttonReturn.dds", 450.0f, 200.0f);
 	m_buttonReturnSprite.SetPosition(RETURNPOS);
@@ -204,18 +207,6 @@ void SoundPause::Barse()
 		if (g_pad[0]->IsPress(enButtonRight))
 		{
 			m_seVolume += 0.01f;
-
-			/** アイコン位置更新 */
-			m_seIconSprite.SetPosition(Vector3(-380.0f + m_seVolume * 750.0f, -120.0f, 0.0f));
-			m_seIconSprite.Update();
-
-			/** バー更新 */
-			m_seBlownBarSprite.SetScale(Vector3(m_seVolume, 1.0f, 0.0f));
-			m_seBlownBarSprite.Update();
-
-			/** 黒アイコン更新 */
-			m_seBlackIcon.SetPosition(Vector3(-380.0f + m_seVolume * 750.0f, -120.0f, 0.0f));
-			m_seBlackIcon.Update();
 		}
 	}
 
@@ -225,21 +216,13 @@ void SoundPause::Barse()
 		if (g_pad[0]->IsPress(enButtonLeft))
 		{
 			m_seVolume -= 0.01f;
-
-			/** 同様にUI更新 */
-			m_seIconSprite.SetPosition(Vector3(-380.0f + m_seVolume * 750.0f, -120.0f, 0.0f));
-			m_seIconSprite.Update();
-
-			m_seBlownBarSprite.SetScale(Vector3(m_seVolume, 1.0f, 0.0f));
-			m_seBlownBarSprite.Update();
-
-			m_seBlackIcon.SetPosition(Vector3(-380.0f + m_seVolume * 750.0f, -120.0f, 0.0f));
-			m_seBlackIcon.Update();
 		}
 	}
 
 	/** SE音量をSoundManagerに反映 */
 	m_choiceSound->m_seVolume = m_seVolume;
+
+	UpdateSEUI();
 }
 
 void SoundPause::UpdateBGMUI()
@@ -277,14 +260,8 @@ void SoundPause::UpdateSEUI()
 void SoundPause::Render(RenderContext& rc)
 {
 	m_backGroundSprite.Draw(rc);
-	m_settingSprite.Draw(rc);
+	m_grayBarSprite.Draw(rc);
 	m_buttonReturnSprite.Draw(rc);
-	m_volumeSprite.Draw(rc);
-	m_notVolumeSprite.Draw(rc);
-	m_seVolumeSprite.Draw(rc);
-	m_seNotVolumeSprite.Draw(rc);
-	m_bgmSprite.Draw(rc);
-	m_seSprite.Draw(rc);
 
 	/** BGM音量バー描画 */
 	if (m_bgmVolume > 0.05f)
@@ -297,6 +274,14 @@ void SoundPause::Render(RenderContext& rc)
 	{
 		m_seBlownBarSprite.Draw(rc);
 	}
+
+	m_settingSprite.Draw(rc);
+	m_volumeSprite.Draw(rc);
+	m_notVolumeSprite.Draw(rc);
+	m_seVolumeSprite.Draw(rc);
+	m_seNotVolumeSprite.Draw(rc);
+	m_bgmSprite.Draw(rc);
+	m_seSprite.Draw(rc);
 
 	/** BGM選択アイコン描画 */
 	if (m_Count == 0)
