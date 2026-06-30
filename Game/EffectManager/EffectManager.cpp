@@ -13,7 +13,7 @@ void EffectManager::LoadEffects()
 	/** UFOの光*/
 	nsK2EngineLow::EffectEngine::GetInstance()->ResistEffect(
 		(int)EffectID::EffectID_UFOLight,
-		u"Assets/Effects/UFOLight.efk"
+		u"Assets/Effects/UFOLight2.efk"
 	);
 
 	/** 救出された牛が出すハート*/
