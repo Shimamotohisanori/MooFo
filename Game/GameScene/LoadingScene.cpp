@@ -534,7 +534,10 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		break;
 	case 20:
 	{
+		/** 牛の餌を生成 */
+		NewGO<CowFood>(0, "cowfood");
 
+		 NewGO<CowFoodManager>(0, "cowfoodmanager");
 	}
 	break;
 	/** スカイキューブを生成 */
