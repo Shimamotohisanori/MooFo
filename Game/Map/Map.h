@@ -5,6 +5,7 @@ class UFO;
 class Pause;
 class Game;
 class LodingScene;
+class CowFoodManager;
 class Map : public IGameObject
 {
 public:
@@ -14,47 +15,57 @@ public:
 	void Update();
 	void Render(RenderContext& rc);
 private:
-	/** ƒ[ƒ‹ƒhÀ•WŒn‚©‚çƒ}ƒbƒvÀ•WŒn‚É•ÏŠ· */
+	/** ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã‹ã‚‰ãƒãƒƒãƒ—åº§æ¨™ç³»ã«å¤‰æ› */
 	bool WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3 cowPosition, Vector3& mapPosition);
 	
 	std::vector<UFO*> m_ufos;
 
-	/** ƒ}ƒbƒv‚Ì‰æ‘œ */
+	/** ãƒãƒƒãƒ—ã®ç”»åƒ */
 	SpriteRender m_mapSprite;
 
-	/** ƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚Ì‰æ‘œ */
+	/** ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ */
 	SpriteRender m_playerSprite;
 
-	/** ‹ƒAƒCƒRƒ“‚Ì‰æ‘œ */
+	/** ç‰›ã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ */
 	SpriteRender m_cowSprite[10];
 
-	/** UFOƒAƒCƒRƒ“‚Ì‰æ‘œ */
+	/** UFOã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ */
 	SpriteRender m_ufoSprite[4];
 
-	/** ŠëŒ¯ƒAƒCƒRƒ“‚Ì‰æ‘œ */
+	/** å±é™ºã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ */
 	SpriteRender m_dangerSprite[4];
-	/** –îˆóƒAƒCƒRƒ“‚Ì‰æ‘œ*/
+
+	/** çŸ¢å°ã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ*/
 	SpriteRender m_arrowSprite[4];
 
-	/** ƒAƒEƒgƒ‰ƒCƒ“ƒAƒCƒRƒ“‚Ì‰æ‘œ */
+	/** é¤Œã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ */
+	SpriteRender m_foodSprite[2];
+
+	/** ã‚¢ã‚¦ãƒˆãƒ©ã‚¤ãƒ³ã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ */
 	SpriteRender m_outLineSprite;
-	/** ƒvƒŒƒCƒ„[‚Ìƒ|ƒCƒ“ƒ^ */
+	/** ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒã‚¤ãƒ³ã‚¿ */
 	Game* m_game = nullptr;
-	/** ƒvƒŒƒCƒ„[‚Ìƒ|ƒCƒ“ƒ^ */
+	/** ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒã‚¤ãƒ³ã‚¿ */
 	Player* m_player = nullptr;
 
-	/** ƒ|[ƒY‚Ìƒ|ƒCƒ“ƒ^ */
+	/** ãƒãƒ¼ã‚ºã®ãƒã‚¤ãƒ³ã‚¿ */
 	Pause* m_pause = nullptr;
-	/** ƒ}ƒbƒv‚Ì‰ñ“]Šp“x */
+
+	/** ç‰›ã®é¤Œã®ãƒã‚¤ãƒ³ã‚¿ */
+	CowFoodManager* m_cowFoodManager = nullptr;
+
+	/** ãƒãƒƒãƒ—ã®å›è»¢è§’åº¦ */
 	float m_mapAngle = 0.0f;
 
 	float m_flashTImer = 0.0f;
-	/** –îˆó‚ÌŠp“x*/
+	/** çŸ¢å°ã®è§’åº¦*/
 	float m_arrowAngle[4];
-	/** ƒ}ƒbƒv“à‚É•\¦‚³‚ê‚Ä‚¢‚éUI‚ª‚¢‚é‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO */
+	/** ãƒãƒƒãƒ—å†…ã«è¡¨ç¤ºã•ã‚Œã¦ã„ã‚‹UIãŒã„ã‚‹ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚° */
 	bool m_isCowImage[10];
 	bool m_isUFOImage[4];
+	bool m_isFoodImage[2] = {false,false};
 	bool m_isdanger[4];
 	bool m_isArrow[4];
+	
 
 };
