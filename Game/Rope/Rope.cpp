@@ -217,6 +217,11 @@ void Rope::OnHitCow(Cow* cow)
 	/** 牛を捕まえた瞬間にたるみをリセット */
 	m_ropeSlack = 50.0f;
 	m_ropeSlackTime = 0.0f;
+
+	/** 投げアニメーション中に命中した場合に備えて強制終了する */
+	m_isThrowRope = false;
+	m_isStartRopeAnimation = false;
+	m_ropeAnimationTime = 0.0f;
 }
 
 
@@ -415,13 +420,7 @@ void Rope::Render(RenderContext& rc)
 	
 	m_rollModelRender.Draw(rc);
 
-	/** ロープを投げている最中ならロープモデルを描画する */
-	if (m_isThrowRope)
-	{
-		m_ropeModelRender.Draw(rc);
-	}
-
-	else if (m_isHitCow)
+	if (m_isHitCow)
 	{
 		/** 牛に当たっているならセグメントを描画する */
 		for (int i = 0; i < ROPE_SEGMENT_COUNT; i++)
@@ -429,4 +428,12 @@ void Rope::Render(RenderContext& rc)
 			m_ropeSegments[i].Draw(rc);
 		}
 	}
+
+	/** ロープを投げている最中ならロープモデルを描画する */
+	else if (m_isThrowRope)
+	{
+		m_ropeModelRender.Draw(rc);
+	}
+
+	
 }

@@ -8,6 +8,7 @@
 #include "SoundManager/SoundManager.h"
 #include "Source/Actor/Stage/CowFood.h"
 #include "EffectManager/EffectManager.h"
+#include "Source/Actor/Character/Cow/Cow.h"
 
 namespace
 {
@@ -226,6 +227,36 @@ void Player::Rotation()
 	/** ロープを投げているときは回転できないようにする */
 	if (m_rope->GetIsThrowRope())
 	{
+		return;
+	}
+
+	/** 牛を引っ張ているときは牛の方向を向く */
+	if (m_rope->GetIsHitCow())
+	{
+		/** ロープが当たっている牛を取得する */
+		Cow* hitcow = m_rope->GetHitCow();
+
+		if (hitcow)
+		{
+			/** プレイヤーから牛への方向ベクトルを計算する */
+			Vector3 dir = hitcow->GetPosition() - m_transform.GetPosition();
+
+			/** 上下方向の回転は無視する */
+			dir.y = 0.0f;
+
+			/** ベクトルの長さが十分ある場合のみ処理を行う */
+			if(dir.LengthSq() >= 0.0001f)
+			{
+				/** 方向ベクトルを正規化する */
+				dir.Normalize();
+
+				/** ロープが当たっている牛の方向を向くようにプレイヤーの回転を設定する */
+				m_transform.GetRotation().SetRotationYFromDirectionXZ(dir);
+
+				/** 設定した回転をモデルに反映させる */
+				m_playerModelRender.SetRotation(m_transform.GetRotation());
+			}
+		}
 		return;
 	}
 

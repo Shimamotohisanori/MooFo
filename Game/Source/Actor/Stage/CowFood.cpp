@@ -44,6 +44,9 @@ namespace
 
 	/** 牛の餌を置くことができないエリアの半径 */
 	constexpr float COWFOOD_PUT_TABOO_RADIUS = 300.0f;
+
+	/** 餌を回収する際のクールタイム */
+	constexpr float COWFOOD_COLLECT_COOLTIME = 1.0f;
 }
 
 CowFood::~CowFood()
@@ -170,7 +173,24 @@ void CowFood::Update()
 
 	/** ゲームクラスを見つける */
 	m_game = FindGO<Game>("game");
+
+	/** ポーズ画面のインスタンスを取得する */
+	if (m_pause == nullptr)
+	{
+		m_pause = FindGO<Pause>("pause");
+	}
   
+	if (m_collectCoolTime > 0.0f)
+	{
+		/** 餌を回収するクールタイムを減らす */
+		m_collectCoolTime -= g_gameTime->GetFrameDeltaTime();
+
+		if(m_collectCoolTime <= 0.0f)
+		{
+			m_collectCoolTime = 0.0f;
+		}
+	}
+
 	/** 餌を置く処理を実行する */
 	CowFoodPut();
 
@@ -225,6 +245,12 @@ void CowFood::Update()
 		/** Aボタンが押されたら餌の数を2にセットして設置フラグを立てる */
 		if(g_pad[0]->IsTrigger(enButtonA))
 		{
+
+			/** 餌を取るクールタイム中なら処理をスキップする */
+			if (m_collectCoolTime > 0.0f)
+			{
+				return;
+			}
 			/** 牛の餌を取る音を再生させる。*/
 			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
 
@@ -232,6 +258,9 @@ void CowFood::Update()
 
 			m_foodCount = 2;
 			m_isPutFood = true;
+
+			/** 餌を回収するクールタイムを設定する */
+			m_collectCoolTime = COWFOOD_COLLECT_COOLTIME;
 		}
 	}
 	else
@@ -257,8 +286,8 @@ void CowFood::CowFoodPut()
 		return;
 	}
 
-
-	
+	/** ポーズがない場合は早期リターン */
+	if (!m_pause) return;
 
 	Player* player = FindGO<Player>("player");
 
@@ -303,7 +332,8 @@ void CowFood::CowFoodPut()
 	pos.y = 0.0f;
 
 	/** ロープを投げておらず、牛に当たっておらず、LB2ボタンが押されたら */
-	if (!m_rope->GetIsThrowRope() && !m_rope->GetIsHitCow() && g_pad[0]->IsTrigger(enButtonLB2))
+	if (!m_rope->GetIsThrowRope() && !m_rope->GetIsHitCow() &&
+		!m_pause->GetIsPause() && g_pad[0]->IsTrigger(enButtonLB2))
 	{
 		/** 餌の残数があり、まだ設置中でなければ */
 		if (m_foodCount > 0 && !m_isPutPlayer)
@@ -349,6 +379,11 @@ void CowFood::Render(RenderContext& rc)
 	/**フェード完了までUIの表示を遅らす*/
 	LoadingScene* lodingScene = FindGO<LoadingScene>("loading");
 	if (lodingScene != nullptr && !lodingScene->GetLoadingEnd())
+	{
+		return;
+	}
+
+	if (m_pause && m_pause->IsActive())
 	{
 		return;
 	}

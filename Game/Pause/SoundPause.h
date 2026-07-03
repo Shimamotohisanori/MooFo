@@ -92,12 +92,18 @@ private:
 	SpriteRender m_seBlackIcon;
 	/** 選ばれていないときに出す黒い画像*/
 	SpriteRender m_blackSprite;
+
+	/** 灰色のバー */
+	SpriteRender m_grayBarSprite;
+
 	/** サウンドマネージャーのポインタ*/
 	SoundManager* m_choiceSound = nullptr;
 	/** 選択する時のSEのサウンドソースのポインタ*/
 	SoundSource* p_chiceSE = nullptr;
 	/** 決定する時のSEのサウンドソースのポインタ*/
 	SoundSource* p_decisionSE = nullptr;
+
+	
 
 private:
 	/** ゲームのポインタ*/

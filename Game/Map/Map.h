@@ -5,6 +5,7 @@ class UFO;
 class Pause;
 class Game;
 class LodingScene;
+class CowFoodManager;
 class Map : public IGameObject
 {
 public:
@@ -33,8 +34,12 @@ private:
 
 	/** 危険アイコンの画像 */
 	SpriteRender m_dangerSprite[4];
+
 	/** 矢印アイコンの画像*/
 	SpriteRender m_arrowSprite[4];
+
+	/** 餌アイコンの画像 */
+	SpriteRender m_foodSprite[2];
 
 	/** アウトラインアイコンの画像 */
 	SpriteRender m_outLineSprite;
@@ -45,6 +50,10 @@ private:
 
 	/** ポーズのポインタ */
 	Pause* m_pause = nullptr;
+
+	/** 牛の餌のポインタ */
+	CowFoodManager* m_cowFoodManager = nullptr;
+
 	/** マップの回転角度 */
 	float m_mapAngle = 0.0f;
 
@@ -54,7 +63,9 @@ private:
 	/** マップ内に表示されているUIがいるかどうかのフラグ */
 	bool m_isCowImage[10];
 	bool m_isUFOImage[4];
+	bool m_isFoodImage[2] = {false,false};
 	bool m_isdanger[4];
 	bool m_isArrow[4];
+	
 
 };

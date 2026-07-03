@@ -529,19 +529,18 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	} break;
 
 	/** ゲームカメラを生成 */
+
 	case 19: NewGO<GameCamera>(0, "gameCamera");
 		break;
-
 	case 20:
 	{
-		/** 牛の餌を生成 */
-		NewGO<CowFood>(0, "cowfood");
-		NewGO<CowFoodManager>(0, "cowfoodmanager");
+
 	}
 	break;
 	/** スカイキューブを生成 */
 	case 21:
 	{
+
 		/** SkyCube を生成 */
 		SkyCube * sky = NewGO<SkyCube>(0, "skyCube");
 
@@ -579,7 +578,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 
 		/** ロード完了フラグを立てる */
 		m_isLoadingEnd = true;
-		//DeleteGO(this);
+
 		return;
 	}
 

@@ -2,10 +2,12 @@
 #include "Map.h"
 #include "Source/Actor/Character/Player/Player.h"
 #include "Source/Actor/Character/Cow/Cow.h"
-#include "GameScene/Game.h"
 #include "Source/Actor/Character/UFO/UFO.h"
-#include "Pause/Pause.h"
+#include "Source/Actor/Character/Cow/CowLuring.h"
+#include "Source/Actor/Stage/CowFoodManager.h"
 #include"GameScene/LoadingScene.h"
+#include "GameScene/Game.h"
+#include "Pause/Pause.h"
 namespace
 {
 	/** ミニマップのスプライトのパス */
@@ -19,6 +21,9 @@ namespace
 
 	/** UFOのアイコンのファイルパス */
 	const char* UFO_ICON_PATH = "Assets/sprite/MapUI/UFOIcon.dds";
+
+	/** 牛の餌アイコンのファイルパス */
+	const char* FOOD_ICON_PATH = "Assets/sprite/MapUI/FoodIcon.dds";
 
 	/** ビックリマークのファイルパス */
 	const char* DANGER_ICON_PATH = "Assets/sprite/MapUI/Danger.dds";
@@ -41,6 +46,7 @@ namespace
 	constexpr int COW_NUM = 10;
 	constexpr int UFO_NUM = 4;
 	constexpr int ARROW_NUM = 4;
+	constexpr int FOOD_NUM = 2;
 }
 
 bool Map::Start()
@@ -71,6 +77,14 @@ bool Map::Start()
 		m_ufoSprite[i].Init(UFO_ICON_PATH, 50.0f, 50.0f);
 	}
 
+	/** 餌のアイコンの初期化 */
+	for (int i = 0; i < FOOD_NUM; i++)
+	{
+		m_foodSprite[i].Init(FOOD_ICON_PATH,25.0f,25.0f);
+	}
+
+
+
 	/* ビックリマークをUFOが牛を捕まえたときに表示させる。
 	 * UFOが起点となるためUFO_NUMを使用する
 	 */
@@ -90,10 +104,17 @@ bool Map::Start()
 	m_ufos = FindGOs<UFO>("UFO");
 	m_player = FindGO<Player>("player");
 	m_game = FindGO<Game>("game");
+	
 	return true;
 }
 void Map::Update()
 {
+	/** CowFoodManagerが取得できない場合は毎フレーム取得を試みる */
+	if (m_cowFoodManager == nullptr)
+	{
+		m_cowFoodManager = FindGO<CowFoodManager>("cowfoodmanager");
+	}
+
 	/** ゲームオブジェクトが見つからなかったら処理を行わない。 */
 	if (m_game == nullptr || m_player == nullptr) return;
 	/** 毎フレームUFOのリストを更新する */
@@ -144,6 +165,30 @@ void Map::Update()
 
 			/** SpriteRenderに座標を設定 */
 			m_cowSprite[i].SetPosition(mapPos);
+		}
+	}
+
+	if (m_cowFoodManager)
+	{
+		const auto& foodList = m_cowFoodManager->GetFoodList();
+		int foodCount = min((int)foodList.size(), FOOD_NUM);
+
+		for (int i = 0; i < FOOD_NUM; i++)
+		{
+			m_isFoodImage[i] = false;
+		}
+
+		for (int i = 0; i < foodCount; i++)
+		{
+			Vector3 foodPos = foodList[i]->GetPosition();
+			Vector3 mapPos;
+
+			if (WorldPositionConvertToMapPosition(playerPos, foodPos, mapPos))
+			{
+				m_isFoodImage[i] = true;
+				m_foodSprite[i].SetPosition(mapPos);
+				m_foodSprite[i].Update();
+			}
 		}
 	}
 
@@ -364,6 +409,14 @@ void Map::Render(RenderContext& rc)
 		{
 			m_arrowSprite[i].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, flash));
 			m_arrowSprite[i].Draw(rc);
+		}
+	}
+
+	for (int i = 0; i < FOOD_NUM; i++)
+	{
+		if (m_isFoodImage[i])
+		{
+			m_foodSprite[i].Draw(rc);
 		}
 	}
 

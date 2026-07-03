@@ -49,7 +49,10 @@ private:
 	/** 餌を設置した後のクールタイム */
 	float m_coolTime = 0.0f;
 
-	/** クールタイム中華どうか */
+	/** 餌を回収する際のクールタイム */
+	float m_collectCoolTime = 0.0f;
+
+	/** クールタイム中かどうか */
 	bool m_isCoolTime = false;
 
 	/** UIを表示させるフラグ */
@@ -99,6 +102,9 @@ private:
 	/** ゲームクラス*/
 	Game* m_game = nullptr;
 
+	/** ポーズ画面のクラス */
+	Pause* m_pause = nullptr;
+
 	/** カウントダウン */
 	CountDown* m_CountDown = nullptr;
 
@@ -110,8 +116,6 @@ private:
 
 	/** 牛の餌を取る音 */
 	SoundSource* m_takehaySE = nullptr;
-
-	Pause* m_pause = nullptr;
 
 	/** 餌禁止のエリアにいるかどうか */
 	bool m_isInTabooArea = false;
