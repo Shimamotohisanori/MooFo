@@ -23,30 +23,6 @@ namespace
 
 bool Stage::Start()
 {
-	/** 外周フェンスと牛舎のモデル */
-	m_perimeterFenceModelRender.Init(PERIMETER_FILE_PATH);
-	m_perimeterFenceModelRender.SetPosition(STAGE_POS);
-	m_perimeterFenceModelRender.Update();
-
-	/** 内周フェンスのモデル */
-	m_innerFenceModelRender.Init(INNER_FILE_PATH);
-	m_innerFenceModelRender.SetPosition(STAGE_POS);
-	m_innerFenceModelRender.Update();
-
-	/** 外周の山のモデル */
-	m_mountainModelRender.Init(MOUNTAIN_FILE_PATH);
-	m_mountainModelRender.SetPosition(STAGE_POS);
-	m_mountainModelRender.Update();
-
-	/** 地面のモデル */
-	m_groundModelRender.Init(GROUND_FILE_PATH);
-	m_groundModelRender.SetPosition(STAGE_POS);
-	m_groundModelRender.Update();
-
-	/** 外周フェンス・内周フェンス・牛の餌に当たり判定をつける */
-	m_perimeterObject.CreateFromModel(m_perimeterFenceModelRender.GetModel(), m_perimeterFenceModelRender.GetModel().GetWorldMatrix());
-	m_innerObject.CreateFromModel(m_innerFenceModelRender.GetModel(), m_innerFenceModelRender.GetModel().GetWorldMatrix());
-	
 	return true;
 }
 
@@ -56,11 +32,85 @@ void Stage::Update()
 
 }
 
+bool  Stage::LoadStepByStep()
+{
+	switch (m_initStep)
+	{
+		/** 外周フェンスと牛舎のモデル*/
+	case InitStep::PerimeterFence:
+		m_perimeterFenceModelRender.Init(PERIMETER_FILE_PATH);
+		m_perimeterFenceModelRender.SetPosition(STAGE_POS);
+		m_perimeterFenceModelRender.Update();
+		m_initStep = InitStep::InnerFence;
+		break;
+
+		/** 内周フェンスのモデル */
+	case InitStep::InnerFence:
+		m_innerFenceModelRender.Init(INNER_FILE_PATH);
+		m_innerFenceModelRender.SetPosition(STAGE_POS);
+		m_innerFenceModelRender.Update();
+		m_initStep = InitStep::Mountain;
+		break;
+
+		/** 外周の山のモデル */
+	case InitStep::Mountain:
+		m_mountainModelRender.Init(MOUNTAIN_FILE_PATH);
+		m_mountainModelRender.SetPosition(STAGE_POS);
+		m_mountainModelRender.Update();
+		m_initStep = InitStep::Ground;
+		break;
+
+		/** 地面のモデル */
+	case InitStep::Ground:
+		m_groundModelRender.Init(GROUND_FILE_PATH);
+		m_groundModelRender.SetPosition(STAGE_POS);
+		m_groundModelRender.Update();
+		m_initStep = InitStep::Collision;
+		break;
+
+		/** 衝突判定 */
+	case InitStep::Collision:
+		/** 外周フェンス・内周フェンスに当たり判定をつける*/
+		m_perimeterObject.CreateFromModel(
+			m_perimeterFenceModelRender.GetModel(),
+			m_perimeterFenceModelRender.GetModel().GetWorldMatrix());
+
+		m_innerObject.CreateFromModel(
+			m_innerFenceModelRender.GetModel(),
+			m_innerFenceModelRender.GetModel().GetWorldMatrix());
+		m_initStep = InitStep::Num;
+		break;
+
+	case InitStep::Num:
+		break;
+	}
+	/** 全ステップが終わったらtrueを返す*/
+	return m_initStep == InitStep::Num;
+}
 
 void Stage::Render(RenderContext& rc)
 {
-	m_perimeterFenceModelRender.Draw(rc);
-	m_innerFenceModelRender.Draw(rc);
-	m_mountainModelRender.Draw(rc);
-	m_groundModelRender.Draw(rc);
+	/** 外周フェンスはPerimeterFenceステップ完了後(=InnerFence以降)にのみ描画可能 */
+	if (m_initStep > InitStep::PerimeterFence)
+	{
+		m_perimeterFenceModelRender.Draw(rc);
+	}
+
+	/** 内周フェンスはInnerFenceステップ完了後(=Mountain以降)にのみ描画可能 */
+	if (m_initStep > InitStep::InnerFence)
+	{
+		m_innerFenceModelRender.Draw(rc);
+	}
+
+	/** 山はMountainステップ完了後(=Ground以降)にのみ描画可能 */
+	if (m_initStep > InitStep::Mountain)
+	{
+		m_mountainModelRender.Draw(rc);
+	}
+
+	/** 地面はGroundステップ完了後(=Collision以降)にのみ描画可能 */
+	if (m_initStep > InitStep::Ground)
+	{
+		m_groundModelRender.Draw(rc);
+	}
 }

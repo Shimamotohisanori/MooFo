@@ -61,5 +61,6 @@ private:
 
 	/** ボタンを押したときのフラグ */
 	bool m_isStartButtonPressed = false;
+	
 };
 

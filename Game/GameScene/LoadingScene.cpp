@@ -10,16 +10,13 @@
 #include "nature/SkyCube.h"
 #include "Source/Actor/Character/UFO/UFOLightManager.h"
 #include "Source/Actor/Stage/CowFood.h"
+#include <chrono>  
 #include "Source/Actor/Stage/CowFoodManager.h"
-#include "Source/Actor/Character/Cow/CowLuring.h"
-
 namespace
 {
 	/** ローディングシーンで使用する画像のファイルパス */
-	const char* COWHOOKLOAD_FILEPATH =   "Assets/sprite/LoadingUI/CowHookLoad.dds";
-	const char* COWRESCUELOAD_FILEPATH = "Assets/sprite/LoadingUI/CowRescueLoad.dds";
-	const char* COWFOODLOAD_FILEPATH =   "Assets/sprite/LoadingUI/CowFoodLoad.dds";
-	const char* GAMECLEARLOAD_FILEPATH = "Assets/sprite/LoadingUI/GameClearLoad.dds";
+	const char* COWHOOKLOAD_FILEPATH =   "Assets/sprite/LoadingUI/NonePictureCowhookLoad.dds";
+	const char* COWFOODLOAD_FILEPATH =   "Assets/sprite/LoadingUI/NonePictureFoodLoading.dds";
 	const char* LOADINGTEXT_FILEPATH =   "Assets/sprite/LoadingUI/LodingUI.dds";
 	const char* BLACKLODING_FILEPATH =   "Assets/sprite/GameTransition/Black.dds";
 
@@ -43,6 +40,10 @@ namespace
 
 	/** 牛同士の最低距離 */
 	constexpr float MIN_DISTANCE = 15.0f; // 牛同士の最低距離
+
+	/** Gif終了とロード完了が揃ってから、実際にフェードアウトを始めるまでの
+	止め絵を見せる時間(秒) */
+	constexpr float FINISHED_HOLD_DURATION = 2.0f;
 }
 
 LoadingScene::LoadingScene()
@@ -59,42 +60,21 @@ LoadingScene::~LoadingScene()
 
 bool LoadingScene::Start()
 {
+	
+
+
 	/** 背景のスプライトの初期化 */
 	m_blackLoadingSpriteRender.Init(BLACKLODING_FILEPATH, BLACKLOADING_WIDTH, BLACKLOADING_HEIGHT);
 	m_blackLoadingSpriteRender.SetPosition(Vector3(0.0f, 0.0f, 0.0f));
 	m_blackLoadingSpriteRender.Update();
 	/** 最初は完全に表示しておく*/
 	m_SceneFadeAlpha = 1.0f;
-
 	/** 最初はフェードインしていない状態にしておく*/
 	m_isSceneFadeOut= false;
 
 
-	/**  スプライトの初期化 */
-	m_loadingSpriteRender[0].Init(COWHOOKLOAD_FILEPATH,COWHOOK_LOADING_WIDTH,LOADING_HEIGHT);
-	m_loadingSpriteRender[1].Init(COWFOODLOAD_FILEPATH, LOADING_WIDTH, LOADING_HEIGHT);
-	m_loadingSpriteRender[2].Init(COWRESCUELOAD_FILEPATH,COWRESCUE_LOADING_WIDTH,COWRESCUE_LOADING_HEIGHT);
-	m_loadingSpriteRender[3].Init(GAMECLEARLOAD_FILEPATH,LOADING_WIDTH,LOADING_HEIGHT);
-	
-	
-	/** スプライトの位置を設定 */
-	for (int i = 0; i < 4; i++)
-	{
-		m_loadingSpriteRender[i].SetPosition(Vector3(0.0f, 100.0f, 0.0f));
-	}
-	
-	/** スプライトの更新 */
-	for (int i = 0; i < 4; i++)
-	{
-		m_loadingSpriteRender[i].Update();
-	}
-	
-	/** Loading文字の初期化 */
-	m_loadingTextSpriteRender.Init(LOADINGTEXT_FILEPATH, LOADINGWARD_WIDTH, LOADINGWARD_HEIGHT);
-	
-	/** Loading文字の位置を設定 */
-	m_loadingTextSpriteRender.SetPosition(Vector3(750.0f, -450.0f, 0.0f));
-	
+	m_isHoldingFinishedFrame = false;
+	m_finishedHoldTimer = 0.0f;
 	/** 最初はLoadingの文字は完全に表示しておく */
 	m_loadingTextAlpha = 1.0f;
 	
@@ -103,7 +83,12 @@ bool LoadingScene::Start()
 
 	/** 最初は最初の画像を表示する */
 	m_currentImage = 0;
-	
+
+	/** 最初に表示される画像は見たことにする*/
+	m_hasSeenImage0 = true;
+	m_hasSeenImage1 = false;
+	m_isReadyToStart = false;
+
 	SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
 
 	/** ローディング中の音源を再生する */
@@ -114,6 +99,17 @@ bool LoadingScene::Start()
 
 void LoadingScene::Update()
 {
+	/** 初期スプライト（ロード画像・テキスト）のロードが終わるまではここだけ進める */
+	if (m_initLoadStep != InitLoadStep::Num)
+	{
+		LoadInitialSpritesStepByStep();
+
+		/** αを黒背景だけ反映して抜ける（他のスプライトはまだ実体がない） */
+		m_blackLoadingSpriteRender.SetMulColor(Vector4(1.0f, 1.0f, 1.0f, m_SceneFadeAlpha));
+		m_blackLoadingSpriteRender.Update();
+		return;
+	}
+
 	/** ローディングシーンの更新処理 */
 	InLoading();
 
@@ -122,8 +118,30 @@ void LoadingScene::Update()
 
 	/** Sceneのフェード処理*/
 	FadeOutLoadingScene();
+
+	/** Gif画像が再生され終わったら自動的に画像を進める処理*/
+	AutoAdvanceImage();
+	/** アニメーションのフレームを先に進めておく(遅延をなくすため)*/
+	if (m_ropeLoadIndex > 0)
+	{
+		m_ropeAnimSpriteRender.Update();
+	}
+	/**最終フレームに到達したらUpdateを止めて静止させる*/
+	if (!m_hasFoodAnimReachedEnd)
+	{
+		m_foodAnimSpriteRender.Update();
+
+		if (m_foodAnimSpriteRender.IsFinished())
+		{
+			m_hasFoodAnimReachedEnd = true;
+		}
+	}
+	
+	/** 餌のアニメーションをバックグラウンドでロードする */
+	LoadFoodAnimInBackground();
+	
 	/**スプライトの更新 */
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		m_loadingSpriteRender[i].Update();
 	}
@@ -141,6 +159,8 @@ void LoadingScene::Update()
 
 	/** Sceneの更新*/
 	m_blackLoadingSpriteRender.Update();
+
+	
 	
 }
 
@@ -151,41 +171,131 @@ void LoadingScene::InLoading()
 	{
 		return;
 	}
-	float deltaTime = g_gameTime->GetFrameDeltaTime();
 
-	m_timer += deltaTime;
-	m_totalTime += deltaTime;
-
-	/** 画像を切り替える処理 */
-	if (m_timer >= m_changeTime)
+	/** ロードが完了していたら、ロード処理を回さない*/
+	if (m_isLoadingEnd)
 	{
-		/** 画像を切り替えるたびにタイマーを初期化する */
-		m_timer = 0.0f;
-
-		/** 画像を順番に切り替える */
-		m_currentImage = (m_currentImage + 1) % 4;
+		return;
 	}
 
-	/** ローディングが開始していない状態で
-	ローディングの全体時間を超えたらローディング開始フラグを立てる */
-	if (m_totalTime >= m_loadingTime && !m_isLoadingStarted)
-	{
-		m_isLoadingStarted = true;
-	}
-
-	if (m_isLoadingStarted)
-	{
 		if (m_loadType == LoadType::ToGameScene)
 		{
 			/** ゲームシーンに移行するタイプのロード処理 */
 			LoadGameObjectsStepByStep();
 		}
-
 		else
 		{
 			/** タイトルシーンに移行するタイプのロード処理 */
 			LoadTitleOnly();
 		}
+	}
+
+void LoadingScene::AutoAdvanceImage()
+{
+	/** 既に開始確定していたら何もしない */
+	if (m_isSceneFadeOut || m_isReadyToStart)
+	{
+		return;
+	}
+
+	if (m_currentImage == 0)
+	{
+		/** １枚目の画像表示中はGifが終わったら２枚目に自動遷移させる*/
+		if (m_ropeAnimSpriteRender.IsFinished()
+			&& !m_hasAutoAdvancedImage0
+			&& m_isFoodLoaded)
+		{
+			m_hasAutoAdvancedImage0 = true;
+			m_currentImage = 1;
+			m_hasSeenImage1 = true;
+
+			/** 2枚目の画像を最初から再生させる*/
+			m_foodAnimSpriteRender.Reset();
+			/** リセットした状態を反映させる*/
+			m_foodAnimSpriteRender.Update();
+		}
+
+	}
+	
+	else if (m_currentImage == 1)
+	{
+		/** ロード完了まで待機*/
+		if (!m_isLoadingEnd)
+		{
+			return;
+		}
+
+		/** ロードが終わっていても、Gifがまだ最後まで再生し終わっていない場合は
+			区切りが良くなるまで待つ（再生の途中でぶつ切りにしないため）*/
+		if (!m_foodAnimSpriteRender.IsFinished())
+		{
+			return;
+		}
+
+		/** ここに来た時点で「ロード完了」かつ「Gifが最後のフレームで静止」している。
+			ただし、その状態を目で見て分かるように、一定時間はそのまま止め絵を見せておく */
+		if (!m_isHoldingFinishedFrame)
+		{
+			m_isHoldingFinishedFrame = true;
+			m_finishedHoldTimer = 0.0f;
+		}
+
+		m_finishedHoldTimer += g_gameTime->GetFrameDeltaTime();
+		if (m_finishedHoldTimer < FINISHED_HOLD_DURATION)
+		{
+			/** まだ止め絵を見せている最中なので、ここでは何もしない*/
+			return;
+		}
+
+		if (m_hasSeenImage0 && m_hasSeenImage1)
+		{
+			m_isReadyToStart = true;
+			m_isSceneFadeOut = true;
+			m_hasFinishedImage2 = true;
+
+			Game* game = FindGO<Game>("game");
+			if (game)
+			{
+				game->ActivateGameBGM();
+			}
+		}
+	}
+	
+}
+
+
+
+
+void LoadingScene::LoadFoodAnimInBackground()
+{
+	if (m_isFoodLoaded)
+	{
+		return;
+	}
+
+	/** 1フレームでロードに使ってよい時間(ms) */
+	constexpr double FOOD_LOAD_TIME_BUDGET_MS = 1.5;
+
+	auto loadStart = std::chrono::high_resolution_clock::now();
+
+	while (m_foodLoadIndex < static_cast<int>(m_foodAnimLoadPaths.size()))
+	{
+		m_foodAnimSpriteRender.AddFrame(m_foodAnimLoadPaths[m_foodLoadIndex]);
+		m_foodLoadIndex++;
+
+		double elapsedMs = std::chrono::duration<double, std::milli>(
+			std::chrono::high_resolution_clock::now() - loadStart).count();
+
+		if (elapsedMs >= FOOD_LOAD_TIME_BUDGET_MS)
+		{
+			break;
+		}
+	}
+
+	/** 全部ロードし終わったらフラグを立てる（これが無いとm_isFoodLoadedが一生trueにならない） */
+	if (m_foodLoadIndex >= static_cast<int>(m_foodAnimLoadPaths.size()))
+	{
+		m_isFoodLoaded = true;
 	}
 }
 
@@ -215,7 +325,34 @@ void LoadingScene::FadeLoadingText()
 }
 
 
+void LoadingScene::LoadInitialSpritesStepByStep()
+{
+	switch (m_initLoadStep)
+	{
+	case InitLoadStep::LoadingImage0:
+		m_loadingSpriteRender[0].Init(COWHOOKLOAD_FILEPATH, LOADING_WIDTH, LOADING_HEIGHT);
+		m_loadingSpriteRender[0].SetPosition(Vector3(0.0f, 100.0f, 0.0f));
+		m_loadingSpriteRender[0].Update();
+		m_initLoadStep = InitLoadStep::LoadingImage1;
+		break;
 
+	case InitLoadStep::LoadingImage1:
+		m_loadingSpriteRender[1].Init(COWFOODLOAD_FILEPATH, LOADING_WIDTH, LOADING_HEIGHT);
+		m_loadingSpriteRender[1].SetPosition(Vector3(0.0f, 100.0f, 0.0f));
+		m_loadingSpriteRender[1].Update();
+		m_initLoadStep = InitLoadStep::LoadingText;
+		break;
+
+	case InitLoadStep::LoadingText:
+		m_loadingTextSpriteRender.Init(LOADINGTEXT_FILEPATH, LOADINGWARD_WIDTH, LOADINGWARD_HEIGHT);
+		m_loadingTextSpriteRender.SetPosition(Vector3(750.0f, -450.0f, 0.0f));
+		m_initLoadStep = InitLoadStep::Num;
+		break;
+
+	case InitLoadStep::Num:
+		break;
+	}
+}
 
 void LoadingScene::FadeOutLoadingScene()
 {
@@ -248,18 +385,93 @@ void LoadingScene::FadeOutLoadingScene()
 
 void LoadingScene::LoadGameObjectsStepByStep()
 {
+	
+
 	switch (m_loadStep)
 	{
 		/** ロードするゲームオブジェクトをステップバイステップで生成する */
 
 		/** プレイヤーを生成 */
-	case 0:	NewGO<Player>(0, "player"); break;
+	case 0:
+	{
+		/** 初回のみパスリストとフレーム数を準備する*/
+		if (m_foodAnimLoadPaths.empty())
+		{
+			/** ロープで引っ張るGifのパスリストを準備する */
+			for (int h = 15; h <= 135; h += 2)
+			{
+				char buf[256];
+				sprintf(buf, "Assets/Gif/PullRope/anim_%02d.DDS", h);
+				m_ropeAnimLoadPaths.push_back(buf);
+			}
+			/** 餌のGifのパスリストを準備する */
+			for (int i = 2; i <= 200; i += 2)
+			{
+				char buf[256];
+				sprintf(buf, "Assets/Gif/Food/anim_%02d.DDS", i);
+				m_foodAnimLoadPaths.push_back(buf);
+			}
 
-		/** ステージを生成 */
-	case 1: NewGO<Stage>(0, "stage"); break;
+			/** ロープで引っ張るGifのフレーム数を準備する */
+			m_ropeAnimSpriteRender.PrepareFrameCount(
+				static_cast<int>(m_ropeAnimLoadPaths.size()), 610.0f, 590.0f, 10.0f);
+			m_ropeAnimSpriteRender.SetPosition({ -535.0f, 10.0f, 0.0f });
 
-		/** 牛を生成(10体分) */
-	case 2:
+			/** 餌のGifのフレーム数を準備する */
+			m_foodAnimSpriteRender.PrepareFrameCount(
+				static_cast<int>(m_foodAnimLoadPaths.size()), 610.0f, 590.0f, 10.0f);
+			m_foodAnimSpriteRender.SetPosition({ -535.0f, 10.0f, 0.0f });
+
+		
+			
+		}
+
+		/** 1フレームでロードに使ってよい時間(ms) */
+		constexpr double ROPE_LOAD_TIME_BUDGET_MS = 2.0;
+
+		/** ロープを最優先でロードし切るまではこのステップに留まる*/
+		if (m_ropeLoadIndex < static_cast<int>(m_ropeAnimLoadPaths.size()))
+		{
+			auto loadStart = std::chrono::high_resolution_clock::now();
+
+			/** 予算内に収まる限り、1枚ずつロードを続ける */
+			while (m_ropeLoadIndex < static_cast<int>(m_ropeAnimLoadPaths.size()))
+			{
+				m_ropeAnimSpriteRender.AddFrame(m_ropeAnimLoadPaths[m_ropeLoadIndex]);
+				m_ropeLoadIndex++;
+
+				double elapsedMs = std::chrono::duration<double, std::milli>(
+					std::chrono::high_resolution_clock::now() - loadStart).count();
+
+				if (elapsedMs >= ROPE_LOAD_TIME_BUDGET_MS)
+				{
+					break;
+				}
+			}
+			return; // ロープのロードが終わるまで次のステップに進まない
+		}
+
+		// ロープのロードが完了した時点でこのcaseを抜ける
+		break;
+	}
+
+	case 1:NewGO<Player>(0, "player");
+		break;
+
+	case 2:/** ステージを生成 */
+	{
+		if (m_stage == nullptr)
+		{
+			m_stage = NewGO<Stage>(0, "stage");
+		}
+		if (!m_stage->LoadStepByStep())
+		{
+			/** ステージのロードが終わるまで次のステップに進まない*/
+			return;
+		}
+		break;
+	}
+	/** 牛を生成(10体分) */
 	case 3:
 	case 4:
 	case 5:
@@ -269,7 +481,8 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	case 9:
 	case 10:
 	case 11:
-		{
+	case 12:
+	{
 		Cow* cow = NewGO<Cow>(0, "cow");
 		cow->SetPosition(RandomCowPos());
 		/** 0～9の数字を割り当てる*/
@@ -278,8 +491,8 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		m_tempCows.push_back(cow);
 	} break;
 
-		/** もしUFOが消えていなかったら残っているUFOを消す */
-	case 12:
+	/** もしUFOが消えていなかったら残っているUFOを消す */
+	case 13:
 	{
 		auto ufos = FindGOs<UFO>("UFO");
 		for (auto ufo : ufos)
@@ -292,16 +505,16 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		break;
 	}
 
-		/** UFOLightManagerを生成 */
-	case 13:
+	/** UFOLightManagerを生成 */
+	case 14:
 		NewGO<UFOLightManager>(0, "ufolightmanager");
 		break;
 
 		/** UFOを生成(4体分) */
-	case 14:
 	case 15:
 	case 16:
 	case 17:
+	case 18:
 	{
 
 		int index = m_loadStep - 14;
@@ -315,23 +528,22 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		}
 	} break;
 
-		/** ゲームカメラを生成 */
-	case 18: NewGO<GameCamera>(0, "gameCamera"); 
+	/** ゲームカメラを生成 */
+	case 19: NewGO<GameCamera>(0, "gameCamera");
 		break;
-		/** スカイキューブを生成 */
-	case 19:
+
+	case 20:
 	{
 		/** 牛の餌を生成 */
 		NewGO<CowFood>(0, "cowfood");
 		NewGO<CowFoodManager>(0, "cowfoodmanager");
 	}
 	break;
-		/** スカイキューブを生成 */
-	case 20:
+	/** スカイキューブを生成 */
+	case 21:
 	{
-		
 		/** SkyCube を生成 */
-		SkyCube* sky = NewGO<SkyCube>(0, "skyCube");
+		SkyCube * sky = NewGO<SkyCube>(0, "skyCube");
 
 		/** タイプ設定 */
 		sky->SetType(EnSkyCubeType::enSkyCubeType_Day);
@@ -349,29 +561,31 @@ void LoadingScene::LoadGameObjectsStepByStep()
 
 		/** ブルームを抑制 */
 		g_renderingEngine->SetBloomThreshold(3.0f);
-	} break;
+	}
+	 break;
 
-		/** ゲーム本体を生成 */
-	case 21:
-		Game* game =NewGO<Game>(0, "game");
+	/** ゲーム本体を生成 */
+	case 22:
+		Game * game = NewGO<Game>(0, "game");
 
 		/** ロードした牛をゲームに渡す */
 		for (auto cow : m_tempCows)
 		{
 			game->GetAliveCows().push_back(cow);
 		}
-		
+
 		/** ロードしたUFOをゲームに渡す */
 		game->SetUFOList(m_tempUFOs);
 
-		m_isSceneFadeOut = true;
+		/** ロード完了フラグを立てる */
 		m_isLoadingEnd = true;
 		//DeleteGO(this);
 		return;
 	}
 
 	m_loadStep++;
-}
+	}
+
 
 void LoadingScene::LoadTitleOnly()
 {
@@ -408,7 +622,7 @@ Vector3 LoadingScene::RandomCowPos()
 		{
 			return pos;;
 		}
-	}	
+	}
 }
 
 void LoadingScene::SetNextScene(std::function<void()>next)
@@ -419,10 +633,28 @@ void LoadingScene::SetNextScene(std::function<void()>next)
 void LoadingScene::Render(RenderContext& rc)
 {
 	m_blackLoadingSpriteRender.Draw(rc);
-	if (m_isLoadingEnd)
+
+	if (m_initLoadStep != InitLoadStep::Num)
 	{
 		return;
 	}
+	/** フェードアウト中は画像を描画しない */
+	if (m_isReadyToStart)
+	{
+		return;
+	}
+	
+
 	m_loadingSpriteRender[m_currentImage].Draw(rc);
+
+	if (m_currentImage == 0)
+	{
+		m_ropeAnimSpriteRender.Draw(rc);
+	}
+	if (m_currentImage == 1)
+	{
+		m_foodAnimSpriteRender.Draw(rc);
+		
+	}
 	m_loadingTextSpriteRender.Draw(rc);
 }
