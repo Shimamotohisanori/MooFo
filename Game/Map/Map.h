@@ -15,52 +15,52 @@ public:
 	void Update();
 	void Render(RenderContext& rc);
 private:
-	/** ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã‹ã‚‰ãƒãƒƒãƒ—åº§æ¨™ç³»ã«å¤‰æ› */
+	/** ƒ[ƒ‹ƒhÀ•WŒn‚©‚çƒ}ƒbƒvÀ•WŒn‚É•ÏŠ· */
 	bool WorldPositionConvertToMapPosition(Vector3 worldCenterPosition, Vector3 cowPosition, Vector3& mapPosition);
 	
 	std::vector<UFO*> m_ufos;
 
-	/** ãƒãƒƒãƒ—ã®ç”»åƒ */
+	/** ƒ}ƒbƒv‚Ì‰æ‘œ */
 	SpriteRender m_mapSprite;
 
-	/** ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ */
+	/** ƒvƒŒƒCƒ„[ƒAƒCƒRƒ“‚Ì‰æ‘œ */
 	SpriteRender m_playerSprite;
 
-	/** ç‰›ã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ */
+	/** ‹ƒAƒCƒRƒ“‚Ì‰æ‘œ */
 	SpriteRender m_cowSprite[10];
 
-	/** UFOã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ */
+	/** UFOƒAƒCƒRƒ“‚Ì‰æ‘œ */
 	SpriteRender m_ufoSprite[4];
 
-	/** å±é™ºã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ */
+	/** ŠëŒ¯ƒAƒCƒRƒ“‚Ì‰æ‘œ */
 	SpriteRender m_dangerSprite[4];
 
-	/** çŸ¢å°ã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ*/
+	/** –îˆóƒAƒCƒRƒ“‚Ì‰æ‘œ*/
 	SpriteRender m_arrowSprite[4];
 
-	/** é¤Œã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ */
+	/** ‰aƒAƒCƒRƒ“‚Ì‰æ‘œ */
 	SpriteRender m_foodSprite[2];
 
-	/** ã‚¢ã‚¦ãƒˆãƒ©ã‚¤ãƒ³ã‚¢ã‚¤ã‚³ãƒ³ã®ç”»åƒ */
+	/** ƒAƒEƒgƒ‰ƒCƒ“ƒAƒCƒRƒ“‚Ì‰æ‘œ */
 	SpriteRender m_outLineSprite;
-	/** ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒã‚¤ãƒ³ã‚¿ */
+	/** ƒvƒŒƒCƒ„[‚Ìƒ|ƒCƒ“ƒ^ */
 	Game* m_game = nullptr;
-	/** ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒã‚¤ãƒ³ã‚¿ */
+	/** ƒvƒŒƒCƒ„[‚Ìƒ|ƒCƒ“ƒ^ */
 	Player* m_player = nullptr;
 
-	/** ãƒãƒ¼ã‚ºã®ãƒã‚¤ãƒ³ã‚¿ */
+	/** ƒ|[ƒY‚Ìƒ|ƒCƒ“ƒ^ */
 	Pause* m_pause = nullptr;
 
-	/** ç‰›ã®é¤Œã®ãƒã‚¤ãƒ³ã‚¿ */
+	/** ‹‚Ì‰a‚Ìƒ|ƒCƒ“ƒ^ */
 	CowFoodManager* m_cowFoodManager = nullptr;
 
-	/** ãƒãƒƒãƒ—ã®å›è»¢è§’åº¦ */
+	/** ƒ}ƒbƒv‚Ì‰ñ“]Šp“x */
 	float m_mapAngle = 0.0f;
 
 	float m_flashTImer = 0.0f;
-	/** çŸ¢å°ã®è§’åº¦*/
+	/** –îˆó‚ÌŠp“x*/
 	float m_arrowAngle[4];
-	/** ãƒãƒƒãƒ—å†…ã«è¡¨ç¤ºã•ã‚Œã¦ã„ã‚‹UIãŒã„ã‚‹ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚° */
+	/** ƒ}ƒbƒv“à‚É•\¦‚³‚ê‚Ä‚¢‚éUI‚ª‚¢‚é‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO */
 	bool m_isCowImage[10];
 	bool m_isUFOImage[4];
 	bool m_isFoodImage[2] = {false,false};

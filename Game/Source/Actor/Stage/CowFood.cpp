@@ -9,7 +9,6 @@
 #include"GameScene/LoadingScene.h"
 #include"Pause/Pause.h"
 #include "SoundManager/SoundManager.h"
-#include "Pause/Pause.h"
 
 namespace
 {
@@ -45,6 +44,9 @@ namespace
 
 	/** 牛の餌を置くことができないエリアの半径 */
 	constexpr float COWFOOD_PUT_TABOO_RADIUS = 300.0f;
+
+	/** 餌を回収する際のクールタイム */
+	constexpr float COWFOOD_COLLECT_COOLTIME = 1.0f;
 }
 
 CowFood::~CowFood()
@@ -178,6 +180,17 @@ void CowFood::Update()
 		m_pause = FindGO<Pause>("pause");
 	}
   
+	if (m_collectCoolTime > 0.0f)
+	{
+		/** 餌を回収するクールタイムを減らす */
+		m_collectCoolTime -= g_gameTime->GetFrameDeltaTime();
+
+		if(m_collectCoolTime <= 0.0f)
+		{
+			m_collectCoolTime = 0.0f;
+		}
+	}
+
 	/** 餌を置く処理を実行する */
 	CowFoodPut();
 
@@ -232,6 +245,12 @@ void CowFood::Update()
 		/** Aボタンが押されたら餌の数を2にセットして設置フラグを立てる */
 		if(g_pad[0]->IsTrigger(enButtonA))
 		{
+
+			/** 餌を取るクールタイム中なら処理をスキップする */
+			if (m_collectCoolTime > 0.0f)
+			{
+				return;
+			}
 			/** 牛の餌を取る音を再生させる。*/
 			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
 
@@ -239,6 +258,9 @@ void CowFood::Update()
 
 			m_foodCount = 2;
 			m_isPutFood = true;
+
+			/** 餌を回収するクールタイムを設定する */
+			m_collectCoolTime = COWFOOD_COLLECT_COOLTIME;
 		}
 	}
 	else

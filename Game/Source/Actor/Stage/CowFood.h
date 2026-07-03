@@ -49,7 +49,10 @@ private:
 	/** 餌を設置した後のクールタイム */
 	float m_coolTime = 0.0f;
 
-	/** クールタイム中華どうか */
+	/** 餌を回収する際のクールタイム */
+	float m_collectCoolTime = 0.0f;
+
+	/** クールタイム中かどうか */
 	bool m_isCoolTime = false;
 
 	/** UIを表示させるフラグ */
