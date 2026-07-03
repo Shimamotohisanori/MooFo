@@ -49,7 +49,7 @@ bool Title::Start()
 	m_titlePressStartSpriteRender.Update();
 
 	m_soundManager = FindGO<SoundManager>("soundmanager");
-	m_titleBGM = m_soundManager->PlayingBGM(SoundBGM::enTitleBGM, false);
+	m_titleBGM = m_soundManager->PlayingBGM(SoundBGM::enTitleBGM, true);
 
 	return true;
 }

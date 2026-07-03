@@ -117,7 +117,6 @@ bool Game::Start()
 	m_cowFood = FindGO<CowFood>("cowfood");
 	m_cowFoodManager = FindGO<CowFoodManager>("cowfoodmanager");
 	m_cowLuring = FindGO<CowLuring>("cowluring");
-	
 
 	/** スコアの生成 */
 	m_score = NewGO<Score>(0, "score");
@@ -166,7 +165,11 @@ bool Game::Start()
 
 void Game::Update()
 {
-	
+	/** まだ本当のゲーム開始前(ロード中)は何もしない*/
+	if (!m_isGameActive)
+	{
+		return;
+	}
 	/** 生きている牛のリストをループして牛が存在するか確認する */
 	for (auto it = m_aliveCows.begin(); it != m_aliveCows.end();)
 	{
