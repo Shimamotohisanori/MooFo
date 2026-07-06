@@ -1,5 +1,6 @@
 #pragma once
 class Pause;
+class VoiceManager;
 class SoundPause : public IGameObject
 {
 public:
@@ -120,9 +121,12 @@ private:
 	/** 決定する時のSEのサウンドソースのポインタ*/
 	SoundSource* p_decisionSE = nullptr;
 
-	
+	/** サウンドマネージャーのポインタ */
+	SoundManager* m_soundManager = nullptr;
 
-private:
+	/** ボイスマネージャーのポインタ */
+	VoiceManager* m_voiceManager = nullptr;
+
 	/** ゲームのポインタ*/
 	Pause* m_pause = nullptr;
 };

@@ -2,6 +2,7 @@
 #include "SoundManager/SoundManager.h"
 #include "SoundPause.h"
 #include "Pause/Pause.h"
+#include "SoundManager/VoiceManager.h"
 
 namespace
 {
@@ -127,10 +128,13 @@ bool SoundPause::Start()
 
 	m_choiceSound = FindGO<SoundManager>("soundmanager");
 
+	m_voiceManager = FindGO<VoiceManager>("voicemanager");
+
 	/** SoundPauseƒNƒ‰ƒX‚ª¶¬‚³‚ê‚½‚Æ‚«‚É
 	 *  SoundManager‚Ì‰¹—Ê‚ðŽQl‚É‚µ‚ÄBGM,SE‚É”½‰f */
 	m_bgmVolume = m_choiceSound->m_bgmVolume;
 	m_seVolume = m_choiceSound->m_seVolume;
+	m_voiceVolume = m_voiceManager->GetVoiceVolume();
 
 	/** UI‚É”½‰f */
 	UpdateBGMUI();
@@ -282,6 +286,9 @@ void SoundPause::Barvoice()
 			m_voiceVolume -= 0.01f;
 		}
 	}
+
+	/** Voice‰¹—Ê‚ðVoiceManager‚É”½‰f */
+	m_voiceManager->SetVoiceVolume(m_voiceVolume);
 
 	UpdateVoiceUI();
 }

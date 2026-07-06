@@ -47,6 +47,11 @@ public:
 	~SoundManager();
 	void Update();
 
+	uint8_t GetTotalSoundCount() const
+	{
+		return m_bgmCount + m_seCount;
+	}
+
 	/** BGMを再生する関数 */
 	float m_bgmVolume = 0.3f;
 
@@ -55,6 +60,9 @@ public:
 
 	/** BGMの数 */
 	uint8_t m_bgmCount = 0;
+
+	/** SEの数 */
+	uint8_t m_seCount = 0;
 
 	/** BGMを再生する関数 */
 	SoundSource* PlayingBGM(SoundBGM number, bool isLoop = true);

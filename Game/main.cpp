@@ -7,6 +7,7 @@
 #include "SoundManager/SoundManager.h"
 #include "EffectManager/EffectManager.h"
 #include <time.h>
+#include "SoundManager/VoiceManager.h"
 
 void ReportLiveObjects()
 {
@@ -36,9 +37,14 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//Gameクラスのオブジェクトを作成。
 	NewGO<Title>(0, "title");
 
-	NewGO<SoundManager>(0, "soundmanager");
+	/** SoundManagerの生成と同時にポインタを保存 */
+	SoundManager* soundManager = NewGO<SoundManager>(0, "soundmanager");
 
 	NewGO<EffectManager>(0, "effectManager");
+
+	/** VoiceManagerの生成と同時にSoundManagerポインタを渡す */
+	VoiceManager* voiceManager = NewGO<VoiceManager>(0, "voicemanager");
+	voiceManager->Init(soundManager);
 
 	srand(time(nullptr));
 	//////////////////////////////////////

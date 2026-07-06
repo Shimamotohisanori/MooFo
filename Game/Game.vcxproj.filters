@@ -99,6 +99,7 @@
     </ClCompile>
     <ClCompile Include="Source\Actor\Character\Cow\CowShrinkHay.cpp" />
     <ClCompile Include="Aiming\Aiming.cpp" />
+    <ClCompile Include="SoundManager\VoiceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -199,6 +200,7 @@
     </ClInclude>
     <ClInclude Include="Source\Actor\Character\Cow\CowShrinkHay.h" />
     <ClInclude Include="Aiming\Aiming.h" />
+    <ClInclude Include="SoundManager\VoiceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

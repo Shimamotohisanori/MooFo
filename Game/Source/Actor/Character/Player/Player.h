@@ -134,9 +134,10 @@ private:
 	/** 牛 */
 	Cow* m_cow = nullptr;
 
+	/** 牛の餌 */
 	CowFood* m_CowFood = nullptr;
 
-	/**  */
+	/** 汗のエフェクト */
 	EffectEmitter* m_sweatEffect = nullptr;
 
 	/** プレイヤーの状態 */
