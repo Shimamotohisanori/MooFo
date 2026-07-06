@@ -5,18 +5,23 @@
 
 namespace
 {
-	const Vector3 RETURNPOS = { 0.0f,-300.0f,0.0f };
-	const Vector3 BLACKPOS = { 0.0f,-295.0f,0.0f };
-	const Vector3 VOLUMEPOS = { 480.0f,75.0f,0.0f };
-	const Vector3 NOT_VOLUMEPOS = { -480.0f,75.0f,0.0f };
-	const Vector3 SE_VOLUMEPOS = { 480.0f,-120.0f,0.0f };
-	const Vector3 SE_NOT_VOLUMEPOS = { -480.0f,-120.0f,0.0f };
-	const Vector3 BGMPOS = { 0.0f,170.0f,0.0f };
-	const Vector3 SEPOS = { 0.0f,-20.0f,0.0f };
-	const Vector3 SOUNDICONPOS = { -380.0f,75.0f,0.0f };
-	const Vector3 SE_ICONPOS = { -380.0f,-120.0f,0.0f };
-	const Vector3 BLOWNBARPOS = { -398.0f,79.0f,0.0f };
-	const Vector3 SE_BLOWNBARPOS = { -398.0f,-119.0f,0.0f };
+	const Vector3 RETURNPOS = { 0.0f,-380.0f,0.0f };
+	const Vector3 BLACKPOS = { 0.0f,-375.0f,0.0f };
+	const Vector3 VOLUMEPOS = { 480.0f,180.0f,0.0f };
+	const Vector3 NOT_VOLUMEPOS = { -480.0f,180.0f,0.0f };
+	const Vector3 SE_VOLUMEPOS = { 480.0f,0.0f,0.0f };
+	const Vector3 SE_NOT_VOLUMEPOS = { -480.0f,0.0f,0.0f };
+	const Vector3 VOICE_VOLUMEPOS = { 480.0f,-170.0f,0.0f };
+	const Vector3 VOICE_NOT_VOLUMEPOS = { -480.0f,-170.0f,0.0f };
+	const Vector3 BGMPOS = { 0.0f,250.0f,0.0f };
+	const Vector3 SEPOS = { 0.0f,80.0f,0.0f };
+	const Vector3 VOICEPOS = { 0.0f,-90.0f,0.0f };
+	const Vector3 SOUNDICONPOS = { -370.0f,180.0f,0.0f };
+	const Vector3 SE_ICONPOS = { -370.0f,0.0f,0.0f };
+	const Vector3 VOICE_ICONPOS = { -370.0f,-170.0f,0.0f };
+	const Vector3 BLOWNBARPOS = { -398.0f,179.0f,0.0f };
+	const Vector3 SE_BLOWNBARPOS = { -398.0f, -1.0f,0.0f };
+	const Vector3 VOICE_BLOWNBARPOS = { -398.0f,-169.0f,0.0f };
 	const Vector3 BLOWNBARINITIALSCALE = { 0.0f,0.0f,0.0f };
 	const Vector2 BLOWN_BAR = { 0.0f,0.5 };
 }
@@ -26,10 +31,10 @@ bool SoundPause::Start()
 	m_backGroundSprite.Init("Assets/sprite/PauseUI/pauseBackGround2.dds", 1980.0f, 1080.0f);
 	m_backGroundSprite.Update();
 
-	m_settingSprite.Init("Assets/sprite/PauseUI/setting2.dds", 1200.0f, 500.0f);
+	m_settingSprite.Init("Assets/sprite/PauseUI/setting3.dds", 1200.0f, 700.0f);
 	m_settingSprite.Update();
 
-	m_grayBarSprite.Init("Assets/sprite/PauseUI/graybar.dds", 1200.0f, 500.0f);
+	m_grayBarSprite.Init("Assets/sprite/PauseUI/graybar2.dds", 1200.0f, 700.0f);
 	m_grayBarSprite.Update();
 
 	m_buttonReturnSprite.Init("Assets/sprite/PauseUI/buttonReturn.dds", 450.0f, 200.0f);
@@ -52,6 +57,14 @@ bool SoundPause::Start()
 	m_seNotVolumeSprite.SetPosition(SE_NOT_VOLUMEPOS);
 	m_seNotVolumeSprite.Update();
 
+	m_voiceVolumeSprite.Init("Assets/sprite/PauseUI/volume.dds", 230.0f, 230.0f);
+	m_voiceVolumeSprite.SetPosition(VOICE_VOLUMEPOS);
+	m_voiceVolumeSprite.Update();
+
+	m_voiceNotVolumeSprite.Init("Assets/sprite/PauseUI/notVolume.dds", 245.0f, 245.0f);
+	m_voiceNotVolumeSprite.SetPosition(VOICE_NOT_VOLUMEPOS);
+	m_voiceNotVolumeSprite.Update();
+
 	m_bgmSprite.Init("Assets/sprite/PauseUI/BGM.dds", 250.0f, 300.0f);
 	m_bgmSprite.SetPosition(BGMPOS);
 	m_bgmSprite.Update();
@@ -59,6 +72,10 @@ bool SoundPause::Start()
 	m_seSprite.Init("Assets/sprite/PauseUI/SE.dds", 250.0f, 300.0f);
 	m_seSprite.SetPosition(SEPOS);
 	m_seSprite.Update();
+
+	m_voiceSprite.Init("Assets/sprite/PauseUI/VoiceUI.dds", 200.0f, 250.0f);
+	m_voiceSprite.SetPosition(VOICEPOS);
+	m_voiceSprite.Update();
 
 	m_soundIconSprite.Init("Assets/sprite/PauseUI/soundIcon.dds", 290.0f, 240.0f);
 	m_soundIconSprite.SetPosition(SOUNDICONPOS);
@@ -68,17 +85,27 @@ bool SoundPause::Start()
 	m_seIconSprite.SetPosition(SE_ICONPOS);
 	m_seIconSprite.Update();
 
-	m_blownBarSprite.Init("Assets/sprite/PauseUI/BlownBar.dds", 790.0f, 255.0f);
+	m_voiceIconSprite.Init("Assets/sprite/PauseUI/VoiceIcon.dds", 290.0f, 240.0f);
+	m_voiceIconSprite.SetPosition(VOICE_ICONPOS);
+	m_voiceIconSprite.Update();
+
+	m_blownBarSprite.Init("Assets/sprite/PauseUI/BlownBar.dds", 790.0f, 260.0f);
 	m_blownBarSprite.SetPosition(BLOWNBARPOS);
 	m_blownBarSprite.SetPivot(BLOWN_BAR);
 	m_blownBarSprite.SetScale(BLOWNBARINITIALSCALE);
 	m_blownBarSprite.Update();
 
-	m_seBlownBarSprite.Init("Assets/sprite/PauseUI/BlownBar.dds", 790.0f, 255.0f);
+	m_seBlownBarSprite.Init("Assets/sprite/PauseUI/BlownBar.dds", 790.0f, 260.0f);
 	m_seBlownBarSprite.SetPosition(SE_BLOWNBARPOS);
 	m_seBlownBarSprite.SetPivot(BLOWN_BAR);
 	m_seBlownBarSprite.SetScale(BLOWNBARINITIALSCALE);
 	m_seBlownBarSprite.Update();
+
+	m_voiceBlownBarSprite.Init("Assets/sprite/PauseUI/BlownBar.dds", 790.0f, 260.0f);
+	m_voiceBlownBarSprite.SetPosition(VOICE_BLOWNBARPOS);
+	m_voiceBlownBarSprite.SetPivot(BLOWN_BAR);
+	m_voiceBlownBarSprite.SetScale(BLOWNBARINITIALSCALE);
+	m_voiceBlownBarSprite.Update();
 
 	m_bgmBlackIcon.Init("Assets/sprite/PauseUI/blackIcon.dds", 290.0f, 240.0f);
 	m_bgmBlackIcon.SetPosition(SOUNDICONPOS);
@@ -87,6 +114,10 @@ bool SoundPause::Start()
 	m_seBlackIcon.Init("Assets/sprite/PauseUI/blackIcon.dds", 290.0f, 240.0f);
 	m_seBlackIcon.SetPosition(SE_ICONPOS);
 	m_seBlackIcon.Update();
+
+	m_voiceBlackIcon.Init("Assets/sprite/PauseUI/blackIcon.dds", 290.0f, 240.0f);
+	m_voiceBlackIcon.SetPosition(VOICE_ICONPOS);
+	m_voiceBlackIcon.Update();
 
 	m_blackSprite.Init("Assets/sprite/PauseUI/Black.dds", 430.0f, 240.0f);
 	m_blackSprite.SetPosition(BLACKPOS);
@@ -104,6 +135,7 @@ bool SoundPause::Start()
 	/** UIに反映 */
 	UpdateBGMUI();
 	UpdateSEUI();
+	UpdateVoiceUI();
 
 	return true;
 }
@@ -149,8 +181,14 @@ void SoundPause::ButtonCount()
 		Barse();
 	}
 
-	/** ↓「戻る」選択中 */
+	/** ↓Voice音量調整モード */
 	if (m_Count == 2)
+	{
+		Barvoice();
+	}
+
+	/** ↓「戻る」選択中 */
+	if (m_Count == 3)
 	{
 		/** スタートボタンでポーズ画面へ戻る */
 		if (g_pad[0]->IsTrigger(enButtonA))
@@ -166,7 +204,7 @@ void SoundPause::ButtonCount()
 	}
 
 	/** ↓範囲外（上限）に行ったら先頭へループ */
-	if (m_Count == 3)
+	if (m_Count == 4)
 	{
 		m_Count = 0;
 	}
@@ -225,13 +263,36 @@ void SoundPause::Barse()
 	UpdateSEUI();
 }
 
+void SoundPause::Barvoice()
+{
+	/** 右キーでVoice音量アップ */
+	if (m_voiceVolume < 1.0f)
+	{
+		if (g_pad[0]->IsPress(enButtonRight))
+		{
+			m_voiceVolume += 0.01f;
+		}
+	}
+
+	/** 左キーでVoice音量ダウン */
+	if (m_voiceVolume > 0.001f)
+	{
+		if (g_pad[0]->IsPress(enButtonLeft))
+		{
+			m_voiceVolume -= 0.01f;
+		}
+	}
+
+	UpdateVoiceUI();
+}
+
 void SoundPause::UpdateBGMUI()
 {
 	/** 音量に応じたアイコン座標計算 */
-	float posX = -380.0f + m_bgmVolume * 750.0f;
+	float posX = -370.0f + m_bgmVolume * 730.0f;
 
 	/** 音量アイコン更新 */
-	m_soundIconSprite.SetPosition(Vector3(posX, 75.0f, 0.0f));
+	m_soundIconSprite.SetPosition(Vector3(posX, 180.0f, 0.0f));
 	m_soundIconSprite.Update();
 
 	/** 音量バー更新 */
@@ -239,22 +300,36 @@ void SoundPause::UpdateBGMUI()
 	m_blownBarSprite.Update();
 
 	/** 黒アイコン更新 */
-	m_bgmBlackIcon.SetPosition(Vector3(posX, 75.0f, 0.0f));
+	m_bgmBlackIcon.SetPosition(Vector3(posX, 180.0f, 0.0f));
 	m_bgmBlackIcon.Update();
 }
 
 void SoundPause::UpdateSEUI()
 {
-	float posX = -380.0f + m_seVolume * 750.0f;
+	float posX = -370.0f + m_seVolume * 730.0f;
 
-	m_seIconSprite.SetPosition(Vector3(posX, -120.0f, 0.0f));
+	m_seIconSprite.SetPosition(Vector3(posX, 0.0f, 0.0f));
 	m_seIconSprite.Update();
 
 	m_seBlownBarSprite.SetScale(Vector3(m_seVolume, 1.0f, 0.0f));
 	m_seBlownBarSprite.Update();
 
-	m_seBlackIcon.SetPosition(Vector3(posX, -120.0f, 0.0f));
+	m_seBlackIcon.SetPosition(Vector3(posX, 0.0f, 0.0f));
 	m_seBlackIcon.Update();
+}
+
+void SoundPause::UpdateVoiceUI()
+{
+	float posX = -370.0f + m_voiceVolume * 730.0f;
+
+	m_voiceIconSprite.SetPosition(Vector3(posX, -170.0f, 0.0f));
+	m_voiceIconSprite.Update();
+	
+	m_voiceBlownBarSprite.SetScale(Vector3(m_voiceVolume, 1.0f, 0.0f));
+	m_voiceBlownBarSprite.Update();
+	
+	m_voiceBlackIcon.SetPosition(Vector3(posX, -170.0f, 0.0f));
+	m_voiceBlackIcon.Update();
 }
 
 void SoundPause::Render(RenderContext& rc)
@@ -275,13 +350,22 @@ void SoundPause::Render(RenderContext& rc)
 		m_seBlownBarSprite.Draw(rc);
 	}
 
+    /** Voice音量バー描画 */
+	if (m_voiceVolume > 0.05f)
+	{
+		m_voiceBlownBarSprite.Draw(rc);
+	}
+
 	m_settingSprite.Draw(rc);
 	m_volumeSprite.Draw(rc);
 	m_notVolumeSprite.Draw(rc);
 	m_seVolumeSprite.Draw(rc);
 	m_seNotVolumeSprite.Draw(rc);
+	m_voiceVolumeSprite.Draw(rc);
+	m_voiceNotVolumeSprite.Draw(rc);
 	m_bgmSprite.Draw(rc);
 	m_seSprite.Draw(rc);
+	m_voiceSprite.Draw(rc);
 
 	/** BGM選択アイコン描画 */
 	if (m_Count == 0)
@@ -303,8 +387,18 @@ void SoundPause::Render(RenderContext& rc)
 		m_seBlackIcon.Draw(rc);
 	}
 
-	/** 終了ボタン選択時は背景非表示 */
+	/** Voice選択中アイコン描画 */
 	if (m_Count == 2)
+	{
+		m_voiceIconSprite.Draw(rc);
+	}
+	else
+	{
+		m_voiceBlackIcon.Draw(rc);
+	}
+
+	/** 終了ボタン選択時は背景非表示 */
+	if (m_Count == 3)
 	{
 		m_blackSprite.SetMulColor
 		(
