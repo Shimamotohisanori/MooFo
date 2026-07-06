@@ -11,6 +11,11 @@ public:
 
 	/** タイトルで行う処理 */
 	void InTitle();
+	/** タイトルの初期化が完了したかどうかを返す */
+	bool IsReady()const
+	{
+		return m_isReady;
+	}
 
 	/** 描画処理 */
 	void Render(RenderContext& rc);
@@ -61,6 +66,8 @@ private:
 
 	/** ボタンを押したときのフラグ */
 	bool m_isStartButtonPressed = false;
+	/** タイトルの初期化が完了したかどうかのフラグ */
+	bool m_isReady = false;
 	
 };
 

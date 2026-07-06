@@ -12,6 +12,7 @@
 #include "Source/Actor/Stage/CowFood.h"
 #include <chrono>  
 #include "Source/Actor/Stage/CowFoodManager.h"
+#include"Title.h"
 namespace
 {
 	/** ローディングシーンで使用する画像のファイルパス */
@@ -43,7 +44,7 @@ namespace
 
 	/** Gif終了とロード完了が揃ってから、実際にフェードアウトを始めるまでの
 	止め絵を見せる時間(秒) */
-	constexpr float FINISHED_HOLD_DURATION = 2.0f;
+	//constexpr float FINISHED_HOLD_DURATION = 2.0f;
 }
 
 LoadingScene::LoadingScene()
@@ -60,9 +61,6 @@ LoadingScene::~LoadingScene()
 
 bool LoadingScene::Start()
 {
-	
-
-
 	/** 背景のスプライトの初期化 */
 	m_blackLoadingSpriteRender.Init(BLACKLODING_FILEPATH, BLACKLOADING_WIDTH, BLACKLOADING_HEIGHT);
 	m_blackLoadingSpriteRender.SetPosition(Vector3(0.0f, 0.0f, 0.0f));
@@ -73,8 +71,7 @@ bool LoadingScene::Start()
 	m_isSceneFadeOut= false;
 
 
-	m_isHoldingFinishedFrame = false;
-	m_finishedHoldTimer = 0.0f;
+	
 	/** 最初はLoadingの文字は完全に表示しておく */
 	m_loadingTextAlpha = 1.0f;
 	
@@ -89,6 +86,10 @@ bool LoadingScene::Start()
 	m_hasSeenImage1 = false;
 	m_isReadyToStart = false;
 
+	/** Gif画像のパスリストとフレーム数を準備する */
+	PrepareAnimResources();
+
+	/** サウンドマネージャーを検索する */
 	SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
 
 	/** ローディング中の音源を再生する */
@@ -214,9 +215,8 @@ void LoadingScene::AutoAdvanceImage()
 			/** リセットした状態を反映させる*/
 			m_foodAnimSpriteRender.Update();
 		}
-
 	}
-	
+
 	else if (m_currentImage == 1)
 	{
 		/** ロード完了まで待機*/
@@ -233,37 +233,70 @@ void LoadingScene::AutoAdvanceImage()
 		}
 
 		/** ここに来た時点で「ロード完了」かつ「Gifが最後のフレームで静止」している。
-			ただし、その状態を目で見て分かるように、一定時間はそのまま止め絵を見せておく */
-		if (!m_isHoldingFinishedFrame)
-		{
-			m_isHoldingFinishedFrame = true;
-			m_finishedHoldTimer = 0.0f;
-		}
-
-		m_finishedHoldTimer += g_gameTime->GetFrameDeltaTime();
-		if (m_finishedHoldTimer < FINISHED_HOLD_DURATION)
-		{
-			/** まだ止め絵を見せている最中なので、ここでは何もしない*/
-			return;
-		}
-
+			そのまま即座にフェードアウトを開始する*/
 		if (m_hasSeenImage0 && m_hasSeenImage1)
 		{
 			m_isReadyToStart = true;
 			m_isSceneFadeOut = true;
 			m_hasFinishedImage2 = true;
 
-			Game* game = FindGO<Game>("game");
-			if (game)
+			/** ゲーム開始時のみBGMを有効にする*/
+			if (m_loadType == LoadType::ToGameScene)
 			{
-				game->ActivateGameBGM();
+				Game* game = FindGO<Game>("game");
+				if (game)
+				{
+					game->ActivateGameBGM();
+				}
+			}
+			else if (m_loadType == LoadType::ToTitleScene)
+			{
+				/** フェード開始と同時にTitleを生成しておく。
+					これによりフェード中、黒背景の裏で既にTitleが描画され始める */
+				if (!m_nextSceneCreated && m_nextSceneLoading)
+				{
+					m_nextSceneLoading();
+					m_nextSceneCreated = true;
+				}
 			}
 		}
 	}
-	
 }
 
 
+void LoadingScene::PrepareAnimResources()
+{
+	/** 既に準備されている場合は何もしない */
+	if (!m_foodAnimLoadPaths.empty())
+	{
+		return;
+	}
+
+	/** ロープで引っ張るGifのパスリストを準備する */
+	for (int h = 10; h <= 135; h += 2)
+	{
+		char buf[256];
+		sprintf(buf, "Assets/Gif/PullRope/anim_%02d.DDS", h);
+		m_ropeAnimLoadPaths.push_back(buf);
+	}
+	/** 餌のGifのパスリストを準備する */
+	for (int i = 1; i <= 200; i += 2)
+	{
+		char buf[256];
+		sprintf(buf, "Assets/Gif/Food/anim_%02d.DDS", i);
+		m_foodAnimLoadPaths.push_back(buf);
+	}
+
+	/** ロープで引っ張るGifのフレーム数を準備する */
+	m_ropeAnimSpriteRender.PrepareFrameCount(
+		static_cast<int>(m_ropeAnimLoadPaths.size()), 610.0f, 590.0f, 10.0f);
+	m_ropeAnimSpriteRender.SetPosition({ -535.0f, 10.0f, 0.0f });
+
+	/** 餌のGifのフレーム数を準備する */
+	m_foodAnimSpriteRender.PrepareFrameCount(
+		static_cast<int>(m_foodAnimLoadPaths.size()), 610.0f, 590.0f, 10.0f);
+	m_foodAnimSpriteRender.SetPosition({ -535.0f, 10.0f, 0.0f });
+}
 
 
 void LoadingScene::LoadFoodAnimInBackground()
@@ -360,71 +393,47 @@ void LoadingScene::FadeOutLoadingScene()
 	{
 		return;
 	}
-	/** フェードアウト処理*/
-	if (m_isSceneFadeOut)
+
+	/** アルファがまだ下がりきっていなければフェード処理を進める */
+	if (m_SceneFadeAlpha > 0.0f)
 	{
 		m_SceneFadeAlpha -= m_SceneFadeSpeed * g_gameTime->GetFrameDeltaTime();
-		if (m_SceneFadeAlpha <= 0.0f)
+		if (m_SceneFadeAlpha < 0.0f)
 		{
 			m_SceneFadeAlpha = 0.0f;
-			m_isSceneFadeOut = false;
-			/** フェード完了フラグをtrueにする*/
-			m_isFadeComplete = true;
-
-			/** フェード完了かつロードが完了したら削除する*/
-			if (m_isLoadingEnd)
-			{
-				DeleteGO(this);
-				return;
-			}
 		}
-		
+		return;
 	}
+
+	/** ここに来た時点でアルファは0（完全に透明＝黒背景が消えた状態）*/
+	m_isFadeComplete = true;
+
+	if (m_loadType == LoadType::ToTitleScene)
+	{
+		/** Titleはもうフェード開始時に生成済み。念のため初期化完了を確認するだけ */
+		Title* title = FindGO<Title>("title");
+		if (!title || !title->IsReady())
+		{
+			return;
+		}
+	}
+
+	m_isSceneFadeOut = false;
+	DeleteGO(this);
+	
 }
 
 
 void LoadingScene::LoadGameObjectsStepByStep()
 {
-	
-
 	switch (m_loadStep)
 	{
 		/** ロードするゲームオブジェクトをステップバイステップで生成する */
 
-		/** プレイヤーを生成 */
+		
 	case 0:
 	{
-		/** 初回のみパスリストとフレーム数を準備する*/
-		if (m_foodAnimLoadPaths.empty())
-		{
-			/** ロープで引っ張るGifのパスリストを準備する */
-			for (int h = 15; h <= 135; h += 2)
-			{
-				char buf[256];
-				sprintf(buf, "Assets/Gif/PullRope/anim_%02d.DDS", h);
-				m_ropeAnimLoadPaths.push_back(buf);
-			}
-			/** 餌のGifのパスリストを準備する */
-			for (int i = 2; i <= 200; i += 2)
-			{
-				char buf[256];
-				sprintf(buf, "Assets/Gif/Food/anim_%02d.DDS", i);
-				m_foodAnimLoadPaths.push_back(buf);
-			}
-
-			/** ロープで引っ張るGifのフレーム数を準備する */
-			m_ropeAnimSpriteRender.PrepareFrameCount(
-				static_cast<int>(m_ropeAnimLoadPaths.size()), 610.0f, 590.0f, 10.0f);
-			m_ropeAnimSpriteRender.SetPosition({ -535.0f, 10.0f, 0.0f });
-
-			/** 餌のGifのフレーム数を準備する */
-			m_foodAnimSpriteRender.PrepareFrameCount(
-				static_cast<int>(m_foodAnimLoadPaths.size()), 610.0f, 590.0f, 10.0f);
-			m_foodAnimSpriteRender.SetPosition({ -535.0f, 10.0f, 0.0f });
-
 		
-			
-		}
 
 		/** 1フレームでロードに使ってよい時間(ms) */
 		constexpr double ROPE_LOAD_TIME_BUDGET_MS = 2.0;
@@ -454,7 +463,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		// ロープのロードが完了した時点でこのcaseを抜ける
 		break;
 	}
-
+	/** プレイヤーを生成 */
 	case 1:NewGO<Player>(0, "player");
 		break;
 
@@ -517,7 +526,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	case 18:
 	{
 
-		int index = m_loadStep - 14;
+		int index = m_loadStep - 15;
 		if (index >= 0 && index < 4)
 		{
 			UFO* ufo = NewGO<UFO>(0, "UFO");
@@ -591,8 +600,34 @@ void LoadingScene::LoadGameObjectsStepByStep()
 
 void LoadingScene::LoadTitleOnly()
 {
-	m_nextSceneLoading();
-	DeleteGO(this);
+	/* 1フレームでロードに使ってよい時間*/
+	constexpr double ROPE_LOAD_TIME_BUDGET_MS = 2.0;	
+
+
+	/** ロープGifのロードが終わるまではここに留まる(ToGameSceneのcase 0と同じロジック) */
+	if (m_ropeLoadIndex < static_cast<int>(m_ropeAnimLoadPaths.size()))
+	{
+		auto loadStart = std::chrono::high_resolution_clock::now();
+
+		while (m_ropeLoadIndex < static_cast<int>(m_ropeAnimLoadPaths.size()))
+		{
+			m_ropeAnimSpriteRender.AddFrame(m_ropeAnimLoadPaths[m_ropeLoadIndex]);
+			m_ropeLoadIndex++;
+
+			double elapsedMs = std::chrono::duration<double, std::milli>(
+				std::chrono::high_resolution_clock::now() - loadStart).count();
+
+			if (elapsedMs >= ROPE_LOAD_TIME_BUDGET_MS)
+			{
+				break;
+			}
+		}
+		return;
+	}
+
+	/** ここに来た時点でロープGifのロードは完了している。
+		タイトル復帰の場合、これ以上ロードするものは無いのでロード完了扱いにする */
+	m_isLoadingEnd = true;
 }
 
 Vector3 LoadingScene::RandomCowPos()
