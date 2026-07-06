@@ -48,6 +48,7 @@ namespace
 SoundManager::SoundManager()
 {
 	m_bgmCount = enBGMNum;
+	m_seCount = enSENum;
 
 	/** BGMファイルパスを作って登録する。 */
 	for (int i = 0; i < enBGMNum; i++)

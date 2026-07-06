@@ -1,5 +1,6 @@
 #pragma once
 class Pause;
+class VoiceManager;
 class SoundPause : public IGameObject
 {
 public:
@@ -10,8 +11,10 @@ public:
 	void ButtonCount();
 	void Barbgm();
 	void Barse();
+	void Barvoice();
 	void UpdateBGMUI();
 	void UpdateSEUI();
+	void UpdateVoiceUI();
 	void Render(RenderContext& rc);
 
 	/** 選択番号設定 */
@@ -61,7 +64,9 @@ private:
 	/** SEの音量 */
 	float m_seVolume  = 0.8f;
 
-	/** */
+	/** Voiceの音量 */
+	float m_voiceVolume = 0.8f;
+
 	/** Pause画面に出てくる背景*/
 	SpriteRender m_backGroundSprite;
 	/** BGMやSEを調整する画面の外枠*/
@@ -74,27 +79,40 @@ private:
 	SpriteRender m_bgmSprite;
 	/** 「SE」とテキストで表示するアイコン*/
 	SpriteRender m_seSprite;
+	/** 「Voice」とテキストで表示するアイコン*/
+	SpriteRender m_voiceSprite;
 	/** SEの音量アイコン*/
 	SpriteRender m_seVolumeSprite;
 	/** SEで音量が出ていないことを表すアイコン*/
 	SpriteRender m_seNotVolumeSprite;
+	/** Voiceの音量アイコン */
+	SpriteRender m_voiceVolumeSprite;
+	/** Voiceの音量が出ていないことを表すアイコン*/
+	SpriteRender m_voiceNotVolumeSprite;
 	/** 「もどる」を文字で表すアイコン*/
 	SpriteRender m_buttonReturnSprite;
 	/** BGMの調整をするための茶色い丸いスライドバー*/
 	SpriteRender m_soundIconSprite;
 	/** SEの調整をするための黄色い丸いスライドバー*/
 	SpriteRender m_seIconSprite;
-	/** BGM・SEを調整するための細長いバー*/
+	/** Voiceの調整をするためのミルク色の丸いスライドバー*/
+	SpriteRender m_voiceIconSprite;
+	/** BGM・SE・VoiceUIを調整するための細長いバー*/
 	SpriteRender m_blownBarSprite;
 	SpriteRender m_seBlownBarSprite;
+	SpriteRender m_voiceBlownBarSprite;
 	/** 丸いスライドバーが選択されていないときに出すスライドバー*/
 	SpriteRender m_bgmBlackIcon;
 	SpriteRender m_seBlackIcon;
+	SpriteRender m_voiceBlackIcon;
 	/** 選ばれていないときに出す黒い画像*/
 	SpriteRender m_blackSprite;
 
 	/** 灰色のバー */
 	SpriteRender m_grayBarSprite;
+
+	/** VoiceUIの画像 */
+	SpriteRender m_voiceUISprite;
 
 	/** サウンドマネージャーのポインタ*/
 	SoundManager* m_choiceSound = nullptr;
@@ -103,9 +121,12 @@ private:
 	/** 決定する時のSEのサウンドソースのポインタ*/
 	SoundSource* p_decisionSE = nullptr;
 
-	
+	/** サウンドマネージャーのポインタ */
+	SoundManager* m_soundManager = nullptr;
 
-private:
+	/** ボイスマネージャーのポインタ */
+	VoiceManager* m_voiceManager = nullptr;
+
 	/** ゲームのポインタ*/
 	Pause* m_pause = nullptr;
 };

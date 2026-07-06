@@ -246,6 +246,7 @@
     <ClCompile Include="Rope\Rope.cpp" />
     <ClCompile Include="Score\Score.cpp" />
     <ClCompile Include="SoundManager\SoundManager.cpp" />
+    <ClCompile Include="SoundManager\VoiceManager.cpp" />
     <ClCompile Include="Source\Actor\Actor.cpp" />
     <ClCompile Include="Source\Actor\Character\Character.cpp" />
     <ClCompile Include="Source\Actor\Character\Cow\Cow.cpp" />
@@ -290,6 +291,7 @@
     <ClInclude Include="Rope\Rope.h" />
     <ClInclude Include="Score\Score.h" />
     <ClInclude Include="SoundManager\SoundManager.h" />
+    <ClInclude Include="SoundManager\VoiceManager.h" />
     <ClInclude Include="Source\Actor\Actor.h" />
     <ClInclude Include="Source\Actor\Character\Character.h" />
     <ClInclude Include="Source\Actor\Character\Cow\Cow.h" />
