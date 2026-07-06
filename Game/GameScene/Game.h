@@ -45,7 +45,7 @@ struct UFORespawnRequest
 /** UFOの一覧 */
 const UFOinfo UFO_INFOMATIONS[] =
 {
-	{ "UFO", Vector3(-1400.0f, 70.0f, 0.0f) },
+	{ "UFO", Vector3(-1200.0f, 70.0f, 0.0f) },
 	{ "UFO", Vector3( 1400.0f, 70.0f, 0.0f) },
 	{ "UFO", Vector3(    0.0f, 70.0f, -1400.0f) },
 	{ "UFO", Vector3(    0.0f, 70.0f, 1400.0f) }

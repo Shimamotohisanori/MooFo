@@ -65,6 +65,9 @@ private:
 
 	/** アニメーションが再生されて、終わったら自動で次の画像に遷移する関数*/
 	void AutoAdvanceImage();
+
+	/** ロープ・餌のGif画像のパスリストとフレーム数を準備する*/
+	void PrepareAnimResources();;
 	/** ランダムな牛のスポーン位置を生成する関数 */
 	Vector3 RandomCowPos();
 
@@ -154,13 +157,8 @@ private:
 	bool m_hasFinishedImage2 = false;
 	/** 餌のGifがロードされたかどうかのフラグ*/
 	bool m_isFoodLoaded = false;
-
-	/** Gif終了&ロード完了の条件が揃ってから、実際にフェードを始めるまで
-	止め絵を見せておく時間を計測するタイマー*/
-	float m_finishedHoldTimer = 0.0f;
-	/** 上記の計測を開始しているかどうかのフラグ*/
-	bool m_isHoldingFinishedFrame = false;
-
+	/** 次のシーンが作成されたかどうかのフラグ*/
+	bool m_nextSceneCreated = false;
 	/** 餌のGifが最終フレームに到達したことをラッチするフラグ（到達後はUpdateを止めて静止させる） */
 	bool m_hasFoodAnimReachedEnd = false;
 	/** ローディング中の音源 */

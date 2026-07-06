@@ -51,6 +51,8 @@ bool Title::Start()
 	m_soundManager = FindGO<SoundManager>("soundmanager");
 	m_titleBGM = m_soundManager->PlayingBGM(SoundBGM::enTitleBGM, true);
 
+	/**ここまで来たら初期化完了にする */
+	m_isReady = true;
 	return true;
 }
 
