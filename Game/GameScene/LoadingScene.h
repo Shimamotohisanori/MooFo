@@ -5,6 +5,7 @@ class Cow;
 class CountDown;
 class GameCamera;
 class UFO;
+class Game;
 /** ローディングシーンのクラス*/
 class LoadingScene : public IGameObject
 {
@@ -111,7 +112,10 @@ private:
 
 	/** ステップ分割ロード中のステージへのポインタ*/
 	class Stage* m_stage = nullptr;  
-	
+	/**スカイキューブのポインタ*/
+	SkyCube * m_skyCube = nullptr;
+	/** ゲームのポインタ*/
+	Game* m_game = nullptr;
 	/** 現在表示している画像*/
 	uint8_t m_currentImage = 0;
 	/** アニメーションロードのインデックス*/

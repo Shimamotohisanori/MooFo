@@ -108,56 +108,7 @@ Game::~Game()
 }
 bool Game::Start()
 {
-	/** ロード画面で生成済みのオブジェクトを参照するだけにする */
-	m_player = FindGO<Player>("player");
-	m_stage = FindGO<Stage>("stage");
-	m_gameCamera = FindGO<GameCamera>("gameCamera");
-	m_skyCube = FindGO<SkyCube>("skyCube");
-	m_inGameSound = FindGO<SoundManager>("soundmanager");
-	m_cowFood = FindGO<CowFood>("cowfood");
-	m_cowFoodManager = FindGO<CowFoodManager>("cowfoodmanager");
-	m_cowLuring = FindGO<CowLuring>("cowluring");
-
-	/** スコアの生成 */
-	m_score = NewGO<Score>(0, "score");
-
-	/** 牛の救出数クラスの生成 */
-	m_cowNumberOfRescues = NewGO<CowNumberOfRescues>(0, "cownumberofrescues");
-
-	/** タイマーの生成 */
-	m_timer = NewGO<Timer>(0, "timer");
-
-	/** ポーズの生成 */
-	m_pause = NewGO<Pause>(0, "pause");
-	m_pause->Deactivate();
-
-	/** マップを生成 */
-	m_map = NewGO<Map>(0, "map");
-
-	/** コンボを生成 */
-	m_combo = NewGO<Combo>(0, "combo");
-
-	/** 時間を増やすクラスの生成 */
-	m_addTimerUI = NewGO<AddTimerUI>(0, "addTimerUI");
-
-	/** カウントダウンはロード側で作っているなら FindGO、ゲーム側でだけなら NewGO */
-	m_countDown = NewGO<CountDown>(0, "countdown");
-
-	/** UFOのライトUIを生成 */
-	m_ufoLightUI = NewGO<UFOLightUI>(0, "ufoLightUI");
-  
-	/** 照準を生成 */
-	m_aiming = NewGO<Aiming>(0, "aiming");
-
-	/** フェードのマネージャーを生成*/
-	m_fadeManager = NewGO<FadeManager>(0, "fadeManager");	
-
-	m_isSound = false;
-	m_spawnTimer = 0.0f;
-
-	m_timeOutImage.Init("Assets/sprite/NumberUI/TimeOut.DDS", 100, 100);
-	m_timeOutImage.SetPosition(Vector3(0.0f, 0.0f, 0.0f));
-	m_timeOutImage.Update();
+	
 	
 	return true;
 }
@@ -399,6 +350,117 @@ void Game::RequestUFORespawn(int slotIndex)
 	m_ufoRespawnRequests.push_back(request);
 }
 
+bool Game::LoadStepByStep()
+{
+	switch (m_gameInitStep)
+	{
+	case InitStep::FindRefs:
+	{
+
+		m_player = FindGO<Player>("player");
+		m_stage = FindGO<Stage>("stage");
+		m_gameCamera = FindGO<GameCamera>("gameCamera");
+		m_skyCube = FindGO<SkyCube>("skyCube");
+		m_inGameSound = FindGO<SoundManager>("soundmanager");
+		m_cowFood = FindGO<CowFood>("cowfood");
+		m_cowFoodManager = FindGO<CowFoodManager>("cowfoodmanager");
+		m_cowLuring = FindGO<CowLuring>("cowluring");
+		m_gameInitStep = InitStep::Score;
+		break;
+	}
+	/** スコアの生成 */
+	case InitStep::Score:
+	{
+		m_score = NewGO<Score>(0, "score");
+		m_gameInitStep = InitStep::CowNumberOfRescues;
+		break;
+
+	}
+	/** 牛の救出数の生成 */
+	case InitStep::CowNumberOfRescues:
+	{
+		m_cowNumberOfRescues = NewGO<CowNumberOfRescues>(0, "cownumberofrescues");
+		m_gameInitStep = InitStep::Timer;
+		break;
+	}
+	/** タイマーの生成 */
+	case InitStep::Timer:
+	{
+		m_timer = NewGO<Timer>(0, "timer");
+		m_gameInitStep = InitStep::Pause;
+		break;
+	}
+	/** ポーズの生成 */
+	case InitStep::Pause:
+	{
+		m_pause = NewGO<Pause>(0, "pause");
+		m_pause->Deactivate();
+		m_gameInitStep = InitStep::Map;
+		break;
+	}
+	/** マップの生成 */
+	case InitStep::Map:
+	{
+		m_map = NewGO<Map>(0, "map");
+		m_gameInitStep = InitStep::Combo;
+		break;
+	}
+	/** コンボの生成 */
+	case InitStep::Combo:
+	{
+		m_combo = NewGO<Combo>(0, "combo");
+		m_gameInitStep = InitStep::AddTimerUI;
+		break;
+	}
+	/** 時間を増やすUIの生成 */
+	case InitStep::AddTimerUI:
+	{
+		m_addTimerUI = NewGO<AddTimerUI>(0, "addTimerUI");
+		m_gameInitStep = InitStep::CountDown;
+		break;
+	}
+	/** カウントダウンの生成 */
+	case InitStep::CountDown:
+	{
+		m_countDown = NewGO<CountDown>(0, "countdown");
+		m_gameInitStep = InitStep::UFOLightUI;
+		break;
+	}
+	/** UFOのライトUIの生成 */
+	case InitStep::UFOLightUI:
+	{
+		m_ufoLightUI = NewGO<UFOLightUI>(0, "ufoLightUI");
+		m_gameInitStep = InitStep::Aiming;
+		break;
+	}
+	/** 照準の生成 */
+	case InitStep::Aiming:
+	{
+		m_aiming = NewGO<Aiming>(0, "aiming");
+		m_gameInitStep = InitStep::FadeManager;
+		break;
+	}
+	/** フェードマネージャーの生成 */
+	case InitStep::FadeManager:
+	{
+		m_fadeManager = NewGO<FadeManager>(0, "fadeManager");
+
+		/** 残りの軽い処理もしておく*/
+		m_isSound = false;
+		m_spawnTimer = 0.0f;
+		m_timeOutImage.Init("Assets/sprite/NumberUI/TimeOut.DDS", 100, 100);
+		m_timeOutImage.SetPosition(Vector3(0.0f, 0.0f, 0.0f));
+		m_timeOutImage.Update();
+
+		m_gameInitStep = InitStep::Num;
+		break;
+	}
+	case InitStep::Num:
+		break;
+	}
+	return m_gameInitStep == InitStep::Num;
+
+	}
 
 void Game::UpdateUFORespawn()
 {

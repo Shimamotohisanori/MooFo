@@ -430,10 +430,10 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	{
 		/** ロードするゲームオブジェクトをステップバイステップで生成する */
 
-		
+
 	case 0:
 	{
-		
+
 
 		/** 1フレームでロードに使ってよい時間(ms) */
 		constexpr double ROPE_LOAD_TIME_BUDGET_MS = 2.0;
@@ -546,58 +546,65 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		/** 牛の餌を生成 */
 		NewGO<CowFood>(0, "cowfood");
 
-		 NewGO<CowFoodManager>(0, "cowfoodmanager");
+		NewGO<CowFoodManager>(0, "cowfoodmanager");
 	}
 	break;
 	/** スカイキューブを生成 */
 	case 21:
 	{
-
 		/** SkyCube を生成 */
-		SkyCube * sky = NewGO<SkyCube>(0, "skyCube");
+		m_skyCube = NewGO<SkyCube>(0, "skyCube");
 
 		/** タイプ設定 */
-		sky->SetType(EnSkyCubeType::enSkyCubeType_Day);
+		m_skyCube->SetType(EnSkyCubeType::enSkyCubeType_Day);
 
 		/** スケール設定 */
-		sky->SetScale(10000.0f);
+		m_skyCube->SetScale(10000.0f);
+	}
+	break;
 
+	/** 方向光・IBL設定（ここが一番重いはず） */
+	case 22:
+	{
 		/** 方向光(ほぼ真上から差し込む光) */
 		Vector3 sunDir(0.0f, -1.0f, 0.0f);
 		sunDir.Normalize();
 		g_renderingEngine->SetDirectionLight(0, sunDir, Vector3(5.0f, 5.0f, 5.0f));
 
 		/** IBL 設定 */
-		g_renderingEngine->SetAmbientByIBLTexture(sky->GetTextureFilePath(), 0.95f);
-
+		g_renderingEngine->SetAmbientByIBLTexture(m_skyCube->GetTextureFilePath(), 0.95f);
+	}
+	break;
+	case 23:
 		/** ブルームを抑制 */
 		g_renderingEngine->SetBloomThreshold(3.0f);
-	}
-	 break;
+		break;
 
-	/** ゲーム本体を生成 */
-	case 22:
-		Game * game = NewGO<Game>(0, "game");
-
-		/** ロードした牛をゲームに渡す */
+	case 24:
+	{
+		if (m_game == nullptr)
+		{
+			m_game = NewGO<Game>(0, "game");
+		}
+		if (!m_game->LoadStepByStep())
+		{
+			/** Gameの初期化が終わるまで次に進まない */
+			return;
+		}
 		for (auto cow : m_tempCows)
 		{
-			game->GetAliveCows().push_back(cow);
+			m_game->GetAliveCows().push_back(cow);
 		}
 
-		/** ロードしたUFOをゲームに渡す */
-		game->SetUFOList(m_tempUFOs);
-
+		m_game->SetUFOList(m_tempUFOs);
+	
 		/** ロード完了フラグを立てる */
 		m_isLoadingEnd = true;
-
 		return;
 	}
-
-	m_loadStep++;
 	}
-
-
+	m_loadStep++;
+}
 void LoadingScene::LoadTitleOnly()
 {
 	/* 1フレームでロードに使ってよい時間*/
