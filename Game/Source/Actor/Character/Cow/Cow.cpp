@@ -16,6 +16,7 @@
 #include "EffectManager/EffectManager.h"
 #include "CowShrinkHay.h"
 #include "CowLuring.h"
+#include "SoundManager/VoiceManager.h"
 
 namespace
 {
@@ -98,6 +99,10 @@ bool Cow::Start()
 	/** 出現時はスケールを0にする */
 	m_cowmodelRender.SetScale(Vector3(0.0f, 0.0f, 0.0f));
 	m_cowmodelRender.Update();
+
+	/** ボイスマネージャーを取得 */
+	m_voiceManager = FindGO<VoiceManager>("voicemanager");
+
 	return true;
 }
 
@@ -748,6 +753,11 @@ void Cow::CapturedByPlayer()
 		if (dir.Length() < 50.0f)
 		{
 			m_isDeadFlag = true;
+
+			/** 牛が捕獲されたときのボイスを再生 */
+			/** ランダムでボイスを選択 */
+			SoundVoice voice = (rand() % 2 == 0) ? SoundVoice::enVoice_Rescue1 : SoundVoice::enVoice_Rescue2;
+			m_voiceManager->PlayingVoice(voice, false);
 
 			if (m_takingUFO)
 			{

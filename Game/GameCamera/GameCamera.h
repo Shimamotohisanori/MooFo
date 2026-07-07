@@ -2,6 +2,7 @@
 class Player;
 class Rope;
 class Game;
+class VoiceManager;
 class GameCamera : public IGameObject
 {
 
@@ -84,6 +85,9 @@ private:
 
 	/** 牛を捕まえた時の音 */
 	SoundSource* m_cowCatchSE = nullptr;
+
+	/** ボイスマネージャー */
+	VoiceManager* m_voiceManager = nullptr;
 
 	/** カメラがロープの事を追従し始めたかどうかのフラグ */
 	bool m_isRopeCameraStarted = false;
