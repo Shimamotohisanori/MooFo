@@ -60,7 +60,7 @@ public:
 	bool Start();
 	void Update();
 	void Render(RenderContext& rc);
-	
+
 
 public:
 	/** ゲームクリアで行う処理 */
@@ -78,11 +78,13 @@ public:
 	/** 牛を生きてる牛リストから消す関数 */
 	void ReMoveCow(Cow* cow);
 
+	/** ステップバイステップで分割ロードを行う */
+	bool LoadStepByStep();
 	bool m_isSound;
 	/** UFOが消えた際にリクエストをする関数*/
 	void RequestUFORespawn(int slotIndex);
 	/** ロード完了後、プレイヤーが実際にスタートを確定した時に呼ぶ */
-	void ActivateGameBGM() 
+	void ActivateGameBGM()
 	{
 		m_isGameActive = true;
 	}
@@ -112,11 +114,11 @@ public:
 	void SetUFOList(const std::vector<UFO*>& ufos);
 
 	/** タイムアウトフラグの取得関数 */
-	bool GetIsTimeOut()const 
+	bool GetIsTimeOut()const
 	{
 		return m_isTimeOut;
 	}
-	
+
 	/** ダミーの牛のセッター*/
 	void SetDuumyCow(DummyCow* cow)
 	{
@@ -155,7 +157,7 @@ private:
 	Pause* m_pause = nullptr;
 
 	/** タイマー */
-	Timer* m_timer  = nullptr;
+	Timer* m_timer = nullptr;
 
 	/** ゲームクリア */
 	GameClear* m_gameClear = nullptr;
@@ -193,10 +195,10 @@ private:
 
 	/** タイマー追加UI */
 	AddTimerUI* m_addTimerUI = nullptr;
-	
+
 	/** ダミーの牛 */
 	DummyCow* m_dummyCow = nullptr;
-	
+
 	/** 牛のライトUI */
 	UFOLightUI* m_ufoLightUI = nullptr;
 
@@ -237,9 +239,26 @@ private:
 		EnUFO_UFO4,
 		EnUFO_Num
 	};
-
 	/** UFOの配列 */
 	UFO* m_UFO[EnUFO_Num];
+	/** 分割ロードに必要な初期化ステップ */
+	enum class InitStep
+	{
+		FindRefs,
+		Score,
+		CowNumberOfRescues,
+		Timer,
+		Pause,
+		Map,
+		Combo,
+		AddTimerUI,
+		CountDown,
+		UFOLightUI,
+		Aiming,
+		FadeManager,
+		Num
+	};
+	InitStep m_gameInitStep = InitStep::FindRefs;
 
 	/** タイムアウトの画像のスケール */
 	Vector3 m_timeOutImageScale = Vector3(0.5f, 0.5f, 1.0f);
