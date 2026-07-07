@@ -5,6 +5,8 @@
 #include "Source/Actor/Character/Player/Player.h"
 #include "SoundManager/SoundManager.h"
 #include "GameScene/Game.h"
+#include "SoundManager/VoiceManager.h"
+
 namespace
 {
 	/** カメラ基本設定 */
@@ -66,6 +68,9 @@ bool GameCamera::Start()
 
 	/** 円平面を設定 */
 	g_camera3D->SetFar(1000000.0f);
+
+	/** ボイスマネージャーを取得 */
+	m_voiceManager = FindGO<VoiceManager>("voicemanager");
 
 	return true;
 }
@@ -316,6 +321,7 @@ void GameCamera::CheckCameraHitCow()
 			continue;
 		}
 
+		/** カメラと牛の距離が一定の範囲内で、牛が捕まえられている状態ならば */
 		if (dist < COW_HIT_FAR_DISTANCE && cow->GetIsTakeAwayed())
 		{
 			/** ロープが当たった扱いにする */
@@ -335,6 +341,11 @@ void GameCamera::CheckCameraHitCow()
 			{
 				m_cowCatchSE = soundManager->PlayingSE(SoundSE::enCowCatchSE, false);
 			}
+
+			/** 牛を捕まえたボイスを再生 */
+			/** ランダムでボイスを選択 */
+			SoundVoice voice = (rand() % 2 == 0) ? SoundVoice::enVoice_Catch1 : SoundVoice::enVoice_Catch2;
+			m_voiceManager->PlayingVoice(voice, false);
 
 			return;
 		}

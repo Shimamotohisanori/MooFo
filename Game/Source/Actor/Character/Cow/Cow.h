@@ -11,6 +11,7 @@ class DummyCow;
 class Timer;
 class CowLuring;
 class CowFoodManager;
+class VoiceManager;
 class Cow : public Character
 {
 public:
@@ -236,6 +237,9 @@ private:
 
 	/** 満腹状態のエフェクト */
 	EffectEmitter* m_overdoseEffect = nullptr;
+
+	/** ボイスマネージャー */
+	VoiceManager* m_voiceManager = nullptr;
 
 	enum EnCowState
 	{

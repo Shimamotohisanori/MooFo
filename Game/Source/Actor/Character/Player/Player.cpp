@@ -9,6 +9,7 @@
 #include "Source/Actor/Stage/CowFood.h"
 #include "EffectManager/EffectManager.h"
 #include "Source/Actor/Character/Cow/Cow.h"
+#include "SoundManager/VoiceManager.h"
 
 namespace
 {
@@ -127,6 +128,9 @@ bool Player::Start()
 	/** 初期化時にステートを待機状態にする */
 	m_playerState = 0;
 	m_playerModelRender.Update();
+
+	/** ボイスマネージャーを取得 */
+	m_voiceManager = FindGO<VoiceManager>("voicemanager");
 
 	return true;
 }
@@ -345,6 +349,12 @@ void Player::ThrowRope()
 		/** ロープを投げる音を再生 */
 		SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
 		m_throwRopeSE = soundManager->PlayingSE(SoundSE::enThrowRopeSE, false);
+
+		/** ボイスの再生(ランダムで2種類切り替え) */
+		SoundVoice voice = (rand() % 2 == 0) ? SoundVoice::enVoice_ThrowRope1 : SoundVoice::enVoice_ThrowRope2;
+		
+		/** ボイスを再生 */
+		m_voiceManager->PlayingVoice(voice, false);
 	}
 }
 
@@ -507,6 +517,9 @@ void Player::SquatAnimation()
 		m_isSquatAnimation = true;
 		/** 連続してトリガーされないようにフラグをリセットする */
 		m_CowFood->SetIsPutFood(false);
+
+		/** ボイスの再生 */
+		m_voiceManager->PlayingVoice(SoundVoice::enVoice_PutHay, false);
 	}
 }
 

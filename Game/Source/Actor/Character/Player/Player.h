@@ -9,6 +9,7 @@ class Game;
 class Pause;
 class Cow;
 class CowFood;
+class VoiceManager;
 class Player : public Character
 {
 public:
@@ -139,6 +140,9 @@ private:
 
 	/** 汗のエフェクト */
 	EffectEmitter* m_sweatEffect = nullptr;
+
+	/** ボイスマネージャー */
+	VoiceManager* m_voiceManager = nullptr;
 
 	/** プレイヤーの状態 */
 	uint8_t m_playerState = 0;
