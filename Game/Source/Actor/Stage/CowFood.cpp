@@ -311,7 +311,7 @@ void CowFood::CowFoodPut()
 	}
 
 	if (player == nullptr)
-	{
+	{	
 		return;
 	}
 

@@ -4,6 +4,7 @@
 #include "CountDown/CountDown.h"
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "GameCamera/GameCamera.h"
+#include "Rope/Rope.h"
 
 namespace
 {
@@ -32,6 +33,7 @@ bool Aiming::Start()
 	m_pause = FindGO<Pause>("pause");
 	m_countdown = FindGO<CountDown>("countdown");
 	m_gameCamera = FindGO<GameCamera>("gameCamera");
+	m_rope = FindGO<Rope>("rope");
 
 	return true;
 }
@@ -69,6 +71,12 @@ void Aiming::Render(RenderContext& rc)
 
 	/** 牛が捕獲されていない場合のみ照準を描画 */
 	if (m_isAnyCowCaptured)
+	{
+		return;
+	}
+
+	/** ロープを投げている最中は照準を描画しない */
+	if (m_rope && m_rope->GetIsThrowRope())
 	{
 		return;
 	}

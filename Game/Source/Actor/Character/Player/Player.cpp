@@ -369,6 +369,9 @@ void Player::PullRope()
 			/** RB1ボタンが押されたとき */
 			if (g_pad[0]->IsTrigger(enButtonRB1))
 			{
+				/** コントローラーをバイブレーションさせる */
+				g_pad[0]->SetVibration(0.5f, 1.0f);
+
 				/** 右ボタンフラグをON、左ボタンフラグをOFFにする */
 				m_isRightButton1 = true;
 				m_isLeftButton1 = false;
@@ -392,6 +395,9 @@ void Player::PullRope()
 			/** LB1ボタンが押されたとき */
 			else if (g_pad[0]->IsTrigger(enButtonLB1))
 			{
+				/** コントローラーをバイブレーションさせる */
+				g_pad[0]->SetVibration(0.5f, 1.0f);
+
 				/** 左ボタンフラグをON、右ボタンフラグをOFFにする */
 				m_isLeftButton1 = true;
 				m_isRightButton1 = false;
@@ -474,22 +480,22 @@ bool Player::CanPlayerUpdate()
 
 void Player::ManageState()
 {
+	/** しゃがみアニメーションが再生されていない場合、しゃがみ中フラグをリセットする */
+	if (!m_playerModelRender.IsPlayingAnimation())
+	{
+		m_isSquatAnimation = false;
+		m_playerState = 0;
+	}
+
 	/** 牛を引っ張っている最中は再生しないようにする。 */
 	if (m_rope->GetIsHitCow())
 	{
 		return;
 	}
 
-	/** しゃがみアニメーション再生中はステートを上書きしない */
+	/** しゃがみアニメーションが再生中は走る/待機への切り替えを防ぐ */
 	if (m_isSquatAnimation)
 	{
-		/** アニメーションが終了したらしゃがみフラグを下げて待機状態に戻す */
-		if (!m_playerModelRender.IsPlayingAnimation())
-		{
-			m_isSquatAnimation = false;
-			m_playerState = 0;
-		}
-		/** しゃがみ中はここで処理を抜けて、走る/待機への切り替えを防ぐ */
 		return;
 	}
 
@@ -511,6 +517,9 @@ void Player::SquatAnimation()
 	/** 牛の餌をおいたら */
 	if (m_CowFood->GetIsPutFood())
 	{
+		/** コントローラーをバイブレーションさせる */
+		g_pad[0]->SetVibration(0.5f, 1.0f);
+	
 		/** 屈むアニメーションを再生する */
 		m_playerState = 4;
 		/** しゃがみ中フラグを立てる */
