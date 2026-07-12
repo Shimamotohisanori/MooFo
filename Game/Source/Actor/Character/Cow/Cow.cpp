@@ -750,7 +750,7 @@ void Cow::CapturedByPlayer()
 		
 		
 		/** 距離が一定以下なら捕獲される */
-		if (dir.Length() < 50.0f)
+		if (dir.Length() < 70.0f)
 		{
 			m_isDeadFlag = true;
 
