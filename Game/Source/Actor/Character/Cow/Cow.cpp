@@ -60,6 +60,12 @@ namespace
 
 	/** 牛の最小スケール */
 	constexpr float COW_MIN_SCALE = 0.1f;
+
+	/** 追いかけるスピード */
+	constexpr float CHASE_POWER = 1.0f;
+
+	/** これ以上近づいたら停止する距離(プレイヤーにのめりこまないように) */
+	constexpr float CHASE_STOP_DISTANCE = 60.0f;
 }
 
 Cow::Cow()
@@ -170,11 +176,36 @@ void Cow::Update()
 		}
 	}
 	
-	/** プレイヤーから逃げる関数 */
-	AvoidPlayer();
+	/** 追いかけてくる牛か、逃げる牛 */
+	if (m_isChasingPlayer)
+	{
+		ChasePlayer();
+	}
+	else
+	{
+		/** プレイヤーから逃げる関数 */
+		AvoidPlayer();
+	}
+	
+	/** 追いかける牛はプレイヤー優先で追いかける */
+	if (!m_isChasingPlayer)
+	{
+		/** 一番近い餌を探す処理 */
+		SearchNearestFood();
 
-	/** 一番近い餌を探す処理 */
-	SearchNearestFood();
+		if (m_isTargetFood)
+		{
+			MoveToFood();
+		}
+		else
+		{
+			if (m_rotationState == EnRotateState_MoveDir)
+			{
+				Move();
+			}
+		}
+	}
+	
 
 	if (m_isTargetFood)
 	{
@@ -184,8 +215,11 @@ void Cow::Update()
 	{
 		if (m_rotationState == EnRotateState_MoveDir)
 		{
-			/** 移動 */
-			Move();
+			if (!m_isChasingPlayer)
+			{
+				/** 移動 */
+				Move();
+			}
 		}
 	}
 	
@@ -858,6 +892,52 @@ void Cow::AvoidPlayer()
 		m_transform.GetRotation().SetRotationYFromDirectionXZ(dir);
 		m_transform.SetRotation(m_transform.GetRotation());
 	}
+
+}
+
+void Cow::ChasePlayer()
+{
+	/** UFOに捕まっている間は追いかけない */
+	if (m_isTakeAwayed == true) return;
+
+	/** ロープに捕まっている時は追いかけない */
+	if (m_isCaptured) return;
+
+	/** プレイヤーと牛の位置を取得 */
+	Vector3 playerPos = m_player->GetPosition();
+	Vector3 cowPos = m_transform.GetPosition();
+
+	Vector3 dir = playerPos - cowPos;
+	float dist = dir.Length();
+
+	/** 近づきすぎると停止して待機アニメーションに戻す */
+	if (dist < CHASE_STOP_DISTANCE)
+	{
+		m_cowState = 0;
+		m_rotationState = EnRotateState_MoveDir;
+		m_moveDir = Vector3::Zero;
+		return;
+	}
+
+	/** 歩きステートにする。*/
+	m_cowState = 1;
+
+	dir.Normalize();
+
+	m_moveDir = dir * 100.0f;
+
+	Vector3 move = Vector3::Zero;
+	move += dir * CHASE_POWER * 100.0f;
+	Vector3 newPos = m_cowCharacterController.Execute(move, g_gameTime->GetFrameDeltaTime());
+
+	m_transform.SetPosition(newPos);
+	m_cowmodelRender.SetPosition(newPos);
+
+	/** 進行方向に(プレイヤー方向)回転 */
+	m_transform.GetRotation().SetRotationYFromDirectionXZ(dir);
+	m_transform.SetRotation(m_transform.GetRotation());
+
+
 
 }
 

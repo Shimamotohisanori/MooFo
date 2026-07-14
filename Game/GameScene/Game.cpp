@@ -33,6 +33,18 @@ namespace
 	const int RANDOM_SPAWN_RANGE = 300;
 	const int RANDOM_SPAWN_RANGE_DOUBLE = 600;
 	const float NEW_SPAWN_TIMER = 3.0f;
+
+	/*
+	 * 追いかける牛の出現確率(%)
+	 * ※救出数による難易度と連動させる※ 
+	 */
+
+	/** 救出数 5未満 */
+	constexpr int CHASE_COW_TABLE_A = 20;
+	/** 救出数 5以上10未満 */
+	constexpr int CHASE_COW_TABLE_B =  15;
+	/** 救出数 10以上 */
+	constexpr int CHASE_COW_TABLE_C =  10;
 }
 
 Game::~Game()
@@ -526,20 +538,26 @@ void Game::SpawnCow()
 			
 			int currentrescues = m_cowNumberOfRescues->GetNumberOfRescues();
 
+			/** もし牛の救出数が一定以上ならスポーン範囲を大きくする。 */
+			int chaseCowRate = CHASE_COW_TABLE_A;
+
 			/** もし牛の救出数が一定以上ならスポーンする範囲を大きくする */
 			if (currentrescues >= 10)
 			{
 				m_difficultyLevelSpawnRange = 600;
+				chaseCowRate = CHASE_COW_TABLE_C;
 			}
 			
 			else if (currentrescues >= 5)
 			{
 				m_difficultyLevelSpawnRange = 400;
+				chaseCowRate = CHASE_COW_TABLE_B;
 			}
 
 			else
 			{
 				m_difficultyLevelSpawnRange = 0;
+				chaseCowRate = CHASE_COW_TABLE_A;
 			}
 
 			m_spawnTimer = 0.0f;
@@ -564,6 +582,10 @@ void Game::SpawnCow()
 			newCow->SetUFOAttracted(rand() % 2 == 0);
 			/** UFOに向かって歩く牛の速度も適応させる*/
 			newCow->IsMoving();
+
+			/** 難易度(救出数)に応じた確率で牛にする。 */
+			newCow->SetIsChasingPlayer(rand() % 100 < chaseCowRate);
+
 			newCow->SetPosition(pos);
 			/** 生きている牛リストに追加 */
 			m_aliveCows.push_back(newCow);
