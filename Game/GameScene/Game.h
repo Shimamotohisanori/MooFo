@@ -23,6 +23,7 @@ class CowFoodManager;
 class CowLuring;
 class FadeManager;
 class Aiming;
+class InstructionControllerUI;
 
 /** UFOの情報をまとめる構造体 */
 struct UFOinfo
@@ -220,6 +221,9 @@ private:
 	/** 照準 */
 	Aiming* m_aiming = nullptr;
 
+	/** 操作説明UI */
+	InstructionControllerUI* m_instructionControllerUI = nullptr;
+
 	/** 生きている牛のリスト */
 	std::vector<Cow*> m_aliveCows;
 	/** フェード処理を開始させるフラグ*/
@@ -256,6 +260,7 @@ private:
 		UFOLightUI,
 		Aiming,
 		FadeManager,
+		InstructionControllerUI,
 		Num
 	};
 	InitStep m_gameInitStep = InitStep::FindRefs;
