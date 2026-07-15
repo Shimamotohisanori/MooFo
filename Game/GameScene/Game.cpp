@@ -24,6 +24,7 @@
 #include "Source/Actor/Character/Cow/CowLuring.h"
 #include "FadeManager/FadeManager.h"
 #include "Aiming/Aiming.h"
+#include "InstructionControllerUI/InstructionControllerUI.h"
 
 namespace
 {
@@ -92,6 +93,9 @@ Game::~Game()
 
 	/** 照準の削除 */
 	DeleteGO(m_aiming);
+
+	/** 操作説明UIの削除 */
+	DeleteGO(m_instructionControllerUI);
 
 	/** コンボクラスの削除 */
 	if (m_combo && !m_combo->IsDead())
@@ -452,9 +456,16 @@ bool Game::LoadStepByStep()
 		m_timeOutImage.SetPosition(Vector3(0.0f, 0.0f, 0.0f));
 		m_timeOutImage.Update();
 
+		m_gameInitStep = InitStep::InstructionControllerUI;
+		break;
+	}
+	case InitStep::InstructionControllerUI:
+	{
+		m_instructionControllerUI = NewGO<InstructionControllerUI>(0, "instructionControllerUI");
 		m_gameInitStep = InitStep::Num;
 		break;
 	}
+
 	case InitStep::Num:
 		break;
 	}
@@ -632,6 +643,12 @@ void Game::TimeOut()
 void Game::Render(RenderContext& rc)
 {
 	if (IsFadeTimeOut())
+	{
+		return;
+	}
+
+	/** ポーズ中はゲーム処理をしない */
+	if(m_pause && m_pause->GetIsPause())
 	{
 		return;
 	}

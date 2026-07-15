@@ -34,9 +34,9 @@ namespace
 	/** 矢印のファイルパス*/
 	const char* ARROW_SPRITE_PATH = "Assets/sprite/MapUI/Arrow.dds";
 
-	Vector3 MAP_CENTER_POSITION = Vector3(704.0f, -300.0f, 0.0f);
+	Vector3 MAP_CENTER_POSITION = Vector3(745.0f, 310.0f, 0.0f);
 
-	Vector3 MAP_OUTLINE_POSITION = Vector3(704.0f, -302.5f, 0.0f);
+	Vector3 MAP_OUTLINE_POSITION = Vector3(745.0f, 307.5f, 0.0f);
 
 
 	constexpr float MAP_RADIUS = 180.0f;
