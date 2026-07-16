@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 class CountDown;
 class Pause;
 class Game;
@@ -16,6 +16,8 @@ class Timer : public IGameObject
 	/** コンボで時間を増やす処理 */
 	void AddTimer(float time);
 
+	/** 時間を減らす処理*/
+	void DecreaseTimer(float time);
 	/** タイマーの値を取得する関数 */
 	const float GetTimer() const
 	{

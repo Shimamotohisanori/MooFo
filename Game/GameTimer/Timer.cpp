@@ -280,6 +280,15 @@ void Timer::AddTimer(float time)
 	m_timer += time;
 }
 
+void Timer::DecreaseTimer(float time)
+{
+	m_timer -= time;
+	if (m_timer < 0)
+	{
+		m_timer = 0.0f;
+	}
+}
+
 
 void Timer::Render(RenderContext& rc)
 {
