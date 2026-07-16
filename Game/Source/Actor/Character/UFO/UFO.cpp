@@ -196,7 +196,7 @@ void UFO::Update()
 	{
 		Vector3 effectPos = m_transform.GetPosition();
 		effectPos.y += 350.0f;
-		m_UFOConfusionEffect->SetPosition(effectPos);
+		m_UFOConfusionEffect->SetPosition(effectPos + Vector3(0.0f,0.0f,0.0f));
 	}
 	/** 牛捕獲コントローラーの更新 */
 	m_cowCaptureController.Update();
@@ -458,7 +458,7 @@ void UFO::PlayEffect()
 	/** エフェクトを再生する*/
 	m_UFOConfusionEffect = NewGO<nsK2EngineLow::EffectEmitter>(0);
 	m_UFOConfusionEffect->Init((int)effectID);
-	m_UFOConfusionEffect->SetScale({ 10.0f, 10.0f, 10.0f });
+	m_UFOConfusionEffect->SetScale({ 20.0f, 20.0f, 20.0f });
 	m_UFOConfusionEffect->Play();
 
 	/** 三回失敗すると上昇する*/

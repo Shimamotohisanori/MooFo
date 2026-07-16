@@ -26,8 +26,6 @@ public:
 	
 	/** 分割ロード中の処理を行う関数*/
 	void LoadInitialSpritesStepByStep();
-	/** Loading文字のフェード処理を行う関数*/
-	void FadeLoadingText();
 	/** 餌のアニメーションをバックグラウンドでロードする関数*/
 	void LoadFoodAnimInBackground();
 	/** シーンが切り替わるタイミングでフェードアウト処理を行う*/
@@ -79,22 +77,30 @@ private:
 
 	/** アニメーション分割ロード用のパスリスト(ロープで引っ張るGif)*/
 	std::vector<std::string> m_ropeAnimLoadPaths;
+
+	/** 歩く牛アニメーションの画像パスリスト*/
+	std::vector < std::string>m_CowWalkAnimLoadPaths;
+	/** ローディング中の操作説明画像のスプライトレンダラー */
+	SpriteRender m_LoadingInstructionSpriteRender;
 	/** 牛の餌を説明するアニメーションスプライトレンダラー */
 	AnimSpriteRender m_foodAnimSpriteRender;
 
 	/** ロープで救出することを説明するアニメーションスプライトレンダラー */
 	AnimSpriteRender m_ropeAnimSpriteRender;
 
+	/** ローディング中の下に出す歩く牛アニメーション*/
+	AnimSpriteRender m_cowWalkSpriteRender;
+
+
 	enum class InitLoadStep
 	{
-		
-		LoadingImage0,/** 牛の救出を説明する画像 */
-		LoadingImage1,/** 餌の説明画像 */
-		LoadingText,/** Loadingの文字 */
+		LoadingInstruction,/** ローディング中の操作説明画像 */
+		LoadingGifBackGroundImage,/** 選ばれたGif画像の背景 */
+		//LoadingText,/** Loadingの文字 */
 		Num
 	};
 
-	InitLoadStep m_initLoadStep = InitLoadStep::LoadingImage0;
+	InitLoadStep m_initLoadStep = InitLoadStep::LoadingInstruction;
 	/** ローディング中の背景のスプライトレンダー*/
 	SpriteRender m_blackLoadingSpriteRender;
 
@@ -127,13 +133,15 @@ private:
 	/** ロードするゲームオブジェクトのステップ*/
 	uint8_t m_loadStep = 0;
 
-	/** Load文字フェード用の変数*/
-	/** Loadingの文字のアルファ値*/
-	float m_loadingTextAlpha = 1.0f;
-	/** Loadingの文字のフェード速度*/
-	float m_loadingFadeSpeed = 0.5f;
+	///** Load文字フェード用の変数*/
+	///** Loadingの文字のアルファ値*/
+	//float m_loadingTextAlpha = 1.0f;
+	///** Loadingの文字のフェード速度*/
+	//float m_loadingFadeSpeed = 0.5f;
+	/** 操作説明画像を表示する時間*/
+	float m_LoadingInstructionTime = 0.0f;
 	/** フェードインしているかどうかのフラグ*/
-	bool m_isFadeIn = false;
+	//bool m_isFadeIn = false;
 	/** ローディングが開始したかどうかのフラグ*/
 	bool m_isLoadingStarted = false;
 	/** ローディングが終了したかどうかのフラグ*/
@@ -163,11 +171,16 @@ private:
 	bool m_isFoodLoaded = false;
 	/** 次のシーンが作成されたかどうかのフラグ*/
 	bool m_nextSceneCreated = false;
-	/** 餌のGifが最終フレームに到達したことをラッチするフラグ（到達後はUpdateを止めて静止させる） */
-	bool m_hasFoodAnimReachedEnd = false;
+	/** 2枚目にロープのGif画像を表示するかどうか(falseの時は餌のGIF)*/
+	bool m_useRopeGif = false;
+	/** 選ばれたGifが最終フレームに到達しているかどうかのフラグ(表示中のみUpdateして、到達後は制止させる)*/
+	bool m_hasSelectedGifReachedEnd = false;
 	/** ローディング中の音源 */
 	SoundSource* m_loadingSound = nullptr;
 
+
+	/** 操作説明画像を最低表示しておく時間(秒) */
+	static constexpr float MIN_IMAGE0_DISPLAY_TIME = 3.0f; // 好きな秒数に調整
 	//これは、LoadingSceneを呼び出すときに、次のシーンをロードする関数を引数で渡してもらうための変数。
 	/** 次のシーンをロードする関数*/
 	std::function<void()> m_nextSceneLoading = nullptr;
