@@ -97,6 +97,20 @@ private:
 	void UpdateSegments();
 
 private:
+	/** ロープのアニメーション */
+	enum enRopeAnimation
+	{
+		enRopeAnimation_Shrink_Throw, /** 投げるアニメーション(縮む) */
+		enRopeAnimation_Stretch_Throw,  /** 投げるアニメーション(伸びる) */
+		enRopeAnimation_Num
+	};
+
+	/** ロープのアニメーション */
+	AnimationClip m_ropeAnimationClips[enRopeAnimation_Num];
+
+	/** アニメーション番号 */
+	enRopeAnimation m_currentAnimation = enRopeAnimation_Shrink_Throw;
+
 	/** プレイヤー */
 	Player* m_player = nullptr;
 
@@ -114,6 +128,9 @@ private:
 
 	/** ロープモデルレンダー */
 	ModelRender m_ropeModelRender;
+
+	/** アニメを再生するロープモデル */
+	ModelRender m_animationRopeModelRender;
 
 	/** セグメントごとのモデルレンダー */
 	ModelRender m_ropeSegments[ROPE_SEGMENT_COUNT];

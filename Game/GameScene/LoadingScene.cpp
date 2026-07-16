@@ -56,8 +56,6 @@ namespace
 	constexpr int COWWALK_FREAM_COUNT = 25;
 	/** 25枚を15fpsで再生 → 1周約1.67秒*/
 	constexpr float COWWALK_FPS = 15.0f; 
-	/** ゲーム開始直後(初期10体)に追いかける牛の出現確率 */
-	constexpr int INITIAL_CHASE_COW_RATE = 20;
 }
 
 LoadingScene::LoadingScene()

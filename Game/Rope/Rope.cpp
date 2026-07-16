@@ -13,6 +13,15 @@ namespace
 	/** 捕まった牛用のロープモデルファイルパス */
 	const char* CAPTURED_COW_FILEPATH = "Assets/modelData/Rope/CapturedCowRope.tkm";
 
+	/** ロープが縮むアニメーション */
+	const char* ROPE_SHRINK_ANIMATION_FILEPATH = "Assets/animData/Rope/Shrink_ThrowRope.tka";
+
+	/** ロープが伸びるアニメーション */
+	const char* ROPE_EXTEND_ANIMATION_FILEPATH = "Assets/animData/Rope/Stretch_ThrowRope.tka";
+
+	/** アニメーションを再生させるロープモデルのファイルパス */
+	const char* ROPE_ANIMATION_MODEL_FILEPATH = "Assets/modelData/Rope/animationRope.tkm";
+
 	/** ロープの初期の大きさ */
 	const Vector3 ROPE_INITIAL_SCALE = { 1.0f, 1.0f, 5.0f };
 
@@ -90,6 +99,19 @@ bool Rope::Start()
 	m_ropeModelRender.SetScale(m_ropeScale);
 	m_ropeRot = Quaternion::Identity;
 	m_rollModelRender.SetScale(NO_HIT_COW_ROLL_ROPE_SCALE);
+
+	/** ロープが縮むアニメーションのロード */
+	m_ropeAnimationClips[enRopeAnimation_Shrink_Throw].Load(ROPE_SHRINK_ANIMATION_FILEPATH);
+	m_ropeAnimationClips[enRopeAnimation_Shrink_Throw].SetLoopFlag(false);
+
+	/** ロープが伸びるアニメーションのロード */
+	m_ropeAnimationClips[enRopeAnimation_Stretch_Throw].Load(ROPE_EXTEND_ANIMATION_FILEPATH);
+	m_ropeAnimationClips[enRopeAnimation_Stretch_Throw].SetLoopFlag(false);
+
+	/** アニメーションを再生するロープモデルの初期化 */
+	m_animationRopeModelRender.Init(ROPE_ANIMATION_MODEL_FILEPATH,m_ropeAnimationClips,enRopeAnimation_Num,enModelUpAxisZ);
+
+	m_animationRopeModelRender.SetPosition(Vector3(0.0f, 0.0f, 0.0f));
 	return true;
 }
 
@@ -114,6 +136,20 @@ void Rope::Update()
 
 	/** プレイヤーが存在しないなら処理しない */
 	if (!m_player) return;
+
+	if (!m_animationRopeModelRender.IsPlayingAnimation() && m_currentAnimation == enRopeAnimation_Shrink_Throw)
+	{
+		m_animationRopeModelRender.PlayAnimation(enRopeAnimation_Shrink_Throw, 1.5f);
+		m_currentAnimation = enRopeAnimation_Stretch_Throw;
+	}
+
+	if (!m_animationRopeModelRender.IsPlayingAnimation() && m_currentAnimation == enRopeAnimation_Stretch_Throw)
+	{
+		m_animationRopeModelRender.PlayAnimation(enRopeAnimation_Stretch_Throw, 1.5f);
+		m_currentAnimation = enRopeAnimation_Num;
+	}
+
+	m_animationRopeModelRender.Update();
 
 	/** Dead になった牛のポインタをリセット */
 	if (m_hitCow != nullptr && m_hitCow->IsDead())
@@ -418,6 +454,8 @@ void Rope::UpdateSegments()
 void Rope::Render(RenderContext& rc)
 {
 	
+	m_animationRopeModelRender.Draw(rc);
+
 	m_rollModelRender.Draw(rc);
 
 	if (m_isHitCow)
