@@ -58,13 +58,13 @@ bool UFOLightUI::Start()
 	m_game = FindGO<Game>("game");
 	/** 光の発射までのスプライト初期化 */
 	m_LightApperSpriteRender.Init(LIGHT_APPEAR_SPRITE_FILEPATH, FONT_WIDTH, FONT_HEIGHT);
-	m_LightApperSpriteRender.SetPosition(Vector3(740.0f, 500.0f, 0.0f));
+	m_LightApperSpriteRender.SetPosition(Vector3(-800.0f, 490.0f, 0.0f));
 	m_LightApperSpriteRender.SetScale(FONT_SCALE);
 	m_LightApperSpriteRender.Update();
 
 	/** 秒のスプライト初期化 */
 	m_secondsSpriteRender.Init(LIGHT_APPEAR_SECONDS_SPRITE_FILEPATH, SECOMDS_WIDTH, SECOMDS_HEIGHT);
-	m_secondsSpriteRender.SetPosition(Vector3(940.0f, 510.0f, 0.0f));
+	m_secondsSpriteRender.SetPosition(Vector3(-600.0f, 500.0f, 0.0f));
 	m_secondsSpriteRender.SetScale(FONT_SCALE);
 	m_secondsSpriteRender.Update();
 	
@@ -169,8 +169,8 @@ void UFOLightUI::CountSpriteUI()
 
 	/** 表示位置 */
 	Vector3 pos;
-	pos.x = 900.0f;
-	pos.y = 513.0f;
+	pos.x = -644.0f;
+	pos.y = 508.0f;
 	pos.z = 0.0f;
 	m_LightApperNumberSpriteRender[m_currentCount].SetPosition(pos);
 

@@ -294,8 +294,9 @@ private:
 	
 	/** 牛の回転ステート */
 	EnCowState m_rotationState = EnRotateState_MoveDir;
-
+  
 	/** 牛の種類 */
+
 	EnCowType m_cowType = EnCowType::en_Random;
 	
 	/** 牛のモデルレンダラー */

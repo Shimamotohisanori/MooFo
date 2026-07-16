@@ -992,7 +992,7 @@ void Cow::SetCowType(EnCowType type)
 	{
 		m_isTargetFood = false;
 	}
-
+  
 	/** ボーナス牛専用のステータス */
 	if (type == EnCowType::en_Bonus)
 	{
@@ -1006,7 +1006,6 @@ void Cow::SetCowType(EnCowType type)
 		m_avoidDistance = AVOID_DISTANCE;
 		m_avoidPower = AVOID_POWER;
 	}
-
 	ApplyCowModel();
 }
 

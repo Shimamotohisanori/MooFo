@@ -467,6 +467,16 @@ void GameCamera::CheckAimingCow()
 	Vector3 raydirection = g_camera3D->GetForward();
 	raydirection.Normalize();
 
+	/** プレイヤーのレイ方向への射影距離を計算 */
+	/** これより手前にいる牛は対象外にする */
+	float playerprojectiondist = 0.0f;
+	if(m_player)
+	{
+		Vector3 toPlayer = m_player->GetPosition() - raystart;
+		playerprojectiondist = toPlayer.Dot(raydirection);
+	}
+	
+
 	/** 照準が牛を狙っているフラグを下ろす */
 	m_isAimingCow = false;
 
@@ -489,6 +499,9 @@ void GameCamera::CheckAimingCow()
 
 		/** 牛がカメラの後ろにいるなら無視 */
 		if (projectiondist < 0.0f) continue;
+
+		/** カメラとプレイヤーの間にいる牛は対象外 */
+		if (projectiondist < playerprojectiondist) continue;
 
 		/** レイ距離が最大距離を超えていたら無視 */
 		if (projectiondist > RAY_MAX_DISTANCE) continue;
