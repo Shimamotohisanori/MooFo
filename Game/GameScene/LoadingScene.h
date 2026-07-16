@@ -26,8 +26,6 @@ public:
 	
 	/** 分割ロード中の処理を行う関数*/
 	void LoadInitialSpritesStepByStep();
-	/** Loading文字のフェード処理を行う関数*/
-	void FadeLoadingText();
 	/** 餌のアニメーションをバックグラウンドでロードする関数*/
 	void LoadFoodAnimInBackground();
 	/** シーンが切り替わるタイミングでフェードアウト処理を行う*/
@@ -79,6 +77,9 @@ private:
 
 	/** アニメーション分割ロード用のパスリスト(ロープで引っ張るGif)*/
 	std::vector<std::string> m_ropeAnimLoadPaths;
+
+	/** 歩く牛アニメーションの画像パスリスト*/
+	std::vector < std::string>m_CowWalkAnimLoadPaths;
 	/** ローディング中の操作説明画像のスプライトレンダラー */
 	SpriteRender m_LoadingInstructionSpriteRender;
 	/** 牛の餌を説明するアニメーションスプライトレンダラー */
@@ -87,11 +88,15 @@ private:
 	/** ロープで救出することを説明するアニメーションスプライトレンダラー */
 	AnimSpriteRender m_ropeAnimSpriteRender;
 
+	/** ローディング中の下に出す歩く牛アニメーション*/
+	AnimSpriteRender m_cowWalkSpriteRender;
+
+
 	enum class InitLoadStep
 	{
 		LoadingInstruction,/** ローディング中の操作説明画像 */
 		LoadingGifBackGroundImage,/** 選ばれたGif画像の背景 */
-		LoadingText,/** Loadingの文字 */
+		//LoadingText,/** Loadingの文字 */
 		Num
 	};
 
@@ -128,15 +133,15 @@ private:
 	/** ロードするゲームオブジェクトのステップ*/
 	uint8_t m_loadStep = 0;
 
-	/** Load文字フェード用の変数*/
-	/** Loadingの文字のアルファ値*/
-	float m_loadingTextAlpha = 1.0f;
-	/** Loadingの文字のフェード速度*/
-	float m_loadingFadeSpeed = 0.5f;
+	///** Load文字フェード用の変数*/
+	///** Loadingの文字のアルファ値*/
+	//float m_loadingTextAlpha = 1.0f;
+	///** Loadingの文字のフェード速度*/
+	//float m_loadingFadeSpeed = 0.5f;
 	/** 操作説明画像を表示する時間*/
 	float m_LoadingInstructionTime = 0.0f;
 	/** フェードインしているかどうかのフラグ*/
-	bool m_isFadeIn = false;
+	//bool m_isFadeIn = false;
 	/** ローディングが開始したかどうかのフラグ*/
 	bool m_isLoadingStarted = false;
 	/** ローディングが終了したかどうかのフラグ*/

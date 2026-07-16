@@ -27,13 +27,13 @@ namespace
 	constexpr int BLACKLOADING_WIDTH = 1920.0f;
 	constexpr int LOADING_WIDTH = 1900.0f;
 	constexpr int INSTRUCTION_LOADING_WIDTH = 1850.0f;
-	constexpr int LOADINGWARD_WIDTH = 400.0f;
+	constexpr int COWWALK_WIDTH = 300.0f;
 	
 	/** 縦幅 */
 	constexpr int BLACKLOADING_HEIGHT = 1080.0f;
 	constexpr int LOADING_HEIGHT = 850.0f;
 	constexpr int INSTRUCTION_LOADING_HEIGHT = 850.0f;
-	constexpr int LOADINGWARD_HEIGHT = 100.0f;
+	constexpr int COWWALK_HEIGHT = 400.0f;
 	
 	/** 牛のランダムスポーン範囲 */
 	constexpr int RANDOM_SPAWN_RANGE = 500;
@@ -42,9 +42,14 @@ namespace
 	/** 牛同士の最低距離 */
 	constexpr float MIN_DISTANCE = 15.0f; // 牛同士の最低距離
 
-	/** Gif終了とロード完了が揃ってから、実際にフェードアウトを始めるまでの
-	止め絵を見せる時間(秒) */
-	//constexpr float FINISHED_HOLD_DURATION = 2.0f;
+
+	/** 歩く牛のローディングアニメーションのファイルパス*/
+	const char* COWWALK_FILEPATH = "Assets/Gif/CowLoadingGif/anim_%02d.dds";
+	
+	/** 歩く牛のフレームの数*/
+	constexpr int COWWALK_FREAM_COUNT = 25;
+	/** 25枚を15fpsで再生 → 1周約1.67秒*/
+	constexpr float COWWALK_FPS = 15.0f; 
 }
 
 LoadingScene::LoadingScene()
@@ -73,11 +78,9 @@ bool LoadingScene::Start()
 	/** 2枚目に表示するGif画像をランダムに選ぶ*/
 	m_useRopeGif = (rand() % 2 == 0);
 	
-	/** 最初はLoadingの文字は完全に表示しておく */
-	m_loadingTextAlpha = 1.0f;
+
 	
-	/** 最初はフェードインしていない状態にする */
-	m_isFadeIn = false;
+	
 
 	/** 最初は最初の画像を表示する */
 	m_currentImage = 0;
@@ -118,29 +121,14 @@ void LoadingScene::Update()
 	/** ローディングシーンの更新処理 */
 	InLoading();
 
-	/** Loadingの文字のフェード処理 */
-	FadeLoadingText();
+	
 
 	/** Sceneのフェード処理*/
 	FadeOutLoadingScene();
 
 	/** Gif画像が再生され終わったら自動的に画像を進める処理*/
 	AutoAdvanceImage();
-	///** アニメーションのフレームを先に進めておく(遅延をなくすため)*/
-	//if (m_ropeLoadIndex > 0)
-	//{
-	//	m_ropeAnimSpriteRender.Update();
-	//}
-	///**最終フレームに到達したらUpdateを止めて静止させる*/
-	//if (!m_hasSelectedGifReachedEnd)
-	//{
-	//	m_foodAnimSpriteRender.Update();
-
-	//	if (m_foodAnimSpriteRender.IsFinished())
-	//	{
-	//		m_hasSelectedGifReachedEnd = true;
-	//	}
-	//}
+	
 
 	/** 表示中の選ばれたGif画像のみ再生を進める*/
 	if (m_currentImage == 1 && !m_hasSelectedGifReachedEnd)
@@ -170,26 +158,22 @@ void LoadingScene::Update()
 	/** 餌のアニメーションをバックグラウンドでロードする */
 	LoadFoodAnimInBackground();
 	
-	///**スプライトの更新 */
-	//for (int i = 0; i < 2; i++)
-	//{
-	//	m_loadingSpriteRender[i].Update();
-	//}
+	/** 歩く牛のLoadingアニメーションを常にループ再生する*/
+	m_cowWalkSpriteRender.Update();
+	if (m_cowWalkSpriteRender.IsFinished())
+	{
+		m_cowWalkSpriteRender.Reset();
+		m_cowWalkSpriteRender.Update();
+	}
 
-	/** αを反映させる */
-	m_loadingTextSpriteRender.SetMulColor(
-		Vector4(1.0f, 1.0f, 1.0f, m_loadingTextAlpha)
-	);
+	
 	/** αを反映させる*/
 	m_blackLoadingSpriteRender.SetMulColor(
 		Vector4(1.0f, 1.0f, 1.0f, m_SceneFadeAlpha)
 	);
-	/** Loadingの文字の更新 */
-	m_loadingTextSpriteRender.Update();
 
 	/** Sceneの更新*/
 	m_blackLoadingSpriteRender.Update();
-
 	/** 説明画像と、選ばれたGifの背景画像だけ更新 */
 	m_LoadingInstructionSpriteRender.Update();
 	m_loadingSpriteRender[m_useRopeGif ? 0 : 1].Update();
@@ -332,6 +316,14 @@ void LoadingScene::PrepareAnimResources()
 		m_foodAnimLoadPaths.push_back(buf);
 	}
 
+	/** 歩く牛のローディングアニメーションを常にループ再生する*/
+	for (int i = 1; i <= COWWALK_FREAM_COUNT; i++)
+	{
+		char buf[256];
+		sprintf(buf, COWWALK_FILEPATH, i);
+		m_CowWalkAnimLoadPaths.push_back(buf);
+	}
+
 	/** ロープで引っ張るGifのフレーム数を準備する */
 	m_ropeAnimSpriteRender.PrepareFrameCount(
 		static_cast<int>(m_ropeAnimLoadPaths.size()), 610.0f, 590.0f, 10.0f);
@@ -341,6 +333,13 @@ void LoadingScene::PrepareAnimResources()
 	m_foodAnimSpriteRender.PrepareFrameCount(
 		static_cast<int>(m_foodAnimLoadPaths.size()), 610.0f, 590.0f, 10.0f);
 	m_foodAnimSpriteRender.SetPosition({ -535.0f, 10.0f, 0.0f });
+
+	/** 25枚程度なので一括ロードする*/
+	m_cowWalkSpriteRender.Init(
+		m_CowWalkAnimLoadPaths,
+		static_cast<int>(m_CowWalkAnimLoadPaths.size()),
+		COWWALK_WIDTH, COWWALK_HEIGHT, COWWALK_FPS);
+	m_cowWalkSpriteRender.SetPosition(Vector3(800.0f, -400.0f, 0.0f));
 }
 
 
@@ -377,30 +376,6 @@ void LoadingScene::LoadFoodAnimInBackground()
 	}
 }
 
-void LoadingScene::FadeLoadingText()
-{
-	if (m_isFadeIn)
-	{
-		/** フェードイン(0 →1) */
-		m_loadingTextAlpha += m_loadingFadeSpeed * g_gameTime->GetFrameDeltaTime();
-		if (m_loadingTextAlpha >= 1.0f)
-		{
-			m_loadingTextAlpha = 1.0f;
-			m_isFadeIn = false;
-		}
-	}
-	else
-	{
-		/** フェードアウト(1 →0) */
-		m_loadingTextAlpha -= m_loadingFadeSpeed * g_gameTime->GetFrameDeltaTime();
-		if (m_loadingTextAlpha <= 0.0f)
-		{
-			m_loadingTextAlpha = 0.0f;
-			/** 次はフェードイン */
-			m_isFadeIn = true;
-		}
-	}
-}
 
 
 void LoadingScene::LoadInitialSpritesStepByStep()
@@ -424,16 +399,9 @@ void LoadingScene::LoadInitialSpritesStepByStep()
 		m_loadingSpriteRender[bgIndex].Init(bgPath, LOADING_WIDTH, LOADING_HEIGHT);
 		m_loadingSpriteRender[bgIndex].SetPosition(Vector3(0.0f, 100.0f, 0.0f));
 		m_loadingSpriteRender[bgIndex].Update();
-		m_initLoadStep = InitLoadStep::LoadingText;
-		break;
-	}
-
-	case InitLoadStep::LoadingText:
-		m_loadingTextSpriteRender.Init(LOADINGTEXT_FILEPATH, LOADINGWARD_WIDTH, LOADINGWARD_HEIGHT);
-		m_loadingTextSpriteRender.SetPosition(Vector3(750.0f, -450.0f, 0.0f));
 		m_initLoadStep = InitLoadStep::Num;
 		break;
-
+	}
 	case InitLoadStep::Num:
 		break;
 	}
@@ -481,8 +449,6 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	switch (m_loadStep)
 	{
 		/** ロードするゲームオブジェクトをステップバイステップで生成する */
-
-
 	case 0:
 	{
 
@@ -762,5 +728,5 @@ void LoadingScene::Render(RenderContext& rc)
 			m_foodAnimSpriteRender.Draw(rc);
 		}
 	}
-	m_loadingTextSpriteRender.Draw(rc);
+	m_cowWalkSpriteRender.Draw(rc);
 }
