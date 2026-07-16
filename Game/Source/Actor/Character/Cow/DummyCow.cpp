@@ -36,8 +36,11 @@ bool DummyCow::Start()
 {
 	m_DummyCowSE = FindGO<SoundManager>("soundmanager");
 	m_dummyCowModelRender.SetRaytracingWorld(false);
+	
 	/** モデルの初期化*/
-	m_dummyCowModelRender.Init(FILEPATH,animationClips,EnAnimation_Num, enModelUpAxisZ);
+	const char* modelPath = (m_modelPath != nullptr) ? m_modelPath : FILEPATH;
+	m_dummyCowModelRender.Init(modelPath, animationClips, EnAnimation_Num, enModelUpAxisZ);
+
 	m_dummyCowModelRender.SetPosition(m_position);
 	m_dummyCowModelRender.SetRotation(m_rotation);
 

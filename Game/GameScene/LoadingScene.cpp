@@ -42,6 +42,9 @@ namespace
 	/** 牛同士の最低距離 */
 	constexpr float MIN_DISTANCE = 15.0f; // 牛同士の最低距離
 
+	/** ゲーム開始直後(初期10体)に追いかける牛の出現確率 */
+	constexpr int INITIAL_CHASE_COW_RATE = 20;
+
 	/** Gif終了とロード完了が揃ってから、実際にフェードアウトを始めるまでの
 	止め絵を見せる時間(秒) */
 	//constexpr float FINISHED_HOLD_DURATION = 2.0f;
@@ -496,7 +499,17 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		cow->SetPosition(RandomCowPos());
 		/** 0～9の数字を割り当てる*/
 		int cowIndex = m_loadStep - 2;
-		cow->SetUFOAttracted(cowIndex % 2 == 0);
+
+		/** 牛の性格をランダムに割り当てる */
+		if (rand() % 100 < INITIAL_CHASE_COW_RATE)
+		{
+			cow->SetCowType(Cow::EnCowType::en_Chase);
+		}
+		else
+		{
+			cow->SetCowType(cowIndex % 2 == 0 ? Cow::EnCowType::en_Light : Cow::EnCowType::en_Random);
+		}
+
 		m_tempCows.push_back(cow);
 	} break;
 

@@ -12,6 +12,7 @@ class Timer;
 class CowLuring;
 class CowFoodManager;
 class VoiceManager;
+
 class Cow : public Character
 {
 public:
@@ -23,6 +24,14 @@ public:
 		void Update() override;
 		void Render(RenderContext& rc) override;
 public:
+	enum class EnCowType
+	{
+		en_Random, //ランダムに動く牛
+		en_Light,  //UFOに向かって動く牛
+		en_Chase,  //プレイヤーを追いかける牛
+		en_Num
+	};
+
 	/** 移動関数 */
 	void Move()override;
 
@@ -34,6 +43,15 @@ public:
 
 	/** 状態管理関数 */
 	void ManageState();
+
+	/** 牛の行動タイプを設定する関数 */
+	void SetCowType(EnCowType type);
+
+	/** 牛の行動タイプを取得する関数 */
+	EnCowType GetCowType() const
+	{
+		return m_cowType;
+	}
 
 	/** 牛の位置を設定する関数 */
 	void SetPosition(const Vector3& pos)
@@ -152,6 +170,23 @@ public:
 		return m_isEating;
 	}
 
+	/** プレイヤーを追いかけているかどうかを設定する関数 */
+	void SetIsChasingPlayer(bool isChasing)
+	{
+		m_isChasingPlayer = isChasing;
+
+		if (isChasing)
+		{
+			m_isTargetFood = false;
+		}
+	}
+
+	/** プレイヤーを追いかけているかどうかを取得する関数 */
+	bool GetIsChasingPlayer() const
+	{
+		return m_isChasingPlayer;
+	}
+
 	/** 牛を削除予定を見る関数 */
 	void RequestKill();
 
@@ -180,8 +215,15 @@ private:
 
 	/** 牛が納屋に入る関数 */
 	void EnterBarn();
+
 	/** */
 	void MoveTowardUFO(UFO* ufo);
+	
+	/** プレイヤーと牛の距離の関数 */
+	void ChasePlayer();
+
+	/**  */
+	void ApplyCowModel();
 
 	UFO* FindNearestEmittingUFO();
 
@@ -251,6 +293,8 @@ private:
 	
 	/** 牛の回転ステート */
 	EnCowState m_rotationState = EnRotateState_MoveDir;
+
+	EnCowType m_cowType = EnCowType::en_Random;
 	
 	/** 牛のモデルレンダラー */
 	ModelRender m_cowmodelRender;
@@ -266,7 +310,7 @@ private:
 	/** 休憩しない牛の移動速度*/
 	Vector3 m_moving = Vector3::Zero;
 	/** 牛の移動速度 */
-	float m_moveSpeed = 50.0f;
+	float m_moveSpeed = 30.0f;
 
 	/** 牛の移動時間 */
 	float m_moveTimer = 0;
@@ -305,6 +349,12 @@ private:
 	bool m_isTargetFood = false;
 	/** 牛がUFOに向かって進むフラグ*/
 	bool m_isUFOAttracted = false;
+
+	/** 追いかけてくる牛かどうか */
+	bool m_isChasingPlayer = false;
+
+	/** モデルが初期化済みかどうか */
+	bool m_isModelInitialized = false;
 
 	enum EnAnimation
 	{
