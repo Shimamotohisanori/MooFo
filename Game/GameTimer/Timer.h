@@ -33,7 +33,6 @@ public:
 	/** タイマーの処理 */
 	void TextTimer();
 
-
 private:
 	/** 制限時間 */
 	float m_timer = 120.0f;
