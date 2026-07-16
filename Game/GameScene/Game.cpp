@@ -45,6 +45,19 @@ namespace
 	constexpr int CHASE_COW_TABLE_B =  15;
 	/** 救出数 10以上 */
 	constexpr int CHASE_COW_TABLE_C =  10;
+
+	/** 難易度に応じて牛のタイプの抽選をする */
+	Cow::EnCowType DecideCowType(int chaseCowRate)
+	{
+		int roll = rand() % 100;
+
+		if (roll < chaseCowRate)
+		{
+			return Cow::EnCowType::en_Chase;
+		}
+		
+		return (rand() % 2 == 0) ? Cow::EnCowType::en_Light : Cow::EnCowType::en_Random;
+	}
 }
 
 Game::~Game()
@@ -530,6 +543,7 @@ void Game::SpawnCow()
 	/** 現在の牛の数が10体未満なら補充 */
 	if (m_aliveCows.size() < COW_NUM)
 	{
+
 		m_spawnTimer += g_gameTime->GetFrameDeltaTime();
 
 		/** 3秒ごとに1体補充 */
@@ -578,13 +592,10 @@ void Game::SpawnCow()
 			pos.y = 0.0f;
 			pos.z = (rand() % (range * 2)) - range;
 
-			/** ここでUFOに向かって歩く牛を生成させる*/
-			newCow->SetUFOAttracted(rand() % 2 == 0);
+			/** 難易度に応じて牛のタイプを決定する */
+			newCow->SetCowType(DecideCowType(chaseCowRate));
 			/** UFOに向かって歩く牛の速度も適応させる*/
 			newCow->IsMoving();
-
-			/** 難易度(救出数)に応じた確率で牛にする。 */
-			newCow->SetIsChasingPlayer(rand() % 100 < chaseCowRate);
 
 			newCow->SetPosition(pos);
 			/** 生きている牛リストに追加 */
