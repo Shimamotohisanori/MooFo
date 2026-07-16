@@ -25,7 +25,7 @@
 #include "FadeManager/FadeManager.h"
 #include "Aiming/Aiming.h"
 #include "InstructionControllerUI/InstructionControllerUI.h"
-
+#include"GameTimer/DecreaseTimerUI.h"
 namespace
 {
 	/**マジックナンバー対策*/
@@ -121,7 +121,8 @@ Game::~Game()
 
 	/** 操作説明UIの削除 */
 	DeleteGO(m_instructionControllerUI);
-
+	/**タイマーが減少するUIの削除 */
+	DeleteGO(m_decreaseTimerUI);
 	/** コンボクラスの削除 */
 	if (m_combo && !m_combo->IsDead())
 	{
@@ -487,6 +488,13 @@ bool Game::LoadStepByStep()
 	case InitStep::InstructionControllerUI:
 	{
 		m_instructionControllerUI = NewGO<InstructionControllerUI>(0, "instructionControllerUI");
+		m_gameInitStep = InitStep::DecreaseTimerUI;
+		break;
+	}
+
+	case InitStep::DecreaseTimerUI:
+	{
+		m_decreaseTimerUI = NewGO<DecreaseTimerUI>(0, "decreasetimerUI");
 		m_gameInitStep = InitStep::Num;
 		break;
 	}

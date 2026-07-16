@@ -8,6 +8,8 @@ class Score;
 class CowCaptureController;
 class Pause;
 class Game;
+class Timer;
+class DecreaseTimerUI;
 class UFO : public Character
 {
 public:
@@ -142,13 +144,15 @@ private:
 
 	/*スコア*/
 	Score* m_score = nullptr;
-
+	/** タイマー*/
+	Timer* m_timer = nullptr;
 	/** UFOの牛捕獲コントローラー */
 	CowCaptureController m_cowCaptureController;
 	
 	/** ポーズ */
 	Pause* m_pause = nullptr;
-
+	/** 減少用のタイマー*/
+	DecreaseTimerUI* m_decreaseTimer = nullptr;
 	/** UFOが牛を吸い込むSE */
 	SoundSource* m_UFOCaptureSE = nullptr;
 
