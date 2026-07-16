@@ -29,6 +29,7 @@ public:
 		en_Random, //ランダムに動く牛
 		en_Light,  //UFOに向かって動く牛
 		en_Chase,  //プレイヤーを追いかける牛
+		en_Bonus, //ボーナス牛
 		en_Num
 	};
 
@@ -294,6 +295,7 @@ private:
 	/** 牛の回転ステート */
 	EnCowState m_rotationState = EnRotateState_MoveDir;
 
+	/** 牛の種類 */
 	EnCowType m_cowType = EnCowType::en_Random;
 	
 	/** 牛のモデルレンダラー */
@@ -320,6 +322,15 @@ private:
 
 	/** 出現時のスケール */
 	float m_spawnScale = 0.0f;
+
+	/** プレイヤーが引っ張る抵抗の倍率 */
+	float m_pullResistance = 1.0f;
+
+	/** 逃げ始める距離 */
+	float m_avoidDistance = 80.0f;
+
+	/** 逃げる強さ(引っ張り時) */
+	float m_avoidPower = 3.0f;
 
 	/** 出現演出中のフラグ */
 	bool m_isSpawning = true;
