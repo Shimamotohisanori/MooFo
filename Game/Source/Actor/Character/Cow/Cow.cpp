@@ -124,11 +124,17 @@ bool Cow::Start()
 	/** ボイスマネージャーを取得 */
 	m_voiceManager = FindGO<VoiceManager>("voicemanager");
 
+	/** カウントダウンの情報を取得*/
+	m_countdown = FindGO<CountDown>("countdown");
+
 	return true;
 }
 
 void Cow::Update()
 {
+	
+	
+
 	/** 削除予約されているなら */
 	if (m_isPendingKill)
 	{
@@ -1135,6 +1141,11 @@ void Cow::PlayAnimation()
 
 void Cow::Render(RenderContext& rc)
 {
+	/** カウントダウン中は牛を描画しない*/
+	if (m_countdown && m_countdown->GetCountDown())
+	{
+		return;
+	}
 	/** モデルが初期化されてない場合は描画しない */
 	if (!m_isModelInitialized)
 	{
