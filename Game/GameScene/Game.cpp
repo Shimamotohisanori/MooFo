@@ -24,6 +24,7 @@
 #include "Source/Actor/Character/Cow/CowLuring.h"
 #include "FadeManager/FadeManager.h"
 #include "Aiming/Aiming.h"
+#include "InstructionControllerUI/InstructionControllerUI.h"
 
 namespace
 {
@@ -33,6 +34,31 @@ namespace
 	const int RANDOM_SPAWN_RANGE = 300;
 	const int RANDOM_SPAWN_RANGE_DOUBLE = 600;
 	const float NEW_SPAWN_TIMER = 3.0f;
+
+	/*
+	 * 追いかける牛の出現確率(%)
+	 * ※救出数による難易度と連動させる※ 
+	 */
+
+	/** 救出数 5未満 */
+	constexpr int CHASE_COW_TABLE_A = 20;
+	/** 救出数 5以上10未満 */
+	constexpr int CHASE_COW_TABLE_B =  15;
+	/** 救出数 10以上 */
+	constexpr int CHASE_COW_TABLE_C =  10;
+
+	/** 難易度に応じて牛のタイプの抽選をする */
+	Cow::EnCowType DecideCowType(int chaseCowRate)
+	{
+		int roll = rand() % 100;
+
+		if (roll < chaseCowRate)
+		{
+			return Cow::EnCowType::en_Chase;
+		}
+		
+		return (rand() % 2 == 0) ? Cow::EnCowType::en_Light : Cow::EnCowType::en_Random;
+	}
 }
 
 Game::~Game()
@@ -92,6 +118,9 @@ Game::~Game()
 
 	/** 照準の削除 */
 	DeleteGO(m_aiming);
+
+	/** 操作説明UIの削除 */
+	DeleteGO(m_instructionControllerUI);
 
 	/** コンボクラスの削除 */
 	if (m_combo && !m_combo->IsDead())
@@ -452,9 +481,16 @@ bool Game::LoadStepByStep()
 		m_timeOutImage.SetPosition(Vector3(0.0f, 0.0f, 0.0f));
 		m_timeOutImage.Update();
 
+		m_gameInitStep = InitStep::InstructionControllerUI;
+		break;
+	}
+	case InitStep::InstructionControllerUI:
+	{
+		m_instructionControllerUI = NewGO<InstructionControllerUI>(0, "instructionControllerUI");
 		m_gameInitStep = InitStep::Num;
 		break;
 	}
+
 	case InitStep::Num:
 		break;
 	}
@@ -518,6 +554,7 @@ void Game::SpawnCow()
 	/** 現在の牛の数が10体未満なら補充 */
 	if (m_aliveCows.size() < COW_NUM)
 	{
+
 		m_spawnTimer += g_gameTime->GetFrameDeltaTime();
 
 		/** 3秒ごとに1体補充 */
@@ -526,20 +563,26 @@ void Game::SpawnCow()
 			
 			int currentrescues = m_cowNumberOfRescues->GetNumberOfRescues();
 
+			/** もし牛の救出数が一定以上ならスポーン範囲を大きくする。 */
+			int chaseCowRate = CHASE_COW_TABLE_A;
+
 			/** もし牛の救出数が一定以上ならスポーンする範囲を大きくする */
 			if (currentrescues >= 10)
 			{
 				m_difficultyLevelSpawnRange = 600;
+				chaseCowRate = CHASE_COW_TABLE_C;
 			}
 			
 			else if (currentrescues >= 5)
 			{
 				m_difficultyLevelSpawnRange = 400;
+				chaseCowRate = CHASE_COW_TABLE_B;
 			}
 
 			else
 			{
 				m_difficultyLevelSpawnRange = 0;
+				chaseCowRate = CHASE_COW_TABLE_A;
 			}
 
 			m_spawnTimer = 0.0f;
@@ -560,10 +603,11 @@ void Game::SpawnCow()
 			pos.y = 0.0f;
 			pos.z = (rand() % (range * 2)) - range;
 
-			/** ここでUFOに向かって歩く牛を生成させる*/
-			newCow->SetUFOAttracted(rand() % 2 == 0);
+			/** 難易度に応じて牛のタイプを決定する */
+			newCow->SetCowType(DecideCowType(chaseCowRate));
 			/** UFOに向かって歩く牛の速度も適応させる*/
 			newCow->IsMoving();
+
 			newCow->SetPosition(pos);
 			/** 生きている牛リストに追加 */
 			m_aliveCows.push_back(newCow);
@@ -632,6 +676,12 @@ void Game::TimeOut()
 void Game::Render(RenderContext& rc)
 {
 	if (IsFadeTimeOut())
+	{
+		return;
+	}
+
+	/** ポーズ中はゲーム処理をしない */
+	if(m_pause && m_pause->GetIsPause())
 	{
 		return;
 	}

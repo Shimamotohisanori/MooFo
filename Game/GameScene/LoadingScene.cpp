@@ -43,6 +43,7 @@ namespace
 	constexpr float MIN_DISTANCE = 15.0f; // 牛同士の最低距離
 
 
+
 	/** 歩く牛のローディングアニメーションのファイルパス*/
 	const char* COWWALK_FILEPATH = "Assets/Gif/CowLoadingGif/anim_%02d.dds";
 	
@@ -50,6 +51,10 @@ namespace
 	constexpr int COWWALK_FREAM_COUNT = 25;
 	/** 25枚を15fpsで再生 → 1周約1.67秒*/
 	constexpr float COWWALK_FPS = 15.0f; 
+	/** ゲーム開始直後(初期10体)に追いかける牛の出現確率 */
+	constexpr int INITIAL_CHASE_COW_RATE = 20;
+
+	
 }
 
 LoadingScene::LoadingScene()
@@ -514,7 +519,17 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		cow->SetPosition(RandomCowPos());
 		/** 0～9の数字を割り当てる*/
 		int cowIndex = m_loadStep - 2;
-		cow->SetUFOAttracted(cowIndex % 2 == 0);
+
+		/** 牛の性格をランダムに割り当てる */
+		if (rand() % 100 < INITIAL_CHASE_COW_RATE)
+		{
+			cow->SetCowType(Cow::EnCowType::en_Chase);
+		}
+		else
+		{
+			cow->SetCowType(cowIndex % 2 == 0 ? Cow::EnCowType::en_Light : Cow::EnCowType::en_Random);
+		}
+
 		m_tempCows.push_back(cow);
 	} break;
 

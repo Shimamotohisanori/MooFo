@@ -4,6 +4,7 @@ class Pause;
 class Cow;
 class CountDown;
 class GameCamera;
+class Rope;
 class Aiming : public IGameObject
 {
 public:
@@ -27,6 +28,9 @@ private:
 
 	/** ゲームカメラのポインタ */
 	GameCamera* m_gameCamera = nullptr;
+
+	/** ロープクラスのポインタ */
+	Rope* m_rope = nullptr;
 
 	/** 牛が捕まっているかどうかのフラグ */
 	bool m_isAnyCowCaptured = false;

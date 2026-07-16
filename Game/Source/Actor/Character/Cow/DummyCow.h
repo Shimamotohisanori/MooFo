@@ -19,7 +19,13 @@ public:
 	{
 		m_rotation = rot;
 	}
-	
+
+	/** 表示するモデルのパスを設定する関数(牛の見た目を引き継ぐため) */
+	void SetModelPath(const char* modelPath)
+	{
+		m_modelPath = modelPath;
+	}
+
 	/** ジャンプアニメーションを再生する関数 */
 	void PlayJumpAnimtion();
 
@@ -56,6 +62,8 @@ private:
 
 	/** 縮小スケール */
 	float m_shrinkScale = 1.0f;
+
+	const char* m_modelPath = nullptr;
 
 	/** サウンドマネージャー*/
 	SoundManager* m_DummyCowSE = nullptr;

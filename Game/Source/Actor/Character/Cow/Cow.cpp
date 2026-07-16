@@ -20,8 +20,13 @@
 
 namespace
 {
-	/** 牛のモデルファイルパス */
-	const char* COW_MOCEL_FILEPATH = "Assets/modelData/Cow/Model/Cow5.tkm"; //enModelUpAxis = enModelUpAxisZ;
+	/** 牛のタイプごとのモデルのファイルパス */
+	const char* COW_MODEL_PATHS[static_cast<int>(Cow::EnCowType::en_Num)] =
+	{
+		"Assets/modelData/Cow/Model/Cow5.tkm",
+		"Assets/modelData/Cow/Model/LightCow.tkm",
+		"Assets/modelData/Cow/Model/ChaseCow.tkm",
+	}; 
 
 	/** 牛のアニメーションのファイルパス */
 	const char* IDLE_ANIMATION_FILE_PATH = "Assets/modelData/Cow/Animation/Idle3.tka";
@@ -60,6 +65,12 @@ namespace
 
 	/** 牛の最小スケール */
 	constexpr float COW_MIN_SCALE = 0.1f;
+
+	/** 追いかけるスピード */
+	constexpr float CHASE_POWER = 1.0f;
+
+	/** これ以上近づいたら停止する距離(プレイヤーにのめりこまないように) */
+	constexpr float CHASE_STOP_DISTANCE = 60.0f;
 }
 
 Cow::Cow()
@@ -92,13 +103,6 @@ bool Cow::Start()
 
 	/** キャラクターコントローラーを初期化する */
 	m_cowCharacterController.Init(20.0f, 20.0f, m_transform.GetPosition());
-
-	/** 牛のモデルを初期化する */
-	m_cowmodelRender.Init(COW_MOCEL_FILEPATH,animationClips,EnAnimation_Num,enModelUpAxisZ);
-	m_cowmodelRender.SetPosition(m_transform.GetPosition());
-	/** 出現時はスケールを0にする */
-	m_cowmodelRender.SetScale(Vector3(0.0f, 0.0f, 0.0f));
-	m_cowmodelRender.Update();
 
 	/** ボイスマネージャーを取得 */
 	m_voiceManager = FindGO<VoiceManager>("voicemanager");
@@ -169,23 +173,37 @@ void Cow::Update()
 			m_cowEatSE = nullptr;
 		}
 	}
-	
-	/** プレイヤーから逃げる関数 */
-	AvoidPlayer();
 
-	/** 一番近い餌を探す処理 */
-	SearchNearestFood();
-
-	if (m_isTargetFood)
+	switch (m_cowType)
 	{
-		MoveToFood();
+	case EnCowType::en_Chase:
+		ChasePlayer();
+		break;
+
+	case EnCowType::en_Light:
+	case EnCowType::en_Random:
+	default:
+		AvoidPlayer();
+		break;
+
 	}
-	else
+
+	if (m_cowType != EnCowType::en_Chase)
 	{
-		if (m_rotationState == EnRotateState_MoveDir)
+		/** 一番近い餌を探す処理 */
+		SearchNearestFood();
+
+		if (m_isTargetFood)
 		{
-			/** 移動 */
-			Move();
+			MoveToFood();
+		}
+		else
+		{
+			if (m_rotationState == EnRotateState_MoveDir)
+			{
+				/** 移動 */
+				Move();
+			}
 		}
 	}
 	
@@ -619,11 +637,17 @@ void Cow::EnterBarn()
 		}
 
 		m_dummyCow = NewGO<DummyCow>(0, "dummyCow");
+
+		/** 元の牛と同じモデルを引き継がせる */
+		m_dummyCow->SetModelPath(COW_MODEL_PATHS[static_cast<int>(m_cowType)]);
+		
 		/** dummyCowに牛の情報を渡す*/
 		m_dummyCow->SetPosition(m_transform.GetPosition());
 		m_dummyCow->SetRotation(m_transform.GetRotation());
+		
 		/** ジャンプアニメーションを再生*/
 		m_dummyCow->PlayJumpAnimtion();
+
 		if (m_game)
 		{
 			m_game->SetDuumyCow(m_dummyCow);
@@ -750,7 +774,7 @@ void Cow::CapturedByPlayer()
 		
 		
 		/** 距離が一定以下なら捕獲される */
-		if (dir.Length() < 50.0f)
+		if (dir.Length() < 70.0f)
 		{
 			m_isDeadFlag = true;
 
@@ -796,11 +820,17 @@ void Cow::CapturedByPlayer()
 			m_isTakeAwayed = false;
 			
 		    m_dummyCow = NewGO<DummyCow>(0, "dummyCow");
+
+			/** 元の牛と同じモデルを引き継がせる */
+			m_dummyCow->SetModelPath(COW_MODEL_PATHS[static_cast<int>(m_cowType)]);
+
 			/** dummyCowに牛の情報を渡す*/
 			m_dummyCow->SetPosition(m_transform.GetPosition());
 			m_dummyCow->SetRotation(m_transform.GetRotation());
+			
 			/** ジャンプアニメーションを再生*/
 			m_dummyCow->PlayJumpAnimtion();
+
 			if (m_game)
 			{
 				m_game->SetDuumyCow(m_dummyCow);
@@ -859,6 +889,82 @@ void Cow::AvoidPlayer()
 		m_transform.SetRotation(m_transform.GetRotation());
 	}
 
+}
+
+void Cow::ChasePlayer()
+{
+	/** UFOに捕まっている間は追いかけない */
+	if (m_isTakeAwayed == true) return;
+
+	/** ロープに捕まっている時は追いかけない */
+	if (m_isCaptured) return;
+
+	/** プレイヤーと牛の位置を取得 */
+	Vector3 playerPos = m_player->GetPosition();
+	Vector3 cowPos = m_transform.GetPosition();
+
+	Vector3 dir = playerPos - cowPos;
+	float dist = dir.Length();
+
+	/** 近づきすぎると停止して待機アニメーションに戻す */
+	if (dist < CHASE_STOP_DISTANCE)
+	{
+		m_cowState = 0;
+		m_rotationState = EnRotateState_MoveDir;
+		m_moveDir = Vector3::Zero;
+		return;
+	}
+
+	/** 歩きステートにする。*/
+	m_cowState = 1;
+
+	dir.Normalize();
+
+	m_moveDir = dir * 100.0f;
+
+	Vector3 move = Vector3::Zero;
+	move += dir * CHASE_POWER * 100.0f;
+	Vector3 newPos = m_cowCharacterController.Execute(move, g_gameTime->GetFrameDeltaTime());
+
+	m_transform.SetPosition(newPos);
+	m_cowmodelRender.SetPosition(newPos);
+
+	/** 進行方向に(プレイヤー方向)回転 */
+	m_transform.GetRotation().SetRotationYFromDirectionXZ(dir);
+	m_transform.SetRotation(m_transform.GetRotation());
+
+
+
+}
+
+void Cow::SetCowType(EnCowType type)
+{
+	m_cowType = type;
+
+	m_isUFOAttracted = (type == EnCowType::en_Light);
+	m_isChasingPlayer = (type == EnCowType::en_Chase);
+
+	if (type == EnCowType::en_Chase)
+	{
+		m_isTargetFood = false;
+	}
+
+	ApplyCowModel();
+}
+
+void Cow::ApplyCowModel()
+{
+	/** 既に初期化済みなら何もしない */
+	if (m_isModelInitialized)
+	{
+		return;
+	}
+
+	int index = static_cast<int>(m_cowType);
+	const char* modelPath = COW_MODEL_PATHS[index];
+
+	m_cowmodelRender.Init(modelPath, animationClips, EnAnimation_Num, enModelUpAxisZ);
+	m_isModelInitialized = true;
 }
 
 bool Cow::CanUpdate()
@@ -972,6 +1078,12 @@ void Cow::PlayAnimation()
 
 void Cow::Render(RenderContext& rc)
 {
+	/** モデルが初期化されてない場合は描画しない */
+	if (!m_isModelInitialized)
+	{
+		return;
+	}
+
 	/** 普通の牛のモデルを描画する */
 	m_cowmodelRender.Draw(rc);
 }
