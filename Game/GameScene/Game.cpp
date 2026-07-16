@@ -41,15 +41,22 @@ namespace
 	 */
 
 	/** 救出数 5未満 */
-	constexpr int CHASE_COW_TABLE_A = 20;
+	constexpr uint8_t CHASE_COW_TABLE_A = 20;
 	/** 救出数 5以上10未満 */
-	constexpr int CHASE_COW_TABLE_B =  15;
+	constexpr uint8_t CHASE_COW_TABLE_B =  15;
 	/** 救出数 10以上 */
-	constexpr int CHASE_COW_TABLE_C =  10;
+	constexpr uint8_t CHASE_COW_TABLE_C =  10;
+
+	/** ボーナス牛の出現確率 */
+	constexpr uint8_t BONUS_COW_RATE = 4;
 
 	/** 難易度に応じて牛のタイプの抽選をする */
 	Cow::EnCowType DecideCowType(int chaseCowRate)
 	{
+		if (rand() % 100 < BONUS_COW_RATE)
+		{
+			return Cow::EnCowType::en_Bonus;
+		}
 		int roll = rand() % 100;
 
 		if (roll < chaseCowRate)

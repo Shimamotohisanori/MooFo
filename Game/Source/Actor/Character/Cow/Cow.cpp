@@ -17,6 +17,7 @@
 #include "CowShrinkHay.h"
 #include "CowLuring.h"
 #include "SoundManager/VoiceManager.h"
+#include "GameTimer/AddTimerUI.h"
 
 namespace
 {
@@ -26,6 +27,7 @@ namespace
 		"Assets/modelData/Cow/Model/Cow5.tkm",
 		"Assets/modelData/Cow/Model/LightCow.tkm",
 		"Assets/modelData/Cow/Model/ChaseCow.tkm",
+		"Assets/modelData/Cow/Model/BonusCow.tkm",
 	}; 
 
 	/** 牛のアニメーションのファイルパス */
@@ -47,6 +49,9 @@ namespace
 
 	/** 逃げる強さ */
 	constexpr float AVOID_POWER = 5.0f;
+
+	/** ボーナス牛の引っ張り抵抗 */
+	constexpr float BONUS_COW_PULL_RESISTANCE = 0.4f;
 
 	/** 牛の移動時間と休憩時間 */
 	constexpr int RANDOMCOW_TIMER = 180 + 60;
@@ -71,6 +76,18 @@ namespace
 
 	/** これ以上近づいたら停止する距離(プレイヤーにのめりこまないように) */
 	constexpr float CHASE_STOP_DISTANCE = 60.0f;
+
+	/** ボーナス牛が逃げ始める距離 */
+	constexpr float BONUS_COW_AVOID_DISTANCE = 150.0f;
+
+	/** ボーナス牛の逃げる強さ */
+	constexpr float BONUS_COW_AVOID_POWER = 10.0f;
+
+	/** ボーナス牛を救出した際のスコア */
+	constexpr int BONUS_COW_SCORE = 900;
+
+	/** ボーナス牛救出時に追加されるタイム */
+	constexpr float BONUS_COW_TIME = 3.0f;
 }
 
 Cow::Cow()
@@ -626,7 +643,16 @@ void Cow::EnterBarn()
 		{
 			combo->AddCombo();
 			combo->AddScore(100);
-			//m_game->ReMoveCow(this);
+			
+			if (m_cowType == EnCowType::en_Bonus)
+			{
+				combo->AddScore(BONUS_COW_SCORE);
+
+				if (m_timer)
+				{
+					m_timer->AddTimer(BONUS_COW_TIME);
+				}
+			}
 		}
 
 		/** 牛の救出数を増やす */
@@ -741,7 +767,9 @@ void Cow::PulledByPlayer()
 
 		/** 牛をプレイヤーのいる位置まで徐々に移動 */
 		Vector3 move = Vector3::Zero;
-		move += dir * PULL_POWER * 100.0f;
+
+		/** ボーナス牛は引っ張りが重くなるようにする */
+		move += dir * PULL_POWER * 100.0f * m_pullResistance;
 		Vector3 newPos = m_cowCharacterController.Execute(move, g_gameTime->GetFrameDeltaTime());
 
 		m_transform.SetPosition(newPos);
@@ -805,6 +833,22 @@ void Cow::CapturedByPlayer()
 			{
 				combo->AddCombo();
 				combo->AddScore(100);
+
+				if (m_cowType == EnCowType::en_Bonus)
+				{
+					combo->AddScore(BONUS_COW_SCORE);
+
+					if (m_timer)
+					{
+						m_timer->AddTimer(BONUS_COW_TIME);
+					}
+
+					AddTimerUI* m_addtimerUI = FindGO<AddTimerUI>("addTimerUI");
+					if (m_addtimerUI)
+					{
+						m_addtimerUI->Play();
+					}
+				}
 			}
 
 			/** 牛の救出数を増やす */
@@ -878,7 +922,7 @@ void Cow::AvoidPlayer()
 
 		dir.Normalize();
 		Vector3 move = Vector3::Zero;
-		move += dir * AVOID_POWER * 100.0f;
+		move += dir * m_avoidPower * 100.0f;
 		Vector3 newPos = m_cowCharacterController.Execute(move, g_gameTime->GetFrameDeltaTime());
 
 		m_transform.SetPosition(newPos);
@@ -948,7 +992,20 @@ void Cow::SetCowType(EnCowType type)
 	{
 		m_isTargetFood = false;
 	}
-
+  
+	/** ボーナス牛専用のステータス */
+	if (type == EnCowType::en_Bonus)
+	{
+		m_pullResistance = BONUS_COW_PULL_RESISTANCE;
+		m_avoidDistance  = BONUS_COW_AVOID_DISTANCE;
+		m_avoidPower = BONUS_COW_AVOID_POWER;
+	}
+	else
+	{
+		m_pullResistance = 1.0f;
+		m_avoidDistance = AVOID_DISTANCE;
+		m_avoidPower = AVOID_POWER;
+	}
 	ApplyCowModel();
 }
 
