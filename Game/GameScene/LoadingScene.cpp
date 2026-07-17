@@ -42,9 +42,6 @@ namespace
 	/** 牛同士の最低距離 */
 	constexpr float MIN_DISTANCE = 15.0f; // 牛同士の最低距離
 
-	/** ゲーム開始直後(初期10体)に追いかける牛の出現確率 */
-	constexpr int INITIAL_CHASE_COW_RATE = 20;
-
 	/** Gif終了とロード完了が揃ってから、実際にフェードアウトを始めるまでの
 	止め絵を見せる時間(秒) */
 	//constexpr float FINISHED_HOLD_DURATION = 2.0f;
@@ -285,6 +282,10 @@ void LoadingScene::AutoAdvanceImage()
 				{
 					game->ActivateGameBGM();
 				}
+
+				/** ロード中のBGMはここで明示的に止める*/
+				DeleteGO(m_loadingSound);
+				m_loadingSound = nullptr;
 			}
 			else if (m_loadType == LoadType::ToTitleScene)
 			{
