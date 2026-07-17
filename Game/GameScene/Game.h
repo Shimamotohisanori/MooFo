@@ -86,10 +86,7 @@ public:
 	/** UFOが消えた際にリクエストをする関数*/
 	void RequestUFORespawn(int slotIndex);
 	/** ロード完了後、プレイヤーが実際にスタートを確定した時に呼ぶ */
-	void ActivateGameBGM()
-	{
-		m_isGameActive = true;
-	}
+	void ActivateGameBGM();
 	/** UFO達の取得関数 */
 	std::vector<UFO*> GetUFOs()const
 	{
