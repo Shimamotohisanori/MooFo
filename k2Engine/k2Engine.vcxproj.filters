@@ -141,6 +141,9 @@
       <Filter>graphics\postEffect</Filter>
     </ClCompile>
     <ClCompile Include="AnimSpriteRender.cpp" />
+    <ClCompile Include="graphics\postEffect\ToonOutlineEffect.cpp">
+      <Filter>graphics\postEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\ModelRender.h">
@@ -254,5 +257,8 @@
       <Filter>graphics\postEffect</Filter>
     </ClInclude>
     <ClInclude Include="AnimSpriteRender.h" />
+    <ClInclude Include="graphics\postEffect\ToonOutlineEffect.h">
+      <Filter>graphics\postEffect</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

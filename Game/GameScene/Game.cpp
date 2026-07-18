@@ -209,6 +209,9 @@ void Game::Update()
 		m_pause->Activate();
 		m_pause->SetIsPause(true);
 
+		/** トゥーン輪郭線を無効化 */
+		g_renderingEngine->SetEnableToonOutline(false);
+
 	}
 
 	/** 牛を生む関数 */

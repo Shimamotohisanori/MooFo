@@ -7,6 +7,7 @@
 #include "graphics/preRender/LightCulling.h"
 #include "geometry/SceneGeometryData.h"
 #include "graphics/light/VolumeLightRender.h"
+#include "graphics/postEffect/ToonOutlineEffect.h"
 
 namespace nsK2Engine {
 
@@ -404,6 +405,17 @@ namespace nsK2Engine {
         {
             return m_raytracingLightData;
         }
+        /// <summary>
+        /// トゥーン輪郭線の描画を有効/無効にする。
+        /// </summary>
+        /// <remark>
+        /// ロード画面など、輪郭線を描画したシーンの上にスプライトを被せて隠したい場合に、
+        /// 一時的に無効化するために使用します。
+        /// </remark>
+        void SetEnableToonOutline(bool enable)
+        {
+            m_isEnableToonOutline = enable;
+        }
     private:
         /// <summary>
         /// イメージベースドライティング(IBL)のためのデータを初期化する。
@@ -549,5 +561,8 @@ namespace nsK2Engine {
         };
 
         std::list< SEventListenerData > m_eventListeners;                // イベントリスナー。
+        
+        ToonOutlineEffect m_toonOutlineEffect;                           // トゥーン輪郭線エフェクト。
+		bool m_isEnableToonOutline = true;                               // トゥーン輪郭線エフェクトが有効か
     };
 }
