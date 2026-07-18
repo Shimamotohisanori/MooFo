@@ -132,6 +132,9 @@ void Pause::Select()
 			m_isPause = false;
 			Deactivate();
 			m_game->m_isSound = false;
+
+			/** トゥーン輪郭線を有効化 */
+			g_renderingEngine->SetEnableToonOutline(true);
 		}
 
 		/** 選択している場所の番号が1のときはタイトルに戻る */
