@@ -119,7 +119,7 @@ bool Cow::Start()
 	m_cowmodelRender.SetRaytracingWorld(false);
 
 	/** キャラクターコントローラーを初期化する */
-	m_cowCharacterController.Init(20.0f, 20.0f, m_transform.GetPosition());
+	m_cowCharacterController.Init(19.0f, 40.0f, m_transform.GetPosition());
 
 	/** ボイスマネージャーを取得 */
 	m_voiceManager = FindGO<VoiceManager>("voicemanager");
