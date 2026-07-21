@@ -25,6 +25,7 @@ class FadeManager;
 class Aiming;
 class InstructionControllerUI;
 class DecreaseTimerUI;
+class CowLivesUI;
 
 /** UFOの情報をまとめる構造体 */
 struct UFOinfo
@@ -223,6 +224,8 @@ private:
 	InstructionControllerUI* m_instructionControllerUI = nullptr;
 	/** タイマーを減少させるUI*/
 	DecreaseTimerUI* m_decreaseTimerUI = nullptr;
+	/** プレイヤーの残機を表すUI*/
+	CowLivesUI* m_cowLivesUI = nullptr;
 	/** 生きている牛のリスト */
 	std::vector<Cow*> m_aliveCows;
 	/** フェード処理を開始させるフラグ*/
@@ -261,6 +264,7 @@ private:
 		FadeManager,
 		InstructionControllerUI,
 		DecreaseTimerUI,
+		CowLivesUI,
 		Num
 	};
 	InitStep m_gameInitStep = InitStep::FindRefs;

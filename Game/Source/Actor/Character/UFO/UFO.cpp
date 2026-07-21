@@ -15,6 +15,7 @@
 #include "EffectManager/EffectManager.h"
 #include"GameTimer/Timer.h"
 #include"GameTimer/DecreaseTimerUI.h"
+#include"CowLivesUI.h"
 namespace
 {
 	/** UFOのモデルファイルパス */
@@ -397,6 +398,13 @@ void UFO::TakeAwayTheCow()
 		deleteEffect->SetScale({ 0.5f, 0.5f, 0.5f });
 		deleteEffect->Play();
 		deleteEffect->Update();
+
+		/** 牛が連れ去られたので牛の残機を1つ減らす */
+		CowLivesUI* cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
+		if (cowLivesUI)
+		{
+			cowLivesUI->DecreaseLife();
+		}
 
 		/** 牛の状態を連れていかれる前の状態に戻す */
 		m_targetCow->SetIsTakeAwayed(false);

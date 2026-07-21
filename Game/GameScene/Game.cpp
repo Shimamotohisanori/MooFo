@@ -26,6 +26,7 @@
 #include "Aiming/Aiming.h"
 #include "InstructionControllerUI/InstructionControllerUI.h"
 #include"GameTimer/DecreaseTimerUI.h"
+#include"CowLivesUI.h"
 namespace
 {
 	/**マジックナンバー対策*/
@@ -130,6 +131,9 @@ Game::~Game()
 	DeleteGO(m_instructionControllerUI);
 	/**タイマーが減少するUIの削除 */
 	DeleteGO(m_decreaseTimerUI);
+
+	/** プレイヤーの残機を表すUIの削除*/
+	DeleteGO(m_cowLivesUI);
 	/** コンボクラスの削除 */
 	if (m_combo && !m_combo->IsDead())
 	{
@@ -525,6 +529,13 @@ bool Game::LoadStepByStep()
 	case InitStep::DecreaseTimerUI:
 	{
 		m_decreaseTimerUI = NewGO<DecreaseTimerUI>(0, "decreasetimerUI");
+		m_gameInitStep = InitStep::CowLivesUI;
+		break;
+	}
+
+	case InitStep::CowLivesUI:
+	{
+		m_cowLivesUI = NewGO<CowLivesUI>(0, "cowlivesui");
 		m_gameInitStep = InitStep::Num;
 		break;
 	}
@@ -730,6 +741,7 @@ void Game::TimeOut()
 
 void Game::Render(RenderContext& rc)
 {
+	/**	タイムアウトのフェードアウトをしていたら描画しない*/
 	if (IsFadeTimeOut())
 	{
 		return;
