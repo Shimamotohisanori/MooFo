@@ -63,6 +63,9 @@ public:
 		m_hitCowCameraPos = offset;
 	}
 
+	/** 照準が狙っている牛座標を取得する関数 */
+	Vector3 GetAimTargetPosition() const;
+
 private:
 	/** 牛がロープに当たったら*/
 	void HitCow();

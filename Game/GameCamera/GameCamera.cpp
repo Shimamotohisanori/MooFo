@@ -37,7 +37,7 @@ namespace
 	constexpr float RAY_MAX_DISTANCE = 750.0f;
 
 	/** 牛との判定に使う球の半径 */
-	constexpr float COW_COLLISION_RADIUS = 50.0f;
+	constexpr float COW_COLLISION_RADIUS = 45.0f;
 
 }
 
@@ -190,6 +190,33 @@ void GameCamera::Follow()
 	g_camera3D->Update();
 }
 
+
+Vector3 GameCamera::GetAimTargetPosition() const
+{
+	/** レイの始点と方向 */
+	Vector3 raystart = g_camera3D->GetPosition();
+	Vector3 raydirection = g_camera3D->GetForward();
+	raydirection.Normalize();
+
+	/** レイの方向が上向きの場合は、最大距離までの位置を返す */
+	if (raydirection.y > 0.0f)
+	{
+		/** レイの最大距離までの位置を返す */
+		return raystart + raydirection * RAY_MAX_DISTANCE;
+	}
+
+	/** レイの方向が下向きの場合は、地面との交点を計算する */
+	float t = -raystart.y / raydirection.y;
+
+	if (t > 0.0f && t < RAY_MAX_DISTANCE)
+	{
+		/** 地面との交点を返す */
+		return raystart + raydirection * t;
+	}
+
+	/** それ以外の場合は、最大距離までの位置を返す */
+	return raystart + raydirection * RAY_MAX_DISTANCE;
+}
 
 void GameCamera::HitCow()
 {

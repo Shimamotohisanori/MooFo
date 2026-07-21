@@ -67,10 +67,10 @@ namespace
 	constexpr float ROPE_THROW_SPEED = 1000.0f;
 
 	/** ロープが伸びきる最大距離 */
-	constexpr float ROPE_MAX_THROW_DISTANCE = 400.0f;
+	constexpr float ROPE_MAX_THROW_DISTANCE = 430.0f;
 
 	/** ゴーストの当たり判定半径 */
-	constexpr float GHOST_RADIUS = 30.0f;
+	constexpr float GHOST_RADIUS = 25.0f;
 }
 
 
@@ -283,7 +283,9 @@ void Rope::OnHitCow(Cow* cow)
 void Rope::PlayerThrowsRope()
 {
 	/** ロープを投げる処理 */
-	if (m_isThrowRope && !m_isStartRopeAnimation && !m_isEndRopeAnimation)
+	if (m_isThrowRope && 
+		!m_isStartRopeAnimation && 
+        !m_isEndRopeAnimation)
 	{
 		/** ロープアニメーション開始のフラグを立てる */
 		m_isStartRopeAnimation = true;
@@ -296,46 +298,52 @@ void Rope::PlayerThrowsRope()
 
 		/** カメラを取得して、投げた瞬間の前方向を固定する */
 		GameCamera* gameCamera = FindGO<GameCamera>("gameCamera");
-		Vector3 forward = Vector3::AxisZ; // 念のためのデフォルト
+		
+		/** 照準位置を取得する */
+		Vector3 aimTarget = gameCamera->GetAimTargetPosition();
 
-		if (gameCamera != nullptr)
-		{
-			forward = gameCamera->GetCameraForward();
-
-			if (forward.LengthSq() > 0.0001f)
-			{
-				forward.Normalize();
-			}
-			else
-			{
-				forward = Vector3::AxisZ;
-			}
-		}
-
-		/** 投げ始めの瞬間、プレイヤーの位置を基準に輪っかの位置を1回だけ決める */
+		/** プレイヤーの位置を取得する */
 		Vector3 playerPos = m_player->GetPosition();
 
-		m_ropePos = playerPos + forward * ROPE_OFFSET_FORWARD + Vector3(0.0f, ROPE_OFFSET_UP, 0.0f);
+		/** プレイヤーの回転を取得する */
+		Vector3 right = Vector3::AxisX;
 
-		/** 飛んでいく起点として固定保存する(ゴースト・輪っか前進の基準) */
-		m_ropeThrowOrigin = m_ropePos;
+		/** プレイヤーの回転を適用して右方向を取得する */
+		m_player->GetRotation().Apply(right);
 
-		/** 投げる方向は「カメラの前方向」で固定する */
-		m_throwDirection = forward;
+		/** プレイヤーの回転を適用して前方向を取得する */
+		Vector3 forward = Vector3::AxisZ;
 
-		/** 輪っかの回転も、この固定した方向を基準にする */
-		m_ropeRot.SetRotation(Vector3::AxisZ, forward);
+		/** プレイヤーの回転を適用して前方向を取得する */
+		m_player->GetRotation().Apply(forward);
 
+		/** ロープの開始位置を計算する */
+		Vector3 ropeStartPos =
+			playerPos
+			+ right * ROPE_OFFSET_RIGHT
+			+ forward * ROPE_OFFSET_FORWARD
+			+ Vector3(0.0f, ROPE_OFFSET_UP, 0.0f);
 
-		/** ゴーストを輪っかの位置に生成 */
+		m_ropePos = ropeStartPos;
+
+		/** 投げた瞬間の方向を計算する */
+		m_throwDirection = aimTarget - ropeStartPos;
+		m_throwDirection.Normalize();
+
+		/** 投げた瞬間の方向をQuaternionに変換して保持する */
+		m_ropeRot.SetRotation(Vector3::AxisZ, m_throwDirection);
+
+		/** 投げた瞬間の位置を記録する */
+		m_ropeThrowOrigin = ropeStartPos;
+
+		/** ゴーストの位置も投げた瞬間の位置にする */
+		m_ropeGhostPosition = ropeStartPos;
+
 		if (!m_isGhostCreated)
 		{
-			/** ゴーストを生成 */
 			m_ropeGhostObject.CreateSphere(m_ropePos, Quaternion::Identity, GHOST_RADIUS);
 			m_isGhostCreated = true;
 		}
-
-		/** ゴーストの位置を輪っかの位置に設定 */
 		else
 		{
 			m_ropeGhostObject.SetPosition(m_ropePos);
@@ -415,6 +423,7 @@ void Rope::RotateRope()
 		{
 			/** 完全に縮み終わったらここでフラグを下ろす(唯一の場所) */
 			m_isEndRopeAnimation = false;
+			m_isThrowRope = false;
 		}
 
 		return;
@@ -543,8 +552,13 @@ void Rope::CalcThrowSegments()
 	/** セグメント計算（既存） */
 	for (int i = 0; i <= ROPE_SEGMENT_COUNT; i++)
 	{
+		/** 線形補間の割合を計算 */
 		float segT = (float)i / (float)ROPE_SEGMENT_COUNT;
+
+		/** 線形補間でXZ方向は均等に分割 */
 		Vector3 pos = start + (end - start) * segT;
+
+		/** 計算したセグメントの位置を保存 */
 		m_ropeSegmentPositions[i] = pos;
 	}
 }
@@ -580,6 +594,10 @@ void Rope::CheckHitCowByGhost()
 	/** ゴーストが作成されていないなら処理しない */
 	if (!m_isGhostCreated) return;
 
+	GameCamera* gameCamera = FindGO<GameCamera>("gameCamera");
+
+	if (!gameCamera || !gameCamera->GetIsAimingCow()) return;
+
 	/** ゴーストが牛に当たったか判定 */
 	for (auto cow : m_cowList)
 	{
@@ -595,6 +613,7 @@ void Rope::CheckHitCowByGhost()
 			cow->GetCharacterController(),
 			[this, cow](const btCollisionObject& contactObj)
 			{
+				/** ゴーストが牛に当たった場合の処理 */
 				if (m_ropeGhostObject.IsSelf(contactObj))
 				{
 					OnHitCow(cow);
