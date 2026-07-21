@@ -209,11 +209,13 @@ void Game::Update()
 		m_pause->Activate();
 		m_pause->SetIsPause(true);
 
+		/** トゥーン輪郭線を無効化 */
+		g_renderingEngine->SetEnableToonOutline(false);
+
 	}
 
 	/** 牛を生む関数 */
 	SpawnCow();
-
 
 	UpdateUFORespawn();
 	/* タイムアウト処理 */
@@ -402,6 +404,10 @@ bool Game::LoadStepByStep()
 		m_cowFood = FindGO<CowFood>("cowfood");
 		m_cowFoodManager = FindGO<CowFoodManager>("cowfoodmanager");
 		m_cowLuring = FindGO<CowLuring>("cowluring");
+
+		/** UIで表示させる物は一旦Updateなどを一時停止させる*/
+		if (m_cowFood)m_cowFood->Deactivate();
+		if (m_cowFoodManager)m_cowFoodManager->Deactivate();
 		m_gameInitStep = InitStep::Score;
 		break;
 	}
@@ -409,6 +415,8 @@ bool Game::LoadStepByStep()
 	case InitStep::Score:
 	{
 		m_score = NewGO<Score>(0, "score");
+		/** UIで表示させる物は一旦Updateなどを一時停止させる*/
+		m_score->Deactivate();
 		m_gameInitStep = InitStep::CowNumberOfRescues;
 		break;
 
@@ -417,6 +425,8 @@ bool Game::LoadStepByStep()
 	case InitStep::CowNumberOfRescues:
 	{
 		m_cowNumberOfRescues = NewGO<CowNumberOfRescues>(0, "cownumberofrescues");
+		/** UIで表示させる物は一旦Updateなどを一時停止させる*/
+		m_cowNumberOfRescues->Deactivate();
 		m_gameInitStep = InitStep::Timer;
 		break;
 	}
@@ -424,6 +434,8 @@ bool Game::LoadStepByStep()
 	case InitStep::Timer:
 	{
 		m_timer = NewGO<Timer>(0, "timer");
+		/** UIで表示させる物は一旦Updateなどを一時停止させる*/
+		m_timer->Deactivate();
 		m_gameInitStep = InitStep::Pause;
 		break;
 	}
@@ -431,6 +443,7 @@ bool Game::LoadStepByStep()
 	case InitStep::Pause:
 	{
 		m_pause = NewGO<Pause>(0, "pause");
+		/** UIで表示させる物は一旦Updateなどを一時停止させる*/
 		m_pause->Deactivate();
 		m_gameInitStep = InitStep::Map;
 		break;
@@ -440,6 +453,8 @@ bool Game::LoadStepByStep()
 	{
 		m_map = NewGO<Map>(0, "map");
 		m_gameInitStep = InitStep::Combo;
+		/** UIで表示させる物は一旦Updateなどを一時停止させる*/
+		m_map->Deactivate();
 		break;
 	}
 	/** コンボの生成 */
@@ -453,6 +468,8 @@ bool Game::LoadStepByStep()
 	case InitStep::AddTimerUI:
 	{
 		m_addTimerUI = NewGO<AddTimerUI>(0, "addTimerUI");
+		/** UIで表示させる物は一旦Updateなどを一時停止させる*/
+		m_addTimerUI->Deactivate();
 		m_gameInitStep = InitStep::CountDown;
 		break;
 	}
@@ -460,6 +477,8 @@ bool Game::LoadStepByStep()
 	case InitStep::CountDown:
 	{
 		m_countDown = NewGO<CountDown>(0, "countdown");
+		/** UIで表示させる物は一旦Updateなどを一時停止させる*/
+		m_countDown->Deactivate();
 		m_gameInitStep = InitStep::UFOLightUI;
 		break;
 	}
@@ -467,6 +486,8 @@ bool Game::LoadStepByStep()
 	case InitStep::UFOLightUI:
 	{
 		m_ufoLightUI = NewGO<UFOLightUI>(0, "ufoLightUI");
+		/** UIで表示させる物は一旦Updateなどを一時停止させる*/
+		m_ufoLightUI->Deactivate();
 		m_gameInitStep = InitStep::Aiming;
 		break;
 	}
@@ -495,6 +516,8 @@ bool Game::LoadStepByStep()
 	case InitStep::InstructionControllerUI:
 	{
 		m_instructionControllerUI = NewGO<InstructionControllerUI>(0, "instructionControllerUI");
+		/** 一旦Updateなどを一時停止させる*/
+		m_instructionControllerUI->Deactivate();
 		m_gameInitStep = InitStep::DecreaseTimerUI;
 		break;
 	}
@@ -557,7 +580,24 @@ void Game::UpdateUFORespawn()
 	);
 }
 
+/** ロード完了後、プレイヤーが実際にスタートを確定した時に呼ぶ */
+void Game:: ActivateGameBGM()
+{
+	m_isGameActive = true;
 
+	/** ここでロードが完了したらActiveにして再開させる*/
+	if (m_score)                   m_score->Activate();
+	if (m_cowNumberOfRescues)      m_cowNumberOfRescues->Activate();
+	if (m_timer)                   m_timer->Activate();
+	if (m_addTimerUI)              m_addTimerUI->Activate();
+	if (m_countDown)               m_countDown->Activate();
+	if (m_ufoLightUI)              m_ufoLightUI->Activate();
+	if (m_instructionControllerUI) m_instructionControllerUI->Activate();
+	if (m_map)                     m_map->Activate();
+	if (m_cowFood)                 m_cowFood->Activate();
+	if (m_cowFoodManager)          m_cowFoodManager->Activate();
+	
+}
 void Game::SpawnCow()
 {
 	if (m_timer->GetTimer() <= 4.0f || m_isTimeOut)

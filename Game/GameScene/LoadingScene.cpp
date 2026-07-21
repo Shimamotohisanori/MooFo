@@ -42,9 +42,6 @@ namespace
 	/** 牛同士の最低距離 */
 	constexpr float MIN_DISTANCE = 15.0f; // 牛同士の最低距離
 
-	/** ゲーム開始直後(初期10体)に追いかける牛の出現確率 */
-	constexpr int INITIAL_CHASE_COW_RATE = 20;
-
 	/** Gif終了とロード完了が揃ってから、実際にフェードアウトを始めるまでの
 	止め絵を見せる時間(秒) */
 	//constexpr float FINISHED_HOLD_DURATION = 2.0f;
@@ -56,6 +53,10 @@ namespace
 	constexpr int COWWALK_FREAM_COUNT = 25;
 	/** 25枚を15fpsで再生 → 1周約1.67秒*/
 	constexpr float COWWALK_FPS = 15.0f; 
+	
+	/** ゲーム開始直後(初期10体)に追いかける牛の出現確率 */
+	constexpr int INITIAL_CHASE_COW_RATE = 20;
+
 }
 
 LoadingScene::LoadingScene()
@@ -72,6 +73,9 @@ LoadingScene::~LoadingScene()
 
 bool LoadingScene::Start()
 {
+	/** ロード中は輪郭線を無効化 */
+	g_renderingEngine->SetEnableToonOutline(false);
+
 	/** 背景のスプライトの初期化 */
 	m_blackLoadingSpriteRender.Init(BLACKLODING_FILEPATH, BLACKLOADING_WIDTH, BLACKLOADING_HEIGHT);
 	m_blackLoadingSpriteRender.SetPosition(Vector3(0.0f, 0.0f, 0.0f));
@@ -83,10 +87,6 @@ bool LoadingScene::Start()
 
 	/** 2枚目に表示するGif画像をランダムに選ぶ*/
 	m_useRopeGif = (rand() % 2 == 0);
-	
-
-	
-	
 
 	/** 最初は最初の画像を表示する */
 	m_currentImage = 0;
@@ -283,6 +283,10 @@ void LoadingScene::AutoAdvanceImage()
 				{
 					game->ActivateGameBGM();
 				}
+
+				/** ロード中のBGMはここで明示的に止める*/
+				DeleteGO(m_loadingSound);
+				m_loadingSound = nullptr;
 			}
 			else if (m_loadType == LoadType::ToTitleScene)
 			{
@@ -443,6 +447,9 @@ void LoadingScene::FadeOutLoadingScene()
 			return;
 		}
 	}
+
+	/** ロード終了後は輪郭線を再度有効化 */
+	g_renderingEngine->SetEnableToonOutline(true);
 
 	m_isSceneFadeOut = false;
 	DeleteGO(this);

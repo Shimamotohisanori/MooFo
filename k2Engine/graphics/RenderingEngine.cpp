@@ -38,6 +38,11 @@ namespace nsK2Engine {
             m_gBuffer[enGBufferNormal],
             m_gBuffer[enGBufferMetaricShadowSmooth],
             m_gBuffer[enGBufferAlbedoDepth]);
+
+        m_toonOutlineEffect.Init(
+            m_gBuffer[enGBufferNormal].GetRenderTargetTexture(),
+            m_zprepassRenderTarget.GetRenderTargetTexture()
+        );
     }
     void RenderingEngine::InitDefferedLighting_Sprite()
     {
@@ -369,8 +374,16 @@ namespace nsK2Engine {
         // 2D描画
         Render2D(rc);
 
+        // トゥーン輪郭線描画
+        if (m_isEnableToonOutline) {
+            m_toonOutlineEffect.Render(rc, m_mainRenderTarget);
+        }
+
         // メインレンダリングターゲットの内容をフレームバッファにコピー
         CopyMainRenderTargetToFrameBuffer(rc);
+
+		//m_toonOutlineEffect.DebugRenderMaskToFrameBuffer(rc);
+
 #ifdef COPY_RAYTRACING_FRAMEBUFFER
         g_graphicsEngine->DispatchRaytracing(rc);
         // レイトレの結果をフレームバッファに書き込む。
