@@ -70,13 +70,19 @@ public:
 	/** 牛を捕まえた時のロープモデルの位置設定 */
 	void SetRopeModelPos(Vector3 pos)
 	{
-		m_rollModelRender.SetPosition(pos);
+		m_ropeModelRender.SetPosition(pos);
 	}
 
 	/** 牛を捕まえた時のロープモデルの回転設定 */
 	void SetRopeModelRot(Quaternion rot)
 	{
-		m_rollModelRender.SetRotation(rot);
+		m_ropeModelRender.SetRotation(rot);
+	}
+
+	/** ロープが縮んでいるかどうかを取得する関数 */
+	bool GetIsEndRopeAnimation()const
+	{
+		return m_isEndRopeAnimation;
 	}
 
 
@@ -96,21 +102,19 @@ private:
 	/** セグメントの更新 */
 	void UpdateSegments();
 
+	/** ロープのアニメーション関数 */
+	void CalcThrowSegments();
+
+	/** 投げている最中のゴーストの更新 */
+	void UpdateThrowGhost();
+
+	/** ゴーストが連れ去られている牛に当たったか判定 */
+	void CheckHitCowByGhost();
+
+	/** ゴーストが牛に当たった時の処理 */
+	void UpdateHandPosition();
+
 private:
-	/** ロープのアニメーション */
-	enum enRopeAnimation
-	{
-		enRopeAnimation_Shrink_Throw, /** 投げるアニメーション(縮む) */
-		enRopeAnimation_Stretch_Throw,  /** 投げるアニメーション(伸びる) */
-		enRopeAnimation_Num
-	};
-
-	/** ロープのアニメーション */
-	AnimationClip m_ropeAnimationClips[enRopeAnimation_Num];
-
-	/** アニメーション番号 */
-	enRopeAnimation m_currentAnimation = enRopeAnimation_Shrink_Throw;
-
 	/** プレイヤー */
 	Player* m_player = nullptr;
 
@@ -126,17 +130,11 @@ private:
 	/** セグメント数 */
 	static const int ROPE_SEGMENT_COUNT = 10;
 
-	/** ロープモデルレンダー */
-	ModelRender m_ropeModelRender;
-
-	/** アニメを再生するロープモデル */
-	ModelRender m_animationRopeModelRender;
-
 	/** セグメントごとのモデルレンダー */
 	ModelRender m_ropeSegments[ROPE_SEGMENT_COUNT];
 
-	/** 牛を捕まえた時のロープモデルレンダー */
-	ModelRender m_rollModelRender;
+	/** ロープモデルレンダー */
+	ModelRender m_ropeModelRender;
 
 	/** セグメントごとの位置 */
 	Vector3 m_ropeSegmentPositions[ROPE_SEGMENT_COUNT + 1];
@@ -150,14 +148,35 @@ private:
 	/** ロープのスケール */
 	Vector3 m_ropeScale = Vector3::Zero;
 
+	/** ゴーストの現在位置 */
+	Vector3 m_ropeGhostPosition = Vector3::Zero;
+
+	/** ゴーストの方向 */
+	Vector3 m_throwDirection = Vector3::AxisZ;
+
+	/** ロープが飛んでいく起点(投げた瞬間の位置で固定、ゴーストの計算基準) */
+	Vector3 m_ropeThrowOrigin = Vector3::Zero;
+
+	/** ロープのゴーストオブジェクト */
+	PhysicsGhostObject m_ropeGhostObject;
+
+	/** ゴーストが作成されたかどうかのフラグ */
+	bool m_isGhostCreated = false;
+
 	/** ロープを投げたかどうかのフラグ */
 	bool m_isThrowRope = false;
 
 	/** ロープアニメーションが始まったかどうかのフラグ */
 	bool m_isStartRopeAnimation = false;
 
+	/** ロープアニメーションが終わったかどうかのフラグ */
+	bool m_isEndRopeAnimation = false;
+
 	/** 縄が牛に当たったかどうかのフラグ*/
 	bool m_isHitCow = false;
+
+	/** ゴーストが進んだ距離 */
+	float m_ropeThrowDistance = 0.0f;
 
 	/** ロープアニメーション時間 */
 	float m_ropeAnimationTime = 0.0f;
@@ -167,5 +186,8 @@ private:
 
 	/** ロープのたるみアニメーション時間 */
 	float m_ropeSlackTime = 0.0f;
+
+	/** ロープの縮む時間 */
+	float m_ropeShrinkTime = 0.0f;
 };
 

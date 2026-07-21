@@ -194,6 +194,12 @@ public:
 	/** UFOに連れ去らわれる処理 */
 	void TakeAwayedByUFO(Vector3 direction, float speed);
 
+	/** キャラクターコントローラーを取得(ロープのゴースト判定用) */
+	CharacterController& GetCharacterController()
+	{
+		return m_cowCharacterController;
+	}
+
 
 private:
 	/** プレイヤーに引っ張られる関数 */
