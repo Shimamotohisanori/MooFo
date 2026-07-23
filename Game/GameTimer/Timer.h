@@ -2,7 +2,7 @@
 class CountDown;
 class Pause;
 class Game;
-class FadeManager;
+class CowLivesUI;
 /** タイマークラス */
 class Timer : public IGameObject
 {
@@ -68,6 +68,9 @@ private:
 	Pause* m_pause = nullptr;
 	/** ゲームのポインタ*/
 	Game* m_game = nullptr;
+
+	/** プレイヤーの残機ポインタ*/
+	CowLivesUI* m_cowLivesUI = nullptr;
 
 	/** タイマーの残り秒数が５秒になっているかどうかのフラグ*/
 	bool m_isFiveTimer = false;

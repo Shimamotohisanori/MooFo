@@ -10,6 +10,7 @@ class Pause;
 class Game;
 class Timer;
 class DecreaseTimerUI;
+class CowLivesUI;
 class UFO : public Character
 {
 public:
@@ -155,6 +156,8 @@ private:
 	DecreaseTimerUI* m_decreaseTimer = nullptr;
 	/** UFOが牛を吸い込むSE */
 	SoundSource* m_UFOCaptureSE = nullptr;
+	/** プレイヤーの残機UI*/
+	CowLivesUI* m_cowLivesUI = nullptr;
 
 	/** 牛が鳴いたかどうか */
 	bool m_hasCryed = false;

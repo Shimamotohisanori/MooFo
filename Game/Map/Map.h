@@ -6,6 +6,7 @@ class Pause;
 class Game;
 class LodingScene;
 class CowFoodManager;
+class CowLivesUI;
 class Map : public IGameObject
 {
 public:
@@ -53,6 +54,8 @@ private:
 
 	/** 牛の餌のポインタ */
 	CowFoodManager* m_cowFoodManager = nullptr;
+	/** プレイヤーの残機ポインタ*/
+	CowLivesUI* m_cowLivesUI = nullptr;
 
 	/** マップの回転角度 */
 	float m_mapAngle = 0.0f;

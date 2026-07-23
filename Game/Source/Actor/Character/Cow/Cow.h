@@ -12,6 +12,7 @@ class Timer;
 class CowLuring;
 class CowFoodManager;
 class VoiceManager;
+class CowLivesUI;
 
 class Cow : public Character
 {
@@ -295,6 +296,8 @@ private:
 
 	/** ボイスマネージャー */
 	VoiceManager* m_voiceManager = nullptr;
+	/** プレイヤーの残機ポインタ*/
+	CowLivesUI* m_cowLivesUI = nullptr;
 
 	enum EnCowState
 	{

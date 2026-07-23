@@ -4,7 +4,7 @@
 #include "Pause/Pause.h"
 #include"GameScene/Game.h"
 #include"SoundManager/SoundManager.h"
-#include"FadeManager/FadeManager.h"
+#include"CowLivesUI.h"
 
 namespace
 {
@@ -79,6 +79,8 @@ void Timer::Update()
 	m_countdown = FindGO<CountDown>("countdown");
 	
 	m_pause = FindGO<Pause>("pause");
+
+	m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
 	
 	if(m_pause == nullptr || m_countdown == nullptr)
 	{
@@ -87,6 +89,11 @@ void Timer::Update()
 
 	/** Pause中は制限時間の更新を止める */
 	if (m_pause->GetIsPause())
+	{
+		return;
+	}
+	/** 「RESCUE FAILED」のテキストが出たらタイマーを止める*/
+	if (m_cowLivesUI && m_cowLivesUI->IsNotOperetion())
 	{
 		return;
 	}
@@ -327,6 +334,11 @@ void Timer::Render(RenderContext& rc)
 	if (m_isFiveTimer)
 	{
 		m_redDigitSprite[2][m_flashDigits[2]].Draw(rc);
+		return;
+	}
+	/** フェード処理中は描画しない*/
+	if (m_cowLivesUI->IsFadeInComplete())
+	{
 		return;
 	}
 

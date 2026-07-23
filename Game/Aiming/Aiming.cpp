@@ -5,7 +5,7 @@
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "GameCamera/GameCamera.h"
 #include "Rope/Rope.h"
-
+#include"CowLivesUI.h"
 namespace
 {
 	/** 照準の画像ファイルパス */
@@ -40,6 +40,8 @@ bool Aiming::Start()
 
 void Aiming::Update()
 {
+	m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
+
 	/** 牛がプレイヤーに捕獲されたかどうかを確認 */
 	m_isAnyCowCaptured = false;
 	auto cows = FindGOs<Cow>("cow");
@@ -80,7 +82,11 @@ void Aiming::Render(RenderContext& rc)
 	{
 		return;
 	}
-
+	/** フェード処理中は描画しない*/
+	if (m_cowLivesUI && m_cowLivesUI->IsFadeInComplete())
+	{
+		return;
+	}
 	/** 照準が牛を狙っている時は赤く
 	 * そうじゃないなら白くする */
 	if (m_gameCamera && m_gameCamera->GetIsAimingCow())
