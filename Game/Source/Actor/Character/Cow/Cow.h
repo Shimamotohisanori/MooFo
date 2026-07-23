@@ -229,8 +229,11 @@ private:
 	/** プレイヤーと牛の距離の関数 */
 	void ChasePlayer();
 
-	/**  */
+	/** 牛の種類のモデル関数 */
 	void ApplyCowModel();
+
+	/** 牛の餌を表示させる関数 */
+	void CowSweat();
 
 	UFO* FindNearestEmittingUFO();
 
@@ -286,6 +289,9 @@ private:
 
 	/** 満腹状態のエフェクト */
 	EffectEmitter* m_overdoseEffect = nullptr;
+
+	/** 牛の汗エフェクト */
+	EffectEmitter* m_cowSweatEffect = nullptr;
 
 	/** ボイスマネージャー */
 	VoiceManager* m_voiceManager = nullptr;
