@@ -189,5 +189,8 @@ private:
 
 	/** ロープの縮む時間 */
 	float m_ropeShrinkTime = 0.0f;
+
+	/** RB2を押している間のロープのスピン時間 */
+	float m_ropeSpinTime = 0.0f;
 };
 
