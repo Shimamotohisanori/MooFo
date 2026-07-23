@@ -586,6 +586,7 @@ void Player::PlayAnimation()
 	case 1:
 		/** 走るアニメーション */
 		m_playerModelRender.PlayAnimation(enAnimationClip_Run, 0.15f);
+		m_playerModelRender.SetAnimationSpeed(1.7f);
 		m_playerModelRender.Update();
 		break;
 	case 2:

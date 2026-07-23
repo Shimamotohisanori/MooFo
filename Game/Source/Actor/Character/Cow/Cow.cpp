@@ -139,7 +139,6 @@ bool Cow::Start()
 
 	m_cowSweatEffect = NewGO<EffectEmitter>(0);
 	m_cowSweatEffect->Init((int)EffectID::EffectID_CowSweat);
-	//ミライの俺へ、牛の汗のエフェクトは出せるようになったから汗のエフェクトのスケールと難易度調整の画像とかやれ
 	return true;
 }
 
