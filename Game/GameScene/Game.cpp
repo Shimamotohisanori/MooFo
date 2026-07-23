@@ -26,6 +26,7 @@
 #include "Aiming/Aiming.h"
 #include "InstructionControllerUI/InstructionControllerUI.h"
 #include"GameTimer/DecreaseTimerUI.h"
+#include"CowLivesUI.h"
 namespace
 {
 	/**マジックナンバー対策*/
@@ -130,6 +131,9 @@ Game::~Game()
 	DeleteGO(m_instructionControllerUI);
 	/**タイマーが減少するUIの削除 */
 	DeleteGO(m_decreaseTimerUI);
+
+	/** プレイヤーの残機を表すUIの削除*/
+	DeleteGO(m_cowLivesUI);
 	/** コンボクラスの削除 */
 	if (m_combo && !m_combo->IsDead())
 	{
@@ -142,11 +146,15 @@ Game::~Game()
 		DeleteGO(m_fadeManager);
 		m_fadeManager = nullptr;
 	}
+	if (g_renderingEngine)
+	{
+		/** トゥーン輪郭線を無効化 */
+		g_renderingEngine->SetEnableToonOutline(false);
+	}
+	
 }
 bool Game::Start()
 {
-	
-	
 	return true;
 }
 
@@ -189,11 +197,13 @@ void Game::Update()
 	/** セレクトボタンを押していて
 	 * カウントダウン中でないかつ
 	 * タイムアウトしていない場合かつ
-	 *　５秒前になっていなかったら*/
+	 *　５秒前になっていなかいかつ
+	 　　「RESCUE FAILED」の文字が出ていたら*/
 	if (g_pad[0]->IsTrigger(enButtonSelect)
 		&& !m_countDown->GetCountDown()
 		&& !m_isTimeOut
-		&& !m_timer->IsFiveCountDown())
+		&& !m_timer->IsFiveCountDown()
+		&&(!m_cowLivesUI||!m_cowLivesUI->IsNotOperetion()))
 	{
 		/** タイムアウトなら */
 		if (m_isTimeOut)
@@ -525,6 +535,13 @@ bool Game::LoadStepByStep()
 	case InitStep::DecreaseTimerUI:
 	{
 		m_decreaseTimerUI = NewGO<DecreaseTimerUI>(0, "decreasetimerUI");
+		m_gameInitStep = InitStep::CowLivesUI;
+		break;
+	}
+
+	case InitStep::CowLivesUI:
+	{
+		m_cowLivesUI = NewGO<CowLivesUI>(0, "cowlivesui");
 		m_gameInitStep = InitStep::Num;
 		break;
 	}
@@ -730,6 +747,7 @@ void Game::TimeOut()
 
 void Game::Render(RenderContext& rc)
 {
+	/**	タイムアウトのフェードアウトをしていたら描画しない*/
 	if (IsFadeTimeOut())
 	{
 		return;

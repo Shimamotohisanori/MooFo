@@ -4,6 +4,7 @@
 #include "Pause/Pause.h"
 #include"UFOLightManager.h"
 #include"GameScene/Game.h"
+#include"CowLivesUI.h"
 
 namespace
 {
@@ -28,8 +29,8 @@ namespace
 	const Vector3 FONT_SCALE = Vector3(2.0f, 2.0f, 2.0f);
 
 	/** 数字の大きさ */
-	const float NUMBERFONT_WIDTH = 100.0f;
-	const float NUMBERFONT_HEIGHT = 100.0f;
+	const float NUMBERFONT_WIDTH = 90.0f;
+	const float NUMBERFONT_HEIGHT = 90.0f;
 
 	/** 「光の発射まで」の大きさ */
 	const float FONT_WIDTH = 200.0f;
@@ -58,13 +59,13 @@ bool UFOLightUI::Start()
 	m_game = FindGO<Game>("game");
 	/** 光の発射までのスプライト初期化 */
 	m_LightApperSpriteRender.Init(LIGHT_APPEAR_SPRITE_FILEPATH, FONT_WIDTH, FONT_HEIGHT);
-	m_LightApperSpriteRender.SetPosition(Vector3(-800.0f, 490.0f, 0.0f));
+	m_LightApperSpriteRender.SetPosition(Vector3(0.0f, 380.0f, 0.0f));
 	m_LightApperSpriteRender.SetScale(FONT_SCALE);
 	m_LightApperSpriteRender.Update();
 
 	/** 秒のスプライト初期化 */
 	m_secondsSpriteRender.Init(LIGHT_APPEAR_SECONDS_SPRITE_FILEPATH, SECOMDS_WIDTH, SECOMDS_HEIGHT);
-	m_secondsSpriteRender.SetPosition(Vector3(-600.0f, 500.0f, 0.0f));
+	m_secondsSpriteRender.SetPosition(Vector3(190.0f, 390.0f, 0.0f));
 	m_secondsSpriteRender.SetScale(FONT_SCALE);
 	m_secondsSpriteRender.Update();
 	
@@ -87,6 +88,7 @@ void UFOLightUI::Update()
 
 	m_pause = FindGO<Pause>("pause");
 	m_countdown = FindGO<CountDown>("countdown");
+	m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
 	/** 光が出ているかどうかのフラグを取得 */
 	CountSpriteUI();
 
@@ -116,6 +118,11 @@ void UFOLightUI::Render(RenderContext& rc)
 	
 	/** Pause中は描画を止める */
 	if (m_pause->GetIsPause())
+	{
+		return;
+	}
+
+	if (m_cowLivesUI && m_cowLivesUI->IsGameOverSequenceActive())
 	{
 		return;
 	}
@@ -169,8 +176,8 @@ void UFOLightUI::CountSpriteUI()
 
 	/** 表示位置 */
 	Vector3 pos;
-	pos.x = -644.0f;
-	pos.y = 508.0f;
+	pos.x = 155.0f;
+	pos.y = 395.0f;
 	pos.z = 0.0f;
 	m_LightApperNumberSpriteRender[m_currentCount].SetPosition(pos);
 

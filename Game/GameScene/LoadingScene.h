@@ -179,6 +179,8 @@ private:
 	SoundSource* m_loadingSound = nullptr;
 
 
+
+
 	/** 操作説明画像を最低表示しておく時間(秒) */
 	static constexpr float MIN_IMAGE0_DISPLAY_TIME = 3.0f; // 好きな秒数に調整
 	//これは、LoadingSceneを呼び出すときに、次のシーンをロードする関数を引数で渡してもらうための変数。

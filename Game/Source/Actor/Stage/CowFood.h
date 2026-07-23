@@ -5,6 +5,7 @@ class CowFoodManager;
 class LoadingScene;
 class Game;
 class Pause;
+class CowLivesUI;
 class CowFood : public IGameObject
 {
 public:
@@ -110,6 +111,9 @@ private:
 
 	/** 牛の餌の管理 */
 	CowFoodManager* m_CowFoodManager = nullptr;
+	/** プレイヤーの残機のUI*/
+	CowLivesUI* m_cowLivesUI = nullptr;
+
 
 	/** 牛の餌を置く音 */
 	SoundSource* m_puthaySE = nullptr;

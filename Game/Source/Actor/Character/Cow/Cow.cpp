@@ -18,6 +18,7 @@
 #include "CowLuring.h"
 #include "SoundManager/VoiceManager.h"
 #include "GameTimer/AddTimerUI.h"
+#include"CowLivesUI.h"
 
 namespace
 {
@@ -138,9 +139,6 @@ bool Cow::Start()
 
 	m_cowSweatEffect = NewGO<EffectEmitter>(0);
 	m_cowSweatEffect->Init((int)EffectID::EffectID_CowSweat);
-
-	//ミライの俺へ、牛の汗のエフェクトは出せるようになったから汗のエフェクトのスケールと難易度調整の画像とかやれ
-
 	return true;
 }
 
@@ -1084,6 +1082,8 @@ bool Cow::CanUpdate()
 	m_pause = FindGO<Pause>("pause");
 	m_game = FindGO<Game>("game");
 	m_timer = FindGO<Timer>("timer");
+	/** プレイヤーの残機UIの情報を取得*/
+	m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
 	/** どれかが存在しないときは処理しないようにするため早期リターン */
 	if (m_pause == nullptr ||
 		m_countdown == nullptr ||
@@ -1122,6 +1122,11 @@ bool Cow::CanUpdate()
 
 	/** カウントダウン中のときは処理しないようにするため早期リターン */
 	if (m_countdown->GetCountDown())
+	{
+		return false;
+	}
+	/** ゲームオーバー演出中は牛を動かさない*/
+	if (m_cowLivesUI && m_cowLivesUI->IsGameOverSequenceActive())
 	{
 		return false;
 	}

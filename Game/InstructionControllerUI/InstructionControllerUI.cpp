@@ -2,6 +2,7 @@
 #include "InstructionControllerUI.h"
 #include "Pause/Pause.h"
 #include "GameScene/LoadingScene.h"
+#include"CowLivesUI.h"
 namespace
 {
 	/** InstructionControllerUIのスプライトのパス */
@@ -26,6 +27,8 @@ bool InstructionControllerUI::Start()
 
 void InstructionControllerUI::Update()
 {
+	m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
+
 	m_instructionControllerUI.Update();
 }
 
@@ -40,6 +43,11 @@ void InstructionControllerUI::Render(RenderContext & renderContext)
 
 	/** ポーズ中なら描画しない */
 	if (m_pause && m_pause->GetIsPause())
+	{
+		return;
+	}
+
+	if (m_cowLivesUI && m_cowLivesUI->IsFadeInComplete())
 	{
 		return;
 	}

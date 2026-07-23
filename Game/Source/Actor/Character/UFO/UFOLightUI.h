@@ -3,6 +3,7 @@ class CountDown;
 class Pause;
 class UFOLightManager;
 class Game;
+class CowLivesUI;
 /** UFOの光のUIクラス */
 class UFOLightUI : public IGameObject
 {
@@ -30,6 +31,8 @@ private:
 	CountDown* m_countdown = nullptr;
     /** ゲーム*/
 	Game* m_game = nullptr;
+	/** プレイヤーの残機UI*/
+	CowLivesUI* m_cowLivesUI = nullptr;
 
 	/** 光が出ているときに表示する数字のスプライトレンダー */
 	SpriteRender m_LightApperNumberSpriteRender[5];

@@ -104,6 +104,8 @@
     <ClCompile Include="GameTimer\DecreaseTimerUI.cpp">
       <Filter>GameTimer</Filter>
     </ClCompile>
+
+    <ClCompile Include="CowLivesUI.cpp" />
     <ClCompile Include="GameScene\Difficulty.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -154,9 +156,6 @@
     </ClInclude>
     <ClInclude Include="CountDown\CountDown.h">
       <Filter>CountDown</Filter>
-    </ClInclude>
-    <ClInclude Include="GameScene\Game.h">
-      <Filter>GameScene</Filter>
     </ClInclude>
     <ClInclude Include="Pause\SoundPause.h">
       <Filter>Pause</Filter>
@@ -209,6 +208,11 @@
     <ClInclude Include="InstructionControllerUI\InstructionControllerUI.h" />
     <ClInclude Include="GameTimer\DecreaseTimerUI.h">
       <Filter>GameTimer</Filter>
+    </ClInclude>
+
+    <ClInclude Include="CowLivesUI.h" />
+    <ClInclude Include="GameScene\Game.h">
+      <Filter>FadeMaager</Filter>
     </ClInclude>
     <ClInclude Include="GameScene\Difficulty.h" />
   </ItemGroup>

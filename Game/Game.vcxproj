@@ -228,6 +228,7 @@
     <ClCompile Include="Aiming\Aiming.cpp" />
     <ClCompile Include="Combo\Combo.cpp" />
     <ClCompile Include="CountDown\CountDown.cpp" />
+    <ClCompile Include="CowLivesUI.cpp" />
     <ClCompile Include="CowNumberOfRescues\CowNumberOfRescues.cpp" />
     <ClCompile Include="EffectManager\EffectManager.cpp" />
     <ClCompile Include="FadeManager\FadeManager.cpp" />
@@ -276,6 +277,7 @@
     <ClInclude Include="Aiming\Aiming.h" />
     <ClInclude Include="Combo\Combo.h" />
     <ClInclude Include="CountDown\CountDown.h" />
+    <ClInclude Include="CowLivesUI.h" />
     <ClInclude Include="CowNumberOfRescues\CowNumberOfRescues.h" />
     <ClInclude Include="EffectManager\EffectManager.h" />
     <ClInclude Include="FadeManager\FadeManager.h" />

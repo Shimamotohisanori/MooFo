@@ -57,7 +57,6 @@ private:
 	LoadingScene* m_loadingScene = nullptr;
 	/** サウンドポーズのポインタ*/
 	SoundPause* m_soundPause = nullptr;
-
 	/** Pasue中に使用する画像一覧*/
 	/** Pause背景*/
 	SpriteRender m_pauseBackGround;

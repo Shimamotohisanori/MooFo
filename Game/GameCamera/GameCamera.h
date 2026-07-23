@@ -2,6 +2,8 @@
 class Player;
 class Rope;
 class Game;
+class VoiceManager;
+class CowLivesUI;
 class GameCamera : public IGameObject
 {
 
@@ -95,6 +97,15 @@ private:
 
 	/** 牛捕獲時専用カメラ位置 */
 	Vector3 m_hitCowCameraPos = Vector3::Zero;
+
+	/** 牛を捕まえた時の音 */
+	SoundSource* m_cowCatchSE = nullptr;
+
+	/** ボイスマネージャー */
+	VoiceManager* m_voiceManager = nullptr;
+
+	/** プレイヤーの残機UI*/
+	CowLivesUI* m_cowLivesUI = nullptr;
 
 	/** カメラがロープの事を追従し始めたかどうかのフラグ */
 	bool m_isRopeCameraStarted = false;
