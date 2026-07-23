@@ -155,9 +155,6 @@
     <ClInclude Include="CountDown\CountDown.h">
       <Filter>CountDown</Filter>
     </ClInclude>
-    <ClInclude Include="GameScene\Game.h">
-      <Filter>GameScene</Filter>
-    </ClInclude>
     <ClInclude Include="Pause\SoundPause.h">
       <Filter>Pause</Filter>
     </ClInclude>
@@ -211,6 +208,9 @@
       <Filter>GameTimer</Filter>
     </ClInclude>
     <ClInclude Include="CowLivesUI.h" />
+    <ClInclude Include="GameScene\Game.h">
+      <Filter>FadeMaager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

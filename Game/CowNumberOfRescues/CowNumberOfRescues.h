@@ -4,6 +4,7 @@
  */
 class LoadingScene;
 class Game;
+class CowLivesUI;
 class CowNumberOfRescues : public IGameObject
 {
 public:
@@ -69,6 +70,8 @@ private:
 
 	/** ゲーム */
 	Game* m_game = nullptr;
+	/** プレイヤーの残機ポインタ*/
+	CowLivesUI* m_cowLivesUI = nullptr;
 
 	/** レイアウトの種類 */
 	enum LayoutType

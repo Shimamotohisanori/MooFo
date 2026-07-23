@@ -10,7 +10,7 @@
 #include "EffectManager/EffectManager.h"
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "SoundManager/VoiceManager.h"
-
+#include"CowLivesUI.h"
 namespace
 {
 	/** プレイヤーモデルのファイルパス */
@@ -142,12 +142,36 @@ void Player::Update()
 	{
 		m_CowFood = FindGO<CowFood>("cowfood");
 	}
+	
+	/** 「FAILED　RESCUE」のテキストが出ていたらこの下の処理を止める*/
+	m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
+	if (m_cowLivesUI && m_cowLivesUI->IsNotOperetion())
+	{
+		/** 走っているSEが再生中なら*/
+		if (m_isPlayRunSE && m_runSE != nullptr)
+		{
+			m_runSE->Stop();
+			m_isPlayRunSE = false;
+		}
+		/** 移動速度と移動中フラグをリセットする*/
+		m_moveSpeed = Vector3::Zero;
+		m_isMoving = false;
+
+		/** アニメーションを待機状態に戻して固まったままにしない*/
+		m_playerState = 0;
+		PlayAnimation();
+		m_playerModelRender.Update();
+		
+		return;
+	}
 
 	/*アップデートできるかどうかを判断する関数 */
 	if (!CanPlayerUpdate())
 	{
 		return;
 	}
+
+
 
 	/*ロープを引っ張る処理 */
 	PullRope();

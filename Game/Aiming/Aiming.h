@@ -5,6 +5,7 @@ class Cow;
 class CountDown;
 class GameCamera;
 class Rope;
+class CowLivesUI;
 class Aiming : public IGameObject
 {
 public:
@@ -31,6 +32,8 @@ private:
 
 	/** ロープクラスのポインタ */
 	Rope* m_rope = nullptr;
+	/** プレイヤーの残機ポインタ*/
+	CowLivesUI* m_cowLivesUI = nullptr;
 
 	/** 牛が捕まっているかどうかのフラグ */
 	bool m_isAnyCowCaptured = false;

@@ -1,6 +1,7 @@
 #pragma once
 class LoadingScene;
 class Game;
+class CowLivesUI;
 class Score :public IGameObject
 {
 public:
@@ -68,6 +69,9 @@ private:
 	SoundSource* m_scoreRiseSE = nullptr;
 	/** ゲームのポインタ*/
 	Game* m_game = nullptr;
+
+	/** プレイヤーの残機UIのポインタ*/
+	CowLivesUI* m_cowLivesUI = nullptr;
 	/** ５桁(万・千・百・十・一)の五桁を描画するスプライト */
 	SpriteRender m_digitSprite[5][10];
 	

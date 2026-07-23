@@ -8,6 +8,7 @@
 #include"GameScene/LoadingScene.h"
 #include "GameScene/Game.h"
 #include "Pause/Pause.h"
+#include"CowLivesUI.h"
 namespace
 {
 	/** ミニマップのスプライトのパス */
@@ -109,6 +110,8 @@ bool Map::Start()
 }
 void Map::Update()
 {
+
+	m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
 	/** CowFoodManagerが取得できない場合は毎フレーム取得を試みる */
 	if (m_cowFoodManager == nullptr)
 	{
@@ -357,6 +360,11 @@ void Map::Render(RenderContext& rc)
 	}
 	/** タイムアウト時のフェード処理中は描画を止める*/
 	if (m_game->IsFadeTimeOut())
+	{
+		return;
+	}
+	/** フェード処理中は描画しない*/
+	if (m_cowLivesUI && m_cowLivesUI->IsFadeInComplete())
 	{
 		return;
 	}

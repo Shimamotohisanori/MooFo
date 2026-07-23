@@ -6,7 +6,7 @@
 #include "SoundManager/SoundManager.h"
 #include "GameScene/Game.h"
 #include "SoundManager/VoiceManager.h"
-
+#include"CowLivesUI.h"
 namespace
 {
 	/** カメラ基本設定 */
@@ -80,6 +80,7 @@ void GameCamera::Update()
 	m_player = FindGO<Player>("player");
 	m_rope = FindGO<Rope>("rope");
 	m_game = FindGO<Game>("game");
+	m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
 
 	/** タイムアウトしているときはカメラを動かさない */
 	if (m_game == nullptr || m_game->GetIsTimeOut())
@@ -88,6 +89,11 @@ void GameCamera::Update()
 	}
 
 	if (m_player == nullptr || m_rope == nullptr)
+	{
+		return;
+	}
+	/** 「RESCUE FAILED」の文字が出ていたらこの下の処理をしない*/
+	if (m_cowLivesUI == nullptr || m_cowLivesUI->IsNotOperetion())
 	{
 		return;
 	}

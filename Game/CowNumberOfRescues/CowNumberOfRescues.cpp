@@ -2,6 +2,7 @@
 #include "CowNumberOfRescues.h"
 #include "GameScene/Game.h"
 #include "GameScene/LoadingScene.h"
+#include"CowLivesUI.h"
 namespace
 {
     /** 数のUIのファイルパス */
@@ -135,6 +136,9 @@ bool CowNumberOfRescues::Start()
 
 void CowNumberOfRescues::Update()
 {
+
+    m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
+
     tens = m_numberOfRescues / 10;
     ones = m_numberOfRescues % 10;
 
@@ -252,6 +256,11 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
         {
             return;
         }
+    }
+    /** フェード処理中は描画しない*/
+    if (m_cowLivesUI && m_cowLivesUI->IsFadeInComplete())
+    {
+        return;
     }
 
     /** レイアウトの種類 */

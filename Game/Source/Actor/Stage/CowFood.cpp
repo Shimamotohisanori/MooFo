@@ -9,6 +9,7 @@
 #include"GameScene/LoadingScene.h"
 #include"Pause/Pause.h"
 #include "SoundManager/SoundManager.h"
+#include"CowlivesUI.h"
 
 namespace
 {
@@ -157,6 +158,8 @@ void CowFood::Update()
 	m_CountDown = FindGO<CountDown>("countdown");
 
 	m_pause = FindGO<Pause>("pause");
+
+	m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
 	/** カウントダウン中は処理をスキップする */
 	if (m_CountDown && m_CountDown->GetCountDown())
 	{
@@ -389,6 +392,11 @@ void CowFood::Render(RenderContext& rc)
 	}
 	/** タイムアウト時は餌のUIをでないようにする*/
 	if (!m_game || m_game->IsFadeTimeOut())
+	{
+		return;
+	}
+	/** フェード処理が始まったら描画しない*/
+	if (m_cowLivesUI && m_cowLivesUI->IsFadeInComplete())
 	{
 		return;
 	}

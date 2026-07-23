@@ -3,6 +3,7 @@
 #include "SoundManager/SoundManager.h"
 #include"GameScene/LoadingScene.h"
 #include"GameScene/Game.h"
+#include"CowLivesUI.h"
 namespace
 {
 	/** 三桁の数字を描画する画像の大きさ */
@@ -60,7 +61,7 @@ bool Score::Start()
 
 void Score::Update()
 {
-	
+	m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
 	/** スコアのカウンターアニメーション処理 */
 	ScoreCounterAnimation();
 
@@ -244,6 +245,13 @@ void Score::Render(RenderContext& rc)
 	{
 		return;
 	}
+
+	/** フェード処理中は描画しない*/
+	if (m_cowLivesUI&&m_cowLivesUI->IsFadeInComplete())
+	{
+		return;
+	}
+
 	for (int i = 0; i < 5; i++)
 	{
 		for (int j = 0; j < 10; j++)

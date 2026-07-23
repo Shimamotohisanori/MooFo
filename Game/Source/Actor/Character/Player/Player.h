@@ -10,6 +10,7 @@ class Pause;
 class Cow;
 class CowFood;
 class VoiceManager;
+class CowLivesUI;
 class Player : public Character
 {
 public:
@@ -143,7 +144,8 @@ private:
 
 	/** ボイスマネージャー */
 	VoiceManager* m_voiceManager = nullptr;
-
+	/** プレイヤーの残機*/
+	CowLivesUI* m_cowLivesUI = nullptr;
 	/** プレイヤーの状態 */
 	uint8_t m_playerState = 0;
 

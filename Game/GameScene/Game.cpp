@@ -146,11 +146,15 @@ Game::~Game()
 		DeleteGO(m_fadeManager);
 		m_fadeManager = nullptr;
 	}
+	if (g_renderingEngine)
+	{
+		/** トゥーン輪郭線を無効化 */
+		g_renderingEngine->SetEnableToonOutline(false);
+	}
+	
 }
 bool Game::Start()
 {
-	
-	
 	return true;
 }
 
@@ -193,11 +197,13 @@ void Game::Update()
 	/** セレクトボタンを押していて
 	 * カウントダウン中でないかつ
 	 * タイムアウトしていない場合かつ
-	 *　５秒前になっていなかったら*/
+	 *　５秒前になっていなかいかつ
+	 　　「RESCUE FAILED」の文字が出ていたら*/
 	if (g_pad[0]->IsTrigger(enButtonSelect)
 		&& !m_countDown->GetCountDown()
 		&& !m_isTimeOut
-		&& !m_timer->IsFiveCountDown())
+		&& !m_timer->IsFiveCountDown()
+		&&(!m_cowLivesUI||!m_cowLivesUI->IsNotOperetion()))
 	{
 		/** タイムアウトなら */
 		if (m_isTimeOut)

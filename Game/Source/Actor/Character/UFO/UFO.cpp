@@ -150,6 +150,8 @@ void UFO::Update()
 	/* UFOのサウンドを更新する関数 */
 	UpdateUFOSound();
 
+	
+
 	/** アップデートできるかどうかを判断する */
 	if (!CanUFOUpdate())
 	{
@@ -379,7 +381,7 @@ void UFO::TakeAwayTheCow()
 		タイマーを2秒減少させる*/
 		if (m_timer && m_timer->GetTimer() < 7.0f)
 		{
-			m_timer->DecreaseTimer(2.0f);
+			m_timer->DecreaseTimer(3.0f);
 		}
 		
 		m_decreaseTimer = FindGO<DecreaseTimerUI>("decreasetimerUI");
@@ -805,6 +807,8 @@ bool UFO::CanUFOUpdate()
 	m_countdown = FindGO<CountDown>("countdown");
 	m_pause = FindGO<Pause>("pause");
 	m_score = FindGO<Score>("score");
+	m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
+
 
 	/** UFOがゲームシーンに存在していないときは処理をしない */
 	if (m_pause == nullptr || m_countdown == nullptr || m_game == nullptr || m_game->IsDead())
@@ -826,6 +830,11 @@ bool UFO::CanUFOUpdate()
 
 	/** カウントダウン中はUFOを動かさない */
 	if (m_countdown->GetCountDown())
+	{
+		return false;
+	}
+	/** 「救出　失敗…」とフォントが出ているときはUFOを動かさないようにする*/
+	if (m_cowLivesUI && m_cowLivesUI->IsGameOverSequenceActive())
 	{
 		return false;
 	}

@@ -18,6 +18,7 @@
 #include "CowLuring.h"
 #include "SoundManager/VoiceManager.h"
 #include "GameTimer/AddTimerUI.h"
+#include"CowLivesUI.h"
 
 namespace
 {
@@ -126,6 +127,8 @@ bool Cow::Start()
 
 	/** カウントダウンの情報を取得*/
 	m_countdown = FindGO<CountDown>("countdown");
+
+	
 
 	return true;
 }
@@ -1038,6 +1041,8 @@ bool Cow::CanUpdate()
 	m_pause = FindGO<Pause>("pause");
 	m_game = FindGO<Game>("game");
 	m_timer = FindGO<Timer>("timer");
+	/** プレイヤーの残機UIの情報を取得*/
+	m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
 	/** どれかが存在しないときは処理しないようにするため早期リターン */
 	if (m_pause == nullptr ||
 		m_countdown == nullptr ||
@@ -1076,6 +1081,11 @@ bool Cow::CanUpdate()
 
 	/** カウントダウン中のときは処理しないようにするため早期リターン */
 	if (m_countdown->GetCountDown())
+	{
+		return false;
+	}
+	/** ゲームオーバー演出中は牛を動かさない*/
+	if (m_cowLivesUI && m_cowLivesUI->IsGameOverSequenceActive())
 	{
 		return false;
 	}
