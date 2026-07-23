@@ -4,6 +4,7 @@
 #include"GameScene/LoadingScene.h"
 #include"Pause/Pause.h"
 #include"FadeManager/FadeManager.h"
+#include"SoundManager/SoundManager.h"
 namespace
 {
 	/** 横幅*/
@@ -58,7 +59,7 @@ CowLivesUI::CowLivesUI()
 
 CowLivesUI::~CowLivesUI()
 {
-
+	DeleteGO(m_failedRescueSE);
 }
 
 
@@ -85,9 +86,6 @@ bool CowLivesUI::Start()
 
 	/** アイコンの初期化を行う*/
 	ResetLives();
-
-	
-
 	return true;
 }
 
@@ -172,6 +170,17 @@ void CowLivesUI::StartGameOverSequence()
 	/**文字が表示されていたら操作を受け付けないようにする*/
 	if (m_gameOverPhase == GameOverPhase::ShowingFailedText)
 	{
+		/** まだSEが再生されていなければ流す*/
+		if (!m_isPlayFailedRescueSE)
+		{
+			/**サウンドマネージャーを取得する*/
+			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+
+			/** 「救助失敗」時に流すSEを再生する*/
+			m_failedRescueSE = soundManager->PlayingSE(SoundSE::enFailedRescue, false);
+			m_isPlayFailedRescueSE = true;
+		}
+	
 		m_isNotOperation = true;
 	}
 	/** テキストの拡大演出のスケールをリセット*/

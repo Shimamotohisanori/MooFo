@@ -77,6 +77,8 @@ private:
 
 	/** FAILED RESCUEが出ていたら操作を受け付けないようにするフラグ*/
 	bool m_isNotOperation = false;
+	/**「救助失敗」時に流すSEが再生中かどうかのフラグ */
+	bool m_isPlayFailedRescueSE = false;
 	/** ゲームオーバー演出の状態*/
 	enum class GameOverPhase
 	{
@@ -106,6 +108,10 @@ private:
 	Game* m_game = nullptr;
 	/** ポーズのポインタ*/
 	Pause* m_pause = nullptr;
+	/** 「救助失敗」のテキストを出すときのSEのポインタ*/
+	SoundSource* m_failedRescueSE = nullptr;
+
+
 	/** フェードマネージャーのポインタ*/
 	FadeManager* m_fadeManager = nullptr;
 
