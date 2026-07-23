@@ -377,11 +377,11 @@ void UFO::TakeAwayTheCow()
 		/** 牛が連れ去られたらスコアを減らす処理 */
 		m_score->DecreaseScore(100);
 		m_timer = FindGO<Timer>("timer");
-		/** タイマーが存在するかつ残りタイマーが6秒以上なら
+		/** タイマーが存在するかつ残りタイマーが7秒以上なら
 		タイマーを2秒減少させる*/
-		if (m_timer && m_timer->GetTimer() < 7.0f)
+		if (m_timer && m_timer->GetTimer() >= 7.0f)
 		{
-			m_timer->DecreaseTimer(3.0f);
+			m_timer->DecreaseTimer(2.0f);
 		}
 		
 		m_decreaseTimer = FindGO<DecreaseTimerUI>("decreasetimerUI");
