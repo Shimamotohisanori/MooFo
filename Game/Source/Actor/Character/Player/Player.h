@@ -76,6 +76,12 @@ public:
 		return m_isMoving;
 	}
 
+	/** 屈むアニメーションが再生できるかどうかのフラグを取得する関数 */
+	bool GetIsSquatAnimation() const
+	{
+		return m_isSquatAnimation;
+	}
+
 
 private:
 	/** ロープを投げる関数*/
@@ -177,6 +183,9 @@ private:
 	/** 屈むアニメーションが再生できるかどうかのフラグ */
 	bool m_isSquatAnimation = false;
 
+	/** 前のフレームでRB2が押されていたかどうか */
+	bool m_wasRB2Pressed = false;
+
 	/** アニメーション */
 	enum EnPlayAnimation
 	{
@@ -185,6 +194,8 @@ private:
 		enAnimationClip_PullLeft,
 		enAnimationClip_PullRight,
 		enAnimationClip_Squat,
+		enAnimationClip_RotateRope,
+		enAimationClip_ThrowRope,
 		enAnimationClip_Num,
 	};
 

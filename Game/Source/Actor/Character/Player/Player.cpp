@@ -32,6 +32,12 @@ namespace
 	/** プレイヤーが屈むアニメーション */
 	const char* ANIMATION_SQUAT_FILEPATH = "Assets/animData/CowBoyAnimation/Squat.tka";
 
+	/** プレイヤーがロープを回すアニメーション */
+	const char* ANIMATION_ROTATEROPE_FILEPATH = "Assets/animData/CowBoyAnimation/RotateRope.tka";
+
+	/** プレイヤーがロープを投げるアニメーション */
+	const char* ANIMATION_THROWROPE_FILEPATH = "Assets/animData/CowBoyAnimation/ThrowRope.tka";
+
 	/** ロープを引っ張る画像のファイルパス */
 	const char* PULLROPEFILEPATH = "Assets/sprite/PullRopeButton/PullRope.dds";
 
@@ -83,6 +89,14 @@ Player::Player()
 	/** 屈むアニメーションクリップを読み込み、ループしない(1回だけ再生)に設定する */
 	animationClips[enAnimationClip_Squat].Load(ANIMATION_SQUAT_FILEPATH);
 	animationClips[enAnimationClip_Squat].SetLoopFlag(false);
+
+	/** ロープを投げるアニメーションクリップを読み込み、ループ再生に設定する */
+	animationClips[enAnimationClip_RotateRope].Load(ANIMATION_ROTATEROPE_FILEPATH);
+	animationClips[enAnimationClip_RotateRope].SetLoopFlag(true);
+
+	/** ロープを投げるアニメーションクリップを読み込み、ループしない(1回だけ再生)に設定する */
+	animationClips[enAimationClip_ThrowRope].Load(ANIMATION_THROWROPE_FILEPATH);
+	animationClips[enAimationClip_ThrowRope].SetLoopFlag(false);
 
 	/** プレイヤーモデルを初期化する。Z軸を上方向としてモデルを読み込む */
 	m_playerModelRender.Init(PLAYER_FILEPATH, animationClips, enAnimationClip_Num, enModelUpAxisZ);
@@ -180,8 +194,13 @@ void Player::Move()
 	/* ロープを投げているとき
 	 * ロープが牛に当たっているとき
 	 * 屈むアニメーション中
-	 * ロープのアニメーションが終了しているときは移動できないようにする */
-	if (m_rope->GetIsThrowRope() or m_rope->GetIsHitCow() or m_isSquatAnimation or m_rope->GetIsEndRopeAnimation())
+	 * ロープのアニメーションが終了しているとき
+	 * RB2ボタンが押されているときは移動できないようにする */
+	if (m_rope->GetIsThrowRope() or
+		m_rope->GetIsHitCow() or
+		m_isSquatAnimation or
+		m_rope->GetIsEndRopeAnimation() or
+		g_pad[0]->IsPress(enButtonRB2))
 	{
 		m_moveSpeed = Vector3::Zero;
 		/*ロープを投げているときとロープが牛に当たっているときは移動できないようにする */
@@ -329,14 +348,30 @@ void Player::ThrowRope()
 	/** ロープが存在しない、またはロープが牛に当たっているときはロープを投げられないようにする */
 	if (!m_rope or m_rope->GetIsHitCow())
 	{
+		/** ロープがあたっている間は押下状態の記録だけを更新する */
+		m_wasRB2Pressed = g_pad[0]->IsPress(enButtonRB2);
+
 		return;
 	}
+
+	/** 現在のRB2の押下状態を取得 */
+	bool isrb2pressed = g_pad[0]->IsPress(enButtonRB2);
+
+	/** 前フレーム押していて、今は離れているフラグ */
+	bool isreleased = m_wasRB2Pressed && !isrb2pressed;
+
+	/** 現在のRB2の押下状態を記録しておく */
+	m_wasRB2Pressed = isrb2pressed;
 
 	/** クールダウン中はロープを投げられない */
 	if (m_throwRopeCoolTime > 0.0f) return;
 
-	/** RB2ボタンが押されていて、ロープを投げていないとき */
-	if (g_pad[0]->IsTrigger(enButtonRB2) && !m_rope->GetIsThrowRope())
+	/** RB2ボタンが離されていて、ロープを投げていない
+	 * かつ縮みアニメーションが終了しているとき */
+	if (isreleased && 
+		!m_rope->GetIsThrowRope() &&
+		!m_rope->GetIsEndRopeAnimation() && 
+		!m_isSquatAnimation)
 	{
 		/** 投げる瞬間、カメラの前方向(水平のみ)にプレイヤーを向かせる */
 		Vector3 camForward = g_camera3D->GetForward();
@@ -353,7 +388,7 @@ void Player::ThrowRope()
 		m_rope->SetIsThrowRope(true);
 
 		/** クールダウン開始 */
-		m_throwRopeCoolTime = 1.5f;
+		m_throwRopeCoolTime = 2.0f;
 
 		/** ロープを投げる音を再生 */
 		SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
@@ -496,6 +531,13 @@ void Player::ManageState()
 		m_playerState = 0;
 	}
 
+	/** ロープを投げている最中はステートを6(ロープを投げる)にする */
+	if (m_rope->GetIsThrowRope())
+	{
+		m_playerState = 6;
+		return;
+	}
+
 	/** 牛を引っ張っている最中は再生しないようにする。 */
 	if (m_rope->GetIsHitCow())
 	{
@@ -505,6 +547,13 @@ void Player::ManageState()
 	/** しゃがみアニメーションが再生中は走る/待機への切り替えを防ぐ */
 	if (m_isSquatAnimation)
 	{
+		return;
+	}
+
+	/** RB2ボタンが押されている間はステートを5(ロープを回す)にする */
+	if(g_pad[0]->IsPress(enButtonRB2))
+	{
+		m_playerState = 5;
 		return;
 	}
 
@@ -577,6 +626,16 @@ void Player::PlayAnimation()
 	case 4:
 		/** 屈むアニメーション(ループなしで1回だけ再生される) */
 		m_playerModelRender.PlayAnimation(enAnimationClip_Squat, 0.30f);
+		m_playerModelRender.Update();
+		break;
+	case 5:
+		/** ロープを回すアニメーション */
+		m_playerModelRender.PlayAnimation(enAnimationClip_RotateRope, 0.15f);
+		m_playerModelRender.Update();
+		break;
+	case 6:
+		/** ロープを投げるアニメーション(ループなしで1回だけ再生される) */
+		m_playerModelRender.PlayAnimation(enAimationClip_ThrowRope, 0.15f);
 		m_playerModelRender.Update();
 		break;
 	}
