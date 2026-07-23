@@ -56,6 +56,7 @@ namespace
 	
 	/** ゲーム開始直後(初期10体)に追いかける牛の出現確率 */
 	constexpr int INITIAL_CHASE_COW_RATE = 20;
+
 }
 
 LoadingScene::LoadingScene()

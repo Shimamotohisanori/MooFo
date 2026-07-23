@@ -60,6 +60,9 @@ namespace
 	/** 納屋の位置 */
 	const Vector3 BARN_POSITION = Vector3{ -1320.0f,0.0f,10.0f };
 
+	/** 牛の汗の大きさ */
+	const Vector3 COWSWEAT_SCALE = Vector3{ 10.0f,10.0f,10.0f };
+
 	/** 納屋の半径 */
 	constexpr float BARN_RADIUS = 300.0f;
 
@@ -104,6 +107,12 @@ Cow::Cow()
 
 Cow::~Cow()
 {
+	/** 牛が汗をかくのをやめる */
+	if (m_cowSweatEffect)
+	{
+		DeleteGO(m_cowSweatEffect);
+	}
+
 	/** 牛が餌を食べる音の再生を止める */
 	if (m_cowEatSE)
 	{
@@ -120,7 +129,7 @@ bool Cow::Start()
 	m_cowmodelRender.SetRaytracingWorld(false);
 
 	/** キャラクターコントローラーを初期化する */
-	m_cowCharacterController.Init(20.0f, 20.0f, m_transform.GetPosition());
+	m_cowCharacterController.Init(19.0f, 40.0f, m_transform.GetPosition());
 
 	/** ボイスマネージャーを取得 */
 	m_voiceManager = FindGO<VoiceManager>("voicemanager");
@@ -128,8 +137,9 @@ bool Cow::Start()
 	/** カウントダウンの情報を取得*/
 	m_countdown = FindGO<CountDown>("countdown");
 
-	
-
+	m_cowSweatEffect = NewGO<EffectEmitter>(0);
+	m_cowSweatEffect->Init((int)EffectID::EffectID_CowSweat);
+	//ミライの俺へ、牛の汗のエフェクトは出せるようになったから汗のエフェクトのスケールと難易度調整の画像とかやれ
 	return true;
 }
 
@@ -233,6 +243,9 @@ void Cow::Update()
 		}
 	}
 	
+	/** 牛が汗をかく処理 */
+	CowSweat();
+
 	/** 牛が納屋に入る処理 */
 	EnterBarn();
 
@@ -1031,6 +1044,35 @@ void Cow::ApplyCowModel()
 
 	m_cowmodelRender.Init(modelPath, animationClips, EnAnimation_Num, enModelUpAxisZ);
 	m_isModelInitialized = true;
+}
+
+void Cow::CowSweat()
+{
+	/** 牛が連れ去られている最中は汗を出す */
+	if (m_isTakeAwayed)
+	{
+		if (m_cowSweatEffect)
+		{
+			Vector3 effectPos = m_transform.GetPosition();
+			effectPos.y += 30.0f;
+
+			m_cowSweatEffect->SetPosition(effectPos);
+			m_cowSweatEffect->SetScale(COWSWEAT_SCALE);
+
+			/** 連れ去られている間はループする */
+			if (!m_cowSweatEffect->IsPlay())
+			{
+				m_cowSweatEffect->Play();
+			}
+		}
+	}
+	else
+	{
+		if (m_cowSweatEffect)
+		{
+			m_cowSweatEffect->Stop();
+		}
+	}
 }
 
 bool Cow::CanUpdate()

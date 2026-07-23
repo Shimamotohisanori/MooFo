@@ -3,10 +3,11 @@
 #include "Rope/Rope.h"
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "Source/Actor/Character/Player/Player.h"
-#include "SoundManager/SoundManager.h"
 #include "GameScene/Game.h"
 #include "SoundManager/VoiceManager.h"
 #include"CowLivesUI.h"
+
+
 namespace
 {
 	/** カメラ基本設定 */
@@ -21,12 +22,6 @@ namespace
 	constexpr float ROPE_START_UP_OFFSET = 40.0f;
 	constexpr float ROPE_FLY_SPEED = 5.0f;
 	constexpr float ROPE_TARGET_DISTANCE = 500.0f;
-
-	/** カメラが牛に当たったと判断する最大の距離 */
-	constexpr float COW_HIT_FAR_DISTANCE = 120.0f;
-
-	/** カメラが牛に当たったと判断する最小の距離 */
-	constexpr float COW_HIT_NEAR_DISTANCE = 20.0f;
 
 	/** 牛視点 */
 	constexpr float COW_CAMERA_UP = 80.0f;
@@ -45,7 +40,7 @@ namespace
 	constexpr float RAY_MAX_DISTANCE = 750.0f;
 
 	/** 牛との判定に使う球の半径 */
-	constexpr float COW_COLLISION_RADIUS = 50.0f;
+	constexpr float COW_COLLISION_RADIUS = 45.0f;
 
 }
 
@@ -68,9 +63,6 @@ bool GameCamera::Start()
 
 	/** 円平面を設定 */
 	g_camera3D->SetFar(1000000.0f);
-
-	/** ボイスマネージャーを取得 */
-	m_voiceManager = FindGO<VoiceManager>("voicemanager");
 
 	return true;
 }
@@ -99,8 +91,6 @@ void GameCamera::Update()
 	}
 
 	Follow();
-	FollowRope();
-	CheckCameraHitCow();
 	HitCow();
 	CheckAimingCow();
 }
@@ -108,11 +98,6 @@ void GameCamera::Update()
 
 void GameCamera::Follow()
 {
-
-	if (m_rope->GetIsThrowRope())
-	{
-		return;
-	}
 
 	/** 注視点の計算 */
 	Vector3 target;
@@ -215,149 +200,32 @@ void GameCamera::Follow()
 }
 
 
-void GameCamera::FollowRope()
+Vector3 GameCamera::GetAimTargetPosition() const
 {
+	/** レイの始点と方向 */
+	Vector3 raystart = g_camera3D->GetPosition();
+	Vector3 raydirection = g_camera3D->GetForward();
+	raydirection.Normalize();
 
-	if (!m_rope) return;
-
-	/** 牛を捕まえた後はロープに追従する処理を行わない */
-	if (m_isCowCaptured) return;
-
-	/** ロープが投げられたら一回だけ実行 */
-	if (m_rope->GetIsThrowRope() && !m_isRopeCameraStarted)
+	/** レイの方向が上向きの場合は、最大距離までの位置を返す */
+	if (raydirection.y > 0.0f)
 	{
-		m_isRopeCameraStarted = true;
-
-		/** 現在のカメラ位置を保存 */
-		m_savedCameraPos = m_cameraPos;
-
-		/** カメラの forward を保存（上下方向も含む）*/
-		Vector3 camForward = g_camera3D->GetTarget() - g_camera3D->GetPosition();
-		if (camForward.LengthSq() < 0.0001f) {
-			camForward = Vector3::AxisZ;
-		}
-		camForward.Normalize();
-		m_ropeForward = camForward;
-
-		/** プレイヤーの少し前からカメラが出てくるようにする */
-		m_cameraPos = camForward 
-			* ROPE_START_FORWARD_DIST
-			+ Vector3(0.0f, ROPE_START_UP_OFFSET, 0.0f);
+		/** レイの最大距離までの位置を返す */
+		return raystart + raydirection * RAY_MAX_DISTANCE;
 	}
 
-	/** ロープを投げている途中のカメラ処理 */
-	if(m_rope->GetIsThrowRope())
+	/** レイの方向が下向きの場合は、地面との交点を計算する */
+	float t = -raystart.y / raydirection.y;
+
+	if (t > 0.0f && t < RAY_MAX_DISTANCE)
 	{
-		/** カメラforwardを計算 */
-		Vector3 camForward = m_ropeForward;
-
-		/** カメラを前進する */
-		m_cameraPos += camForward * ROPE_FLY_SPEED;
-
-		/** 地面に近すぎたら下に行かないようにする */
-		if (m_cameraPos.y < MIN_CAMERA_HEIGHT) {
-			m_cameraPos.y = MIN_CAMERA_HEIGHT;
-		}
-
-		Vector3 eye = m_player->GetPosition()
-			+ Vector3(0.0f, 0.0f, 0.0f)
-			+ m_cameraPos;
-
-		/** 横方向の位置が最大値を超えないようにする */
-		if (eye.x < MAX_CAMERA_POS_X)
-		{
-			eye.x = MAX_CAMERA_POS_X;
-		}
-
-		Vector3 target = eye + camForward * ROPE_TARGET_DISTANCE;
-
-		/** カメラの注視点と位置を設定 */
-		g_camera3D->SetPosition(eye);
-		g_camera3D->SetTarget(target);
-		
-		/** カメラの更新 */
-		g_camera3D->Update();
-		return;
+		/** 地面との交点を返す */
+		return raystart + raydirection * t;
 	}
 
-	/** ロープを投げ終わったらカメラ位置を元に戻す */
-	if (!m_rope->GetIsThrowRope() && m_isRopeCameraStarted)
-	{
-		m_isRopeCameraStarted = false;
-		m_cameraPos = m_savedCameraPos;
-	}
+	/** それ以外の場合は、最大距離までの位置を返す */
+	return raystart + raydirection * RAY_MAX_DISTANCE;
 }
-
-void GameCamera::CheckCameraHitCow()
-{
-	/** ロープが投げられていない場合は牛に当たる処理を行わない */
-	if (!m_rope->GetIsThrowRope()) return;
-
-	/** 牛を捕まえた後は牛に当たる処理を行わない */
-	if (m_isCowCaptured) return;
-
-	/** カメラ位置 */
-	Vector3 camPos = g_camera3D->GetPosition();
-
-	/** 全ての牛を取得する */
-	auto cows = FindGOs<Cow>("cow");
-
-	for (auto cow : cows)
-	{
-		if (!cow) continue;
-
-		Vector3 toCow = cow->GetPosition() - camPos;
-
-		float dist = toCow.Length();
-
-		/** カメラと牛の距離が一定の範囲内で、牛が捕まえられている状態ならば */
-		if (dist < COW_HIT_NEAR_DISTANCE)
-		{
-			continue;
-		}
-
-		toCow.Normalize();
-
-		/** カメラの前方向と牛への方向の内積を計算して
-		カメラの前方向に近いかどうかを判断する */
-		float dot = GetCameraForward().Dot(toCow);
-
-		if (dot < 0.8f)
-		{
-			continue;
-		}
-
-		/** カメラと牛の距離が一定の範囲内で、牛が捕まえられている状態ならば */
-		if (dist < COW_HIT_FAR_DISTANCE && cow->GetIsTakeAwayed())
-		{
-			/** ロープが当たった扱いにする */
-			m_rope->OnHitCow(cow);
-
-			/** 牛を捕まえたフラグを立てる */
-			m_isCowCaptured = true;
-
-			/** 牛捕獲カメラ初期位置 */
-			/** 保存されたカメラの位置を使用することで
-			 * プレイヤーの後ろ側にカメラが配置される */
-			m_hitCowCameraPos = m_savedCameraPos;
-
-			/** 牛を捕まえた音を再生 */
-			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
-			if (soundManager)
-			{
-				m_cowCatchSE = soundManager->PlayingSE(SoundSE::enCowCatchSE, false);
-			}
-
-			/** 牛を捕まえたボイスを再生 */
-			/** ランダムでボイスを選択 */
-			SoundVoice voice = (rand() % 2 == 0) ? SoundVoice::enVoice_Catch1 : SoundVoice::enVoice_Catch2;
-			m_voiceManager->PlayingVoice(voice, false);
-
-			return;
-		}
-	}
-}
-
 
 void GameCamera::HitCow()
 {

@@ -288,6 +288,13 @@ namespace nsK2Engine {
 		void SetRaytracingWorld(bool flag) {
 			m_isRaytracingWorld = flag;
 		}
+		/// <summary>
+		/// スケルトンの読み込みが完了している？
+		/// </summary>
+		bool IsSkeletonLoaded() const
+		{
+			return m_skeleton.GetNumBones() > 0;
+		}
 	private:
 		/// <summary>
 		/// スケルトンの初期化。

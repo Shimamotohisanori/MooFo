@@ -15,7 +15,6 @@ public:
 	void Update();
 	void Render(RenderContext& rc);
 
-private:
 
 private:
 	/** 照準の画像 */

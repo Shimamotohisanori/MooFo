@@ -4,6 +4,8 @@
 #include "GameCamera/GameCamera.h"
 #include "Source/Actor/Character/Player/Player.h"
 #include "GameTimer/Timer.h"
+#include "SoundManager/SoundManager.h"
+#include "SoundManager/VoiceManager.h"
 
 namespace
 {
@@ -12,6 +14,9 @@ namespace
 
 	/** 捕まった牛用のロープモデルファイルパス */
 	const char* CAPTURED_COW_FILEPATH = "Assets/modelData/Rope/CapturedCowRope.tkm";
+
+	/** アニメーションを再生させるロープモデルのファイルパス */
+	const char* ROPE_ANIMATION_MODEL_FILEPATH = "Assets/modelData/Rope/animationRope.tkm";
 
 	/** ロープの初期の大きさ */
 	const Vector3 ROPE_INITIAL_SCALE = { 1.0f, 1.0f, 5.0f };
@@ -46,6 +51,9 @@ namespace
 	/** ロープのたるみアニメーション継続時間 */
 	constexpr float ROPE_SLACK_DURATION = 0.8f;
 
+	/** ロープの縮むアニメーション継続時間 */
+	const float ROPE_SHRINK_DURATION = 1.0f;
+
 	/** ロープのたるみアニメーションの時間をスケールする係数 */
 	constexpr float DELTA_TIME_SCALE = 5.0f;
 
@@ -54,6 +62,15 @@ namespace
 
 	/** 牛が連れ去られる時のロープの最小スケール */
 	constexpr float COW_MIN_SCALE = 0.1f;
+
+	/** ゴーストの前進速度 */
+	constexpr float ROPE_THROW_SPEED = 1000.0f;
+
+	/** ロープが伸びきる最大距離 */
+	constexpr float ROPE_MAX_THROW_DISTANCE = 430.0f;
+
+	/** ゴーストの当たり判定半径 */
+	constexpr float GHOST_RADIUS = 25.0f;
 }
 
 
@@ -72,8 +89,7 @@ Rope::~Rope()
 
 bool Rope::Start()
 {
-	m_ropeModelRender.Init(ROPE_MODEL_FILEPATH);
-	m_rollModelRender.Init(CAPTURED_COW_FILEPATH);
+	m_ropeModelRender.Init(CAPTURED_COW_FILEPATH);
 
 	/** セグメント初期化 */
 	for (int i = 0; i < ROPE_SEGMENT_COUNT; ++i)
@@ -87,9 +103,9 @@ bool Rope::Start()
 
 	m_player = FindGO<Player>("player");
 	m_ropeScale = ROPE_INITIAL_SCALE;
-	m_ropeModelRender.SetScale(m_ropeScale);
 	m_ropeRot = Quaternion::Identity;
-	m_rollModelRender.SetScale(NO_HIT_COW_ROLL_ROPE_SCALE);
+	m_ropeModelRender.SetScale(NO_HIT_COW_ROLL_ROPE_SCALE);
+
 	return true;
 }
 
@@ -135,6 +151,26 @@ void Rope::Update()
 	/** ロープの回転に関する関数 */
 	RotateRope();
 
+	/** 投げている最中はセグメントを伸ばす */
+	if (m_isThrowRope || m_isEndRopeAnimation)
+	{
+		UpdateHandPosition();
+
+		if (m_isThrowRope)
+		{
+			UpdateThrowGhost();
+		}
+
+		CalcThrowSegments();
+		UpdateSegments();
+		
+		if (m_isThrowRope)
+		{
+			CheckHitCowByGhost();
+		}
+		
+	}
+
 	if (m_isHitCow && m_hitCow != nullptr)
 	{
 
@@ -166,8 +202,8 @@ void Rope::Update()
 		Quaternion cowRot = m_hitCow->GetRotation();
 
 		/** 捕まった牛用のロープモデルに反映 */
-		m_rollModelRender.SetPosition(cowPos);
-		m_rollModelRender.SetRotation(cowRot);
+		m_ropeModelRender.SetPosition(cowPos);
+		m_ropeModelRender.SetRotation(cowRot);
 
 		/** 牛が連れ去られている時はロープのスケールを変える */
 		if (m_hitCow->GetIsTakeAwayed())
@@ -183,26 +219,20 @@ void Rope::Update()
 
 			/** 牛がUFOに近づくにつれてロープのスケールを小さくする */
 			float scale = max(1.0f - t, COW_MIN_SCALE);
-			m_rollModelRender.SetScale(Vector3(scale, scale, scale));
+			m_ropeModelRender.SetScale(Vector3(scale, scale, scale));
 
 			/** スケールが小さくなるにつれてロープの位置を下げる */
 			cowPos.y -= (1.0f - scale) * 30.0f;
-			m_rollModelRender.SetPosition(cowPos);
+			m_ropeModelRender.SetPosition(cowPos);
 		}
 		else
 		{
 			/** 通常時はHIT_COW_ROLL_ROPE_SCALEに戻す */
-			m_rollModelRender.SetScale(HIT_COW_ROLL_ROPE_SCALE);
+			m_ropeModelRender.SetScale(HIT_COW_ROLL_ROPE_SCALE);
 		}
 
 	}
 
-	/** 牛に当たっているかのフラグがtrueなら */
-	if (m_isThrowRope) {
-		m_rollModelRender.SetScale(HIT_COW_ROLL_ROPE_SCALE);
-	}
-
-	m_rollModelRender.Update();
 	m_ropeModelRender.Update();
 }
 
@@ -222,21 +252,102 @@ void Rope::OnHitCow(Cow* cow)
 	m_isThrowRope = false;
 	m_isStartRopeAnimation = false;
 	m_ropeAnimationTime = 0.0f;
+
+	/** 牛を捕まえた時のカメラ演出フラグを立てる */
+	GameCamera* gameCamera = FindGO<GameCamera>("gameCamera");
+	if (gameCamera != nullptr)
+	{
+		gameCamera->SetIsCowCaptured(true);
+
+		/** 牛を捕まえた瞬間のカメラ位置を記録する */
+		gameCamera->InitHitCowCameraPos();
+	}
+
+	/** 牛を捕まえた音を再生 */
+	SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+	if (soundManager)
+	{
+		soundManager->PlayingSE(SoundSE::enCowCatchSE, false);
+	}
+
+	/** 牛を捕まえたボイスを再生(ランダム) */
+	VoiceManager* voiceManager = FindGO<VoiceManager>("voicemanager");
+	if (voiceManager)
+	{
+		SoundVoice voice = (rand() % 2 == 0) ? SoundVoice::enVoice_Catch1 : SoundVoice::enVoice_Catch2;
+		voiceManager->PlayingVoice(voice, false);
+	}
 }
 
 
 void Rope::PlayerThrowsRope()
 {
-	/** ロープが投げられていたら */
-	if (m_isThrowRope && !m_isStartRopeAnimation)
+	/** ロープを投げる処理 */
+	if (m_isThrowRope && 
+		!m_isStartRopeAnimation && 
+        !m_isEndRopeAnimation)
 	{
 		/** ロープアニメーション開始のフラグを立てる */
 		m_isStartRopeAnimation = true;
 
-		/** プレイヤーが向いている方向にロープを出す */
-		m_ropeModelRender.SetRotation(m_player->GetRotation());
-
 		m_ropeRot = m_player->GetRotation();
+
+		m_ropeAnimationTime = 0.0f;
+
+		m_ropeThrowDistance = 0.0f;
+
+		/** カメラを取得して、投げた瞬間の前方向を固定する */
+		GameCamera* gameCamera = FindGO<GameCamera>("gameCamera");
+		
+		/** 照準位置を取得する */
+		Vector3 aimTarget = gameCamera->GetAimTargetPosition();
+
+		/** プレイヤーの位置を取得する */
+		Vector3 playerPos = m_player->GetPosition();
+
+		/** プレイヤーの回転を取得する */
+		Vector3 right = Vector3::AxisX;
+
+		/** プレイヤーの回転を適用して右方向を取得する */
+		m_player->GetRotation().Apply(right);
+
+		/** プレイヤーの回転を適用して前方向を取得する */
+		Vector3 forward = Vector3::AxisZ;
+
+		/** プレイヤーの回転を適用して前方向を取得する */
+		m_player->GetRotation().Apply(forward);
+
+		/** ロープの開始位置を計算する */
+		Vector3 ropeStartPos =
+			playerPos
+			+ right * ROPE_OFFSET_RIGHT
+			+ forward * ROPE_OFFSET_FORWARD
+			+ Vector3(0.0f, ROPE_OFFSET_UP, 0.0f);
+
+		m_ropePos = ropeStartPos;
+
+		/** 投げた瞬間の方向を計算する */
+		m_throwDirection = aimTarget - ropeStartPos;
+		m_throwDirection.Normalize();
+
+		/** 投げた瞬間の方向をQuaternionに変換して保持する */
+		m_ropeRot.SetRotation(Vector3::AxisZ, m_throwDirection);
+
+		/** 投げた瞬間の位置を記録する */
+		m_ropeThrowOrigin = ropeStartPos;
+
+		/** ゴーストの位置も投げた瞬間の位置にする */
+		m_ropeGhostPosition = ropeStartPos;
+
+		if (!m_isGhostCreated)
+		{
+			m_ropeGhostObject.CreateSphere(m_ropePos, Quaternion::Identity, GHOST_RADIUS);
+			m_isGhostCreated = true;
+		}
+		else
+		{
+			m_ropeGhostObject.SetPosition(m_ropePos);
+		}
 	}
 
 	/** ロープアニメーションが開始していたら */
@@ -248,9 +359,18 @@ void Rope::PlayerThrowsRope()
 		/** ロープアニメーションが1秒より大きかったら */
 		if (m_ropeAnimationTime > 1.0f)
 		{
+			m_ropeThrowDistance = 0.0f;
 			m_ropeAnimationTime = 0.0f;
 			m_isStartRopeAnimation = false;
 			m_isThrowRope = false;
+
+			/** 牛に当たっていない場合はロープアニメーションを終了する */
+			if (!m_isHitCow)
+			{
+				/** ロープアニメーション終了のフラグを立てる */
+				m_isEndRopeAnimation = true;
+				m_ropeShrinkTime = 0.0f;
+			}
 		}
 	}
 }
@@ -275,55 +395,57 @@ void Rope::FollowRightHand()
 
 	m_ropePos = ropePos;
 	m_ropeModelRender.SetPosition(ropePos);
-	m_rollModelRender.SetScale(NO_HIT_COW_ROLL_ROPE_SCALE);
-	m_rollModelRender.SetPosition(ropePos);
-	m_rollModelRender.SetRotation(playerRot);
+	m_ropeModelRender.SetScale(NO_HIT_COW_ROLL_ROPE_SCALE);
+	m_ropeModelRender.SetPosition(ropePos);
+	m_ropeModelRender.SetRotation(playerRot);
 
 }
 
 
 void Rope::RotateRope()
 {
-	/** カメラの前にモデルを出す */
-	GameCamera* gameCamera = FindGO<GameCamera>("gameCamera");
-
-	if(gameCamera == nullptr) return;
-
-	/** 牛に当たっているかのフラグがtrueならこの処理はしない */
-	if (gameCamera->GetIsCowCaptured())
+	/** 縮み中ならこちらを優先する */
+	if (m_isEndRopeAnimation)
 	{
+		/** 時間加算はここだけで行う */
+		m_ropeShrinkTime += g_gameTime->GetFrameDeltaTime();
+		float t = min(m_ropeShrinkTime / ROPE_SHRINK_DURATION, 1.0f);
+
+		Vector3 start = m_ropePos;
+		Vector3 end = m_ropeGhostPosition;
+		Vector3 shrinkPos = start + (end - start) * (1.0f - t);
+
+		m_ropeModelRender.SetPosition(shrinkPos);
+		m_ropeModelRender.SetRotation(m_player->GetRotation());
+		m_ropeModelRender.SetScale(NO_HIT_COW_ROLL_ROPE_SCALE);
+
+		if (t >= 1.0f)
+		{
+			/** 完全に縮み終わったらここでフラグを下ろす(唯一の場所) */
+			m_isEndRopeAnimation = false;
+			m_isThrowRope = false;
+		}
+
 		return;
 	}
-
-	/** ロープを投げている最中なら */
 	if (m_isThrowRope)
 	{
-		/** カメラの前方向を取得 */
-		Vector3 camForward = gameCamera->GetCameraForward();
-
-		/** カメラの前にロープを出す */
-		Vector3 camPos = gameCamera->GetCameraPosition();
-		Vector3 ropePos = camPos + camForward * 50.0f;
-
-		/** モデルの回転補正90度回転 */
 		Quaternion fixRot;
 		fixRot.SetRotation(Vector3::AxisX, 90.0f);
 
-		/** forwardから回転を作る */
 		Quaternion camRot;
-		camRot.SetRotation(Vector3::AxisZ, camForward);
+		camRot.SetRotation(Vector3::AxisZ, m_throwDirection); /** 固定した方向を使う */
 
 		m_ropeRot = camRot;
 
-		/** ロープをスピンさせるための回転 */
 		Quaternion spinRot;
 		spinRot.SetRotation(Vector3::AxisY, m_ropeAnimationTime * 10.0f);
-		m_ropeRot *= spinRot * fixRot;		
+		m_ropeRot *= spinRot * fixRot;
 
-		/** ロープの位置と回転を反映 */
-		m_rollModelRender.SetPosition(ropePos);
-
-		m_rollModelRender.SetRotation(m_ropeRot);
+		/** 輪っかの位置を、ゴースト(先端)の位置に合わせて前進させる */
+		m_ropeModelRender.SetPosition(m_ropeGhostPosition);
+		m_ropeModelRender.SetRotation(m_ropeRot);
+		m_ropeModelRender.SetScale(NO_HIT_COW_ROLL_ROPE_SCALE);
 	}
 }
 
@@ -414,13 +536,120 @@ void Rope::UpdateSegments()
 	}
 }
 
+void Rope::CalcThrowSegments()
+{
+	Vector3 start = m_ropePos;
+	Vector3 end = m_ropeGhostPosition;
+
+	/** ロープ縮みアニメーション */
+	if (m_isEndRopeAnimation)
+	{
+		/** m_ropeShrinkTimeを参照 */
+		float t = min(m_ropeShrinkTime / ROPE_SHRINK_DURATION, 1.0f);
+		end = start + (end - start) * (1.0f - t);
+	}
+
+	/** セグメント計算（既存） */
+	for (int i = 0; i <= ROPE_SEGMENT_COUNT; i++)
+	{
+		/** 線形補間の割合を計算 */
+		float segT = (float)i / (float)ROPE_SEGMENT_COUNT;
+
+		/** 線形補間でXZ方向は均等に分割 */
+		Vector3 pos = start + (end - start) * segT;
+
+		/** 計算したセグメントの位置を保存 */
+		m_ropeSegmentPositions[i] = pos;
+	}
+}
+
+void Rope::UpdateThrowGhost()
+{
+	m_ropeThrowDistance += ROPE_THROW_SPEED * g_gameTime->GetFrameDeltaTime();
+	m_ropeThrowDistance = min(m_ropeThrowDistance, ROPE_MAX_THROW_DISTANCE);
+
+	/** 固定した起点から前進させる */
+	m_ropeGhostPosition = m_ropeThrowOrigin + m_throwDirection * m_ropeThrowDistance;
+	m_ropeGhostObject.SetPosition(m_ropeGhostPosition);
+
+	/** 地面に当たったら縮み開始 */
+	if (m_ropeGhostPosition.y <= 0.0f)
+	{
+		/** 伸びるアニメーションを強制終了 */
+		m_isThrowRope = false;
+		m_isStartRopeAnimation = false;
+		m_ropeAnimationTime = 0.0f;
+
+		/** 牛に当たっていないなら縮み開始 */
+		if (!m_isHitCow)
+		{
+			m_isEndRopeAnimation = true;
+			m_ropeShrinkTime = 0.0f;
+		}
+	}
+}
+
+void Rope::CheckHitCowByGhost()
+{
+	/** ゴーストが作成されていないなら処理しない */
+	if (!m_isGhostCreated) return;
+
+	GameCamera* gameCamera = FindGO<GameCamera>("gameCamera");
+
+	if (!gameCamera || !gameCamera->GetIsAimingCow()) return;
+
+	/** ゴーストが牛に当たったか判定 */
+	for (auto cow : m_cowList)
+	{
+		/** 牛が存在しないなら処理しない */
+		if (!cow) continue;
+		/** 牛が連れ去られていないなら処理しない */
+		if (!cow->GetIsTakeAwayed()) continue;
+		
+		/** 牛が削除予定なら処理しない */
+		if (cow->GetIsPendingKill()) continue;
+		/** 牛とゴーストの当たり判定 */
+		PhysicsWorld::GetInstance()->ContactTest(
+			cow->GetCharacterController(),
+			[this, cow](const btCollisionObject& contactObj)
+			{
+				/** ゴーストが牛に当たった場合の処理 */
+				if (m_ropeGhostObject.IsSelf(contactObj))
+				{
+					OnHitCow(cow);
+				}
+			}
+		);
+
+		if (m_isHitCow) break;
+	}
+}
+
+void Rope::UpdateHandPosition()
+{
+	Vector3 playerPos = m_player->GetPosition();
+	Quaternion playerRot = m_player->GetRotation();
+
+	Vector3 right = Vector3::AxisX;
+	playerRot.Apply(right);
+
+	Vector3 forward = Vector3::AxisZ;
+	playerRot.Apply(forward);
+
+	m_ropePos =
+		playerPos
+		+ right * ROPE_OFFSET_RIGHT
+		+ forward * ROPE_OFFSET_FORWARD
+		+ Vector3(0.0f, ROPE_OFFSET_UP, 0.0f);
+}
+
 
 void Rope::Render(RenderContext& rc)
 {
-	
-	m_rollModelRender.Draw(rc);
 
-	if (m_isHitCow)
+	m_ropeModelRender.Draw(rc);
+
+	if (m_isHitCow || m_isThrowRope || m_isEndRopeAnimation)
 	{
 		/** 牛に当たっているならセグメントを描画する */
 		for (int i = 0; i < ROPE_SEGMENT_COUNT; i++)
@@ -428,12 +657,5 @@ void Rope::Render(RenderContext& rc)
 			m_ropeSegments[i].Draw(rc);
 		}
 	}
-
-	/** ロープを投げている最中ならロープモデルを描画する */
-	else if (m_isThrowRope)
-	{
-		m_ropeModelRender.Draw(rc);
-	}
-
 	
 }

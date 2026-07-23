@@ -47,14 +47,28 @@ public:
 		return g_camera3D->GetForward();
 	}
 
+	/** 牛を捕まえた瞬間、牛捕獲用カメラの基準位置を初期化する関数 */
+	void InitHitCowCameraPos()
+	{
+		/** 現在のカメラの位置と注視点の差分を基準に、牛捕獲用のオフセットを設定する */
+		Vector3 currentPos = g_camera3D->GetPosition();
+		Vector3 currentTarget = g_camera3D->GetTarget();
+
+		Vector3 offset = currentPos - currentTarget;
+
+		/** 差分がゼロに近い場合は、デフォルトの後方・上方オフセットを使う */
+		if (offset.LengthSq() < 0.0001f)
+		{
+			offset = Vector3(0.0f, 80.0f, -200.0f);
+		}
+
+		m_hitCowCameraPos = offset;
+	}
+
+	/** 照準が狙っている牛座標を取得する関数 */
+	Vector3 GetAimTargetPosition() const;
 
 private:
-	/** ロープを追いかける関数*/
-	void FollowRope();
-
-	/** 牛に当たったかどうかの判定関数*/
-	void CheckCameraHitCow();
-
 	/** 牛がロープに当たったら*/
 	void HitCow();
 

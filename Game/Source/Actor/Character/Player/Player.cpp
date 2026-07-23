@@ -201,8 +201,11 @@ void Player::Update()
 
 void Player::Move()
 {
-	/** ロープを投げているか、ロープが牛に当たっている場合は移動速度をゼロにして移動を禁止する */
-	if (m_rope->GetIsThrowRope() or m_rope->GetIsHitCow() or m_isSquatAnimation)
+	/* ロープを投げているとき
+	 * ロープが牛に当たっているとき
+	 * 屈むアニメーション中
+	 * ロープのアニメーションが終了しているときは移動できないようにする */
+	if (m_rope->GetIsThrowRope() or m_rope->GetIsHitCow() or m_isSquatAnimation or m_rope->GetIsEndRopeAnimation())
 	{
 		m_moveSpeed = Vector3::Zero;
 		/*ロープを投げているときとロープが牛に当たっているときは移動できないようにする */
@@ -252,13 +255,8 @@ void Player::Move()
 
 void Player::Rotation()
 {
-	/** ロープを投げているときは回転できないようにする */
-	if (m_rope->GetIsThrowRope())
-	{
-		return;
-	}
 
-	/** 牛を引っ張ているときは牛の方向を向く */
+	/** 牛を引っ張っているときは牛の方向を向く */
 	if (m_rope->GetIsHitCow())
 	{
 		/** ロープが当たっている牛を取得する */
@@ -364,6 +362,17 @@ void Player::ThrowRope()
 	/** RB2ボタンが押されていて、ロープを投げていないとき */
 	if (g_pad[0]->IsTrigger(enButtonRB2) && !m_rope->GetIsThrowRope())
 	{
+		/** 投げる瞬間、カメラの前方向(水平のみ)にプレイヤーを向かせる */
+		Vector3 camForward = g_camera3D->GetForward();
+		camForward.y = 0.0f;
+
+		if (camForward.LengthSq() > 0.0001f)
+		{
+			camForward.Normalize();
+			m_transform.GetRotation().SetRotationYFromDirectionXZ(camForward);
+			m_playerModelRender.SetRotation(m_transform.GetRotation());
+		}
+
 		/** ロープを投げる */
 		m_rope->SetIsThrowRope(true);
 
