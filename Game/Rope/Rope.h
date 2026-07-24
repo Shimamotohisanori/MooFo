@@ -145,9 +145,6 @@ private:
 	/** ロープの回転 */
 	Quaternion m_ropeRot = Quaternion::Identity;
 
-	/** ロープのスケール */
-	Vector3 m_ropeScale = Vector3::Zero;
-
 	/** ゴーストの現在位置 */
 	Vector3 m_ropeGhostPosition = Vector3::Zero;
 

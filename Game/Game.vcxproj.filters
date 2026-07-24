@@ -104,10 +104,9 @@
     <ClCompile Include="GameTimer\DecreaseTimerUI.cpp">
       <Filter>GameTimer</Filter>
     </ClCompile>
+    <ClCompile Include="CowLivesUI.cpp" />
     <ClCompile Include="GameScene\Difficulty.cpp" />
-    <ClCompile Include="CowLivesUI\CowLivesUI.cpp">
-      <Filter>CowLivesUI</Filter>
-    </ClCompile>
+    <ClCompile Include="UIPanels\UIPanels.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -210,13 +209,12 @@
     <ClInclude Include="GameTimer\DecreaseTimerUI.h">
       <Filter>GameTimer</Filter>
     </ClInclude>
+    <ClInclude Include="CowLivesUI.h" />
     <ClInclude Include="GameScene\Game.h">
       <Filter>FadeMaager</Filter>
     </ClInclude>
     <ClInclude Include="GameScene\Difficulty.h" />
-    <ClInclude Include="CowLivesUI\CowLivesUI.h">
-      <Filter>CowLivesUI</Filter>
-    </ClInclude>
+    <ClInclude Include="UIPanels\UIPanels.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
@@ -284,9 +282,6 @@
     </Filter>
     <Filter Include="FadeMaager">
       <UniqueIdentifier>{ea922d3b-8d8c-483a-a7a2-142be959ff57}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="CowLivesUI">
-      <UniqueIdentifier>{9ced8b48-eb6f-4936-93ee-dd8e6530dcc3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
