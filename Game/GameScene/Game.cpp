@@ -25,8 +25,9 @@
 #include "FadeManager/FadeManager.h"
 #include "Aiming/Aiming.h"
 #include "InstructionControllerUI/InstructionControllerUI.h"
-#include"GameTimer/DecreaseTimerUI.h"
-#include"CowLivesUI.h"
+#include "GameTimer/DecreaseTimerUI.h"
+#include "CowLivesUI.h"
+#include "UIPanels/UIPanels.h"
 namespace
 {
 	/**マジックナンバー対策*/
@@ -134,6 +135,10 @@ Game::~Game()
 
 	/** プレイヤーの残機を表すUIの削除*/
 	DeleteGO(m_cowLivesUI);
+
+	/** UIのパネルをまとめるクラスの削除 */
+	DeleteGO(m_uipanels);
+
 	/** コンボクラスの削除 */
 	if (m_combo && !m_combo->IsDead())
 	{
@@ -414,6 +419,7 @@ bool Game::LoadStepByStep()
 		m_cowFood = FindGO<CowFood>("cowfood");
 		m_cowFoodManager = FindGO<CowFoodManager>("cowfoodmanager");
 		m_cowLuring = FindGO<CowLuring>("cowluring");
+		m_uipanels = FindGO<UIPanels>("uipanels");
 
 		/** UIで表示させる物は一旦Updateなどを一時停止させる*/
 		if (m_cowFood)m_cowFood->Deactivate();
