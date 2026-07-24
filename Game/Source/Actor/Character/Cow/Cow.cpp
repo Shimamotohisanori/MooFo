@@ -18,7 +18,7 @@
 #include "CowLuring.h"
 #include "SoundManager/VoiceManager.h"
 #include "GameTimer/AddTimerUI.h"
-#include"CowLivesUI.h"
+#include"CowLivesUI/CowLivesUI.h"
 
 namespace
 {

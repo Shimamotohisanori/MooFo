@@ -8,7 +8,7 @@
 #include"GameScene/LoadingScene.h"
 #include "GameScene/Game.h"
 #include "Pause/Pause.h"
-#include"CowLivesUI.h"
+#include"CowLivesUI/CowLivesUI.h"
 namespace
 {
 	/** ミニマップのスプライトのパス */

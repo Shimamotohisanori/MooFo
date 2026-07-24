@@ -5,7 +5,7 @@
 #include "Source/Actor/Character/Player/Player.h"
 #include "GameScene/Game.h"
 #include "SoundManager/VoiceManager.h"
-#include"CowLivesUI.h"
+#include"CowLivesUI/CowLivesUI.h"
 
 
 namespace

@@ -9,7 +9,7 @@
 #include"GameScene/LoadingScene.h"
 #include"Pause/Pause.h"
 #include "SoundManager/SoundManager.h"
-#include"CowlivesUI.h"
+#include"CowLivesUI/CowlivesUI.h"
 
 namespace
 {

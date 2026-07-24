@@ -10,7 +10,7 @@
 #include "EffectManager/EffectManager.h"
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "SoundManager/VoiceManager.h"
-#include"CowLivesUI.h"
+#include"CowLivesUI/CowLivesUI.h"
 namespace
 {
 	/** プレイヤーモデルのファイルパス */

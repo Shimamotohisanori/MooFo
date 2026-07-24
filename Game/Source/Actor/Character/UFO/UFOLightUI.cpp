@@ -4,7 +4,7 @@
 #include "Pause/Pause.h"
 #include"UFOLightManager.h"
 #include"GameScene/Game.h"
-#include"CowLivesUI.h"
+#include"CowLivesUI/CowLivesUI.h"
 
 namespace
 {
