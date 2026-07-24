@@ -5,7 +5,7 @@
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "GameCamera/GameCamera.h"
 #include "Rope/Rope.h"
-#include"CowLivesUI.h"
+#include"CowLivesUI/CowLivesUI.h"
 namespace
 {
 	/** 照準の画像ファイルパス */

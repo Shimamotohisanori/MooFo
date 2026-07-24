@@ -3,7 +3,7 @@
 #include "SoundManager/SoundManager.h"
 #include"GameScene/LoadingScene.h"
 #include"GameScene/Game.h"
-#include"CowLivesUI.h"
+#include"CowLivesUI/CowLivesUI.h"
 namespace
 {
 	/** 三桁の数字を描画する画像の大きさ */
