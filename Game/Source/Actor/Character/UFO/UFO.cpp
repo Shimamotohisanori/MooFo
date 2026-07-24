@@ -15,7 +15,7 @@
 #include "EffectManager/EffectManager.h"
 #include"GameTimer/Timer.h"
 #include"GameTimer/DecreaseTimerUI.h"
-#include"CowLivesUI.h"
+#include"CowLivesUI/CowLivesUI.h"
 namespace
 {
 	/** UFOのモデルファイルパス */
