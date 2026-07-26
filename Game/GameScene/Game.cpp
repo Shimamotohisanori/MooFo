@@ -26,7 +26,7 @@
 #include "Aiming/Aiming.h"
 #include "InstructionControllerUI/InstructionControllerUI.h"
 #include "GameTimer/DecreaseTimerUI.h"
-#include "CowLivesUI.h"
+#include "CowLivesUI/CowLivesUI.h"
 #include "UIPanels/UIPanels.h"
 namespace
 {
