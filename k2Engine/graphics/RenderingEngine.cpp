@@ -371,13 +371,13 @@ namespace nsK2Engine {
         // ポストエフェクトを実行
         m_postEffect.Render(rc, m_mainRenderTarget);
 
-        // 2D描画
-        Render2D(rc);
-
         // トゥーン輪郭線描画
         if (m_isEnableToonOutline) {
             m_toonOutlineEffect.Render(rc, m_mainRenderTarget);
         }
+
+        // 2D描画
+        Render2D(rc);
 
         // メインレンダリングターゲットの内容をフレームバッファにコピー
         CopyMainRenderTargetToFrameBuffer(rc);
