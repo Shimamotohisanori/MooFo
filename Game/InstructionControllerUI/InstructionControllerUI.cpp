@@ -2,7 +2,7 @@
 #include "InstructionControllerUI.h"
 #include "Pause/Pause.h"
 #include "GameScene/LoadingScene.h"
-#include"CowLivesUI.h"
+#include"CowLivesUI/CowLivesUI.h"
 namespace
 {
 	/** InstructionControllerUIのスプライトのパス */

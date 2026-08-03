@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Rope.h"
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "GameCamera/GameCamera.h"
@@ -6,6 +6,8 @@
 #include "GameTimer/Timer.h"
 #include "SoundManager/SoundManager.h"
 #include "SoundManager/VoiceManager.h"
+#include"GameScene/Game.h"
+#include"Tutorial/TutorialManager.h"
 
 namespace
 {
@@ -123,16 +125,25 @@ void Rope::Update()
 	/** タイマーが存在しないなら処理しない */
 	if (m_timer == nullptr) return;
 
-	/** タイマーが1秒未満なら処理しない */
-	if (m_timer->GetTimer() < 1.0f)
+
+	Game* game = FindGO<Game>("game");
+	bool isTutorial = (game && game->GetIsTutorialMode());
+
+	/** チュートリアル中はタイマー制限を無視する */
+	if (!isTutorial)
 	{
-		if (m_hitCow != nullptr && m_hitCow->IsDead())
+		if (m_timer->GetTimer() < 1.0f)
 		{
-			m_isHitCow = false;
-			m_hitCow = nullptr;
+			if (m_hitCow != nullptr && m_hitCow->IsDead())
+			{
+				m_isHitCow = false;
+				m_hitCow = nullptr;
+			}
+			return;
 		}
-		return;
 	}
+
+
 
 	/** プレイヤーが存在しないなら処理しない */
 	if (!m_player) return;
@@ -245,11 +256,11 @@ void Rope::Update()
 
 void Rope::OnHitCow(Cow* cow)
 {
+
 	m_isHitCow = true;
 	m_hitCow = cow;
 
 	cow->SetIsCaptured(true);
-
 	/** 牛を捕まえた瞬間にたるみをリセット */
 	m_ropeSlack = 50.0f;
 	m_ropeSlackTime = 0.0f;
@@ -354,6 +365,18 @@ void Rope::PlayerThrowsRope()
 		{
 			m_ropeGhostObject.SetPosition(m_ropePos);
 		}
+
+
+		/** ロープを投げた瞬間にチュートリアルの成功をカウントする*/
+		Game* game = FindGO<Game>("game");
+		if (game && game->GetIsTutorialMode())
+		{
+			TutorialManager* tutorialManager = FindGO<TutorialManager>("tutorialmanager");
+			if (tutorialManager)
+			{
+				tutorialManager->AddSuccessCount(TutorialManager::EnTutorialStep::RopeThrow);
+			}
+		}
 	}
 
 	/** ロープアニメーションが開始していたら */
@@ -379,6 +402,9 @@ void Rope::PlayerThrowsRope()
 			}
 		}
 	}
+
+
+
 }
 
 

@@ -27,6 +27,7 @@
 #include "InstructionControllerUI/InstructionControllerUI.h"
 #include"GameTimer/DecreaseTimerUI.h"
 #include"CowLivesUI/CowLivesUI.h"
+#include"Tutorial/TutorialManager.h"
 namespace
 {
 	/**マジックナンバー対策*/
@@ -134,6 +135,13 @@ Game::~Game()
 
 	/** プレイヤーの残機を表すUIの削除*/
 	DeleteGO(m_cowLivesUI);
+
+	/** チュートリアルマネージャーの削除*/
+	if (m_tutorialManager && !m_tutorialManager->IsDead())
+	{
+		DeleteGO(m_tutorialManager);
+		m_tutorialManager = nullptr;
+	}
 	/** コンボクラスの削除 */
 	if (m_combo && !m_combo->IsDead())
 	{
@@ -155,6 +163,8 @@ Game::~Game()
 }
 bool Game::Start()
 {
+	m_isTutorialMode = true;
+
 	return true;
 }
 
@@ -542,9 +552,20 @@ bool Game::LoadStepByStep()
 	case InitStep::CowLivesUI:
 	{
 		m_cowLivesUI = NewGO<CowLivesUI>(0, "cowlivesui");
+		m_gameInitStep = InitStep::Tutorial;
+		break;
+	}
+	/** チュートリアルマネージャーの生成*/
+	case InitStep::Tutorial: 
+	{
+		if (m_isTutorialMode)
+		{
+			m_tutorialManager = NewGO<TutorialManager>(0, "tutorialmanager");
+		}
 		m_gameInitStep = InitStep::Num;
 		break;
 	}
+
 
 	case InitStep::Num:
 		break;
@@ -597,6 +618,12 @@ void Game::UpdateUFORespawn()
 	);
 }
 
+void Game::AddTutorialCow(Cow* cow)
+{
+	m_aliveCows.push_back(cow);
+}
+
+
 /** ロード完了後、プレイヤーが実際にスタートを確定した時に呼ぶ */
 void Game:: ActivateGameBGM()
 {
@@ -605,7 +632,11 @@ void Game:: ActivateGameBGM()
 	/** ここでロードが完了したらActiveにして再開させる*/
 	if (m_score)                   m_score->Activate();
 	if (m_cowNumberOfRescues)      m_cowNumberOfRescues->Activate();
-	if (m_timer)                   m_timer->Activate();
+	/** チュートリアル中はタイマーをActivateしない */
+	if (m_timer && !m_isTutorialMode)
+	{
+		m_timer->Activate();
+	}
 	if (m_addTimerUI)              m_addTimerUI->Activate();
 	if (m_countDown)               m_countDown->Activate();
 	if (m_ufoLightUI)              m_ufoLightUI->Activate();
@@ -617,6 +648,12 @@ void Game:: ActivateGameBGM()
 }
 void Game::SpawnCow()
 {
+	/** チュートリアル中はランダムスポーンさせない*/
+	if (m_isTutorialMode)
+	{
+		return;
+	}
+
 	if (m_timer->GetTimer() <= 4.0f || m_isTimeOut)
 	{
 		/** タイマーが4秒以下なら牛を補充しない */
@@ -685,11 +722,17 @@ void Game::SpawnCow()
 			m_aliveCows.push_back(newCow);
 		}
 	}
-
 }
 
 void Game::TimeOut()
 {
+
+	/** チュートリアル中はタイムアウト処理をしない */
+	if (m_isTutorialMode)
+	{
+		return;
+	}
+
 	/** タイマーとタイムアウトフラグを見る*/
 	if (m_timer->GetTimer() < 0.0f && !m_isTimeOut)
 	{
@@ -733,14 +776,13 @@ void Game::TimeOut()
 		}
 
 		/** タイムアウト画像の大きさを徐々に大きくする */
-		/** 目標のスケールを設定 */
+		/** 目標のスケールを設定*/
 		Vector3 targetScale = Vector3(10.0f, 10.0f, 1.0f);
 
 		m_timeOutImageScale.x += (targetScale.x - m_timeOutImageScale.x) * 0.1f;
 		m_timeOutImageScale.y += (targetScale.y - m_timeOutImageScale.y) * 0.1f;
 
 		m_timeOutImage.SetScale(m_timeOutImageScale);
-
 		m_timeOutImage.Update();
 	}
 }

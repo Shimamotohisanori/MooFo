@@ -97,6 +97,9 @@ public:
 	{
 		return m_isPendingkill;
 	}
+	/**  チュートリアル専用：UFOLightManagerの周期を無視して即座に光を出す関数*/
+	void ForceEmitLightForTutorial();
+
 
 private:
 	/* 牛を連れていく関数 */

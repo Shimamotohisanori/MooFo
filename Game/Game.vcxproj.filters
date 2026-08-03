@@ -108,6 +108,9 @@
     <ClCompile Include="CowLivesUI\CowLivesUI.cpp">
       <Filter>CowLivesUI</Filter>
     </ClCompile>
+    <ClCompile Include="Tutorial\TutorialManager.cpp">
+      <Filter>Tutorial</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -217,6 +220,9 @@
     <ClInclude Include="CowLivesUI\CowLivesUI.h">
       <Filter>CowLivesUI</Filter>
     </ClInclude>
+    <ClInclude Include="Tutorial\TutorialManager.h">
+      <Filter>Tutorial</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
@@ -287,6 +293,9 @@
     </Filter>
     <Filter Include="CowLivesUI">
       <UniqueIdentifier>{9ced8b48-eb6f-4936-93ee-dd8e6530dcc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tutorial">
+      <UniqueIdentifier>{783ddae1-222b-4ea3-8e84-8cc59f11a2ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

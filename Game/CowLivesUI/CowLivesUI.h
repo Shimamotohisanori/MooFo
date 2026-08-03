@@ -2,6 +2,7 @@
 class Game;
 class Pause;
 class FadeManager;
+class CountDown;
 class CowLivesUI : public IGameObject
 {
 public:
@@ -110,6 +111,8 @@ private:
 	Pause* m_pause = nullptr;
 	/** 「救助失敗」のテキストを出すときのSEのポインタ*/
 	SoundSource* m_failedRescueSE = nullptr;
+	/** カウントダウンのポインタ*/
+	CountDown* m_countDown = nullptr;
 
 
 	/** フェードマネージャーのポインタ*/

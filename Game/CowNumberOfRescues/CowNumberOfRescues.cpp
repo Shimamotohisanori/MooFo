@@ -262,6 +262,11 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
     {
         return;
     }
+    /** チュートリアル中は描画しない*/
+    if (m_game && m_game->GetIsTutorialMode())
+    {
+        return;
+    }
 
     /** レイアウトの種類 */
     LayoutType layoutType;
