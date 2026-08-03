@@ -22,7 +22,7 @@ namespace
 	/** 牛の残機が一つの時に出すプレイヤー残機UI*/
 	const char * COW_CRISIS_FILEPATH = "Assets/sprite/CowLiveUI/CowLife_Crisis.dds";
 	/** 一枚目のアイコン表示位置*/
-	const Vector3 ICON_START_POS = Vector3(-680.0f,480.0f,0.0f);
+	const Vector3 ICON_START_POS = Vector3(-660.0f,460.0f,0.0f);
 
 	/** アイコン同士の間隔 */
 	constexpr float ICON_SPACING = 110.0f;

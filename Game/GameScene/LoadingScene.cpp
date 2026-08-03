@@ -12,7 +12,8 @@
 #include "Source/Actor/Stage/CowFood.h"
 #include <chrono>  
 #include "Source/Actor/Stage/CowFoodManager.h"
-#include"Title.h"
+#include "Title.h"
+#include "UIPanels/UIPanels.h"
 namespace
 {
 	/** ローディングシーンで使用する画像のファイルパス */
@@ -41,10 +42,6 @@ namespace
 
 	/** 牛同士の最低距離 */
 	constexpr float MIN_DISTANCE = 15.0f; // 牛同士の最低距離
-
-	/** Gif終了とロード完了が揃ってから、実際にフェードアウトを始めるまでの
-	止め絵を見せる時間(秒) */
-	//constexpr float FINISHED_HOLD_DURATION = 2.0f;
 
 	/** 歩く牛のローディングアニメーションのファイルパス*/
 	const char* COWWALK_FILEPATH = "Assets/Gif/CowLoadingGif/anim_%02d.dds";
@@ -588,7 +585,11 @@ void LoadingScene::LoadGameObjectsStepByStep()
 
 	case 19: NewGO<GameCamera>(0, "gameCamera");
 		break;
-	case 20:
+
+	case 20: NewGO<UIPanels>(0, "uipanels");
+		break;
+
+	case 21:
 	{
 		/** 牛の餌を生成 */
 		NewGO<CowFood>(0, "cowfood");
@@ -597,7 +598,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	}
 	break;
 	/** スカイキューブを生成 */
-	case 21:
+	case 22:
 	{
 		/** SkyCube を生成 */
 		m_skyCube = NewGO<SkyCube>(0, "skyCube");
@@ -611,7 +612,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	break;
 
 	/** 方向光・IBL設定（ここが一番重いはず） */
-	case 22:
+	case 23:
 	{
 		/** 方向光(ほぼ真上から差し込む光) */
 		Vector3 sunDir(0.0f, -1.0f, 0.0f);
@@ -622,12 +623,12 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		g_renderingEngine->SetAmbientByIBLTexture(m_skyCube->GetTextureFilePath(), 0.95f);
 	}
 	break;
-	case 23:
+	case 24:
 		/** ブルームを抑制 */
 		g_renderingEngine->SetBloomThreshold(3.0f);
 		break;
 
-	case 24:
+	case 25:
 	{
 		if (m_game == nullptr)
 		{

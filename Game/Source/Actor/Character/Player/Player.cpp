@@ -220,10 +220,10 @@ void Player::Move()
 	 * 屈むアニメーション中
 	 * ロープのアニメーションが終了しているとき
 	 * RB2ボタンが押されているときは移動できないようにする */
-	if (m_rope->GetIsThrowRope() or
-		m_rope->GetIsHitCow() or
-		m_isSquatAnimation or
-		m_rope->GetIsEndRopeAnimation() or
+	if (m_rope->GetIsThrowRope() ||
+		m_rope->GetIsHitCow() ||
+		m_isSquatAnimation ||
+		m_rope->GetIsEndRopeAnimation() ||
 		g_pad[0]->IsPress(enButtonRB2))
 	{
 		m_moveSpeed = Vector3::Zero;
@@ -370,7 +370,7 @@ void Player::ThrowRope()
 	}
 
 	/** ロープが存在しない、またはロープが牛に当たっているときはロープを投げられないようにする */
-	if (!m_rope or m_rope->GetIsHitCow())
+	if (!m_rope || m_rope->GetIsHitCow())
 	{
 		/** ロープがあたっている間は押下状態の記録だけを更新する */
 		m_wasRB2Pressed = g_pad[0]->IsPress(enButtonRB2);

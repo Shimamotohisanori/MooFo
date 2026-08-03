@@ -27,6 +27,7 @@ class InstructionControllerUI;
 class DecreaseTimerUI;
 class CowLivesUI;
 class TutorialManager;
+class UIPanels;
 
 /** UFOの情報をまとめる構造体 */
 struct UFOinfo
@@ -253,7 +254,7 @@ private:
 	/** 終了画像 */
 	SpriteRender m_timeOutImage;
 
-	/** フェードマネージャーのポインタ*/
+	/** フェードマネージャーのポインタ */
 	FadeManager* m_fadeManager = nullptr;
 
 	/** 照準 */
@@ -261,15 +262,20 @@ private:
 
 	/** 操作説明UI */
 	InstructionControllerUI* m_instructionControllerUI = nullptr;
-	/** タイマーを減少させるUI*/
+	
+	/** タイマーを減少させるUI */
 	DecreaseTimerUI* m_decreaseTimerUI = nullptr;
-	/** プレイヤーの残機を表すUI*/
+	
+	/** プレイヤーの残機を表すUI */
 	CowLivesUI* m_cowLivesUI = nullptr;
-
+	
+	/** UIのパネルをまとめるクラス */
+	UIPanels* m_uipanels = nullptr;
 
 	/** 生きている牛のリスト */
 	std::vector<Cow*> m_aliveCows;
-	/** フェード処理を開始させるフラグ*/
+	
+	/** フェード処理を開始させるフラグ */
 	bool m_isfadeStart = false;
 
 	bool m_isFadeOut = false;

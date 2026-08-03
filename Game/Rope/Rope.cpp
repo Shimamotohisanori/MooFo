@@ -20,9 +20,6 @@ namespace
 	/** アニメーションを再生させるロープモデルのファイルパス */
 	const char* ROPE_ANIMATION_MODEL_FILEPATH = "Assets/modelData/Rope/animationRope.tkm";
 
-	/** ロープの初期の大きさ */
-	const Vector3 ROPE_INITIAL_SCALE = { 1.0f, 1.0f, 5.0f };
-
 	/** 牛に当たっていない時の巻かれたロープの大きさ */
 	const Vector3 NO_HIT_COW_ROLL_ROPE_SCALE = { 0.4f, 0.4f, 0.4f };
 
@@ -110,7 +107,6 @@ bool Rope::Start()
 	}
 
 	m_player = FindGO<Player>("player");
-	m_ropeScale = ROPE_INITIAL_SCALE;
 	m_ropeRot = Quaternion::Identity;
 	m_ropeModelRender.SetScale(NO_HIT_COW_ROLL_ROPE_SCALE);
 
@@ -706,8 +702,7 @@ void Rope::UpdateHandPosition()
 	Vector3 forward = Vector3::AxisZ;
 	playerRot.Apply(forward);
 
-	/** 飛んでいる最中(m_isThrowRope)は投げ出した位置(回転オフセット)を維持し、
-	 * 縮んでいる最中(m_isEndRopeAnimation)や通常時は通常のオフセットに戻す */
+	/** ロープを回している間(RB2押下中)のオフセットを使用するかどうか */
 	bool userotatingoffset = m_isThrowRope && !m_isEndRopeAnimation;
 
 	/** 飛んでいる最中は投げ出した位置を維持し、縮み中は通常の位置に戻す */

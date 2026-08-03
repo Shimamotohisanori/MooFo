@@ -7,7 +7,6 @@ class Rope;
 class CountDown;
 class Game;
 class Pause;
-class Cow;
 class CowFood;
 class VoiceManager;
 class CowLivesUI;
@@ -154,9 +153,6 @@ private:
 
 	/** ƒvƒŒƒCƒ„[‚ª‘–‚é‰¹ */
 	SoundSource* m_runSE = nullptr;
-
-	/** ‹ */
-	Cow* m_cow = nullptr;
 
 	/** ‹‚Ì‰a */
 	CowFood* m_CowFood = nullptr;
