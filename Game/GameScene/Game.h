@@ -26,6 +26,7 @@ class Aiming;
 class InstructionControllerUI;
 class DecreaseTimerUI;
 class CowLivesUI;
+class TutorialManager;
 class UIPanels;
 
 /** UFOの情報をまとめる構造体 */
@@ -133,7 +134,45 @@ public:
 
 	/** 全ての牛を削除する関数 */
 	void KillAllCows();
+	/** チュートリアル用の牛をaliveCowリストへ追加する関数*/
+	void AddTutorialCow(Cow* cow);
 
+	/** チュートリアル用にUFOをスロットへ登録する関数 */
+	void SetTutorialUFO(int slotIndex, UFO* ufo)
+	{
+		if (slotIndex >= 0 && slotIndex < EnUFO_Num)
+		{
+			m_UFO[slotIndex] = ufo;
+		}
+	}
+	/** チュートリアルモードかどうかを取得する関数(難易度システム実装まではfalseのダミー)*/
+	bool GetIsTutorialMode()const
+	{
+		return m_isTutorialMode;
+	}
+
+	/** チュートリアルが完了するごとにゲームを終了させる(結果画面なし) */
+	void EndTutorial()
+	{
+		DeleteGO(m_inGameBGM);
+		DeleteGO(this);
+	}
+
+
+	/** チュートリアルモードを強制的に切り替える関数*/
+	void DebugSetTutorialMode(bool isTutorialMode)
+	{
+		m_isTutorialMode = isTutorialMode;
+	}
+
+	/** UFOがGame側の管理から抜けたことを知らせる(スロットをnullptrに戻すだけ) */
+	void ClearUFOSlot(int slotIndex)
+	{
+		if (slotIndex >= 0 && slotIndex < EnUFO_Num)
+		{
+			m_UFO[slotIndex] = nullptr;
+		}
+	}
 
 private:
 	/** 牛が生まれる関数 */
@@ -240,10 +279,19 @@ private:
 	bool m_isfadeStart = false;
 
 	bool m_isFadeOut = false;
+
+	bool m_isGameActive = false;
+
+	/** チュートリアルモードかどうかのフラグ(難易度システム実装までは常にfalse)*/
+	bool m_isTutorialMode = false;
+	/** チュートリアル管理*/
+	TutorialManager* m_tutorialManager = nullptr;
 	/** UFOの再出現リクエストのリスト */
 	std::vector<UFORespawnRequest> m_ufoRespawnRequests;
 	/** リスポーン時間*/
 	static constexpr float UFO_RESPAWN_TIME = 10.0f;
+
+
 	/** UFOの配列 */
 	enum EnUFO
 	{
@@ -273,6 +321,7 @@ private:
 		InstructionControllerUI,
 		DecreaseTimerUI,
 		CowLivesUI,
+		Tutorial,
 		Num
 	};
 	InitStep m_gameInitStep = InitStep::FindRefs;
@@ -291,8 +340,6 @@ private:
 
 	/** タイムアウトフラグ */
 	bool m_isTimeOut = false;
-
-	bool m_isGameActive = false;
 
 };
 

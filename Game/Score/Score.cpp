@@ -252,6 +252,12 @@ void Score::Render(RenderContext& rc)
 		return;
 	}
 
+	/** チュートリアル中は描画しない*/
+	if (m_game && m_game->GetIsTutorialMode())
+	{
+		return;
+	}
+
 	for (int i = 0; i < 5; i++)
 	{
 		for (int j = 0; j < 10; j++)

@@ -295,9 +295,15 @@ void LoadingScene::AutoAdvanceImage()
 					m_nextSceneCreated = true;
 				}
 			}
+			/** ロード中のBGMをここで明示的に止める */
+				if (m_loadingSound != nullptr)
+				{
+					DeleteGO(m_loadingSound);
+					m_loadingSound = nullptr;
+				}
+			}
 		}
 	}
-}
 
 
 void LoadingScene::PrepareAnimResources()
@@ -508,35 +514,35 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		}
 		break;
 	}
-	/** 牛を生成(10体分) */
-	case 3:
-	case 4:
-	case 5:
-	case 6:
-	case 7:
-	case 8:
-	case 9:
-	case 10:
-	case 11:
-	case 12:
-	{
-		Cow* cow = NewGO<Cow>(0, "cow");
-		cow->SetPosition(RandomCowPos());
-		/** 0～9の数字を割り当てる*/
-		int cowIndex = m_loadStep - 2;
+	///** 牛を生成(10体分) */
+	//case 3:
+	//case 4:
+	//case 5:
+	//case 6:
+	//case 7:
+	//case 8:
+	//case 9:
+	//case 10:
+	//case 11:
+	//case 12:
+	//{
+	//	Cow* cow = NewGO<Cow>(0, "cow");
+	//	cow->SetPosition(RandomCowPos());
+	//	/** 0～9の数字を割り当てる*/
+	//	int cowIndex = m_loadStep - 2;
 
-		/** 牛の性格をランダムに割り当てる */
-		if (rand() % 100 < INITIAL_CHASE_COW_RATE)
-		{
-			cow->SetCowType(Cow::EnCowType::en_Chase);
-		}
-		else
-		{
-			cow->SetCowType(cowIndex % 2 == 0 ? Cow::EnCowType::en_Light : Cow::EnCowType::en_Random);
-		}
+	//	/** 牛の性格をランダムに割り当てる */
+	//	if (rand() % 100 < INITIAL_CHASE_COW_RATE)
+	//	{
+	//		cow->SetCowType(Cow::EnCowType::en_Chase);
+	//	}
+	//	else
+	//	{
+	//		cow->SetCowType(cowIndex % 2 == 0 ? Cow::EnCowType::en_Light : Cow::EnCowType::en_Random);
+	//	}
 
-		m_tempCows.push_back(cow);
-	} break;
+	//	m_tempCows.push_back(cow);
+	//} break;
 
 	/** もしUFOが消えていなかったら残っているUFOを消す */
 	case 13:
@@ -557,23 +563,23 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		NewGO<UFOLightManager>(0, "ufolightmanager");
 		break;
 
-		/** UFOを生成(4体分) */
-	case 15:
-	case 16:
-	case 17:
-	case 18:
-	{
+	//	/** UFOを生成(4体分) */
+	//case 15:
+	//case 16:
+	//case 17:
+	//case 18:
+	//{
 
-		int index = m_loadStep - 15;
-		if (index >= 0 && index < 4)
-		{
-			UFO* ufo = NewGO<UFO>(0, "UFO");
-			ufo->SetPosition(UFO_INFOMATIONS[index].pos);
-			ufo->SetUFOMoveState();
-			ufo->SetSlotIndex(index);
-			m_tempUFOs.push_back(ufo);
-		}
-	} break;
+	//	int index = m_loadStep - 15;
+	//	if (index >= 0 && index < 4)
+	//	{
+	//		UFO* ufo = NewGO<UFO>(0, "UFO");
+	//		ufo->SetPosition(UFO_INFOMATIONS[index].pos);
+	//		ufo->SetUFOMoveState();
+	//		ufo->SetSlotIndex(index);
+	//		m_tempUFOs.push_back(ufo);
+	//	}
+	//} break;
 
 	/** ゲームカメラを生成 */
 

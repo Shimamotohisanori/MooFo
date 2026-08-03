@@ -337,6 +337,19 @@ void UFO::Rotation()
 }
 
 
+void UFO::ForceEmitLightForTutorial()
+{
+	UFOLightManager* manager = FindGO<UFOLightManager>("ufolightmanager");
+	if (manager)
+	{
+		/** 通常のランダム発光サイクルから外す */
+		manager->UnregisterUFO(this);
+	}
+	/** 強制的にEmit状態にする(Wait→Emitの遷移としてPlayLightEffectも走る) */
+	m_cowCaptureController.SyncState(CowCaptureController::Emit);
+}
+
+
 void UFO::TakeAwayTheCow()
 {
 	/** 牛を連れていけるかどうかのフラグが立っているか

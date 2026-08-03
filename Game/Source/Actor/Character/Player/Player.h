@@ -40,11 +40,27 @@ public:
 		return m_transform.GetPosition();
 	};
 
+	/** プレイヤーの位置を外部から設定する関数(チュートリアル設定用)*/
+	void SetPosition(const Vector3& pos)
+	{
+		m_transform.SetPosition(pos);
+		m_characterController.SetPosition(pos);
+		m_playerModelRender.SetPosition(pos);
+	}
+
+
 	/** プレイヤーの回転取得関数 */
 	Quaternion GetRotation()
 	{
 		return m_transform.GetRotation();
 	};
+
+	/** プレイヤーの回転を外部から設定する関数(チュートリアル設定用) */
+	void SetRotation(const Quaternion& rot)
+	{
+		m_transform.SetRotation(rot);
+		m_playerModelRender.SetRotation(rot);
+	}
 
 	/** 右ボタンが押されているかどうかのフラグを設定する関数 */
 	void SetGetRightButton1(bool isRightButton1)
