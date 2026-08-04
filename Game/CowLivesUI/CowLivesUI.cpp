@@ -65,23 +65,6 @@ CowLivesUI::~CowLivesUI()
 
 bool CowLivesUI::Start()
 {
-	///** 「RESCUE」の文字を初期化する*/
-	//m_rescueTextRender.Init(RESCUE_TEXT, TEXT_WIDTH, TEXT_HEIGHT);
-	//m_rescueTextRender.SetPosition(RESCUE_TEXT_POS);
-	//m_rescueTextRender.SetScale(Vector3(1.0f, 1.0f, 1.0f));
-	//m_rescueTextRender.Update();
-
-	///** 「FAILED」の文字を初期化する*/
-	//m_failedTextRender.Init(FAILED_TEXT, TEXT_FAILED_WIDTH, TEXT_FAILED_HEIGHT);
-	//m_failedTextRender.SetPosition(FAILED_TEXT_POS);
-	//m_failedTextRender.SetScale(Vector3(1.0f, 1.0f, 1.0f));
-	//m_failedTextRender.Update();
-
-	///** 「…」の文字を初期化する*/
-	//m_tenTextRender.Init(TEN_TEXT, TEXT_WIDTH, TEXT_HEIGHT);
-	//m_tenTextRender.SetPosition(TEN_TEXT_POS);
-	//m_tenTextRender.SetScale(Vector3(1.0f,1.0f,1.0f));
-
 	m_tenTextRender.Update();
 
 	/** アイコンの初期化を行う*/
@@ -92,9 +75,20 @@ bool CowLivesUI::Start()
 
 void CowLivesUI::Update()
 {
-	m_pause = FindGO<Pause>("pause");
+	/** ポーズクラスのポインタが見つからない場合は検索 */
+	if (!m_pause)
+	{
+		m_pause = FindGO<Pause>("pause");
+		return;
+	}
 
-	m_fadeManager = FindGO<FadeManager>("fadeManager");
+	/** フェードマネージャーのポインタが見つからない場合は検索 */
+	if (!m_fadeManager)
+	{
+		m_fadeManager = FindGO<FadeManager>("fadeManager");
+		return;
+	}
+
 	for (int i = 0; i < COW_LIFE_NUM; i++)
 	{
 		m_cowIcons[i].render.Update();

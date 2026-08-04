@@ -114,10 +114,12 @@ bool Rope::Start()
 
 void Rope::Update()
 {
-	m_timer = FindGO<Timer>("timer");
-	
-	/** タイマーが存在しないなら処理しない */
-	if (m_timer == nullptr) return;
+	/** タイマーのポインタが見つからない場合は検索 */
+	if(!m_timer)
+	{
+		m_timer = FindGO<Timer>("timer");
+		return;
+	}
 
 	/** タイマーが1秒未満なら処理しない */
 	if (m_timer->GetTimer() < 1.0f)
