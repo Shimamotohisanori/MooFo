@@ -106,6 +106,7 @@
     </ClCompile>
     <ClCompile Include="CowLivesUI.cpp" />
     <ClCompile Include="GameScene\Difficulty.cpp" />
+    <ClCompile Include="GameScene\DifficultySetting.cpp" />
 
     <ClCompile Include="CowLivesUI\CowLivesUI.cpp">
       <Filter>CowLivesUI</Filter>
@@ -221,7 +222,8 @@
       <Filter>FadeMaager</Filter>
     </ClInclude>
     <ClInclude Include="GameScene\Difficulty.h" />
-
+    
+    <ClInclude Include="GameScene\DifficultySetting.h" />
     <ClInclude Include="CowLivesUI\CowLivesUI.h">
       <Filter>CowLivesUI</Filter>
     </ClInclude>
@@ -230,6 +232,7 @@
     </ClInclude>
 
     <ClInclude Include="UIPanels\UIPanels.h" />
+
 
   </ItemGroup>
   <ItemGroup>

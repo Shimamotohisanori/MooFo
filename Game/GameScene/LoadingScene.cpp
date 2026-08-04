@@ -12,6 +12,7 @@
 #include "Source/Actor/Stage/CowFood.h"
 #include <chrono>  
 #include "Source/Actor/Stage/CowFoodManager.h"
+#include"DifficultySetting.h"
 #include "Title.h"
 #include "UIPanels/UIPanels.h"
 namespace
@@ -563,23 +564,26 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		NewGO<UFOLightManager>(0, "ufolightmanager");
 		break;
 
-	//	/** UFOを生成(4体分) */
-	//case 15:
-	//case 16:
-	//case 17:
-	//case 18:
-	//{
+		/** UFOを生成(4体分) */
+	case 15:
+	case 16:
+	case 17:
+	case 18:
+	{
+		int index = m_loadStep - 15;
+	
+		/** 難易度に応じたUFO数を取得し、その数までしか生成しないようにする */
+		int ufoCount = GameDifficultyManager::GetParam().ufoCount;
 
-	//	int index = m_loadStep - 15;
-	//	if (index >= 0 && index < 4)
-	//	{
-	//		UFO* ufo = NewGO<UFO>(0, "UFO");
-	//		ufo->SetPosition(UFO_INFOMATIONS[index].pos);
-	//		ufo->SetUFOMoveState();
-	//		ufo->SetSlotIndex(index);
-	//		m_tempUFOs.push_back(ufo);
-	//	}
-	//} break;
+		if (index >= 0 && index < 4 && index < ufoCount)
+		{
+			UFO* ufo = NewGO<UFO>(0, "UFO");
+			ufo->SetPosition(UFO_INFOMATIONS[index].pos);
+			ufo->SetUFOMoveState();
+			ufo->SetSlotIndex(index);
+			m_tempUFOs.push_back(ufo);
+		}
+	} break;
 
 	/** ゲームカメラを生成 */
 

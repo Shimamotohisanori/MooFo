@@ -81,6 +81,7 @@ private:
 		GameOver,/** ゲームオーバー*/
 		LayoutTypeNum
 	};
+
 	/** レイアウトの種類ごとのUIの大きさ */
 
 	/** 救出数 */
@@ -129,6 +130,18 @@ private:
 
 	/** 前の救出数 */
 	uint8_t m_oldNumberOfRescues = 0;
+
+	/** ノルマ数 */
+	uint8_t m_norma = 10;
+
+	/** ノルマの十の位 */
+	uint8_t m_normaTens = 0;
+
+	/** ノルマの一の位 */
+	uint8_t m_normaOnes = 0;
+
+
+
 
 	/**	十の位 */
 	uint8_t tens = 0;

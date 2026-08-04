@@ -2,7 +2,8 @@
 #include "SoundManager/SoundManager.h"
 #include "Title.h"
 #include "Game.h"
-#include "LoadingScene.h"
+//#include "LoadingScene.h"
+#include "Difficulty.h"
 
 namespace
 {
@@ -92,8 +93,10 @@ void Title::InTitle()
 		if (m_titleFinalBlinkTime <= 0.0f)
 		{
 			m_isStartButtonPressed = false;
-			m_loadingScene = NewGO<LoadingScene>(0, "loading");
-			m_loadingScene->SetLoadType(LoadingScene::LoadType::ToGameScene);
+			//m_loadingScene = NewGO<LoadingScene>(0, "loading");
+			//m_loadingScene->SetLoadType(LoadingScene::LoadType::ToGameScene);
+			m_difficulty = NewGO<Difficulty>(0, "difficulty");
+
 			DeleteGO(m_titleBGM);
 			//m_loadingScene->SetNextScene([this]()
 			//	{

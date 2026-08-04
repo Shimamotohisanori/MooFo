@@ -234,6 +234,7 @@
     <ClCompile Include="FadeManager\FadeManager.cpp" />
     <ClCompile Include="GameCamera\GameCamera.cpp" />
     <ClCompile Include="GameScene\Difficulty.cpp" />
+    <ClCompile Include="GameScene\DifficultySetting.cpp" />
     <ClCompile Include="GameScene\Game.cpp" />
     <ClCompile Include="GameScene\GameClear.cpp" />
     <ClCompile Include="GameScene\GameOver.cpp" />
@@ -285,6 +286,7 @@
     <ClInclude Include="FadeManager\FadeManager.h" />
     <ClInclude Include="GameCamera\GameCamera.h" />
     <ClInclude Include="GameScene\Difficulty.h" />
+    <ClInclude Include="GameScene\DifficultySetting.h" />
     <ClInclude Include="GameScene\Game.h" />
     <ClInclude Include="GameScene\GameClear.h" />
     <ClInclude Include="GameScene\GameOver.h" />
