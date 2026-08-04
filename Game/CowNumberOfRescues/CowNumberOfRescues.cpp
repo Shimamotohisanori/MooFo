@@ -136,8 +136,12 @@ bool CowNumberOfRescues::Start()
 
 void CowNumberOfRescues::Update()
 {
-
-    m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
+	/** ゲーム中の牛の残機UIのポインタを取得 */
+    if(!m_cowLivesUI)
+    {
+        m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
+        return;
+    }
 
     tens = m_numberOfRescues / 10;
     ones = m_numberOfRescues % 10;

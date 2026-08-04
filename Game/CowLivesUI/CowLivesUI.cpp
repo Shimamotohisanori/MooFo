@@ -78,11 +78,21 @@ bool CowLivesUI::Start()
 
 void CowLivesUI::Update()
 {
-	m_pause = FindGO<Pause>("pause");
+	/** ポーズクラスのポインタが見つからない場合は検索 */
+	if (!m_pause)
+	{
+		m_pause = FindGO<Pause>("pause");
+		return;
+	}
+
+	/** フェードマネージャーのポインタが見つからない場合は検索 */
+	if (!m_fadeManager)
+	{
+		m_fadeManager = FindGO<FadeManager>("fadeManager");
+		return;
+	}
 
 	m_countDown = FindGO<CountDown>("countdown");
-
-	m_fadeManager = FindGO<FadeManager>("fadeManager");
 
 	for (int i = 0; i < COW_LIFE_NUM; i++)
 	{
