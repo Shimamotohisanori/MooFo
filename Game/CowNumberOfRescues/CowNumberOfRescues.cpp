@@ -4,6 +4,7 @@
 #include "GameScene/LoadingScene.h"
 #include "CowLivesUI/CowLivesUI.h"
 #include "GameScene/DifficultySetting.h"
+
 namespace
 {
     /** 数のUIのファイルパス */
