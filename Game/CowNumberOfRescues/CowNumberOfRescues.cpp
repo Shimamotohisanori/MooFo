@@ -2,8 +2,9 @@
 #include "CowNumberOfRescues.h"
 #include "GameScene/Game.h"
 #include "GameScene/LoadingScene.h"
-#include"CowLivesUI.h"
-#include "GameScene/DifficultySetting.h
+#include "CowLivesUI/CowLivesUI.h"
+#include "GameScene/DifficultySetting.h"
+
 namespace
 {
     /** 数のUIのファイルパス */
