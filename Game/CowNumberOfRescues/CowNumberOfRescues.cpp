@@ -3,6 +3,7 @@
 #include "GameScene/Game.h"
 #include "GameScene/LoadingScene.h"
 #include"CowLivesUI.h"
+#include "GameScene/DifficultySetting.h"
 namespace
 {
     /** 数のUIのファイルパス */
@@ -99,6 +100,8 @@ bool CowNumberOfRescues::Start()
     ones = 0;
     m_isResult = false;
 
+    m_norma = static_cast<uint8_t>(GameDifficultyManager::GetParam().normaCount);
+
     /** 数のUIを左右全てに読み込む */
     for (int i = 0; i < 10; i++)
     {
@@ -141,6 +144,10 @@ void CowNumberOfRescues::Update()
 
     tens = m_numberOfRescues / 10;
     ones = m_numberOfRescues % 10;
+
+    /** 替地　追加 */
+    m_normaTens = m_norma / 10;
+    m_normaOnes = m_norma % 10;
 
     InitLayout();
 
@@ -343,22 +350,37 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
     /** 10以下の場合はスラッシュと最大値を表示 */
     if (m_numberOfRescues <= 10)
     {
-        /** スラッシュの表示 */
+        /** スラッシュは常に表示する */
         m_slashSprite.SetPosition(m_slashPos[layoutType]);
         m_slashSprite.SetScale(m_slashScale[layoutType]);
         m_slashSprite.Update();
         m_slashSprite.Draw(renderContext);
 
-        /** 最大値（1 / 10）の表示 */
-        m_oneSprite.SetPosition(m_onePos[layoutType]);
-        m_oneSprite.SetScale(m_oneScale[layoutType]);
-        m_oneSprite.Update();
-        m_oneSprite.Draw(renderContext);
+        if (m_normaTens != 0)
+        {
+            /** 十の位を表示 */
+            m_tensSprite[m_normaTens].SetPosition(m_onePos[layoutType]);
+            m_tensSprite[m_normaTens].SetScale(m_oneScale[layoutType]);
+            m_tensSprite[m_normaTens].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+            m_tensSprite[m_normaTens].Update();
+            m_tensSprite[m_normaTens].Draw(renderContext);
 
-        m_zeroSprite.SetPosition(m_zeroPos[layoutType]);
-        m_zeroSprite.SetScale(m_zeroScale[layoutType]);
-        m_zeroSprite.Update();
-        m_zeroSprite.Draw(renderContext);
+            /** 一の位を表示（通常位置） */
+            m_onesSprite[m_normaOnes].SetPosition(m_zeroPos[layoutType]);
+            m_onesSprite[m_normaOnes].SetScale(m_zeroScale[layoutType]);
+            m_onesSprite[m_normaOnes].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+            m_onesSprite[m_normaOnes].Update();
+            m_onesSprite[m_normaOnes].Draw(renderContext);
+        }
+        else
+        {
+            /** 十の位が0の場合は、一の位の数字を十の位の位置(左)に詰めて表示 */
+            m_onesSprite[m_normaOnes].SetPosition(m_onePos[layoutType]);
+            m_onesSprite[m_normaOnes].SetScale(m_oneScale[layoutType]);
+            m_onesSprite[m_normaOnes].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+            m_onesSprite[m_normaOnes].Update();
+            m_onesSprite[m_normaOnes].Draw(renderContext);
+        }
     }
 
 }

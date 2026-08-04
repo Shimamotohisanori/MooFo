@@ -13,6 +13,7 @@
 #include <chrono>  
 #include "Source/Actor/Stage/CowFoodManager.h"
 #include"Title.h"
+#include"DifficultySetting.h"
 namespace
 {
 	/** ローディングシーンで使用する画像のファイルパス */
@@ -566,9 +567,12 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	case 17:
 	case 18:
 	{
-
 		int index = m_loadStep - 15;
-		if (index >= 0 && index < 4)
+	
+		/** 難易度に応じたUFO数を取得し、その数までしか生成しないようにする */
+		int ufoCount = GameDifficultyManager::GetParam().ufoCount;
+
+		if (index >= 0 && index < 4 && index < ufoCount)
 		{
 			UFO* ufo = NewGO<UFO>(0, "UFO");
 			ufo->SetPosition(UFO_INFOMATIONS[index].pos);

@@ -27,6 +27,7 @@
 #include "InstructionControllerUI/InstructionControllerUI.h"
 #include"GameTimer/DecreaseTimerUI.h"
 #include"CowLivesUI.h"
+#include "DifficultySetting.h"
 namespace
 {
 	/**マジックナンバー対策*/
@@ -657,7 +658,11 @@ void Game::SpawnCow()
 				chaseCowRate = CHASE_COW_TABLE_A;
 			}
 
+			chaseCowRate += GameDifficultyManager::GetParam().chaseCowRateOffset;
+			chaseCowRate = max(0, min(chaseCowRate, 100));
+
 			m_spawnTimer = 0.0f;
+
 
 			/** 新しい牛を生成 */
 			Cow* newCow = NewGO<Cow>(0, "cow");
@@ -717,7 +722,7 @@ void Game::TimeOut()
 			m_isFadeOut = true;
 		
 			/** ゲームオーバーかゲームクリアかを判断する */
-			if (m_cowNumberOfRescues->GetNumberOfRescues() >= 10)
+			if (m_cowNumberOfRescues->GetNumberOfRescues() >= GameDifficultyManager::GetParam().normaCount)
 			{
 				/** ゲームクリアの処理 */
 				Clear();

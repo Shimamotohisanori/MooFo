@@ -1,5 +1,6 @@
 #pragma once
-class LoadingScene;
+//class LoadingScene;
+class Difficulty;
 /** タイトルシーンのクラス */
 class Title : public IGameObject
 {
@@ -43,7 +44,9 @@ private:
 	SoundSource* m_titleSE = nullptr;
 
 	/** タイトルからローディングシーンに移行するためのローディングシーン */
-	LoadingScene* m_loadingScene = nullptr;
+	//LoadingScene* m_loadingScene = nullptr;
+	Difficulty* m_difficulty = nullptr;
+
 
 	/** タイトルの状態を管理する列挙型 */
 	enum enTitleState
