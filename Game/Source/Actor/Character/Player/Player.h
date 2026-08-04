@@ -7,7 +7,6 @@ class Rope;
 class CountDown;
 class Game;
 class Pause;
-class Cow;
 class CowFood;
 class VoiceManager;
 class CowLivesUI;
@@ -41,11 +40,27 @@ public:
 		return m_transform.GetPosition();
 	};
 
+	/** プレイヤーの位置を外部から設定する関数(チュートリアル設定用)*/
+	void SetPosition(const Vector3& pos)
+	{
+		m_transform.SetPosition(pos);
+		m_characterController.SetPosition(pos);
+		m_playerModelRender.SetPosition(pos);
+	}
+
+
 	/** プレイヤーの回転取得関数 */
 	Quaternion GetRotation()
 	{
 		return m_transform.GetRotation();
 	};
+
+	/** プレイヤーの回転を外部から設定する関数(チュートリアル設定用) */
+	void SetRotation(const Quaternion& rot)
+	{
+		m_transform.SetRotation(rot);
+		m_playerModelRender.SetRotation(rot);
+	}
 
 	/** 右ボタンが押されているかどうかのフラグを設定する関数 */
 	void SetGetRightButton1(bool isRightButton1)
@@ -75,6 +90,12 @@ public:
 	bool GetIsMoving()const
 	{
 		return m_isMoving;
+	}
+
+	/** 屈むアニメーションが再生できるかどうかのフラグを取得する関数 */
+	bool GetIsSquatAnimation() const
+	{
+		return m_isSquatAnimation;
 	}
 
 
@@ -133,9 +154,6 @@ private:
 	/** プレイヤーが走る音 */
 	SoundSource* m_runSE = nullptr;
 
-	/** 牛 */
-	Cow* m_cow = nullptr;
-
 	/** 牛の餌 */
 	CowFood* m_CowFood = nullptr;
 
@@ -179,6 +197,9 @@ private:
 	/** 屈むアニメーションが再生できるかどうかのフラグ */
 	bool m_isSquatAnimation = false;
 
+	/** 前のフレームでRB2が押されていたかどうか */
+	bool m_wasRB2Pressed = false;
+
 	/** アニメーション */
 	enum EnPlayAnimation
 	{
@@ -187,6 +208,8 @@ private:
 		enAnimationClip_PullLeft,
 		enAnimationClip_PullRight,
 		enAnimationClip_Squat,
+		enAnimationClip_RotateRope,
+		enAimationClip_ThrowRope,
 		enAnimationClip_Num,
 	};
 

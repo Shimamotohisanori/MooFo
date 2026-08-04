@@ -12,8 +12,9 @@
 #include "Source/Actor/Stage/CowFood.h"
 #include <chrono>  
 #include "Source/Actor/Stage/CowFoodManager.h"
-#include"Title.h"
 #include"DifficultySetting.h"
+#include "Title.h"
+#include "UIPanels/UIPanels.h"
 namespace
 {
 	/** ローディングシーンで使用する画像のファイルパス */
@@ -42,10 +43,6 @@ namespace
 
 	/** 牛同士の最低距離 */
 	constexpr float MIN_DISTANCE = 15.0f; // 牛同士の最低距離
-
-	/** Gif終了とロード完了が揃ってから、実際にフェードアウトを始めるまでの
-	止め絵を見せる時間(秒) */
-	//constexpr float FINISHED_HOLD_DURATION = 2.0f;
 
 	/** 歩く牛のローディングアニメーションのファイルパス*/
 	const char* COWWALK_FILEPATH = "Assets/Gif/CowLoadingGif/anim_%02d.dds";
@@ -299,9 +296,15 @@ void LoadingScene::AutoAdvanceImage()
 					m_nextSceneCreated = true;
 				}
 			}
+			/** ロード中のBGMをここで明示的に止める */
+				if (m_loadingSound != nullptr)
+				{
+					DeleteGO(m_loadingSound);
+					m_loadingSound = nullptr;
+				}
+			}
 		}
 	}
-}
 
 
 void LoadingScene::PrepareAnimResources()
@@ -512,35 +515,35 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		}
 		break;
 	}
-	/** 牛を生成(10体分) */
-	case 3:
-	case 4:
-	case 5:
-	case 6:
-	case 7:
-	case 8:
-	case 9:
-	case 10:
-	case 11:
-	case 12:
-	{
-		Cow* cow = NewGO<Cow>(0, "cow");
-		cow->SetPosition(RandomCowPos());
-		/** 0～9の数字を割り当てる*/
-		int cowIndex = m_loadStep - 2;
+	///** 牛を生成(10体分) */
+	//case 3:
+	//case 4:
+	//case 5:
+	//case 6:
+	//case 7:
+	//case 8:
+	//case 9:
+	//case 10:
+	//case 11:
+	//case 12:
+	//{
+	//	Cow* cow = NewGO<Cow>(0, "cow");
+	//	cow->SetPosition(RandomCowPos());
+	//	/** 0～9の数字を割り当てる*/
+	//	int cowIndex = m_loadStep - 2;
 
-		/** 牛の性格をランダムに割り当てる */
-		if (rand() % 100 < INITIAL_CHASE_COW_RATE)
-		{
-			cow->SetCowType(Cow::EnCowType::en_Chase);
-		}
-		else
-		{
-			cow->SetCowType(cowIndex % 2 == 0 ? Cow::EnCowType::en_Light : Cow::EnCowType::en_Random);
-		}
+	//	/** 牛の性格をランダムに割り当てる */
+	//	if (rand() % 100 < INITIAL_CHASE_COW_RATE)
+	//	{
+	//		cow->SetCowType(Cow::EnCowType::en_Chase);
+	//	}
+	//	else
+	//	{
+	//		cow->SetCowType(cowIndex % 2 == 0 ? Cow::EnCowType::en_Light : Cow::EnCowType::en_Random);
+	//	}
 
-		m_tempCows.push_back(cow);
-	} break;
+	//	m_tempCows.push_back(cow);
+	//} break;
 
 	/** もしUFOが消えていなかったら残っているUFOを消す */
 	case 13:
@@ -586,7 +589,11 @@ void LoadingScene::LoadGameObjectsStepByStep()
 
 	case 19: NewGO<GameCamera>(0, "gameCamera");
 		break;
-	case 20:
+
+	case 20: NewGO<UIPanels>(0, "uipanels");
+		break;
+
+	case 21:
 	{
 		/** 牛の餌を生成 */
 		NewGO<CowFood>(0, "cowfood");
@@ -595,7 +602,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	}
 	break;
 	/** スカイキューブを生成 */
-	case 21:
+	case 22:
 	{
 		/** SkyCube を生成 */
 		m_skyCube = NewGO<SkyCube>(0, "skyCube");
@@ -609,7 +616,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	break;
 
 	/** 方向光・IBL設定（ここが一番重いはず） */
-	case 22:
+	case 23:
 	{
 		/** 方向光(ほぼ真上から差し込む光) */
 		Vector3 sunDir(0.0f, -1.0f, 0.0f);
@@ -620,12 +627,12 @@ void LoadingScene::LoadGameObjectsStepByStep()
 		g_renderingEngine->SetAmbientByIBLTexture(m_skyCube->GetTextureFilePath(), 0.95f);
 	}
 	break;
-	case 23:
+	case 24:
 		/** ブルームを抑制 */
 		g_renderingEngine->SetBloomThreshold(3.0f);
 		break;
 
-	case 24:
+	case 25:
 	{
 		if (m_game == nullptr)
 		{

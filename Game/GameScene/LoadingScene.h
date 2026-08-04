@@ -152,34 +152,42 @@ private:
 	/** Sceneの切り替え時にフェードインするための変数*/
 	/** LodingSceneのα値*/
 	float m_SceneFadeAlpha = 1.0f;
+	
 	/** フェード速度*/
 	float m_SceneFadeSpeed = 0.5f;
+	
 	/** Sceneがフェードアウトしているかどうかのフラグ*/
 	bool m_isSceneFadeOut = false;
+	
 	/** 最初の牛を救出する画像を見たかどうかのフラグ*/
 	bool m_hasSeenImage0 = false;
+	
 	/** 牛の餌の説明画像を見たかどうかのフラグ*/
 	bool m_hasSeenImage1 = false;
+	
 	/** プレイヤーが画像を見終えて決定したかどうかのフラグ*/
 	bool m_isReadyToStart = false;
+	
 	/** 1枚目のGif画像が終了して自動遷移したかどうかのフラグ*/
 	bool m_hasAutoAdvancedImage0 = false;
 
 	/** 2枚目のGif画像が終了したかどうかのフラグ*/
 	bool m_hasFinishedImage2 = false;
+	
 	/** 餌のGifがロードされたかどうかのフラグ*/
 	bool m_isFoodLoaded = false;
+	
 	/** 次のシーンが作成されたかどうかのフラグ*/
 	bool m_nextSceneCreated = false;
+	
 	/** 2枚目にロープのGif画像を表示するかどうか(falseの時は餌のGIF)*/
 	bool m_useRopeGif = false;
+	
 	/** 選ばれたGifが最終フレームに到達しているかどうかのフラグ(表示中のみUpdateして、到達後は制止させる)*/
 	bool m_hasSelectedGifReachedEnd = false;
+	
 	/** ローディング中の音源 */
 	SoundSource* m_loadingSound = nullptr;
-
-
-
 
 	/** 操作説明画像を最低表示しておく時間(秒) */
 	static constexpr float MIN_IMAGE0_DISPLAY_TIME = 3.0f; // 好きな秒数に調整

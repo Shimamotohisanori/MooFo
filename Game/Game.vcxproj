@@ -228,7 +228,7 @@
     <ClCompile Include="Aiming\Aiming.cpp" />
     <ClCompile Include="Combo\Combo.cpp" />
     <ClCompile Include="CountDown\CountDown.cpp" />
-    <ClCompile Include="CowLivesUI.cpp" />
+    <ClCompile Include="CowLivesUI\CowLivesUI.cpp" />
     <ClCompile Include="CowNumberOfRescues\CowNumberOfRescues.cpp" />
     <ClCompile Include="EffectManager\EffectManager.cpp" />
     <ClCompile Include="FadeManager\FadeManager.cpp" />
@@ -273,12 +273,14 @@
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
     <ClCompile Include="Transform\Transform.cpp" />
+    <ClCompile Include="Tutorial\TutorialManager.cpp" />
+    <ClCompile Include="UIPanels\UIPanels.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Aiming\Aiming.h" />
     <ClInclude Include="Combo\Combo.h" />
     <ClInclude Include="CountDown\CountDown.h" />
-    <ClInclude Include="CowLivesUI.h" />
+    <ClInclude Include="CowLivesUI\CowLivesUI.h" />
     <ClInclude Include="CowNumberOfRescues\CowNumberOfRescues.h" />
     <ClInclude Include="EffectManager\EffectManager.h" />
     <ClInclude Include="FadeManager\FadeManager.h" />
@@ -319,6 +321,8 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
     <ClInclude Include="Transform\Transform.h" />
+    <ClInclude Include="Tutorial\TutorialManager.h" />
+    <ClInclude Include="UIPanels\UIPanels.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />

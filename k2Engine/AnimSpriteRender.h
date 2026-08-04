@@ -14,7 +14,7 @@ namespace nsK2Engine {
         /// <param name="fps">1秒あたりのフレーム数</param>
         void Init(const std::vector<std::string>& filePathList,
             int frameCount, float w, float h, float fps = 10.0f);
-
+         
         /** ロードが重いので分割するための関数*/
         void PrepareFrameCount(int frameCount, float w, float h, float fps = 10.0f);
 

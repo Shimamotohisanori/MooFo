@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Rope.h"
 #include "Source/Actor/Character/Cow/Cow.h"
 #include "GameCamera/GameCamera.h"
@@ -6,6 +6,8 @@
 #include "GameTimer/Timer.h"
 #include "SoundManager/SoundManager.h"
 #include "SoundManager/VoiceManager.h"
+#include"GameScene/Game.h"
+#include"Tutorial/TutorialManager.h"
 
 namespace
 {
@@ -18,23 +20,26 @@ namespace
 	/** アニメーションを再生させるロープモデルのファイルパス */
 	const char* ROPE_ANIMATION_MODEL_FILEPATH = "Assets/modelData/Rope/animationRope.tkm";
 
-	/** ロープの初期の大きさ */
-	const Vector3 ROPE_INITIAL_SCALE = { 1.0f, 1.0f, 5.0f };
-
 	/** 牛に当たっていない時の巻かれたロープの大きさ */
-	const Vector3 NO_HIT_COW_ROLL_ROPE_SCALE = { 0.5f, 0.5f, 0.5f };
+	const Vector3 NO_HIT_COW_ROLL_ROPE_SCALE = { 0.4f, 0.4f, 0.4f };
 
 	/** 牛に当たった時の巻かれたロープの大きさ */
 	const Vector3 HIT_COW_ROLL_ROPE_SCALE = { 1.0f, 1.0f, 1.0f };
 
 	/** プレイヤーの右手からロープが出る位置のオフセット */
-	constexpr float ROPE_OFFSET_RIGHT = 10.0f;
+	constexpr float ROPE_OFFSET_RIGHT = 5.0f;
+
+	/** ロープを回している間(RB2押下中)のロープの右オフセット */
+	constexpr float ROPE_OFFSET_RIGHT_ROTATING = 15.0f;
 
 	/** プレイヤーの前からロープが出る位置のオフセット */
 	constexpr float ROPE_OFFSET_FORWARD = 0.5f;
 
 	/** プレイヤーの上からロープが出る位置のオフセット */
 	constexpr float ROPE_OFFSET_UP = 30.0f;
+
+	/** ロープを回している間(RB2押下中)のロープの高さオフセット */
+	constexpr float ROPE_OFFSET_UP_ROTATING = 55.0f;
 
 	/** 牛の位置の少し上を狙うためのオフセット */
 	constexpr float ROPE_AIM_UP_OFFSET = 30.0f;
@@ -102,7 +107,6 @@ bool Rope::Start()
 	}
 
 	m_player = FindGO<Player>("player");
-	m_ropeScale = ROPE_INITIAL_SCALE;
 	m_ropeRot = Quaternion::Identity;
 	m_ropeModelRender.SetScale(NO_HIT_COW_ROLL_ROPE_SCALE);
 
@@ -112,21 +116,32 @@ bool Rope::Start()
 
 void Rope::Update()
 {
-	m_timer = FindGO<Timer>("timer");
-	
-	/** タイマーが存在しないなら処理しない */
-	if (m_timer == nullptr) return;
-
-	/** タイマーが1秒未満なら処理しない */
-	if (m_timer->GetTimer() < 1.0f)
+	/** タイマーのポインタが見つからない場合は検索 */
+	if(!m_timer)
 	{
-		if (m_hitCow != nullptr && m_hitCow->IsDead())
-		{
-			m_isHitCow = false;
-			m_hitCow = nullptr;
-		}
+		m_timer = FindGO<Timer>("timer");
 		return;
 	}
+
+
+	Game* game = FindGO<Game>("game");
+	bool isTutorial = (game && game->GetIsTutorialMode());
+
+	/** チュートリアル中はタイマー制限を無視する */
+	if (!isTutorial)
+	{
+		if (m_timer->GetTimer() < 1.0f)
+		{
+			if (m_hitCow != nullptr && m_hitCow->IsDead())
+			{
+				m_isHitCow = false;
+				m_hitCow = nullptr;
+			}
+			return;
+		}
+	}
+
+
 
 	/** プレイヤーが存在しないなら処理しない */
 	if (!m_player) return;
@@ -239,11 +254,11 @@ void Rope::Update()
 
 void Rope::OnHitCow(Cow* cow)
 {
+
 	m_isHitCow = true;
 	m_hitCow = cow;
 
 	cow->SetIsCaptured(true);
-
 	/** 牛を捕まえた瞬間にたるみをリセット */
 	m_ropeSlack = 50.0f;
 	m_ropeSlackTime = 0.0f;
@@ -320,9 +335,9 @@ void Rope::PlayerThrowsRope()
 		/** ロープの開始位置を計算する */
 		Vector3 ropeStartPos =
 			playerPos
-			+ right * ROPE_OFFSET_RIGHT
+			+ right * ROPE_OFFSET_RIGHT_ROTATING
 			+ forward * ROPE_OFFSET_FORWARD
-			+ Vector3(0.0f, ROPE_OFFSET_UP, 0.0f);
+			+ Vector3(0.0f, ROPE_OFFSET_UP_ROTATING, 0.0f);
 
 		m_ropePos = ropeStartPos;
 
@@ -347,6 +362,18 @@ void Rope::PlayerThrowsRope()
 		else
 		{
 			m_ropeGhostObject.SetPosition(m_ropePos);
+		}
+
+
+		/** ロープを投げた瞬間にチュートリアルの成功をカウントする*/
+		Game* game = FindGO<Game>("game");
+		if (game && game->GetIsTutorialMode())
+		{
+			TutorialManager* tutorialManager = FindGO<TutorialManager>("tutorialmanager");
+			if (tutorialManager)
+			{
+				tutorialManager->AddSuccessCount(TutorialManager::EnTutorialStep::RopeThrow);
+			}
 		}
 	}
 
@@ -373,6 +400,9 @@ void Rope::PlayerThrowsRope()
 			}
 		}
 	}
+
+
+
 }
 
 
@@ -386,19 +416,49 @@ void Rope::FollowRightHand()
 
 	Vector3 forward = Vector3::AxisZ;
 	playerRot.Apply(forward);
-	
+
+	/** RB2を押しているかつ
+	 * しゃがみアニメーション中でないかつ
+	 * ロープアニメーションが終了していない場合、ロープを回す */
+	bool isRotating = g_pad[0]->IsPress(enButtonRB2) && 
+		!m_player->GetIsSquatAnimation() && 
+		!m_isEndRopeAnimation;
+
+	/** RB2を押している間だけ高い位置・右寄りの位置にする(縮み中は通常の位置に戻す) */
+	float offsetUp = isRotating ? ROPE_OFFSET_UP_ROTATING : ROPE_OFFSET_UP;
+	float offsetRight = isRotating ? ROPE_OFFSET_RIGHT_ROTATING : ROPE_OFFSET_RIGHT;
+
 	Vector3 ropePos =
 		playerPos
-		+ right * ROPE_OFFSET_RIGHT
+		+ right * offsetRight
 		+ forward * ROPE_OFFSET_FORWARD
-		+ Vector3(0.0f, ROPE_OFFSET_UP, 0.0f);
+		+ Vector3(0.0f, offsetUp, 0.0f);
 
 	m_ropePos = ropePos;
 	m_ropeModelRender.SetPosition(ropePos);
 	m_ropeModelRender.SetScale(NO_HIT_COW_ROLL_ROPE_SCALE);
-	m_ropeModelRender.SetPosition(ropePos);
-	m_ropeModelRender.SetRotation(playerRot);
 
+	if (isRotating)
+	{
+		/** RB2を押している間はロープをぐるぐる回転(スピン)させる */
+		m_ropeSpinTime += g_gameTime->GetFrameDeltaTime();
+
+		Quaternion fixRot;
+		fixRot.SetRotation(Vector3::AxisX, 90.0f);
+
+		Quaternion spinRot;
+		spinRot.SetRotation(Vector3::AxisY, m_ropeSpinTime * -10.0f);
+
+		Quaternion rot = playerRot;
+		rot *= spinRot * fixRot;
+
+		m_ropeModelRender.SetRotation(rot);
+	}
+	else
+	{
+		m_ropeSpinTime = 0.0f;
+		m_ropeModelRender.SetRotation(playerRot);
+	}
 }
 
 
@@ -439,7 +499,7 @@ void Rope::RotateRope()
 		m_ropeRot = camRot;
 
 		Quaternion spinRot;
-		spinRot.SetRotation(Vector3::AxisY, m_ropeAnimationTime * 10.0f);
+		spinRot.SetRotation(Vector3::AxisY, m_ropeAnimationTime * -10.0f);
 		m_ropeRot *= spinRot * fixRot;
 
 		/** 輪っかの位置を、ゴースト(先端)の位置に合わせて前進させる */
@@ -454,8 +514,25 @@ void Rope::CalcCatenarySegments()
 	/** 牛に当たっていないなら処理しない */
 	if (m_hitCow == nullptr) return;
 
-	/** プレイヤーの手元 */
-	Vector3 start = m_ropePos;
+	/** プレイヤーの手元(牛を捕まえている間はFollowRightHand/UpdateHandPositionが
+	 * 呼ばれず m_ropePos が更新されないため、ここで毎フレーム計算し直す) */
+	Vector3 playerPos = m_player->GetPosition();
+	Quaternion playerRot = m_player->GetRotation();
+
+	Vector3 handRight = Vector3::AxisX;
+	playerRot.Apply(handRight);
+
+	Vector3 handForward = Vector3::AxisZ;
+	playerRot.Apply(handForward);
+
+	Vector3 start =
+		playerPos
+		+ handRight * ROPE_OFFSET_RIGHT
+		+ handForward * ROPE_OFFSET_FORWARD
+		+ Vector3(0.0f, ROPE_OFFSET_UP, 0.0f);
+
+	/** 他の処理からも参照される m_ropePos も最新の手元位置に同期しておく */
+	m_ropePos = start;
 
 	/** 牛の少し上 */
 	Vector3 end = m_hitCow->GetPosition();
@@ -480,25 +557,16 @@ void Rope::CalcCatenarySegments()
 
 	/** 終点を20ユニット手前にずらす */
 	/** この20は調整してください */
-	end -= dir * 20.0f; 
-
+	end -= dir * 20.0f;
 
 	/** セグメントの位置を計算 */
 	/** これをすることでロープの形状を計算する */
 	for (int i = 0; i <= ROPE_SEGMENT_COUNT; i++)
 	{
-		/** 線形補間の割合を計算 */
 		float t = (float)i / (float)ROPE_SEGMENT_COUNT;
-
-		/** 線形補間でXZ方向は均等に分割 */
 		Vector3 pos = start + (end - start) * t;
-
-		/** 放物線でY方向に垂れ下がりを計算 */
-		/** t=0とt=1の端点では0, 中間(0.5)では最大値 */
 		float sag = m_ropeSlack * t * (1.0f - t) * 4.0f;
 		pos.y -= sag;
-
-		/** 計算したセグメントの位置を保存 */
 		m_ropeSegmentPositions[i] = pos;
 	}
 }
@@ -572,8 +640,8 @@ void Rope::UpdateThrowGhost()
 	m_ropeGhostPosition = m_ropeThrowOrigin + m_throwDirection * m_ropeThrowDistance;
 	m_ropeGhostObject.SetPosition(m_ropeGhostPosition);
 
-	/** 地面に当たったら縮み開始 */
-	if (m_ropeGhostPosition.y <= 0.0f)
+	/** 地面に当たるか、牛舎に当たれば縮み開始 */
+	if (m_ropeGhostPosition.y <= 0.0f || m_ropeGhostPosition.x <= -1320.0f)
 	{
 		/** 伸びるアニメーションを強制終了 */
 		m_isThrowRope = false;
@@ -636,11 +704,18 @@ void Rope::UpdateHandPosition()
 	Vector3 forward = Vector3::AxisZ;
 	playerRot.Apply(forward);
 
+	/** ロープを回している間(RB2押下中)のオフセットを使用するかどうか */
+	bool userotatingoffset = m_isThrowRope && !m_isEndRopeAnimation;
+
+	/** 飛んでいる最中は投げ出した位置を維持し、縮み中は通常の位置に戻す */
+	float offsetUp = userotatingoffset ? ROPE_OFFSET_UP_ROTATING : ROPE_OFFSET_UP;
+	float offsetRight = userotatingoffset ? ROPE_OFFSET_RIGHT_ROTATING : ROPE_OFFSET_RIGHT;
+
 	m_ropePos =
 		playerPos
-		+ right * ROPE_OFFSET_RIGHT
+		+ right * offsetRight
 		+ forward * ROPE_OFFSET_FORWARD
-		+ Vector3(0.0f, ROPE_OFFSET_UP, 0.0f);
+		+ Vector3(0.0f, offsetUp, 0.0f);
 }
 
 

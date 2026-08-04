@@ -8,7 +8,7 @@
 #include"GameScene/LoadingScene.h"
 #include "GameScene/Game.h"
 #include "Pause/Pause.h"
-#include"CowLivesUI.h"
+#include"CowLivesUI/CowLivesUI.h"
 namespace
 {
 	/** ミニマップのスプライトのパス */
@@ -110,12 +110,18 @@ bool Map::Start()
 }
 void Map::Update()
 {
+	/** 牛の残機UIが取得できない場合は毎フレーム取得を試みる */
+	if (!m_cowLivesUI)
+	{
+		m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
+		return;
+	}
 
-	m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
 	/** CowFoodManagerが取得できない場合は毎フレーム取得を試みる */
-	if (m_cowFoodManager == nullptr)
+	if (!m_cowFoodManager)
 	{
 		m_cowFoodManager = FindGO<CowFoodManager>("cowfoodmanager");
+		return;
 	}
 
 	/** ゲームオブジェクトが見つからなかったら処理を行わない。 */

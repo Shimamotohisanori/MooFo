@@ -9,7 +9,8 @@
 #include"GameScene/LoadingScene.h"
 #include"Pause/Pause.h"
 #include "SoundManager/SoundManager.h"
-#include"CowlivesUI.h"
+#include"CowLivesUI/CowlivesUI.h"
+#include"Tutorial/TutorialManager.h"
 
 namespace
 {
@@ -361,6 +362,19 @@ void CowFood::CowFoodPut()
 			m_isCoolTime = true;
 			m_coolTime = 1.0f;
 
+			/** 餌を置いた瞬間にチュートリアル中ならPlaceFoodの成功をカウントする*/
+			m_game = FindGO<Game>("game");
+			if (m_game && m_game->GetIsTutorialMode())
+			{
+				TutorialManager* tutorialManager = FindGO<TutorialManager>("tutorialmanager");
+				if (tutorialManager)
+				{
+					tutorialManager->AddSuccessCount(TutorialManager::EnTutorialStep::PlaceFood);
+				}
+			}
+			
+
+
 			
 			/** 牛の餌マネージャーに餌をスポーンさせる */
 			if (m_CowFoodManager)
@@ -401,6 +415,15 @@ void CowFood::Render(RenderContext& rc)
 		return;
 	}
 
+	/** チュートリアルのステップ遷移中(フェードイン～フェードアウト完了まで)はUIを描画しない */
+	if (m_game && m_game->GetIsTutorialMode())
+	{
+		TutorialManager* tutorial = FindGO<TutorialManager>("tutorialmanager");
+		if (tutorial && tutorial->IsTransitioning())
+		{
+			return;
+		}
+	}
 	/** 牛の餌のモデルを描画する。*/
 	m_cowFoodModelRender.Draw(rc);
 

@@ -18,7 +18,8 @@
 #include "CowLuring.h"
 #include "SoundManager/VoiceManager.h"
 #include "GameTimer/AddTimerUI.h"
-#include"CowLivesUI.h"
+#include"CowLivesUI/CowLivesUI.h"
+#include"Tutorial/TutorialManager.h"
 
 namespace
 {
@@ -660,6 +661,16 @@ void Cow::EnterBarn()
 		/** コンボを増やす */
 		Combo* combo = FindGO<Combo>("combo");
 		m_game = FindGO<Game>("game");
+
+		/** チュートリアル中なら牛舎への誘導成功をカウントする*/
+		if (m_game && m_game->GetIsTutorialMode())
+		{
+			TutorialManager* tutorial = FindGO<TutorialManager>("tutorialmanager");
+			if (tutorial)
+			{
+				tutorial->AddSuccessCount(TutorialManager::EnTutorialStep::GuideToBarn);
+			}
+		}
 		if (combo)
 		{
 			combo->AddCombo();
@@ -826,6 +837,17 @@ void Cow::CapturedByPlayer()
 		if (dir.Length() < 70.0f)
 		{
 			m_isDeadFlag = true;
+
+			/** チュートリアル中なら牛の救出成功をカウントする*/
+			if (m_game && m_game->GetIsTutorialMode())
+			{
+				TutorialManager* tutorial = FindGO<TutorialManager>("tutorialmanager");
+				if (tutorial)
+				{
+					tutorial->AddSuccessCount(TutorialManager::EnTutorialStep::CowRescue);
+
+				}
+			}
 
 			/** 牛が捕獲されたときのボイスを再生 */
 			/** ランダムでボイスを選択 */
@@ -1131,11 +1153,16 @@ bool Cow::CanUpdate()
 		return false;
 	}
 
-	/** タイマーが一秒未満なら処理しないようにするため早期リターン */
-	if (m_timer->GetTimer() < 1.0f)
+	/** チュートリアル中はタイマーが一秒未満チェックをスキップする */
+	if (!m_game->GetIsTutorialMode())
 	{
-		return false;
+		/** タイマーが一秒未満なら処理しないようにするため早期リターン */
+		if (m_timer->GetTimer() < 1.0f)
+		{
+			return false;
+		}
 	}
+	
 
 	return true;
 }

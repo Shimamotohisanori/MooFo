@@ -35,6 +35,14 @@ public:
 		return m_isAimingCow;
 	}
 
+
+	/** カメラの視点を初期状態に戻す関数(チュートリアルのリセット用) */
+	void ResetCameraPosition()
+	{
+		m_cameraPos.Set(0.0f, 125.0f, -250.0f);
+		m_isCowCaptured = false;
+		m_isAimingCow = false;
+	}
 	/** カメラの位置取得関数 */
 	Vector3 GetCameraPosition() const
 	{

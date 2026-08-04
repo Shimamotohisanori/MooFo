@@ -86,6 +86,23 @@ public:
 	}
 
 
+	/** チュートリアルのステップ切替時などに、ロープの状態を初期状態に戻す関数 */
+	void ResetRopeState()
+	{
+		m_isThrowRope = false;
+		m_isStartRopeAnimation = false;
+		m_isEndRopeAnimation = false;
+		m_isHitCow = false;
+		m_hitCow = nullptr;
+
+		m_ropeThrowDistance = 0.0f;
+		m_ropeAnimationTime = 0.0f;
+		m_ropeSlack = 50.0f;
+		m_ropeSlackTime = 0.0f;
+		m_ropeShrinkTime = 0.0f;
+		m_ropeSpinTime = 0.0f;
+	}
+
 private:
 	/** プレイヤーが縄を投げた時の縄の処理関数 */
 	void PlayerThrowsRope();
@@ -145,9 +162,6 @@ private:
 	/** ロープの回転 */
 	Quaternion m_ropeRot = Quaternion::Identity;
 
-	/** ロープのスケール */
-	Vector3 m_ropeScale = Vector3::Zero;
-
 	/** ゴーストの現在位置 */
 	Vector3 m_ropeGhostPosition = Vector3::Zero;
 
@@ -189,5 +203,8 @@ private:
 
 	/** ロープの縮む時間 */
 	float m_ropeShrinkTime = 0.0f;
+
+	/** RB2を押している間のロープのスピン時間 */
+	float m_ropeSpinTime = 0.0f;
 };
 

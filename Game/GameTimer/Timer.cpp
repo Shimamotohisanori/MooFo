@@ -4,7 +4,7 @@
 #include "Pause/Pause.h"
 #include"GameScene/Game.h"
 #include"SoundManager/SoundManager.h"
-#include"CowLivesUI.h"
+#include"CowLivesUI/CowLivesUI.h"
 
 namespace
 {
@@ -177,9 +177,9 @@ void Timer::TextTimer()
 		{
 
 			/** 位置設定と点滅対象の記録だけ行う */
-			m_redDigitSprite[0][hundreds].SetPosition({ -100.0f,480.0f,0.0f });
-			m_redDigitSprite[1][tens].SetPosition({ 0.0f,480.0f,0.0f });
-			m_redDigitSprite[2][ones].SetPosition({ 100.0f,480.0f,0.0f });
+			m_redDigitSprite[0][hundreds].SetPosition({ -100.0f,460.0f,0.0f });
+			m_redDigitSprite[1][tens].SetPosition({ 0.0f,460.0f,0.0f });
+			m_redDigitSprite[2][ones].SetPosition({ 100.0f,460.0f,0.0f });
 
 			m_flashDigits[0] = hundreds;
 			m_flashDigits[1] = tens;
@@ -195,9 +195,9 @@ void Timer::TextTimer()
 			m_digitSprite[2][ones].SetScale({ 0.8f,0.8f,0.8f });
 
 			/** 位置設定 */
-			m_digitSprite[0][hundreds].SetPosition({ -100.0f,480.0f,0.0f });
-			m_digitSprite[1][tens].SetPosition({ 0.0f,480.0f,0.0f });
-			m_digitSprite[2][ones].SetPosition({ 100.0f,480.0f,0.0f });
+			m_digitSprite[0][hundreds].SetPosition({ -100.0f,460.0f,0.0f });
+			m_digitSprite[1][tens].SetPosition({ 0.0f,460.0f,0.0f });
+			m_digitSprite[2][ones].SetPosition({ 100.0f,460.0f,0.0f });
 		}
 	}
 	if (time >= 6 && time <= 30)

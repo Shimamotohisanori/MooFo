@@ -3,7 +3,7 @@
 #include "GameScene/Game.h"
 #include "GameScene/LoadingScene.h"
 #include"CowLivesUI.h"
-#include "GameScene/DifficultySetting.h"
+#include "GameScene/DifficultySetting.h
 namespace
 {
     /** 数のUIのファイルパス */
@@ -63,17 +63,17 @@ namespace
     const Vector3 INGAME_NUMBER_SPRITE_TENS_POSITION = Vector3(-680.0f, -360.0f, 0.0f);
     const Vector3 INGAME_NUMBER_SPRITE_ONES_POSITION = Vector3(-630.0f, -360.0f, 0.0f);
     const Vector3 INGAME_NUMBER_SPRITE_ONES_TENBELOW_POSITION = Vector3(-670.0f, -360.0f, 0.0f);
-    const Vector3 INGAME_SLASH_SPRITE_POSITION = Vector3(-590.0f, -370.0f, 0.0f);
-    const Vector3 INGAME_SLASH_SPRITE_TENBELOW_POSITION = Vector3(-590.0f, -370.0f, 0.0f);
-    const Vector3 INGAME_ONE_SPRITE_POSITION = Vector3(-540.0f, -370.0f, 0.0f);
-    const Vector3 INGAME_ZERO_SPRITE_POSITION = Vector3(-500.0f, -370.0f, 0.0f);
+    const Vector3 INGAME_SLASH_SPRITE_POSITION = Vector3(-590.0f, -365.0f, 0.0f);
+    const Vector3 INGAME_SLASH_SPRITE_TENBELOW_POSITION = Vector3(-590.0f, -365.0f, 0.0f);
+    const Vector3 INGAME_ONE_SPRITE_POSITION = Vector3(-540.0f, -360.0f, 0.0f);
+    const Vector3 INGAME_ZERO_SPRITE_POSITION = Vector3(-500.0f, -360.0f, 0.0f);
 
     /** ゲームオーバースプライトのスケール */
     const Vector3 GAMEOVER_SPRITE_SCALE = Vector3(1.5f, 1.5f, 1.0f);
 
     /** ゲームオーバースプライトの座標 */
     const Vector3 GAMEOVER_RESCUE_SPRITE_POSITION = Vector3(-750.0f, 50.0f, 0.0f);
-    const Vector3 GAMEOVER_NUMBER_SPRITE_TENS_POSITION = Vector3(-470.0f, 50.0f, 0.0f);
+    const Vector3 GAMEOVER_NUMBER_SPRITE_TENS_POSITION = Vector3(-520.0f, 50.0f, 0.0f);
     const Vector3 GAMEOVER_NUMBER_SPRITE_ONES_POSITION = Vector3(-450.0f, 50.0f, 0.0f);
     const Vector3 GAMEOVER_SLASH_SPRITE_POSITION = Vector3(-370.0f, 50.0f, 0.0f);
     const Vector3 GAMEOVER_ONE_SPRITE_POSITION = Vector3(-310.0f, 50.0f, 0.0f);
@@ -139,8 +139,12 @@ bool CowNumberOfRescues::Start()
 
 void CowNumberOfRescues::Update()
 {
-
-    m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
+	/** ゲーム中の牛の残機UIのポインタを取得 */
+    if(!m_cowLivesUI)
+    {
+        m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
+        return;
+    }
 
     tens = m_numberOfRescues / 10;
     ones = m_numberOfRescues % 10;
@@ -266,6 +270,11 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
     }
     /** フェード処理中は描画しない*/
     if (m_cowLivesUI && m_cowLivesUI->IsFadeInComplete())
+    {
+        return;
+    }
+    /** チュートリアル中は描画しない*/
+    if (m_game && m_game->GetIsTutorialMode())
     {
         return;
     }
