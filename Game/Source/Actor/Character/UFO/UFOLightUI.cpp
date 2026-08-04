@@ -126,6 +126,11 @@ void UFOLightUI::Render(RenderContext& rc)
 	{
 		return;
 	}
+	/** チュートリアル中は描画しない*/
+	if (m_game && m_game->GetIsTutorialMode())
+	{
+		return;
+	}
 	/** 光が出ているときは描画を止める */
 	if (!m_ufolightManager->IsEmitting())
 	{

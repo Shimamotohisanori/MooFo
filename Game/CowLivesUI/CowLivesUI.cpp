@@ -5,6 +5,8 @@
 #include"Pause/Pause.h"
 #include"FadeManager/FadeManager.h"
 #include"SoundManager/SoundManager.h"
+#include"Tutorial/TutorialManager.h"
+#include"CountDown/CountDown.h"
 namespace
 {
 	/** 横幅*/
@@ -65,6 +67,7 @@ CowLivesUI::~CowLivesUI()
 
 bool CowLivesUI::Start()
 {
+
 	m_tenTextRender.Update();
 
 	/** アイコンの初期化を行う*/
@@ -88,6 +91,8 @@ void CowLivesUI::Update()
 		m_fadeManager = FindGO<FadeManager>("fadeManager");
 		return;
 	}
+
+	m_countDown = FindGO<CountDown>("countdown");
 
 	for (int i = 0; i < COW_LIFE_NUM; i++)
 	{
@@ -326,21 +331,36 @@ void CowLivesUI::Render(RenderContext& rc)
 	{
 		return;
 	}
-	for (int i = 0; i < COW_LIFE_NUM; i++)
+	/** カウントダウン中は描画しない*/
+	if (m_countDown && m_countDown->GetCountDown())
 	{
-		/** 残り一つの残機は点滅させるので非表示フレームでは描画しない*/
-		if (m_cowIcons[i].isCrisis && !m_isBlinkVisible)
-		{
-			continue;
-		}
-		m_cowIcons[i].render.Draw(rc);
+		return;
 	}
-	/** ゲームオーバーの状態が通常状態じゃなければ*/
-	if (m_gameOverPhase != GameOverPhase::None)
-	{
-		m_rescueTextRender.Draw(rc);
-		m_failedTextRender.Draw(rc);
-		m_tenTextRender.Draw(rc);
-	}
-}
 
+	/** チュートリアルのステップ遷移中(フェードイン～フェードアウト完了まで)はUIを描画しない */
+	Game* game = FindGO<Game>("game");
+	if (game&&game->GetIsTutorialMode())
+	{
+		TutorialManager* tutorial = FindGO<TutorialManager>("tutorialmanager");
+		if (tutorial && tutorial->IsTransitioning())
+		{
+			return;
+		}
+	}
+	    for (int i = 0; i < COW_LIFE_NUM; i++)
+		{
+			/** 残り一つの残機は点滅させるので非表示フレームでは描画しない*/
+			if (m_cowIcons[i].isCrisis && !m_isBlinkVisible)
+			{
+				continue;
+			}
+			m_cowIcons[i].render.Draw(rc);
+		}
+		/** ゲームオーバーの状態が通常状態じゃなければ*/
+		if (m_gameOverPhase != GameOverPhase::None)
+		{
+			m_rescueTextRender.Draw(rc);
+			m_failedTextRender.Draw(rc);
+			m_tenTextRender.Draw(rc);
+		}
+	}
