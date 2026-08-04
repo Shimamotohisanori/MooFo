@@ -38,5 +38,6 @@ namespace GameDifficultyManager
 	const DifficultyParam GetParam()
 	{
 		return DIFFICULTY_PARAM_TABLE[static_cast<int>(g_currentDifficulty)];
+
 	}
 }
