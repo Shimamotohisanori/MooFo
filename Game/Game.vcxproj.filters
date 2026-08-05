@@ -98,16 +98,13 @@
       <Filter>GameScene</Filter>
     </ClCompile>
     <ClCompile Include="Source\Actor\Character\Cow\CowShrinkHay.cpp" />
-    <ClCompile Include="Aiming\Aiming.cpp" />
     <ClCompile Include="SoundManager\VoiceManager.cpp" />
     <ClCompile Include="InstructionControllerUI\InstructionControllerUI.cpp" />
     <ClCompile Include="GameTimer\DecreaseTimerUI.cpp">
       <Filter>GameTimer</Filter>
     </ClCompile>
-    <ClCompile Include="CowLivesUI.cpp" />
     <ClCompile Include="GameScene\Difficulty.cpp" />
     <ClCompile Include="GameScene\DifficultySetting.cpp" />
-
     <ClCompile Include="CowLivesUI\CowLivesUI.cpp">
       <Filter>CowLivesUI</Filter>
     </ClCompile>
@@ -115,6 +112,7 @@
       <Filter>Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="UIPanels\UIPanels.cpp" />
+    <ClCompile Include="Aiming\Aiming.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -217,12 +215,10 @@
     <ClInclude Include="GameTimer\DecreaseTimerUI.h">
       <Filter>GameTimer</Filter>
     </ClInclude>
-    <ClInclude Include="CowLivesUI.h" />
     <ClInclude Include="GameScene\Game.h">
       <Filter>FadeMaager</Filter>
     </ClInclude>
     <ClInclude Include="GameScene\Difficulty.h" />
-    
     <ClInclude Include="GameScene\DifficultySetting.h" />
     <ClInclude Include="CowLivesUI\CowLivesUI.h">
       <Filter>CowLivesUI</Filter>
@@ -230,10 +226,7 @@
     <ClInclude Include="Tutorial\TutorialManager.h">
       <Filter>Tutorial</Filter>
     </ClInclude>
-
     <ClInclude Include="UIPanels\UIPanels.h" />
-
-
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
@@ -308,6 +301,5 @@
     <Filter Include="Tutorial">
       <UniqueIdentifier>{783ddae1-222b-4ea3-8e84-8cc59f11a2ef}</UniqueIdentifier>
     </Filter>
-
   </ItemGroup>
 </Project>
