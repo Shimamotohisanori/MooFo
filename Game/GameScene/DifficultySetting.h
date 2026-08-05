@@ -6,10 +6,10 @@ namespace
 }
 enum class EnDifficulty
 {
-	en_easy,
+	en_Tutorial,
+	en_Easy,
 	en_Normal,
 	en_Hard,
-	en_VeryHard,
 	en_DifficultyNum
 };
 
