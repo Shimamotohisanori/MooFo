@@ -155,6 +155,9 @@ private:
 	/** 赤い数字のファイルパス */
 	std::string m_redFilePath[10];
 
+	/** ノルマ(分母)専用の数字のファイルパス */
+	std::string m_normaFilePath[10];
+
 	/** 十の位専用数字画像 */
 	SpriteRender m_tensSprite[10];
 
@@ -178,6 +181,12 @@ private:
 
 	/** 0の画像 */
 	SpriteRender m_zeroSprite;
+
+	/** ノルマ(分母)専用の十の位スプライト(分子用と衝突しないよう分離) */
+	SpriteRender m_normaTensSprite[10];
+
+	/** ノルマ(分母)専用の一の位スプライト(分子用と衝突しないよう分離) */
+	SpriteRender m_normaOnesSprite[10];
 
 	/** リザルト */
 	bool m_isResult = false;
