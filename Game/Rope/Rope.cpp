@@ -117,20 +117,19 @@ bool Rope::Start()
 void Rope::Update()
 {
 	/** タイマーのポインタが見つからない場合は検索 */
-	if(!m_timer)
+	Timer* timer = FindGO<Timer>("timer");
+	if (!timer)
 	{
-		m_timer = FindGO<Timer>("timer");
 		return;
 	}
-
-
+	
 	Game* game = FindGO<Game>("game");
 	bool isTutorial = (game && game->GetIsTutorialMode());
 
 	/** チュートリアル中はタイマー制限を無視する */
 	if (!isTutorial)
 	{
-		if (m_timer->GetTimer() < 1.0f)
+		if (timer->GetTimer() < 1.0f)
 		{
 			if (m_hitCow != nullptr && m_hitCow->IsDead())
 			{

@@ -41,6 +41,8 @@ namespace
         "Red_MooFoNumberUI9"
     };
 
+  
+
     /** 救出数のUIのファイルパス */
     const char* RESCUE_FILEPATH = "Assets/sprite/CowNumberOfRescuesUI/CowNumberOfRescues.DDS";
 
@@ -121,6 +123,12 @@ bool CowNumberOfRescues::Start()
         m_redOnesSprite[i].Init(m_redFilePath[i].c_str(), NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
     }
 
+    for (int i = 0; i < 10; i++)
+    {
+        m_normaTensSprite[i].Init(m_filePath[i].c_str(), NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
+        m_normaOnesSprite[i].Init(m_filePath[i].c_str(), NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
+    }
+
     m_rescueSprite.Init(RESCUE_FILEPATH, RESCUE_SPRITE_SIZE.x, RESCUE_SPRITE_SIZE.y);
 
     m_slashSprite.Init(SLASH_FILEPATH, SLASH_SPRITE_SIZE.x, SLASH_SPRITE_SIZE.y);
@@ -144,7 +152,6 @@ void CowNumberOfRescues::Update()
     if(!m_cowLivesUI)
     {
         m_cowLivesUI = FindGO<CowLivesUI>("cowlivesui");
-        return;
     }
 
     tens = m_numberOfRescues / 10;
@@ -270,7 +277,7 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
         }
     }
     /** フェード処理中は描画しない*/
-    if (m_cowLivesUI && m_cowLivesUI->IsFadeInComplete())
+    if (!m_isResult&&m_cowLivesUI && m_cowLivesUI->IsFadeInComplete())
     {
         return;
     }
@@ -357,10 +364,8 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
         m_onesSprite[ones].Draw(renderContext);
     }
 
-    /** 10以下の場合はスラッシュと最大値を表示 */
     if (m_numberOfRescues <= 10)
     {
-        /** スラッシュは常に表示する */
         m_slashSprite.SetPosition(m_slashPos[layoutType]);
         m_slashSprite.SetScale(m_slashScale[layoutType]);
         m_slashSprite.Update();
@@ -368,29 +373,30 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
 
         if (m_normaTens != 0)
         {
-            /** 十の位を表示 */
-            m_tensSprite[m_normaTens].SetPosition(m_onePos[layoutType]);
-            m_tensSprite[m_normaTens].SetScale(m_oneScale[layoutType]);
-            m_tensSprite[m_normaTens].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-            m_tensSprite[m_normaTens].Update();
-            m_tensSprite[m_normaTens].Draw(renderContext);
+            /** 十の位を表示(分子用とは別インスタンス) */
+            m_normaTensSprite[m_normaTens].SetPosition(m_onePos[layoutType]);
+            m_normaTensSprite[m_normaTens].SetScale(m_oneScale[layoutType]);
+            m_normaTensSprite[m_normaTens].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+            m_normaTensSprite[m_normaTens].Update();
+            m_normaTensSprite[m_normaTens].Draw(renderContext);
 
-            /** 一の位を表示（通常位置） */
-            m_onesSprite[m_normaOnes].SetPosition(m_zeroPos[layoutType]);
-            m_onesSprite[m_normaOnes].SetScale(m_zeroScale[layoutType]);
-            m_onesSprite[m_normaOnes].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-            m_onesSprite[m_normaOnes].Update();
-            m_onesSprite[m_normaOnes].Draw(renderContext);
+            /** 一の位を表示(分子用とは別インスタンス) */
+            m_normaOnesSprite[m_normaOnes].SetPosition(m_zeroPos[layoutType]);
+            m_normaOnesSprite[m_normaOnes].SetScale(m_zeroScale[layoutType]);
+            m_normaOnesSprite[m_normaOnes].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+            m_normaOnesSprite[m_normaOnes].Update();
+            m_normaOnesSprite[m_normaOnes].Draw(renderContext);
         }
         else
         {
-            /** 十の位が0の場合は、一の位の数字を十の位の位置(左)に詰めて表示 */
-            m_onesSprite[m_normaOnes].SetPosition(m_onePos[layoutType]);
-            m_onesSprite[m_normaOnes].SetScale(m_oneScale[layoutType]);
-            m_onesSprite[m_normaOnes].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-            m_onesSprite[m_normaOnes].Update();
-            m_onesSprite[m_normaOnes].Draw(renderContext);
+            m_normaOnesSprite[m_normaOnes].SetPosition(m_onePos[layoutType]);
+            m_normaOnesSprite[m_normaOnes].SetScale(m_oneScale[layoutType]);
+            m_normaOnesSprite[m_normaOnes].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+            m_normaOnesSprite[m_normaOnes].Update();
+            m_normaOnesSprite[m_normaOnes].Draw(renderContext);
         }
     }
+
+
 
 }
