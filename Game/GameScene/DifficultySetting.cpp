@@ -20,7 +20,7 @@ namespace
 		{20, 4,  -10 },
 	};
 
-	EnDifficulty g_currentDifficulty = EnDifficulty::en_Normal;
+	EnDifficulty g_currentDifficulty = EnDifficulty::en_Easy;
 }
 
 namespace GameDifficultyManager
