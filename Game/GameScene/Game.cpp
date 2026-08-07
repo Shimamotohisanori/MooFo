@@ -171,7 +171,7 @@ bool Game::Start()
 {
 	/** ここでチュートリアルモードかどうかを判定する */
 	/** これで難易度が「やさしい」の時はチュートリアルにする*/
-	m_isTutorialMode = (GameDifficultyManager::GetDifficulty() == EnDifficulty::en_Easy);
+	m_isTutorialMode = (GameDifficultyManager::GetDifficulty() == EnDifficulty::en_Tutorial);
 
 	return true;
 }

@@ -189,13 +189,8 @@ void Combo::ResetCombo()
 
 void Combo::AddScore(int score)
 {
-	int multiplier = 1;
-
-	/** 5コンボするごとにスコアの獲得量を２倍 */
-	if (m_combo % 5 == 0 && m_combo > 0)
-	{
-		multiplier = 2;
-	}
+	/** コンボ数をそのまま倍率として使う(1コンボ=100, 2コンボ=200, 3コンボ=300...) */
+	int multiplier = max(1, static_cast<int>(m_combo));
 
 	/** スコアを加算する */
 	Score* scoreobject = FindGO<Score>("score");
