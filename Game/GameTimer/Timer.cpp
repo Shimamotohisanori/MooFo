@@ -5,6 +5,7 @@
 #include"GameScene/Game.h"
 #include"SoundManager/SoundManager.h"
 #include"CowLivesUI/CowLivesUI.h"
+#include "GameScene/DifficultySetting.h"
 
 namespace
 {
@@ -57,6 +58,13 @@ Timer::~Timer()
 bool Timer::Start()
 {
 	m_game = FindGO<Game>("game");
+
+	/** 難易度に応じた制限時間を設定 */
+	const DifficultyParam param = GameDifficultyManager::GetParam();
+	
+	/** 制限時間を難易度ごとの時間に代入する */
+	m_timer = static_cast<float>(param.timeLimit);
+	
 	/** 全ての画像スプライト(30個)を初期化 */
 	for (int j = 0; j < 10; j++)
 	{
