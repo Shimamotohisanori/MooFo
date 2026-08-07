@@ -46,7 +46,7 @@ namespace
 	constexpr float EXPLANATION_END_X = -1200.0f;
 
 	/** 説明画像の初期位置 */
-	const Vector3 EXPLANATION_INITIAL_POSITION = Vector3(1050.0f, -380.0f, 0.0f);
+	const Vector3 EXPLANATION_INITIAL_POSITION = Vector3(0.0f, -380.0f, 0.0f);
 
 	/** 難易度設定の黒画面を出す座標 */
 	const Vector3 BUTTON_POSITION[DIFFICULTY_GRID_ROWS][DIFFICULTY_GRID_COLS] =
@@ -125,8 +125,6 @@ void Difficulty::Update()
 {
 	MoveCursor();
 	Decide();
-	UpdateExplanationSprite();
-
 	m_tutorialExplanationSprite.Update();
 	m_easyExplanationSprite.Update();
 	m_normalExplanationSprite.Update();
@@ -216,46 +214,6 @@ void Difficulty::UpdateButtonColor()
 				isSelected ? COLOR_SELECTED : COLOR_NOT_SELECTED
 			);
 		}
-	}
-}
-
-void Difficulty::MoveExplanationSprite(SpriteRender& sprite)
-{
-	/** 画像の位置を取得 */
-	Vector3 pos = sprite.GetPosition();
-
-	/** 画像を左に移動 */
-	pos.x -= EXPLANATION_MOVE_SPEED;
-
-	/** 左端まで来たら初期位置に戻す */
-	if (pos.x < EXPLANATION_END_X)
-	{
-		pos.x = EXPLANATION_RESET_X;
-	}
-
-	/** 位置を設定 */
-	sprite.SetPosition(pos);
-}
-
-void Difficulty::UpdateExplanationSprite()
-{
-	/** 選択中の難易度に応じて説明画像を移動させる */
-	switch (BUTTON_DIFFICULTY[m_cursorRow][m_cursorCol])
-	{
-	case EnDifficulty::en_Tutorial:
-		MoveExplanationSprite(m_tutorialExplanationSprite);
-		break;
-	case EnDifficulty::en_Easy:
-		MoveExplanationSprite(m_easyExplanationSprite);
-		break;
-	case EnDifficulty::en_Normal:
-		MoveExplanationSprite(m_normalExplanationSprite);
-		break;
-	case EnDifficulty::en_Hard:
-		MoveExplanationSprite(m_hardExplanationSprite);
-		break;
-	default:
-		break;
 	}
 }
 

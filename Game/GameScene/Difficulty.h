@@ -22,12 +22,6 @@ private:
 	/** 選択中のボタンの色を更新する関数 */
 	void UpdateButtonColor();
 
-	/** 選択中の難易度の説明画像を移動させる関数 */
-	void MoveExplanationSprite(SpriteRender& sprite);
-
-	/** 選択中の難易度の説明画像を更新する関数 */
-	void UpdateExplanationSprite();
-
 private:
 	uint8_t m_cursorRow = 0;
 	uint8_t m_cursorCol = 0;
