@@ -15,6 +15,9 @@ namespace
 
 	/** Lerp関数の補完率 */
 	constexpr float LERP_SPEED = 0.2f;
+
+	/** スコアの最大値*/
+	constexpr int MAX_SCORE = 99999;
 }
 
 
@@ -162,6 +165,12 @@ void Score::AddScore(int value)
 
 	m_score += value;
 
+	/** スコアが最大値を超えないようにする */
+	if (m_score > MAX_SCORE)
+	{
+		m_score = MAX_SCORE;
+	}
+
 	/** スコアが増えるSEを再生する */
 	if (soundManager)
 	{
@@ -200,7 +209,8 @@ void Score::SetResult(bool isResult)
 void Score::SetScore(int score)
 {
 	/** スコアを直接反映する */
-	m_score = score;
+	m_score = min(score, MAX_SCORE);
+
 
 	/** 表示用スコアも同期 */
 	//m_displayScore = score;
