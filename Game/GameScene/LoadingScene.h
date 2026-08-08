@@ -30,6 +30,11 @@ public:
 	void LoadFoodAnimInBackground();
 	/** シーンが切り替わるタイミングでフェードアウト処理を行う*/
 	void FadeOutLoadingScene();
+	/** チュートリアルかどうかを設定する関数*/
+	void SetIsTutorial(bool isTutorial)
+	{
+		m_isTutorial = isTutorial;
+	}
 	/** ロードするシーンのタイプ*/
 	enum LoadType
 	{
@@ -133,11 +138,6 @@ private:
 	/** ロードするゲームオブジェクトのステップ*/
 	uint8_t m_loadStep = 0;
 
-	///** Load文字フェード用の変数*/
-	///** Loadingの文字のアルファ値*/
-	//float m_loadingTextAlpha = 1.0f;
-	///** Loadingの文字のフェード速度*/
-	//float m_loadingFadeSpeed = 0.5f;
 	/** 操作説明画像を表示する時間*/
 	float m_LoadingInstructionTime = 0.0f;
 	/** フェードインしているかどうかのフラグ*/
@@ -185,6 +185,8 @@ private:
 	
 	/** 選ばれたGifが最終フレームに到達しているかどうかのフラグ(表示中のみUpdateして、到達後は制止させる)*/
 	bool m_hasSelectedGifReachedEnd = false;
+	/** チュートリアルかどうかのフラグ*/
+	bool m_isTutorial = false;
 	
 	/** ローディング中の音源 */
 	SoundSource* m_loadingSound = nullptr;

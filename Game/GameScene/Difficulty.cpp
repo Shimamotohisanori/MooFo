@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Difficulty.h"
 #include "LoadingScene.h"
 
@@ -198,6 +198,12 @@ void Difficulty::Decide()
 
 		m_loadingScene = NewGO<LoadingScene>(0, "loading");
 		m_loadingScene->SetLoadType(LoadingScene::LoadType::ToGameScene);
+
+		/** チュートリアルが選ばれていたらLoadingSceneに伝える*/
+		if(selected ==EnDifficulty::en_Tutorial)
+		{
+			m_loadingScene->SetIsTutorial(true);
+		}
 
 		DeleteGO(this);
 	}
