@@ -215,9 +215,6 @@
     <ClInclude Include="GameTimer\DecreaseTimerUI.h">
       <Filter>GameTimer</Filter>
     </ClInclude>
-    <ClInclude Include="GameScene\Game.h">
-      <Filter>FadeMaager</Filter>
-    </ClInclude>
     <ClInclude Include="GameScene\Difficulty.h" />
     <ClInclude Include="GameScene\DifficultySetting.h" />
     <ClInclude Include="CowLivesUI\CowLivesUI.h">
@@ -227,6 +224,9 @@
       <Filter>Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="UIPanels\UIPanels.h" />
+    <ClInclude Include="GameScene\Game.h">
+      <Filter>GameScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
