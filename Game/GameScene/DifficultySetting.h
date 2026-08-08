@@ -30,6 +30,11 @@ struct DifficultyParam
 	/** 牛の最大数 */
 	int maxCowCount;
 
+	/** ボーナス牛の出現率 */
+	int bonusCowRate;
+
+	/** UFOに向かって走る牛の出現確率 */
+	int UFOCowRate;
 };
 
 namespace GameDifficultyManager
