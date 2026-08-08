@@ -34,8 +34,6 @@
 #include "UIPanels/UIPanels.h"
 namespace
 {
-	/**マジックナンバー対策*/
-	const uint8_t COW_NUM = 10;
 	/** 牛のランダムスポーン範囲 */
 	const int RANDOM_SPAWN_RANGE = 300;
 	const int RANDOM_SPAWN_RANGE_DOUBLE = 600;
@@ -57,9 +55,9 @@ namespace
 	constexpr uint8_t BONUS_COW_RATE = 4;
 
 	/** 難易度に応じて牛のタイプの抽選をする */
-	Cow::EnCowType DecideCowType(int chaseCowRate)
+	Cow::EnCowType DecideCowType(int chaseCowRate,int bonusCowRate, int lightCowRate)
 	{
-		if (rand() % 100 < BONUS_COW_RATE)
+		if (rand() % 100 < bonusCowRate)
 		{
 			return Cow::EnCowType::en_Bonus;
 		}
@@ -70,7 +68,7 @@ namespace
 			return Cow::EnCowType::en_Chase;
 		}
 		
-		return (rand() % 2 == 0) ? Cow::EnCowType::en_Light : Cow::EnCowType::en_Random;
+		return (rand() % 100 < lightCowRate) ? Cow::EnCowType::en_Light : Cow::EnCowType::en_Random;
 	}
 }
 
@@ -670,7 +668,8 @@ void Game::SpawnCow()
 	}
 
 	/** 現在の牛の数が10体未満なら補充 */
-	if (m_aliveCows.size() < COW_NUM)
+	const int maxCowCount = GameDifficultyManager::GetParam().maxCowCount;
+	if (static_cast<int>(m_aliveCows.size()) < maxCowCount)
 	{
 
 		m_spawnTimer += g_gameTime->GetFrameDeltaTime();
@@ -713,7 +712,7 @@ void Game::SpawnCow()
 			Cow* newCow = NewGO<Cow>(0, "cow");
 
 			
-			/** スポーン位置（例：ランダム） */
+			/** スポーン位置 */
 			Vector3 pos;
 
 			/** ランダムスポーン範囲に難易度による調整を加える */
@@ -725,8 +724,11 @@ void Game::SpawnCow()
 			pos.y = 0.0f;
 			pos.z = (rand() % (range * 2)) - range;
 
+			/** 難易度に応じたパラメーターを取得 */
+			const DifficultyParam difficultyParam = GameDifficultyManager::GetParam();
+
 			/** 難易度に応じて牛のタイプを決定する */
-			newCow->SetCowType(DecideCowType(chaseCowRate));
+			newCow->SetCowType(DecideCowType(chaseCowRate,difficultyParam.bonusCowRate,difficultyParam.UFOCowRate));
 			/** UFOに向かって歩く牛の速度も適応させる*/
 			newCow->IsMoving();
 

@@ -6,18 +6,18 @@ namespace
 	/** 難易度ごとのパラメーターテーブル */
 	const DifficultyParam DIFFICULTY_PARAM_TABLE[static_cast<int>(EnDifficulty::en_DifficultyNum)] =
 	{
-		/** ノルマ 　UFO少なめ　追いかける牛　 制限時間　牛最大出現数*/
+		/** ノルマ 　UFO少なめ　追いかける牛の出現確率　 制限時間　牛最大出現数 ボーナス牛の出現確率  UFOに向かって歩く牛の出現確率 */
 
 		/** チュートリアル用のため未使用 */
-		{ 0, 0,    0 ,  0, 0},
+		{ 0, 0,    0 ,  0, 0, 0, 0},
 		/** 簡単 */
-		{ 5, 2 , -10 ,120, 6},
+		{ 5, 2 , -20 ,120, 6, 0, 50},
 
 		/** 普通 */
-		{10, 3,   -5, 110, 8},
+		{10, 3,   -10, 110, 8, 4,40},
 
 		/** 難しい */
-		{20, 4,  -10 ,100,10},
+		{20, 4,  -5 ,100,10, 6,35},
 	};
 
 	EnDifficulty g_currentDifficulty = EnDifficulty::en_Easy;
