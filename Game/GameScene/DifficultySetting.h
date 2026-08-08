@@ -35,7 +35,6 @@ struct DifficultyParam
 
 	/** UFOに向かって走る牛の出現確率 */
 	int UFOCowRate;
-
 };
 
 namespace GameDifficultyManager
