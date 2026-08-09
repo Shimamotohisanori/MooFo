@@ -311,60 +311,53 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
     m_rescueSprite.Update();
     m_rescueSprite.Draw(renderContext);
 
-    /** 現在の救出数が10より大きいなら */
-    if (m_numberOfRescues > 10)
+    /** ノルマを超えたかどうか(色の判定用) */
+    bool isExceeded = (m_numberOfRescues > m_norma);
+
+    /** 2桁表示が必要かどうか(十の位を出すかどうかの判定用) */
+    bool needsTensDigit = (m_numberOfRescues >= 10);
+
+    /** 十の位の表示(2桁のときだけ) */
+    if (needsTensDigit)
     {
-        /** 赤い十の位用のスプライトの表示 */
-        /** 位置は通常の十の位の位置 */
-        m_redTensSprite[tens].SetPosition(m_tensPos[layoutType]);
-        m_redTensSprite[tens].SetScale(m_tensScale[layoutType]);
-        m_redTensSprite[tens].Update();
-        m_redTensSprite[tens].Draw(renderContext);
+        if (isExceeded)
+        {
+            /** 赤い十の位 */
+            m_redTensSprite[tens].SetPosition(m_tensPos[layoutType]);
+            m_redTensSprite[tens].SetScale(m_tensScale[layoutType]);
+            m_redTensSprite[tens].Update();
+            m_redTensSprite[tens].Draw(renderContext);
+        }
+        else
+        {
+            /** 通常の十の位 */
+            m_tensSprite[tens].SetPosition(m_tensPos[layoutType]);
+            m_tensSprite[tens].SetScale(m_tensScale[layoutType]);
+            m_tensSprite[tens].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+            m_tensSprite[tens].Update();
+            m_tensSprite[tens].Draw(renderContext);
+        }
     }
 
-    if (m_numberOfRescues == 10)
+    /** 一の位の表示(常に表示、色だけノルマ超過で切り替え) */
+    if (isExceeded)
     {
-        /** 十の位用のスプライトの表示 */
-        m_tensSprite[tens].SetPosition(m_tensPos[layoutType]);
-        m_tensSprite[tens].SetScale(m_tensScale[layoutType]);
-        m_tensSprite[tens].SetMulColor(
-            Vector4(
-                1.0f,
-                1.0f,
-                1.0f,
-                1.0f)
-        );
-        m_tensSprite[tens].Update();
-        m_tensSprite[tens].Draw(renderContext);
-    }
-
-    if (m_numberOfRescues > 10)
-    {
-        /** 赤い一の位用のスプライトの表示 */
-        /** 位置は通常の一の位の位置 */
         m_redOnesSprite[ones].SetPosition(m_onesPos[layoutType]);
         m_redOnesSprite[ones].SetScale(m_onesScale[layoutType]);
         m_redOnesSprite[ones].Update();
         m_redOnesSprite[ones].Draw(renderContext);
     }
-
     else
     {
-        /** 一の位用のスプライトの表示 */
         m_onesSprite[ones].SetPosition(m_onesPos[layoutType]);
         m_onesSprite[ones].SetScale(m_onesScale[layoutType]);
-        m_onesSprite[ones].SetMulColor(
-            Vector4(
-                1.0f,
-                1.0f,
-                1.0f,
-                1.0f)
-        );
+        m_onesSprite[ones].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
         m_onesSprite[ones].Update();
         m_onesSprite[ones].Draw(renderContext);
     }
 
-    if (m_numberOfRescues <= 10)
+    /** ノルマ以下のときだけスラッシュ＋ノルマ数字を表示 */
+    if (m_numberOfRescues <= m_norma)
     {
         m_slashSprite.SetPosition(m_slashPos[layoutType]);
         m_slashSprite.SetScale(m_slashScale[layoutType]);
@@ -373,14 +366,12 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
 
         if (m_normaTens != 0)
         {
-            /** 十の位を表示(分子用とは別インスタンス) */
             m_normaTensSprite[m_normaTens].SetPosition(m_onePos[layoutType]);
             m_normaTensSprite[m_normaTens].SetScale(m_oneScale[layoutType]);
             m_normaTensSprite[m_normaTens].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
             m_normaTensSprite[m_normaTens].Update();
             m_normaTensSprite[m_normaTens].Draw(renderContext);
 
-            /** 一の位を表示(分子用とは別インスタンス) */
             m_normaOnesSprite[m_normaOnes].SetPosition(m_zeroPos[layoutType]);
             m_normaOnesSprite[m_normaOnes].SetScale(m_zeroScale[layoutType]);
             m_normaOnesSprite[m_normaOnes].SetMulColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
@@ -396,7 +387,5 @@ void CowNumberOfRescues::Render(RenderContext& renderContext)
             m_normaOnesSprite[m_normaOnes].Draw(renderContext);
         }
     }
-
-
 
 }
