@@ -13,7 +13,7 @@ public:
 
 	bool Start();
 	void Update();
-	void Render(RenderContext& rc) {};
+	void Render(RenderContext& rc);
 
 public:
 	/** チュートリアル用のenum*/
@@ -71,6 +71,12 @@ private:
 
 	/** チュートリアル完了時にタイトルへ遷移させる関数(暗転を維持したまま呼ぶ) */
 	void TransitionToTitle();
+
+	/** 牛を救出するときのチュートリアル中に連れ去られて救出に失敗した時に新しい牛を生成する関数*/
+	void CheckAndRespawnCowTutorial();
+
+	/** 各チュートリアルで出すUIを管理する関数*/
+	void UpdateTutorialUISprite();
 private:
 
 	/** チュートリアル用オブジェクトのセットアップステップ */
@@ -114,11 +120,30 @@ private:
 	/** 暗転中にステップを切り替え済みかどうかのフラグ */
 	bool m_hasSwitchedStep = false;
 
+	/** チュートリアルUIを表示中かどうかのフラグ*/
+	bool m_isTutorialUIVisible = false;
+	/** 現在表示中のチュートリアルUIの位置 */
+	Vector3 m_tutorialUIPos = Vector3::Zero;
+
+	/** 0～9の数字画像*/
+	SpriteRender m_numberSprite[10];
+
+	/** 「/」の画像*/
+	SpriteRender m_slashSprite;
+
 	/** チュートリアル開始時のプレイヤー位置・回転を記憶しておくための変数 */
 	bool m_hasCapturedInitialTransform = false;
 	Vector3 m_playerInitialPos = Vector3::Zero;
 	Quaternion m_playerInitialRot = Quaternion::Identity;
 
+
+	/** 現在表示しているチュートリアルUI用のスプライトレンダー*/
+	SpriteRender m_tutorialUISprite;
+
+	/** 現在ステップにおける、数字・スラッシュ表示位置(絶対座標)*/
+	Vector3 m_currentCountPos = Vector3::Zero;
+	Vector3 m_slashPos = Vector3::Zero;
+	Vector3 m_requiredCountPos = Vector3::Zero;
 
 	/**各ステップに必要な成功回数*/
 	/** ロープを投げる */

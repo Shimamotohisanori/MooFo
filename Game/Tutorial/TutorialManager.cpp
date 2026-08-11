@@ -9,8 +9,49 @@
 #include"Source/Actor/Character/Player/Player.h"
 #include"GameCamera/GameCamera.h"
 #include"Rope/Rope.h"
+#include"Pause/Pause.h"
 #include"Source/Actor/Stage/CowFoodManager.h"
 #include"Source/Actor/Stage/CowFood.h"
+namespace
+{
+	/** 各チュートリアルで出すUIスプライト*/
+
+	/** ロープ投げチュートリアルUI */
+	const char* ROPE_TUTORIAL_UI_FILEPATH = "Assets/sprite/Tutorial/RopeTutorialUI.dds";
+	/** 牛救助チュートリアルUI */
+	const char* RESCUE_TUTORIAL_UI_FILEPATH = "Assets/sprite/Tutorial/RescueTutorialUI.dds";
+	/** 餌を置くチュートリアルUI */
+	const char* COWFOOD_TUTORIAL_UI_FILEPATH = "Assets/sprite/Tutorial/CowFoodTutorialUI.dds";
+	/** 牛舎誘導チュートリアルUI */
+	const char* GUIDE_TUTORIAL_UI_FILEPATH = "Assets/sprite/Tutorial/GuideCowShedTutorialUI.dds";
+
+	/** UI画像のサイズ*/
+	const int TUTORIAL_UI_WIDTH = 400;
+	const int TUTORIAL_UI_HEIGHT = 500;
+
+
+	/** 数字UIのファイルパス*/
+	const char* NUMBER_FILEPATH = "Assets/sprite/NumberUI/";
+	const char* NUMBER_FORMAT = ".dds";
+	const char* NUMBER_FILENAME_LIST[10] =
+	{
+		"MooFoNumberUI0", "MooFoNumberUI1", "MooFoNumberUI2", "MooFoNumberUI3", "MooFoNumberUI4",
+		"MooFoNumberUI5", "MooFoNumberUI6", "MooFoNumberUI7", "MooFoNumberUI8", "MooFoNumberUI9"
+	};
+	/** 「/」画像のファイルパス*/
+	const char* SLASH_FILEPATH = "Assets/sprite/CowNumberOfRescuesUI/slash.DDS";
+
+	/** 数字・スラッシュのサイズ*/
+	const Vector2 NUMBER_SPRITE_SIZE = Vector2(60.0f, 60.f);
+	const Vector2 SLASH_SPRITE_SIZE = Vector2(100.0f, 100.0f);
+
+	/** チュートリアルUI画像を基準にしたカウント表示の相対座標(要調整)*/
+	const Vector3 COUNT_CURRENT_OFFSET = Vector3(-10.0f, -150.0f, 0.0f);
+	const Vector3 COUNT_SLASH_OFFSET = Vector3(-10.0f, -150.0f, 0.0f);
+	const Vector3 COUNT_REQUIRED_OFFSET = Vector3(70.0f, -150.0f, 0.0f);
+
+
+}
 TutorialManager::TutorialManager()
 {
 
@@ -22,6 +63,18 @@ TutorialManager::~TutorialManager()
 
 bool TutorialManager::Start()
 {
+	/** 数字画像を読み込む*/
+	for (int i = 0; i < 10; ++i)
+	{
+		std::string filepath = std::string(NUMBER_FILEPATH )+ std::string(NUMBER_FILENAME_LIST[i]) + NUMBER_FORMAT;
+		m_numberSprite[i].Init(filepath.c_str(), NUMBER_SPRITE_SIZE.x, NUMBER_SPRITE_SIZE.y);
+	}
+
+	/** 「/」の画像を読み込む*/
+	m_slashSprite.Init(SLASH_FILEPATH, SLASH_SPRITE_SIZE.x, SLASH_SPRITE_SIZE.y);
+
+	/** チュートリアルUIスプライトを更新 */
+	UpdateTutorialUISprite();
 	return true;
 }
 void TutorialManager::Update()
@@ -113,6 +166,76 @@ if (game)
   }
 }
 
+
+
+void TutorialManager::UpdateTutorialUISprite()
+{
+	const char* texPath = nullptr;
+	Vector3 uipos = Vector3::Zero;
+
+	/** ステップごとの、UI画像基準のオフセット(要調整)*/
+	Vector3 currentOffset = Vector3::Zero;
+	Vector3 slashOffset = Vector3::Zero;
+	Vector3 requiredOffset = Vector3::Zero;
+	switch (m_cuurentStep)
+	{
+		/** ロープ投げステップ */
+	case EnTutorialStep::RopeThrow:
+		texPath = ROPE_TUTORIAL_UI_FILEPATH;
+		uipos = Vector3(30.0f, 430.0f, 0.0f);
+		currentOffset = Vector3(-90.0f, -150.0f, 0.0f);
+		slashOffset = Vector3(-10.0f, -150.0f, 0.0f);
+		requiredOffset = Vector3(50.0f, -150.0f, 0.0f);
+		break;
+		/** 牛救助ステップ */
+	case EnTutorialStep::CowRescue:
+		texPath = RESCUE_TUTORIAL_UI_FILEPATH;
+		uipos = Vector3(0.0f, 430.0f, 0.0f);
+		currentOffset = Vector3(-60.0f, -150.0f, 0.0f);
+		slashOffset = Vector3(10.0f, -150.0f, 0.0f);
+		requiredOffset = Vector3(70.0f, -150.0f, 0.0f);
+
+		break;
+		/** 餌を置くステップ */
+	case EnTutorialStep::PlaceFood:
+		texPath = COWFOOD_TUTORIAL_UI_FILEPATH;
+		uipos = Vector3(-40.0f, 430.0f, 0.0f);
+		currentOffset = Vector3(-20.0f, -150.0f, 0.0f);
+		slashOffset = Vector3(50.0f, -150.0f, 0.0f);
+		requiredOffset = Vector3(100.0f, -150.0f, 0.0f);
+
+		break;
+		/** 牛舎誘導ステップ */
+	case EnTutorialStep::GuideToBarn:
+		texPath = GUIDE_TUTORIAL_UI_FILEPATH;
+		uipos = Vector3(0.0f, 430.0f, 0.0f);
+		currentOffset = Vector3(-40.0f, -150.0f, 0.0f);
+		slashOffset = Vector3(20.0f, -150.0f, 0.0f);
+		requiredOffset = Vector3(70.0f, -150.0f, 0.0f);
+		break;
+
+	default:
+		m_isTutorialUIVisible = false;
+		return;
+	}
+
+	/** テクスチャを切り替えて初期化しなおす*/
+	m_tutorialUISprite.Init(texPath, TUTORIAL_UI_WIDTH, TUTORIAL_UI_HEIGHT);
+	/** 位置を設定 */
+	m_tutorialUISprite.SetPosition(uipos);
+	/** 更新 */
+	m_tutorialUISprite.Update();
+
+	/** カウント表示の位置計算用に基準位置を保存*/
+	m_tutorialUIPos = uipos;
+
+	/** ステップごとの数字・スラッシュの絶対位置を計算して保存*/
+	m_currentCountPos = uipos + currentOffset;
+	m_slashPos = uipos + slashOffset;
+	m_requiredCountPos = uipos + requiredOffset;
+
+	m_isTutorialUIVisible = true;
+}
 
 
 void TutorialManager::UpdateStepTransition()
@@ -210,12 +333,28 @@ void TutorialManager::AdvanceStep()
 
 	switch (m_cuurentStep)
 	{
-/** CowRescueに切り替わった瞬間に牛とUFOのセットアップ開始*/
+		/** CowRescueに切り替わった瞬間に牛とUFOのセットアップ開始*/
 	case EnTutorialStep::CowRescue:
+	{
+		CowFoodManager* foodManager = FindGO<CowFoodManager>("cowfoodmanager");
+		if (foodManager)
+		{
+			foodManager->ClearAllFood();
+		}
+
+		/** 餌の所持数もリセットしておく*/
+		CowFood* cowFood = FindGO<CowFood>("cowfood");
+		if (cowFood)
+		{
+			cowFood->SetFoodCount(2);
+		}
+
 		m_setupStep = EnSetupStep::NotStarted;
+	}
 		break;
 		/** 救出成功→餌を置くに切り替わった瞬間に、新しい牛を出す*/
-	case EnTutorialStep::PlaceFood: 
+	case EnTutorialStep::PlaceFood:
+	{
 		/** 先にGame側のスロット参照を切ってから削除する*/
 		if (m_tutorialUFO && !m_tutorialUFO->IsDead())
 		{
@@ -227,10 +366,21 @@ void TutorialManager::AdvanceStep()
 			DeleteGO(m_tutorialUFO);
 			m_tutorialUFO = nullptr;
 		}
-		
-		SpawnTutorialCowFoodStep();
-		break;
 
+		CowFoodManager* foodManager = FindGO<CowFoodManager>("cowfoodmanager");
+		if (foodManager)
+		{
+			foodManager->ClearAllFood();
+		}
+
+		/** 餌の所持数もリセットしておく*/
+		CowFood* cowFood = FindGO<CowFood>("cowfood");
+		if (cowFood)
+		{
+			cowFood->SetFoodCount(2);
+		}
+	}
+		break;
 		/**PlaceFoodで置いた牛の餌をすべて削除してから牛舎に誘導するチュートリアルを始める*/ 
 	case EnTutorialStep::GuideToBarn:
 	{
@@ -247,11 +397,29 @@ void TutorialManager::AdvanceStep()
 			cowFood->SetFoodCount(2);
 		}
 
+		/** 餌をチュートリアル中に牛舎へ届けられてすでに消滅している場合は
+		GuideToBarn用に牛を再生成する*/
+
+		if (m_foodTutorialCow == nullptr || m_foodTutorialCow->IsDead())
+		{
+			Game* game = FindGO<Game>("game");
+			if (game)
+			{
+				m_foodTutorialCow = NewGO<Cow>(0, "cow");
+				m_foodTutorialCow->SetPosition(Vector3(400.0f, 0.0f, 0.0f));
+				m_foodTutorialCow->SetCowType(Cow::EnCowType::en_Random);
+				game->AddTutorialCow(m_foodTutorialCow);
+			}
+		}
 	}
 		break;
 	default:
 		break;
 	}
+
+
+	/** ステップが切り替わったらUIも更新 */
+	UpdateTutorialUISprite();
 }
 
 
@@ -346,4 +514,63 @@ void TutorialManager::SetupTutorialActors()
 	case EnSetupStep::Done:
 		break;
 	}
+}
+
+
+void TutorialManager::Render(RenderContext& rc)
+{
+	/**フェード完了までUIの表示を遅らす*/
+	LoadingScene* lodingScene = FindGO<LoadingScene>("loading");
+	if (lodingScene != nullptr && !lodingScene->GetLoadingEnd())
+	{
+		return;
+	}
+	/** チュートリアルUIを表示する*/
+	if (!m_isTutorialUIVisible)
+	{
+		return;
+	}
+
+	Pause* pause = FindGO<Pause>("pause");
+	if (pause&&pause->GetIsPause())
+	{
+		return;
+	}
+	
+
+	/** ステップ遷移中(暗転〜次のステップへの切り替え完了まで)はUIを描画しない */
+	if (m_isTransitioning)
+	{
+		return;
+	}
+
+	m_tutorialUISprite.Draw(rc);
+
+	/** 完了演出中はカウントを出さない*/
+	if (IsComplete())
+	{
+		return;
+	}
+
+	
+
+	/** 現在数/必要数を毎フレーム取得して描画(達成すると自動でカウントアップ表示される)*/
+	int currentOnes = m_successCount % 10;
+	int requiredOnes = GetRequiredCount(m_cuurentStep) % 10;
+
+	
+
+	m_numberSprite[currentOnes].SetPosition(m_currentCountPos);
+	m_numberSprite[currentOnes].Update();
+	m_numberSprite[currentOnes].Draw(rc);
+
+	m_slashSprite.SetPosition(m_slashPos);
+	m_slashSprite.Update();
+
+	m_slashSprite.Draw(rc);
+
+	m_numberSprite[requiredOnes].SetPosition(m_requiredCountPos);
+	m_numberSprite[requiredOnes].Update();
+	m_numberSprite[requiredOnes].Draw(rc);
+
 }
