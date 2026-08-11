@@ -52,8 +52,7 @@ public:
 
 private:
 
-	/**牛の餌のチュートリアル用に牛を新しく一体生成する関数 */
-	void SpawnTutorialCowFoodStep();
+
 
 	/** チュートリアル完了演出を更新する関数*/
 	void UpdateCompleteStep();
@@ -74,7 +73,6 @@ private:
 
 	/** 牛を救出するときのチュートリアル中に連れ去られて救出に失敗した時に新しい牛を生成する関数*/
 	void CheckAndRespawnCowTutorial();
-
 	/** 各チュートリアルで出すUIを管理する関数*/
 	void UpdateTutorialUISprite();
 private:

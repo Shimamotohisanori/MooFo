@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Difficulty.h"
 #include "LoadingScene.h"
 
@@ -31,10 +31,10 @@ namespace
 	const char* HARD_EXPLANATION_FILEPATH = "Assets/sprite/GameTransition/Difficulty/Hard_Explanation.dds";
 
 	/** 説明画像の幅 */
-	constexpr float EXPLANATION_WIDTH = 1200.0f;
+	constexpr float EXPLANATION_WIDTH = 800.0f;
 
 	/** 説明画像の高さ */
-	constexpr float EXPLANATION_HEIGHT = 150.0f;
+	constexpr float EXPLANATION_HEIGHT = 80.0f;
 
 	/** 説明画像の移動速度 */
 	constexpr float EXPLANATION_MOVE_SPEED = 4.0f;
@@ -198,6 +198,12 @@ void Difficulty::Decide()
 
 		m_loadingScene = NewGO<LoadingScene>(0, "loading");
 		m_loadingScene->SetLoadType(LoadingScene::LoadType::ToGameScene);
+
+		/** チュートリアルが選ばれていたらLoadingSceneに伝える*/
+		if(selected ==EnDifficulty::en_Tutorial)
+		{
+			m_loadingScene->SetIsTutorial(true);
+		}
 
 		DeleteGO(this);
 	}

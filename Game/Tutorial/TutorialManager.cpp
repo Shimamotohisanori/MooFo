@@ -109,6 +109,15 @@ void TutorialManager::Update()
 		CaptureInitialTransformIfNeeded();
 	}
 
+	/** CowRescue中、UFOに連れ去られて救出に失敗したら新しい牛を生成する
+	    既に成功したら何もしない*/
+	if (m_cuurentStep == EnTutorialStep::CowRescue
+		&& !m_isTransitioning
+		&& m_successCount < GetRequiredCount(m_cuurentStep))
+	{
+		CheckAndRespawnCowTutorial();
+	}
+
 	UpdateStepTransition();
 }
 
@@ -143,6 +152,40 @@ void TutorialManager::UpdateCompleteStep()
 		}
 }
 
+
+
+
+void TutorialManager::CheckAndRespawnCowTutorial()
+{
+	/** 牛がまだ生きている(削除予約されていたら)何もしない*/
+	if (m_tutorialCow != nullptr
+		&& !m_tutorialCow->GetIsDeadFlag()
+		&& !m_tutorialCow->GetIsPendingKill())
+	{
+		return;
+	}
+
+	/** UFOが存在しなければ再生成できないので何もしない*/
+	if (m_tutorialUFO == nullptr || m_tutorialUFO->IsDead())
+	{
+		return;
+	}
+
+	Game* game = FindGO<Game>("game");
+	if (game == nullptr)
+	{
+		return;
+	}
+	/** 救出に失敗して連れ去られた牛が消えたら光に向かって進む牛を再生成する*/
+	m_tutorialCow = NewGO<Cow>(0, "cow");
+	m_tutorialCow->SetPosition(Vector3(0.0f, 0.0f, 200.0f));
+	m_tutorialCow->SetCowType(Cow::EnCowType::en_Light);
+	game->AddTutorialCow(m_tutorialCow);
+
+	/** UFOの光が消えている可能性があるので、念のため再度強制的に光を出す */
+	m_tutorialUFO->ForceEmitLightForTutorial();
+
+}
 void TutorialManager::TransitionToTitle()
 {
 /** タイトルシーンへの遷移処理 */
@@ -366,6 +409,7 @@ void TutorialManager::AdvanceStep()
 			DeleteGO(m_tutorialUFO);
 			m_tutorialUFO = nullptr;
 		}
+		break;
 
 		CowFoodManager* foodManager = FindGO<CowFoodManager>("cowfoodmanager");
 		if (foodManager)
@@ -396,7 +440,6 @@ void TutorialManager::AdvanceStep()
 		{
 			cowFood->SetFoodCount(2);
 		}
-
 		/** 餌をチュートリアル中に牛舎へ届けられてすでに消滅している場合は
 		GuideToBarn用に牛を再生成する*/
 
@@ -412,7 +455,7 @@ void TutorialManager::AdvanceStep()
 			}
 		}
 	}
-		break;
+	break;
 	default:
 		break;
 	}
@@ -423,18 +466,7 @@ void TutorialManager::AdvanceStep()
 }
 
 
-void TutorialManager::SpawnTutorialCowFoodStep()
-{
-	Game* game = FindGO<Game>("game");
-	if (game == nullptr) return;
 
-	/** 牛舎(-1320, 0, 10)から離れた位置に出し、餌で誘導させる */
-	m_foodTutorialCow = NewGO<Cow>(0, "cow");
-	m_foodTutorialCow->SetPosition(Vector3(400.0f, 0.0f, 0.0f));
-	m_foodTutorialCow->SetCowType(Cow::EnCowType::en_Random);
-
-	game->AddTutorialCow(m_foodTutorialCow);
-}
 
 
 int TutorialManager::GetRequiredCount(EnTutorialStep step) const
@@ -470,7 +502,7 @@ void TutorialManager::SetupTutorialActors()
 		/** 座標を設定*/
 		m_tutorialCow->SetPosition(Vector3(200.0f, 0.0f, 200.0f));
 		/** 牛の種類を設定*/
-		m_tutorialCow->SetCowType(Cow::EnCowType::en_Random);
+		m_tutorialCow->SetCowType(Cow::EnCowType::en_Light);
 
 		/** Gameのaliveリストに登録しないとロープの当たり判定の対象にならない*/
 		game->AddTutorialCow(m_tutorialCow);
@@ -478,7 +510,7 @@ void TutorialManager::SetupTutorialActors()
 		m_setupStep = EnSetupStep::SpawnUFO;
 		break;
 	}
-
+	
 	/** UFOを生成する(スポーン演出はスキップして即座に稼働状態にする)*/
 	case EnSetupStep::SpawnUFO:
 	{

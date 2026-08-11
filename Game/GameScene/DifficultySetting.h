@@ -24,6 +24,17 @@ struct DifficultyParam
 	/** 追いかけてくる牛の出現確率 */
 	int chaseCowRateOffset;
 
+	/** 制限時間 */
+	int timeLimit;
+
+	/** 牛の最大数 */
+	int maxCowCount;
+
+	/** ボーナス牛の出現率 */
+	int bonusCowRate;
+
+	/** UFOに向かって走る牛の出現確率 */
+	int UFOCowRate;
 };
 
 namespace GameDifficultyManager
@@ -42,7 +53,5 @@ namespace GameDifficultyManager
 class DifficultySetting : public  IGameObject
 {
 
-	/** 今日の進捗はクラウドのコードをコピーした後のエラー修正を行った
-	 次にしてほしいことは難易度選択の後のゲームシーンに移行した後にきちんと難易度が反映されているか確認して*/
 };
 
