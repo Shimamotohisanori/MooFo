@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Difficulty.h"
 #include "LoadingScene.h"
+#include "SoundManager/SoundManager.h"
 
 namespace
 {
@@ -118,6 +119,11 @@ bool Difficulty::Start()
 
 	/** 初期状態の色を設定 */
 	UpdateButtonColor();
+
+	/** 難易度選択画面の曲をループ再生 */
+	m_soundManager = FindGO<SoundManager>("soundmanager");
+	m_bgmSoundSource = m_soundManager->PlayingBGM(SoundBGM::enDifficultyBGM, true);
+
 	return true;
 }
 
@@ -149,18 +155,23 @@ void Difficulty::MoveCursor()
 	/** ボタン名は実際のプロジェクトの定義に合わせて要修正 */
 	if (g_pad[0]->IsTrigger(enButtonRight))
 	{
+		/** 難易度選択SE */
+		m_choiceSE = m_soundManager->PlayingSE(SoundSE::enChoiceSE, false);
 		m_cursorCol = (m_cursorCol + 1) % DIFFICULTY_GRID_COLS;
 	}
 	else if (g_pad[0]->IsTrigger(enButtonLeft))
 	{
+		m_choiceSE = m_soundManager->PlayingSE(SoundSE::enChoiceSE, false);
 		m_cursorCol = (m_cursorCol - 1 + DIFFICULTY_GRID_COLS) % DIFFICULTY_GRID_COLS;
 	}
 	else if (g_pad[0]->IsTrigger(enButtonDown))
 	{
+		m_choiceSE = m_soundManager->PlayingSE(SoundSE::enChoiceSE, false);
 		m_cursorRow = (m_cursorRow + 1) % DIFFICULTY_GRID_ROWS;
 	}
 	else if (g_pad[0]->IsTrigger(enButtonUp))
 	{
+		m_choiceSE = m_soundManager->PlayingSE(SoundSE::enChoiceSE, false);
 		m_cursorRow = (m_cursorRow - 1 + DIFFICULTY_GRID_ROWS) % DIFFICULTY_GRID_ROWS;
 	}
 
@@ -182,6 +193,8 @@ void Difficulty::Decide()
 	/** 決定ボタン名も実際のプロジェクトの定義に合わせて要修正 */
 	if (g_pad[0]->IsTrigger(enButtonA))
 	{
+		m_decideSE = m_soundManager->PlayingSE(SoundSE::enDecisionSE, false);
+
 		GameDifficultyManager::SetDifficulty(BUTTON_DIFFICULTY[m_cursorRow][m_cursorCol]);
 
 		/** カーソル位置に対応する難易度を取得して変数に入れる */
@@ -199,6 +212,7 @@ void Difficulty::Decide()
 		m_loadingScene = NewGO<LoadingScene>(0, "loading");
 		m_loadingScene->SetLoadType(LoadingScene::LoadType::ToGameScene);
 
+		DeleteGO(m_bgmSoundSource);
 		DeleteGO(this);
 	}
 }

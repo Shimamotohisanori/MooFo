@@ -12,6 +12,8 @@ enum SoundBGM
 	enGameOverBGM,
 	/** ローディング中のBGM*/
 	enGameLoadingBGM,
+	/** 難易度選択中のBGM */
+	enDifficultyBGM,
 	enBGMNum
 };
 
