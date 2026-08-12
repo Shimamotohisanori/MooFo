@@ -290,6 +290,19 @@ void CowFood::CowFoodPut()
 		return;
 	}
 
+
+	/** チュートリアルのステップ遷移中(フェードイン～フェードアウト完了まで)は餌を置けないようにする */
+	m_game = FindGO<Game>("game");
+	if (m_game && m_game->GetIsTutorialMode())
+	{
+		TutorialManager* tutorial = FindGO<TutorialManager>("tutorialmanager");
+		if (tutorial && tutorial->IsTransitioning())
+		{
+			return;
+		}
+	}
+
+
 	/** ポーズがない場合は早期リターン */
 	if (!m_pause) return;
 

@@ -32,10 +32,10 @@ namespace
 	const char* HARD_EXPLANATION_FILEPATH = "Assets/sprite/GameTransition/Difficulty/Hard_Explanation.dds";
 
 	/** 説明画像の幅 */
-	constexpr float EXPLANATION_WIDTH = 1200.0f;
+	constexpr float EXPLANATION_WIDTH = 800.0f;
 
 	/** 説明画像の高さ */
-	constexpr float EXPLANATION_HEIGHT = 150.0f;
+	constexpr float EXPLANATION_HEIGHT = 80.0f;
 
 	/** 説明画像の移動速度 */
 	constexpr float EXPLANATION_MOVE_SPEED = 4.0f;
