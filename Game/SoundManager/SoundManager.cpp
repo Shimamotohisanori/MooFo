@@ -17,6 +17,7 @@ namespace
 		"GameClearBGM",
 		"GameOverBGM",
 		"LoadBGM",
+		"DifficultyBGM",
 	};
 
 	/** SEƒtƒ@ƒCƒ‹–¼ˆê—— */

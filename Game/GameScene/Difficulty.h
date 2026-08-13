@@ -1,5 +1,6 @@
 #pragma once
 #include "DifficultySetting.h"
+#include "SoundManager/SoundManager.h"
 class LoadingScene;
 class Difficulty : public IGameObject
 {
@@ -52,6 +53,17 @@ private:
 	SpriteRender m_hardExplanationSprite;
 
 	LoadingScene* m_loadingScene;
+
+	SoundManager* m_soundManager = nullptr;
+
+	/** 難易度選択画面のBGM */
+	SoundSource* m_bgmSoundSource = nullptr;
+
+	/** 難易度選択SE */
+	SoundSource* m_choiceSE = nullptr;
+
+	/** 難易度決定SE */
+	SoundSource* m_decideSE = nullptr;
 
 };
 
