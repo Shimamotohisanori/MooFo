@@ -111,12 +111,15 @@ void TutorialManager::Update()
 
 	/** CowRescue中、UFOに連れ去られて救出に失敗したら新しい牛を生成する
 	    既に成功したら何もしない*/
+	/** CowRescue中、UFOに連れ去られて救出失敗したら新しい牛を出す
+   (すでに成功済み・遷移中は対象外にする) */
 	if (m_cuurentStep == EnTutorialStep::CowRescue
 		&& !m_isTransitioning
 		&& m_successCount < GetRequiredCount(m_cuurentStep))
 	{
 		CheckAndRespawnCowTutorial();
 	}
+
 
 	UpdateStepTransition();
 }
@@ -278,6 +281,39 @@ void TutorialManager::UpdateTutorialUISprite()
 	m_requiredCountPos = uipos + requiredOffset;
 
 	m_isTutorialUIVisible = true;
+}
+
+
+void TutorialManager::CheckAndRespawnCowTutorial()
+{
+	/** 牛がまだ生きている(削除予約もされていない)なら何もしない */
+	if (m_tutorialCow != nullptr
+		&& !m_tutorialCow->GetIsDeadFlag()
+		&& !m_tutorialCow->GetIsPendingKill())
+	{
+		return;
+	}
+
+	/** UFOが存在しなければ再生成できないので何もしない */
+	if (m_tutorialUFO == nullptr || m_tutorialUFO->IsDead())
+	{
+		return;
+	}
+
+	Game* game = FindGO<Game>("game");
+	if (game == nullptr)
+	{
+		return;
+	}
+
+	/** 救出に失敗して連れ去られた牛が消えたので、光に向かって進む牛を再生成する */
+	m_tutorialCow = NewGO<Cow>(0, "cow");
+	m_tutorialCow->SetPosition(Vector3(200.0f, 0.0f, 200.0f));
+	m_tutorialCow->SetCowType(Cow::EnCowType::en_Light);
+	game->AddTutorialCow(m_tutorialCow);
+
+	/** UFOの光が消えている可能性があるので、念のため再度強制的に光を出す */
+	m_tutorialUFO->ForceEmitLightForTutorial();
 }
 
 

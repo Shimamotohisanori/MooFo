@@ -316,14 +316,14 @@ void LoadingScene::PrepareAnimResources()
 	}
 
 	/** ロープで引っ張るGifのパスリストを準備する */
-	for (int h = 10; h <= 135; h += 2)
+	for (int h = 10; h <= 93; h += 2)
 	{
 		char buf[256];
 		sprintf(buf, "Assets/Gif/PullRope/anim_%02d.DDS", h);
 		m_ropeAnimLoadPaths.push_back(buf);
 	}
 	/** 餌のGifのパスリストを準備する */
-	for (int i = 1; i <= 200; i += 2)
+	for (int i = 1; i <=74 ; i ++)
 	{
 		char buf[256];
 		sprintf(buf, "Assets/Gif/Food/anim_%02d.DDS", i);
