@@ -528,7 +528,7 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	case 12:
 	{
 		 /** チュートリアル中はLoadingクラスの牛を生成しない */
-		if (!m_isTutorial)
+		if (GameDifficultyManager::GetDifficulty() != EnDifficulty::en_Tutorial)
 		{
 			Cow* cow = NewGO<Cow>(0, "cow");
 			cow->SetPosition(RandomCowPos());
