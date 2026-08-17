@@ -110,6 +110,10 @@ Player::~Player()
 
 	/** ロープオブジェクトを削除する */
 	DeleteGO(m_rope);
+
+	/** ロープを回すSEオブジェクトを削除してnullptrにする */
+	DeleteGO(m_rotationRopeSE);
+	m_rotationRopeSE = nullptr;
 }
 
 bool Player::Start()
@@ -375,6 +379,13 @@ void Player::ThrowRope()
 		/** ロープがあたっている間は押下状態の記録だけを更新する */
 		m_wasRB2Pressed = g_pad[0]->IsPress(enButtonRB2);
 
+		/** ロープを回すSEが再生中なら止める */
+		if(m_isPlayRotationRopeSE && m_rotationRopeSE)
+		{
+			m_rotationRopeSE->Stop();
+			m_isPlayRotationRopeSE = false;
+		}
+
 		return;
 	}
 
@@ -387,14 +398,45 @@ void Player::ThrowRope()
 	/** 現在のRB2の押下状態を記録しておく */
 	m_wasRB2Pressed = isrb2pressed;
 
+	/** 現在のRB2の押下状態を記録しておく */
+	m_wasRB2Pressed = isrb2pressed;
+
+	/** ロープを回す音の再生・停止処理
+	 * 縮みアニメーション中やロープアニメ終了直後は鳴らさない */
+	if (isrb2pressed &&
+		!m_isSquatAnimation &&
+		!m_rope->GetIsThrowRope() &&
+		!m_rope->GetIsEndRopeAnimation())
+	{
+		/** まだ再生していないなら再生する */
+		if (!m_isPlayRotationRopeSE)
+		{
+			SoundManager* soundManager = FindGO<SoundManager>("soundmanager");
+
+			/** trueでループ再生させる */
+			m_rotationRopeSE = soundManager->PlayingSE(SoundSE::enRotationRopeSE, true);
+
+			m_isPlayRotationRopeSE = true;
+		}
+	}
+	else
+	{
+		/** ボタンを離した、または鳴らせない状態になったら停止する */
+		if (m_isPlayRotationRopeSE && m_rotationRopeSE != nullptr)
+		{
+			m_rotationRopeSE->Stop();
+			m_isPlayRotationRopeSE = false;
+		}
+	}
+
 	/** クールダウン中はロープを投げられない */
 	if (m_throwRopeCoolTime > 0.0f) return;
 
 	/** RB2ボタンが離されていて、ロープを投げていない
 	 * かつ縮みアニメーションが終了しているとき */
-	if (isreleased && 
+	if (isreleased &&
 		!m_rope->GetIsThrowRope() &&
-		!m_rope->GetIsEndRopeAnimation() && 
+		!m_rope->GetIsEndRopeAnimation() &&
 		!m_isSquatAnimation)
 	{
 		/** 投げる瞬間、カメラの前方向(水平のみ)にプレイヤーを向かせる */
@@ -420,7 +462,7 @@ void Player::ThrowRope()
 
 		/** ボイスの再生(ランダムで2種類切り替え) */
 		SoundVoice voice = (rand() % 2 == 0) ? SoundVoice::enVoice_ThrowRope1 : SoundVoice::enVoice_ThrowRope2;
-		
+
 		/** ボイスを再生 */
 		m_voiceManager->PlayingVoice(voice, false);
 	}

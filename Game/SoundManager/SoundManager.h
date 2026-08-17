@@ -39,6 +39,7 @@ enum SoundSE
 	enTimerEndFive,/** 制限時間が残り５秒の時に流すSE*/
 	enEatCowFoodSE,/** 牛の餌を食べるときのSE*/
 	enFailedRescue,/** 「救助失敗」のテキストを出すときに流すSE*/
+	enRotationRopeSE,/** ロープを回しているときのSE*/
 	enSENum
 };
 

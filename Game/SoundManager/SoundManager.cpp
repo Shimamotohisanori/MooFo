@@ -42,7 +42,8 @@ namespace
 		"TakehaySE",
 		"TimerEndFive",
 		"EatCowFoodSE",
-		"FailedRescue"
+		"FailedRescue",
+		"RotationRopeSE"
 	};
 }
 
