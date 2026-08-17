@@ -527,25 +527,34 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	case 11:
 	case 12:
 	{
-		 /** チュートリアル中はLoadingクラスの牛を生成しない */
+		/** チュートリアル中はLoadingクラスの牛を生成しない */
 		if (!m_isTutorial)
 		{
-			Cow* cow = NewGO<Cow>(0, "cow");
-			cow->SetPosition(RandomCowPos());
 			/** 0～9の数字を割り当てる*/
 			int cowIndex = m_loadStep - 2;
 
-			/** 牛の性格をランダムに割り当てる */
-			if (rand() % 100 < INITIAL_CHASE_COW_RATE)
-			{
-				cow->SetCowType(Cow::EnCowType::en_Chase);
-			}
-			else
-			{
-				cow->SetCowType(cowIndex % 2 == 0 ? Cow::EnCowType::en_Light : Cow::EnCowType::en_Random);
-			}
+			/** 難易度ごとの最大出現数を取得し、それ未満の時だけ生成する */
+			int maxCowCount = GameDifficultyManager::GetParam().maxCowCount;
 
-			m_tempCows.push_back(cow);
+			if (cowIndex < maxCowCount)
+			{
+				Cow* cow = NewGO<Cow>(0, "cow");
+				cow->SetPosition(RandomCowPos());
+
+				/** 難易度が簡単なら追いかける牛は生成しない */
+				bool isEasy = (GameDifficultyManager::GetDifficulty() == EnDifficulty::en_Easy);
+
+				if (!isEasy && rand() % 100 < INITIAL_CHASE_COW_RATE)
+				{
+					cow->SetCowType(Cow::EnCowType::en_Chase);
+				}
+				else
+				{
+					cow->SetCowType(cowIndex % 2 == 0 ? Cow::EnCowType::en_Light : Cow::EnCowType::en_Random);
+				}
+
+				m_tempCows.push_back(cow);
+			}
 		}
 
 		

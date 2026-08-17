@@ -689,7 +689,7 @@ void Game::SpawnCow()
 				m_difficultyLevelSpawnRange = 600;
 				chaseCowRate = CHASE_COW_TABLE_C;
 			}
-			
+
 			else if (currentrescues >= 5)
 			{
 				m_difficultyLevelSpawnRange = 400;
@@ -702,7 +702,16 @@ void Game::SpawnCow()
 				chaseCowRate = CHASE_COW_TABLE_A;
 			}
 
-			chaseCowRate += GameDifficultyManager::GetParam().chaseCowRateOffset;
+			/** 簡単モードなら追いかける牛の確率を強制的に0にする */
+			if (GameDifficultyManager::GetDifficulty() == EnDifficulty::en_Easy)
+			{
+				chaseCowRate = 0;
+			}
+			else
+			{
+				chaseCowRate += GameDifficultyManager::GetParam().chaseCowRateOffset;
+			}
+
 			chaseCowRate = max(0, min(chaseCowRate, 100));
 
 			m_spawnTimer = 0.0f;
@@ -735,6 +744,8 @@ void Game::SpawnCow()
 			newCow->SetPosition(pos);
 			/** 生きている牛リストに追加 */
 			m_aliveCows.push_back(newCow);
+
+
 		}
 	}
 }
