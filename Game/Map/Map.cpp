@@ -161,6 +161,8 @@ void Map::Update()
 		/** 死んでいる牛とUFOに連れて行かれた牛はマップに表示させない。 */
 		if (cows[i]->IsDead()) continue;
 		if (cows[i]->GetIsTakeAwayed()) continue;
+		/** 出現演出中(カウントダウン)は表示しない */
+		if (cows[i]->GetIsSpawing()) continue;
 
 		/** 牛のワールド座標を取得する。 */
 		Vector3 cowPos = cows[i]->GetPosition();
