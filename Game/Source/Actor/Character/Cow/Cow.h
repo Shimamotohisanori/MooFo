@@ -201,6 +201,11 @@ public:
 		return m_cowCharacterController;
 	}
 
+	bool GetIsSpawing()const
+	{
+		return m_isSpawning;
+	}
+
 
 private:
 	/** プレイヤーに引っ張られる関数 */
