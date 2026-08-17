@@ -8,6 +8,7 @@
 #include "SoundManager/VoiceManager.h"
 #include"GameScene/Game.h"
 #include"Tutorial/TutorialManager.h"
+#include "CountDown/CountDown.h"
 
 namespace
 {
@@ -109,7 +110,7 @@ bool Rope::Start()
 	m_player = FindGO<Player>("player");
 	m_ropeRot = Quaternion::Identity;
 	m_ropeModelRender.SetScale(NO_HIT_COW_ROLL_ROPE_SCALE);
-
+	m_ropeModelRender.Update();
 	return true;
 }
 
@@ -124,7 +125,16 @@ void Rope::Update()
 	}
 	
 	Game* game = FindGO<Game>("game");
+	if (!game) return;
+
 	bool isTutorial = (game && game->GetIsTutorialMode());
+
+
+	CountDown* countDown = FindGO<CountDown>("countdown");
+	if (!countDown || countDown->GetCountDown())
+	{
+		return;
+	}
 
 	/** チュートリアル中はタイマー制限を無視する */
 	if (!isTutorial)
@@ -139,8 +149,6 @@ void Rope::Update()
 			return;
 		}
 	}
-
-
 
 	/** プレイヤーが存在しないなら処理しない */
 	if (!m_player) return;
