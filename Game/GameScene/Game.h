@@ -151,6 +151,9 @@ public:
 		return m_isTutorialMode;
 	}
 
+
+
+
 	/** チュートリアルが完了するごとにゲームを終了させる(結果画面なし) */
 	void EndTutorial()
 	{
