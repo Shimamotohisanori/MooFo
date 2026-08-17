@@ -45,7 +45,7 @@ private:
 	void CowFoodPut();
 
 	/** 牛の餌を所持している数 */
-	uint8_t m_foodCount = 2;
+	uint8_t m_foodCount = 3;
 
 	/** 餌を設置した後のクールタイム */
 	float m_coolTime = 0.0f;
@@ -74,14 +74,17 @@ private:
 	/** 餌を描画させる画像 */
 	SpriteRender m_bucketFood;
 	SpriteRender m_bucketFood_Second;
+	SpriteRender m_bucketFood_Third;
 
 	/** 餌のシルエットを描画させる画像 */
 	SpriteRender m_bucketFood_Black;
 	SpriteRender m_bucketFood_SecondBlack;
+	SpriteRender m_bucketFood_ThirdBlack;
 
 	/** 牛の餌の禁止状態のUI */
 	SpriteRender m_tabooCowFood;
 	SpriteRender m_tabooCowFood_Second;
+	SpriteRender m_tabooCowFood_Third;
 
 	/** 牛の餌の当たり判定 */
 	PhysicsStaticObject m_FoodObject;

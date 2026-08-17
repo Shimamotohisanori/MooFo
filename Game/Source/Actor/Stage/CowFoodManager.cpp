@@ -59,8 +59,8 @@ void CowFoodManager::RemoveFood(CowLuring* food)
 
 void CowFoodManager::SpawnFood(const Vector3& pos)
 {
-	/** もし牛の餌が二個以上ステージ上に置かれたら */
-	if (m_foodList.size() >= 2)
+	/** もし牛の餌が3個以上ステージ上に置かれたら */
+	if (m_foodList.size() >= 3)
 	{
 		/** ゲーム世界の中から先頭の要素をを消す */
 		DeleteGO(m_foodList.front());

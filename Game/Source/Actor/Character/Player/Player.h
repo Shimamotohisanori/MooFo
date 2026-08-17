@@ -151,6 +151,9 @@ private:
 	/** ロープを引っ張る音 */
 	SoundSource* m_pullRopeSE = nullptr;
 
+	/** ロープを回す音 */
+	SoundSource* m_rotationRopeSE = nullptr;
+
 	/** プレイヤーが走る音 */
 	SoundSource* m_runSE = nullptr;
 
@@ -199,6 +202,9 @@ private:
 
 	/** 前のフレームでRB2が押されていたかどうか */
 	bool m_wasRB2Pressed = false;
+
+	/** ロープを回す音が再生中かどうかのフラグ */
+	bool m_isPlayRotationRopeSE = false;
 
 	/** アニメーション */
 	enum EnPlayAnimation
