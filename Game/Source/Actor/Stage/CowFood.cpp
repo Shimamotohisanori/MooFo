@@ -31,6 +31,7 @@ namespace
 	/** 牛の餌のUIの座標 */
 	const Vector3 FOODUI_POS       = { -850.0f,-250.0f,0.0f };
 	const Vector3 FOODUI_SECOND_POS = { -700.0f,-250.0f,0.0f };
+	const Vector3 FOODUI_THIRD_POS = { -550.0f,-250.0f,0.0f };
 
 	/** 牛の餌のエフェクトの大きさ */
 	const Vector3 COWFOOD_EFFECT_SCALE = { 40.0f,40.0f,40.0f };
@@ -87,30 +88,45 @@ bool CowFood::Start()
 	m_bucketFood.SetPosition(FOODUI_POS);
 	m_bucketFood.Update();
 
-	/** 牛の餌のUI(右) */
+	/** 牛の餌のUI(真ん中) */
 	m_bucketFood_Second.Init(FOODBUCKET_UI, 100.0f, 100.0f);
 	m_bucketFood_Second.SetPosition(FOODUI_SECOND_POS);
 	m_bucketFood_Second.Update();
+
+	/** 牛の餌のUI(右) */
+	m_bucketFood_Third.Init(FOODBUCKET_UI, 100.0f, 100.0f);
+	m_bucketFood_Third.SetPosition(FOODUI_THIRD_POS);
+	m_bucketFood_Third.Update();
 
 	/** 牛の餌のシルエットUI(左) */
 	m_bucketFood_Black.Init(FOODBUCKET_BLACK_UI, 100.0f, 100.0f);
 	m_bucketFood_Black.SetPosition(FOODUI_POS);
 	m_bucketFood_Black.Update();
 
-	/** 牛の餌のシルエットUI(右) */
+	/** 牛の餌のシルエットUI(真ん中) */
 	m_bucketFood_SecondBlack.Init(FOODBUCKET_BLACK_UI, 100.0f, 100.0f);
 	m_bucketFood_SecondBlack.SetPosition(FOODUI_SECOND_POS);
 	m_bucketFood_SecondBlack.Update();
+
+	/** 牛の餌のシルエットUI(右) */
+	m_bucketFood_ThirdBlack.Init(FOODBUCKET_BLACK_UI, 100.0f, 100.0f);
+	m_bucketFood_ThirdBlack.SetPosition(FOODUI_THIRD_POS);
+	m_bucketFood_ThirdBlack.Update();
 
 	/** 牛の餌の禁止状態UI(左) */
 	m_tabooCowFood.Init(TABOO_COWFOOD_UI, 100.0f, 100.0f);
 	m_tabooCowFood.SetPosition(FOODUI_POS);
 	m_tabooCowFood.Update();
 
-	/** 牛の餌の禁止状態UI(右) */
+	/** 牛の餌の禁止状態UI(真ん中) */
 	m_tabooCowFood_Second.Init(TABOO_COWFOOD_UI, 100.0f, 100.0f);
 	m_tabooCowFood_Second.SetPosition(FOODUI_SECOND_POS);
 	m_tabooCowFood_Second.Update();
+
+	/** 牛の餌の禁止状態UI(右) */
+	m_tabooCowFood_Third.Init(TABOO_COWFOOD_UI, 100.0f, 100.0f);
+	m_tabooCowFood_Third.SetPosition(FOODUI_THIRD_POS);
+	m_tabooCowFood_Third.Update();
 
 	/** 牛の餌の当たり判定をつける */
 	m_FoodObject.CreateFromModel(m_cowFoodModelRender.GetModel(), m_cowFoodModelRender.GetModel().GetWorldMatrix());
@@ -260,7 +276,7 @@ void CowFood::Update()
 
 			m_takehaySE = soundManager->PlayingSE(SoundSE::enTakehaySE, false);
 
-			m_foodCount = 2;
+			m_foodCount = 3;
 			m_isPutFood = true;
 
 			/** 餌を回収するクールタイムを設定する */
@@ -440,18 +456,34 @@ void CowFood::Render(RenderContext& rc)
 	/** 牛の餌のモデルを描画する。*/
 	m_cowFoodModelRender.Draw(rc);
 
-	if (m_foodCount == 2)
+	if (m_foodCount == 3)
+	{
+		if (m_isInTabooArea)
+		{
+			m_tabooCowFood.Draw(rc);
+			m_tabooCowFood_Second.Draw(rc);
+			m_tabooCowFood_Third.Draw(rc);
+			return;
+		}
+
+	m_bucketFood.Draw(rc);
+	m_bucketFood_Second.Draw(rc);
+	m_bucketFood_Third.Draw(rc); 
+}
+	else if (m_foodCount == 2)
 	{
 		/** 牛の餌を置くことができないエリアにいる場合は禁止状態のUIを描画する */
 		if (m_isInTabooArea)
 		{
 			m_tabooCowFood.Draw(rc);
 			m_tabooCowFood_Second.Draw(rc);
+			m_bucketFood_ThirdBlack.Draw(rc);
 			return;
 		}
 
 		m_bucketFood.Draw(rc);
 		m_bucketFood_Second.Draw(rc);
+		m_bucketFood_ThirdBlack.Draw(rc);
 	}
 	else if (m_foodCount == 1)
 	{
@@ -460,16 +492,19 @@ void CowFood::Render(RenderContext& rc)
 		{
 			m_tabooCowFood.Draw(rc);
 			m_bucketFood_SecondBlack.Draw(rc);
+			m_bucketFood_ThirdBlack.Draw(rc);
 			return;
 		}
 
 		m_bucketFood.Draw(rc);
 		m_bucketFood_SecondBlack.Draw(rc);
+		m_bucketFood_ThirdBlack.Draw(rc);
 	}
 	else
 	{
 		m_bucketFood_Black.Draw(rc);
 		m_bucketFood_SecondBlack.Draw(rc);
+		m_bucketFood_ThirdBlack.Draw(rc);
 	}
 	
 }
