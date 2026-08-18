@@ -457,7 +457,7 @@ CowFoodManager.cpp / .h
 
 >牛を助けるとコンボ数×100のスコアが加算されます。  
 
-><img width="500" height="300" alt="Score" src="https://github.com/user-attachments/assets/832f3672-dbcb-48d9-9c37-f4e460909620" />
+><img width="500" height="300" alt="Score" src="https://github.com/user-attachments/assets/bacd9bc7-a31e-4b2e-9d8e-f8e2a00e7188" />  
 
 >コンボ中は1コンボごとにゲーム時間が+3秒されます。  
 ><img width="500" height="300" alt="AddTimer" src="https://github.com/user-attachments/assets/a531337b-4112-442c-ac05-762527fcb095" />  
@@ -475,7 +475,7 @@ CowFoodManager.cpp / .h
 
 ### ②ゲームスタート時のUI表現について
 >ゲームスタート時のUIに関してはこのようにfmodf関数を使い、カウントダウンからの残りの時間を1で割った余りを取得し、それをα値やスケールの数値の変更に使うことによって、UIが透明で小さい状態から不透明で大きい状態になりを繰り返しながらカウントダウンのUIが表示されているようになっております。  
-><img width="720" height="395" alt="カウントダウン" src="https://github.com/user-attachments/assets/ba663c4a-b305-4f7e-9a7a-d78e286193ca" />　　
+><img width="500" height="300" alt="カウントダウン" src="https://github.com/user-attachments/assets/ba663c4a-b305-4f7e-9a7a-d78e286193ca" />　　
 
 ```c++
 m_countDownTime -=
@@ -549,7 +549,7 @@ m_countDownStart.Update();
 
 ### ③スコアのUIについて
 >スコアのUIでは、この様にカウンターアニメーションを入れ、救出数UIではバウンドアニメーションを入れることにより、数字がリアルタイムで増えていく面白さを表現しました。  
-><img width="500" height="300" alt="ポートフォリオ素材" src="https://github.com/user-attachments/assets/747dc17b-5601-4cd3-89a0-3439d02de641" />  
+><img width="500" height="300" alt="Score" src="https://github.com/user-attachments/assets/434b6890-1f04-4e68-a2c3-39df4bbf1e1f" />  
 
 ## CowNumberOfRescues.cpp
 ```c++
