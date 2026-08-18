@@ -11,7 +11,7 @@ GithubのURL
 https://github.com/Shimamotohisanori/MooFo
 
 YoutubeのURL  
-https://youtu.be/hesRwGaO47Y 
+https://www.youtube.com/watch?v=W8kVCd70rKE  
 
 # 目次
 <a id="toc"></a>
@@ -32,7 +32,7 @@ https://youtu.be/hesRwGaO47Y
 ***制作人数***  
 　3人  
 ***制作期間***  
-　2026年2月～2026年5月  
+　2026年2月～2026年8月  
 ***ゲームジャンル***  
 　3Dアクションゲーム  
 ***プレイ人数***  
@@ -53,29 +53,38 @@ https://youtu.be/hesRwGaO47Y
 　・Windows11  
 
 # 担当ソースコード
-### 島本学典  
+
+### 島本学典
+
 <details>
-<summary>ゲーム部分</summary>  
+<summary>ゲーム部分</summary>
 
-## 核心のゲームシステム  
-・動的スポーンシステム  
-「フィールド内に常時10体の牛を維持するように処理」  
+## 核心のゲームシステム
+
+・動的スポーンシステム
+「フィールド内に常時10体の牛を維持するように処理」
 「捕獲数に応じたスポーン範囲の動的変更」のロジック構築。  
-Game.cpp / .h  
+Game.cpp / .h
 
-・プレイヤー&ロープアクション  
+・プレイヤー&ロープアクション
 プレイヤー移動、ロープの投擲、ロープの追従・描画・挙動制御の実装。  
 Player.cpp / .h  
 Rope.cpp / .h  
 
-・オブジェクト・疑似AIの制御  
-プレイヤー接近時の牛の逃走、UFOにより連れ去り処理、及び基盤となるActor / Character クラスの設計。  
+・オブジェクト・疑似AIの制御
+プレイヤー接近時の牛の逃走、UFOにより連れ去り処理、及び基盤となるActor / Characterクラスの設計。
 Cow.cpp / .h  
 UFO.cpp / .h  
 Actor.cpp / .h  
 Character.cpp / .h  
 
+</details>  
+
+<details>  
+<summary>UI & 演出・カメラ</summary>  
+
 ## UI & 演出・カメラ  
+
 ・カメラシステム  
 ゲーム内カメラの追従及び挙動処理。  
 GameCamera.cpp / .h  
@@ -95,11 +104,36 @@ GameOver.cpp / .h
 Game.cpp / .h  
 
 ・マップUI制御  
-ミニマップ上の牛アイコンの表示・非表示切り替え処理。
+ミニマップ上の牛アイコンの表示・非表示切り替え処理。  
 Map.cpp / .h  
 
+・牛の餌UI・クールタイム  
+牛が禁止エリアに入った際に表示される餌UIの実装、および餌のクールタイム処理を実装。  
+CowFood.cpp / .h  
+
+・照準システム  
+ゲーム中に表示される照準の表示・制御システムを実装。  
+Aiming.cpp / .h  
+
+・操作説明UI  
+ゲーム画面上に操作説明を表示するUIを実装。
+InstructionControllerUI.cpp / .h  
+
+・UIパネル  
+ゲーム中に表示される各種UIの背面に配置する半透明パネルを実装。  
+UIPanels.cpp / .h  
+
+・難易度説明UI  
+難易度選択画面において、難易度ごとの説明画像を表示する機能を実装。  
+Difficulty.cpp / .h  
+DifficultySetting.cpp / .h  
+
+</details>
+
+<details>  
+<summary>エンジン拡張 & システム基盤</summary>  
+
 ## エンジン拡張 & システム基盤  
-※エンジン部分での変更は改造のみとなっております。
 
 ・シーン遷移・ロード処理  
 ロード中のオブジェクト事前生成、及びポーズ終了後にロード画面を経由してタイトルへ戻る処理を実装。  
@@ -120,7 +154,30 @@ CowCaptureController.cpp / .h
 SceneLight.cpp / .h  
 EffectEmitter.cpp / .h  
 
+・シャドウマップ機能の改造  
+ゲーム内の影表現を実現するため、シャドウマップに関連する処理を改造。  
+CascadeShadowMapMatrix.cpp / .h  
+ShadowMapRender.cpp / .h  
+
+・トゥーンアウトライン機能  
+ゲーム内のオブジェクトに輪郭線を表示するため、シェーダー及びレンダリング処理を改造し、トゥーンアウトライン機能を実装。  
+toonOutlineMask.fx  
+ToonOutlineEffect.cpp / .h  
+RenderingEngine.cpp / .h  
+
 </details>  
+
+<details>  
+<summary>サウンド</summary>  
+
+## サウンド  
+
+・ボイス・SE管理  
+プレイヤーのボイスやSEなど、ゲーム内で使用する音声を管理するVoiceManagerを実装。  
+VoiceManager.cpp / .h  
+
+</details>  
+
 
 ### 仙波知裕  
 
@@ -220,7 +277,7 @@ Cow.cpp / .h
 </details>  
 
 # 操作説明  
-> <img width="500" height="300" alt="Instructions" src="https://github.com/user-attachments/assets/ab91e125-4898-4224-8a42-4108c3d3bb52" />  
+> <img width="500" height="300" alt="画像" src="https://github.com/user-attachments/assets/bfdadabf-2e52-4d08-821c-c87f26a5199c" />
 
 [↑目次に戻る](#toc)  
 
@@ -229,21 +286,22 @@ Cow.cpp / .h
 ### ◇ゲーム詳細
 >このゲームは、カウボーイ風のヒーローが、牧場でUFOが連れ去ろうとする牛をロープで助けるアクションゲームです。
 
->時間制限内に、クリアに必要な数以上牛を助けることが目的です。
+>時間制限内に、クリアに必要な数以上牛を助けることが目的です。  
 
->UFOは4機存在しており、光を出しているときは近くにいる牛を追跡し、一定距離内にいる牛を連れ去ろうとしてきます。
+>難易度が存在しており、それぞれ「はじめて」「かんたん」「ふつう」「むずかしい」の4つが存在します。
+
+>UFOは難易度ごとに0～4機存在しており、光を出しているときは近くにいる牛を追跡し、一定距離内にいる牛を連れ去ろうとしてきます。
 
 >プレイヤーは連れ去らわれている牛に対してRBボタンでロープを投げることができます。  
 ロープが一定の距離近づくと牛にロープが付きます。  
 ロープが付いた状態でRT,LTボタン連打をすることによりロープを引っ張り、一定の距離まで近づけることで牛を救出できます。
 
->時間制限が0になるとゲームは終了し、リザルト画面(ゲームオーバー、ゲームクリア)に移ります。
+>時間制限が0になる、または牛が3匹UFOに連れ去られるとゲームは終了し、リザルト画面(ゲームオーバー、ゲームクリア)に移ります。
 >救出数がノルマに達していない場合はゲームオーバー、達成していればゲームクリアとなります。  
 
 > <img width="500" height="300" alt="ゲームの流れ" src="https://github.com/user-attachments/assets/09bec4a2-39ac-4ceb-af97-957e5734bc3b" />
 
->牛を助けるとスコアが+100され、  
-5コンボごとにスコアが+200されます。  
+>牛を助けるとコンボ数×100のスコアが加算されます。  
 
 ><img width="500" height="300" alt="Score" src="https://github.com/user-attachments/assets/832f3672-dbcb-48d9-9c37-f4e460909620" />
 
@@ -256,8 +314,9 @@ Cow.cpp / .h
 # ◇UIについて
 
 ### ①ゲーム中のUIについて
->ゲーム中に使うUIは統一感、見栄えの良さなどを考え、基本的に同じ青色基調のUIにしています。  
-><img width="500" height="300" alt="gameUI" src="https://github.com/user-attachments/assets/c00f9d88-f831-4623-86a7-9c7a7cc0a22f" />
+>ゲーム中に使うUIは統一感、見栄えの良さなどを考え、基本的に同じ白基調のUIにしています。  
+><img width="500" height="300" alt="GameUI" src="https://github.com/user-attachments/assets/9c3b3ef8-e764-4b1e-aef6-e2093a2ca6cb" />
+
 
 [↑目次に戻る](#toc) 
 
@@ -336,8 +395,44 @@ m_countDownStart.Update();
 [↑目次に戻る](#toc) 
 
 ### ③スコアのUIについて
->スコアのUIでは、この様にカウンターアニメーションを入れることにより、数字がリアルタイムで増えていく面白さを表現しました。  
+>スコアのUIでは、この様にカウンターアニメーションを入れ、救出数UIではバウンドアニメーションを入れることにより、数字がリアルタイムで増えていく面白さを表現しました。  
 ><img width="500" height="300" alt="ポートフォリオ素材" src="https://github.com/user-attachments/assets/747dc17b-5601-4cd3-89a0-3439d02de641" />  
+
+## CowNumberOfRescues.cpp
+```c++
+ /** 救出数が変化した場合 */
+ if (m_oldNumberOfRescues != m_numberOfRescues)
+ {
+     /** バウンドの値を設定 */
+     m_bounceValue.y = 30.0f;
+
+     /** 古い救出数を更新 */
+     m_oldNumberOfRescues = m_numberOfRescues;
+
+     /** 数字がバウンドしたフラグを立てる */
+     m_numberBound = true;
+ }
+
+ /** 数字がバウンドしている場合 */
+ if (m_numberBound)
+ {
+     m_bounceValue.Lerp(0.25f, m_bounceValue, Vector3::Zero);
+     /** 救出数のUIの座標にバウンドの値を加算 */
+     for (int i = 0; i < LayoutTypeNum; i++)
+     {
+         m_tensPos[i].y += m_bounceValue.y;
+         m_onesPos[i].y += m_bounceValue.y;
+     }
+     /** バウンドの値が0.1以下になったらバウンド終了 */
+     if (m_bounceValue.y <= 0.1f)
+     {
+         m_bounceValue = Vector3::Zero;
+         m_numberBound = false;
+     }
+ }
+```  
+
+## Score.cpp
 
 ```c++
 /** Lerp関数で滑らかに値を近づける */
