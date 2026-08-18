@@ -178,13 +178,13 @@ VoiceManager.cpp / .h
 
 </details>  
 
-
-### 仙波知裕  
+### 仙波知裕
 
 <details>
-<summary>ゲーム部分</summary>  
+<summary>ゲーム部分</summary>
 
-## ゲーム進行 & システム管理  
+## ゲーム進行 & システム管理
+
 ・ゲームフロー制御  
 タイトル、ゲームクリア、ゲームオーバー、ロードクラスの追加及びシーン遷移処理を実装。  
 Title.cpp / .h  
@@ -201,12 +201,35 @@ GameClear.cpp / .h
 GameOver.cpp / .h  
 
 ・ゲーム開始演出  
-ゲーム開始時のカウントダウン処理を実装  
+ゲーム開始時のカウントダウン処理を実装。  
 CountDown.cpp / .h  
 
+・時間減少システム  
+牛の救出に失敗した際に制限時間を減少させる処理を設計・実装。  
+DecreaseTimerUI.cpp / .h  
+
+・残機システム  
+牛の救出に3回失敗するとゲームオーバーとなる残機システムを設計・実装。  
+CowLivesUI.cpp / .h  
+
+・チュートリアルシステム  
+難易度「はじめて」をチュートリアルとして機能させるため、チュートリアルの進行やゲームルール、難易度に関するシステムを設計・実装。  
+TutorialManager.cpp / .h  
+
+</details>  
+
+<details>  
+<summary>オブジェクト配置 & ゲームバランス</summary>  
+
 ## オブジェクト配置 & ゲームバランス  
+
 ・ランダムスポーン制御  
 現在のスポーン範囲を基準として、牛が毎回ランダムな位置に配置される処理を実装。  
+LoadingScene.cpp / .h  
+
+・牛の行動制御  
+牛の行動パターンとして、フィールド内をランダムに移動する牛と、UFOに向かって移動する牛を実装。  
+Cow.cpp / .h  
 LoadingScene.cpp / .h  
 
 ・UFO制御  
@@ -222,18 +245,89 @@ Combo.cpp / .h
 AddTimer.cpp / .h  
 Timer.cpp / .h  
 
+・牛の餌数調整  
+ゲームバランスの調整として、牛の餌の最大数を2個から3個へ変更。  
+CowFood.cpp / .h  
+
+</details>  
+
+<details>  
+<summary>演出 & UI</summary>  
+
 ## 演出 & UI  
+
 ・救出演出  
-牛救出時に再生され牛アニメーション演出及び音声の追加  
+牛救出時に再生される牛のアニメーション演出及び音声を追加。  
 DummyCow.cpp / .h  
+
+・シーン遷移演出  
+シーン遷移時に必ずFadeOut及びFadeInが行われる仕組みを実装。  
+FadeManager.cpp / .h  
+LoadingScene.cpp / .h  
+
+・マップ外牛の誘導UI  
+マップ外で牛がUFOに連れ去られている際、マップ内に方向を示す矢印を表示し、連れ去られている牛の位置を把握しやすくするUIを実装。  
+Map.cpp / .h  
+
+・操作説明UI  
+ロード画面に操作説明の画像を表示する機能を実装。
+LoadingScene.cpp / .h  
+
+・制限時間警告UI  
+制限時間が一定以下になった際、カウンターアニメーションを再生するように改善。
+Timer.cpp / .h  
+
+・チュートリアルUI  
+難易度「はじめて」をチュートリアルとして、プレイヤーがゲームの操作やルールを理解できるようにUI及びゲーム進行を設計・実装。  
+TutorialManager.cpp / .h  
+
+・牛の餌UI・ゲームルール調整  
+牛の餌の数を2個から3個へ変更し、ゲーム中の餌に関するUI及びゲームルールを調整。  
+CowFood.cpp / .h  
+
+</details>  
+
+<details>  
+<summary>エフェクト & エンジン拡張</summary>  
+
+## エフェクト & エンジン拡張  
+
+・救出失敗時エフェクト  
+UFOによる牛の連れ去りに失敗した際に再生されるエフェクトを追加。  
+EffectManager.cpp / .h  
+
+・GIFアニメーション再生機能  
+GIF画像をゲーム内で再生・表示するための仕組みを設計・実装。  
+AnimSpriteRender.cpp / .h  
 
 </details>  
 
 ### 替地謙介  
-<details>
+
+<details>  
 <summary>ゲーム部分</summary>  
 
+## ゲームルール & 難易度  
+
+・難易度システム  
+難易度選択画面を作成し、プレイヤーが任意の難易度を選択できるシステムを設計・実装。  
+難易度ごとにノルマ、UFOの数、各種類の牛の出現率、制限時間、牛の最大出現数などのゲームパラメータをテーブル管理し、難易度に応じてゲーム内容が変化する仕組みを実装。  
+Difficulty.cpp / .h  
+DifficultySetting.cpp / .h  
+
+・牛の行動・出現制御  
+プレイヤーを追いかける牛や、通常の牛とは異なる報酬を持つボーナス牛を実装し、それぞれの出現率を設定。  
+Cow.cpp / .h  
+LoadingScene.cpp / .h  
+Game.cpp / .h  
+
+</details>  
+
+<details>  
+<summary>UI & オプション機能</summary>  
+
 ## UI & オプション機能  
+
 ・MapUIシステム  
 マップ全体の表示・制御処理を実装。  
 Map.cpp / .h  
@@ -243,13 +337,28 @@ Map.cpp / .h
 Pause.cpp / .h  
 SoundPause.cpp / .h  
 
+・牛の餌UI  
+牛の餌に関するモデル表示やUI表示を実装し、餌を設置することで牛が餌についてくる仕組みを実装。  
+CowFood.cpp / .h  
+
+・難易度選択UI  
+難易度ごとの説明を表示する難易度選択画面を作成し、プレイヤーが任意の難易度を選択できるUIを実装。  
+Difficulty.cpp / .h  
+DifficultySetting.cpp / .h  
+
+</details>  
+
+<details>  
+<summary>サウンド & ビジュアル</summary>  
+
 ## サウンド & ビジュアル  
+
 ・サウンド実装  
-BGM,SEの追加及びゲーム内への組み込み。  
+BGM、SEの追加及びゲーム内への組み込み。  
 SoundManager.cpp / .h  
 
 ・ステージ制作  
-ステージモデルの制作及び描画処理を担当。  
+ステージモデルの制作及び当たり判定、描画処理を担当。  
 Stage.cpp / .h  
 
 ・エフェクト追加  
@@ -257,7 +366,18 @@ Stage.cpp / .h
 DummyCow.cpp / .h  
 EffectManager.cpp / .h  
 
+・ゲーム内エフェクト拡張  
+ゲーム内の各種状況に応じたエフェクトを追加。  
+救出された牛のハートエフェクト、牛の餌を設置した際のエフェクト、餌の補充場所に近づいた際のAボタンエフェクト、牛舎付近のエリアエフェクト、牛が餌を食べた後の満腹エフェクト、プレイヤーが牛を引っ張る際の汗エフェクト、UFOに連れ去られている牛の汗エフェクト、牛が餌を食べ終わった後のエフェクトなどを実装。  
+EffectManager.cpp / .h  
+
+</details>  
+
+<details>  
+<summary>キャラクター制御 & アニメーション</summary>  
+
 ## キャラクター制御 & アニメーション  
+
 ・UFO挙動制御  
 UFOの移動関連処理を実装。  
 UFO.cpp / .h  
@@ -267,17 +387,51 @@ UFO.cpp / .h
 Player.cpp / .h  
 
 ・モーションブレンド  
-プレイヤーのアニメーションの補完処理(モーションブレンド)を実装。  
+プレイヤーのアニメーションの補完処理（モーションブレンド）を実装。  
 Player.cpp / .h  
 
-・牛AI行動制御  
+・プレイヤーアニメーション更新  
+プレイヤーのアニメーションを新規モデル・モーションへ更新し、ゲーム内へ追加実装。  
+Player.cpp / .h  
+
+・ロープ操作UI  
+プレイヤーがロープを引っ張る際に表示されるUIを新調し、ゲーム内へ追加実装。  
+Player.cpp / .h  
+
+・牛の行動制御  
 牛の休憩時間・移動時間をランダム化する疑似AI処理を実装。  
-Cow.cpp / .h
+Cow.cpp / .h  
+
+・牛の餌追従システム  
+牛が設置された餌を追いかける処理を実装。  
+CowLuring.cpp / .h  
+
+・餌の消費演出  
+牛が餌を食べた際に餌が縮む処理、及び餌を食べた際のエフェクト再生を設計・実装。  
+CowShrinkHay.cpp / .h  
+
+</details>  
+
+<details>  
+<summary>オブジェクト & システム管理</summary>  
+
+## オブジェクト & システム管理  
+
+・牛の餌管理システム  
+牛の餌の生成・消去処理を実装し、ゲーム内に存在する餌の情報を管理するシステムを設計・実装。  
+CowFoodManager.cpp / .h  
+
+・牛の餌システム  
+牛の餌のモデル・UI表示、餌の設置、牛の追従、餌の消費など、牛の餌に関する一連のシステムを実装。  
+CowFood.cpp / .h  
+CowLuring.cpp / .h  
+CowShrinkHay.cpp / .h  
+CowFoodManager.cpp / .h  
 
 </details>  
 
 # 操作説明  
-> <img width="500" height="300" alt="画像" src="https://github.com/user-attachments/assets/bfdadabf-2e52-4d08-821c-c87f26a5199c" />
+><img width="500" height="300" alt="画像" src="https://github.com/user-attachments/assets/bfdadabf-2e52-4d08-821c-c87f26a5199c" />
 
 [↑目次に戻る](#toc)  
 
@@ -316,7 +470,6 @@ Cow.cpp / .h
 ### ①ゲーム中のUIについて
 >ゲーム中に使うUIは統一感、見栄えの良さなどを考え、基本的に同じ白基調のUIにしています。  
 ><img width="500" height="300" alt="GameUI" src="https://github.com/user-attachments/assets/9c3b3ef8-e764-4b1e-aef6-e2093a2ca6cb" />
-
 
 [↑目次に戻る](#toc) 
 
