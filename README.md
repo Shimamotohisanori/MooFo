@@ -612,8 +612,7 @@ if (abs(m_score - m_displayScore) < 5)
 >コンボをした際に秒数が+3されてるUIが画面上部に表示されたり、画面右下にComboのUIが表示されたりするように追加しました。  
 今何コンボしていて、秒数がどれくらい増えたかを視覚で分かるようにすることによって、プレイヤーが次にどの牛を救出すればいいかを判断できるようにするためです。
 ><img width="500" height="300" alt="AddTimer" src="https://github.com/user-attachments/assets/a514dc62-71f7-4210-a0b2-91c4d5955428" />  
-><img width="500" height="300" alt="Score" src="https://github.com/user-attachments/assets/add06973-e374-41e0-8d04-263cd6d78b3f" />
-
+><img width="500" height="300" alt="Score" src="https://github.com/user-attachments/assets/225484b0-06ae-4bef-aaea-708b87da3926" />  
 
 [↑目次に戻る](#toc)  
 
