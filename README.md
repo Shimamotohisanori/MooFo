@@ -650,56 +650,149 @@ if (abs(m_score - m_displayScore) < 5)
 
 # 工夫した点
 
-### ①牛の挙動  
-牛の移動処理で休憩時間と移動時間を追加し、さらにそれをランダムにすることにより、より自然な牛に近い動きを再現しました。  
-※RANDOMCOW_TIMERは定数で240になっています。
+### ①異なる種類の牛の実装及び挙動について  
+>4種類の牛を実装いたしました。  
+>種類が分かりやすいように種類ごとに色を分けています。  
+>種類は次の通りです。  
+・ランダム移動を行う牛(茶色)  
+・通常時はランダム移動だが、UFOの光が出ている時のみ光の方向に向かって移動を行う牛(薄茶色)  
+・常時プレイヤーのいる方向について行く牛(ピンク色)  
+・救助に時間がかかるが、救助した際に高得点が得られるボーナス牛(黄色)  
+>これらの牛の生成に関してはLoadingScene.cpp内、及びGame.cpp内で行っています。  
+>これらの牛を追加したことにより、ステージ全体に満遍なく牛を配置できるような状態を作り、常にプレイヤーが考えて動かないと助けられないような環境にしました。  
+>また、この牛達は難易度ごとに出現率が異なるようになっているので、プレイヤーの腕前に合ったプレイを実現させています。  
 
+### LoadingScene.cpp  
 ```c++  
-/** タイマーが0以上なら新しい方向を決める */
-if (m_moveTimer <= 0)
+/** チュートリアル中はLoadingクラスの牛を生成しない */
+if (!m_isTutorial)
 {
-	if (m_isMove)
+	/** 0～9の数字を割り当てる*/
+	int cowIndex = m_loadStep - 2;
+
+	/** 難易度ごとの最大出現数を取得し、それ未満の時だけ生成する */
+	int maxCowCount = GameDifficultyManager::GetParam().maxCowCount;
+
+	if (cowIndex < maxCowCount)
 	{
-		Vector3 dir
-		(
-			/** (0, 1, 2, から - 1を引いているので) - 1, 0, 1の範囲でランダムな値を生成 */
-			rand() % 3 - 1,//x
-			0,             //yは常に0
-			rand() % 3 - 1//z
-		);
+		Cow* cow = NewGO<Cow>(0, "cow");
+		cow->SetPosition(RandomCowPos());
 
-		/** 0,0,0になったら一秒休む */
-		if (dir.LengthSq() == 0)
+		/** 難易度が簡単なら追いかける牛は生成しない */
+		bool isEasy = (GameDifficultyManager::GetDifficulty() == EnDifficulty::en_Easy);
+
+		if (!isEasy && rand() % 100 < INITIAL_CHASE_COW_RATE)
 		{
-			dir = Vector3(1, 0, 0);
+			cow->SetCowType(Cow::EnCowType::en_Chase);
 		}
-		dir.Normalize();
-		m_moveDir = dir;
-		/** 1～4秒間ランダムに方向を変える */
-		m_moveTimer = rand() % RANDOMCOW_TIMER;
-		m_isMove = false;
-	}
-
-		/** 移動した後に必ず休む */
 		else
 		{
-			m_moveDir = Vector3::Zero;
-			/** 1～4秒間のランダム時間に休む */
-			m_moveTimer = rand() % RANDOMCOW_TIMER;
-			m_isMove = true;
+			cow->SetCowType(cowIndex % 2 == 0 ? Cow::EnCowType::en_Light : Cow::EnCowType::en_Random);
+		}
+
+		m_tempCows.push_back(cow);
+	}
+}
+```
+
+### Game.cpp
+```c++ 
+void Game::SpawnCow()
+{
+	/** チュートリアル中はランダムスポーンさせない*/
+	if (m_isTutorialMode)
+	{
+		return;
+	}
+
+	if (m_timer->GetTimer() <= 4.0f || m_isTimeOut)
+	{
+		/** タイマーが4秒以下なら牛を補充しない */
+		return;
+	}
+
+	/** 現在の牛の数が10体未満なら補充 */
+	const int maxCowCount = GameDifficultyManager::GetParam().maxCowCount;
+	if (static_cast<int>(m_aliveCows.size()) < maxCowCount)
+	{
+
+		m_spawnTimer += g_gameTime->GetFrameDeltaTime();
+
+		/** 3秒ごとに1体補充 */
+		if (m_spawnTimer >=NEW_SPAWN_TIMER)
+		{
+			
+			int currentrescues = m_cowNumberOfRescues->GetNumberOfRescues();
+
+			/** もし牛の救出数が一定以上ならスポーン範囲を大きくする。 */
+			int chaseCowRate = CHASE_COW_TABLE_A;
+
+			/** もし牛の救出数が一定以上ならスポーンする範囲を大きくする */
+			if (currentrescues >= 10)
+			{
+				m_difficultyLevelSpawnRange = 600;
+				chaseCowRate = CHASE_COW_TABLE_C;
+			}
+
+			else if (currentrescues >= 5)
+			{
+				m_difficultyLevelSpawnRange = 400;
+				chaseCowRate = CHASE_COW_TABLE_B;
+			}
+
+			else
+			{
+				m_difficultyLevelSpawnRange = 0;
+				chaseCowRate = CHASE_COW_TABLE_A;
+			}
+
+			/** 簡単モードなら追いかける牛の確率を強制的に0にする */
+			if (GameDifficultyManager::GetDifficulty() == EnDifficulty::en_Easy)
+			{
+				chaseCowRate = 0;
+			}
+			else
+			{
+				chaseCowRate += GameDifficultyManager::GetParam().chaseCowRateOffset;
+			}
+
+			chaseCowRate = max(0, min(chaseCowRate, 100));
+
+			m_spawnTimer = 0.0f;
+
+
+			/** 新しい牛を生成 */
+			Cow* newCow = NewGO<Cow>(0, "cow");
+
+			
+			/** スポーン位置 */
+			Vector3 pos;
+
+			/** ランダムスポーン範囲に難易度による調整を加える */
+			int range = RANDOM_SPAWN_RANGE + m_difficultyLevelSpawnRange;
+
+			/** ランダムな位置を生成する */
+			/** 難易度(牛の救出数)に応じてスポーン範囲を調整 */
+			pos.x = (rand() % (range * 2)) - range;
+			pos.y = 0.0f;
+			pos.z = (rand() % (range * 2)) - range;
+
+			/** 難易度に応じたパラメーターを取得 */
+			const DifficultyParam difficultyParam = GameDifficultyManager::GetParam();
+
+			/** 難易度に応じて牛のタイプを決定する */
+			newCow->SetCowType(DecideCowType(chaseCowRate,difficultyParam.bonusCowRate,difficultyParam.UFOCowRate));
+			/** UFOに向かって歩く牛の速度も適応させる*/
+			newCow->IsMoving();
+
+			newCow->SetPosition(pos);
+			/** 生きている牛リストに追加 */
+			m_aliveCows.push_back(newCow);
+
+
 		}
 	}
-/** 移動 */
-Vector3 pos = m_transform.GetPosition();
-/** 少しづつ位置を動かしている */
-pos += m_moveDir * m_moveSpeed * g_gameTime->GetFrameDeltaTime();
-/** ポジションを更新 */
-m_transform.SetPosition(pos);
-/** モデルに位置を反映 */
-m_cowmodelRender.SetPosition(m_transform.GetPosition());
-/** タイマーを減らす */
-m_moveTimer--;
-
+}
 ```  
 
 [↑目次に戻る](#toc)  
@@ -789,336 +882,639 @@ else
 
 [↑目次に戻る](#toc)  
 
-### ③牛がロープに引っ張られる処理  
-プレイヤー側がロープを引っ張るボタンを押したとき、捕まっている牛がプレイヤーの位置に近づくような処理を書くことにより、ロープを左右で交互に引っ張っているような感覚を再現しました。  
+### ③gif画像の実装及び再生について  
+>gif画像が再生及び表示されるように、設計、実装を行いました。
+>AnimSpriteRenderというクラスをK2Engine内で作り、その中で常に画像を再生するような処理や、表示を実装しました。  
+>再生に関しましては、1フレームごとの静止画を連続で何枚も見せることにより、gif画像の様な滑らかな再生を実現しています。  
 
-### プレイヤー側の処理
+### AnimSpriteRender.h  
 ```c++  
-if (m_rope)
+#pragma once
+#include"graphics/SpriteRender.h"
+namespace nsK2Engine {
+    class AnimSpriteRender
+    {
+    public:
+        /// <summary>
+        /// 初期化。
+        /// </summary>
+        /// <param name="filePathList">DDSファイルパスの配列</param>
+        /// <param name="frameCount">フレーム数</param>
+        /// <param name="w">幅</param>
+        /// <param name="h">高さ</param>
+        /// <param name="fps">1秒あたりのフレーム数</param>
+        void Init(const std::vector<std::string>& filePathList,
+            int frameCount, float w, float h, float fps = 10.0f);
+         
+        /** ロードが重いので分割するための関数*/
+        void PrepareFrameCount(int frameCount, float w, float h, float fps = 10.0f);
+
+        /** 1フレーム分だけ追加ロードする関数*/
+        void AddFrame(const std::string& filePath);
+
+        /** 最終フレームより何コマ手前で止めるかを設定する */
+        void SetFinishFrameOffset(int offset) { m_finishFrameOffset = offset; }
+
+        bool IsLoadComplete() const
+        {
+            return static_cast<int>(m_sprites.size()) >= m_frameCount;
+        }
+        void Update();
+        void Draw(RenderContext& rc);
+        void SetPosition(const Vector3& pos);
+        void SetScale(const Vector3& scale);
+        /** Gif画像を最初のフレームに戻す関数*/
+        void Reset();
+
+        bool IsFinished()const
+        {
+            return m_isFinished;
+        }
+    private:
+        std::vector<std::unique_ptr<SpriteRender>>   m_sprites;      // フレームごとのスプライトの配列(ポインタ)
+        int     m_frameCount = 0;                                    // 総フレーム数
+        int     m_currentFrame = 0;                                  // 現在のフレーム番号
+        float   m_fps = 10.0f;                                       // 再生FPS
+        float   m_timer = 0.0f;                                      // 経過時間
+        float   m_frameInterval = 0.1f;
+        float   m_width = 0.0f;                                       //幅
+        float   m_height = 0.0f;                                     // 高さ
+        // 1フレームの秒数
+        Vector3 m_position = Vector3::Zero;                          // 座標
+        Vector3 m_scale = Vector3::One;// 大きさ
+
+        /** 全ロード完了状態で、現在最終フレームを表示しているかどうか（毎ループ1回だけtrueになる） */
+        bool m_isFinished = false;
+
+        /** 最終フレームから何コマ手前で停止させるか */
+        int m_finishFrameOffset = 0;
+    };
+}
+
+```  
+
+### AnimSpriteRender.cpp  
+```c++  
+#include "k2EnginePreCompile.h"
+#include "AnimSpriteRender.h"
+namespace nsK2Engine {
+    void AnimSpriteRender::Init(
+        const std::vector<std::string>& filePathList,
+        int frameCount, float w, float h, float fps)
+    {
+        m_frameCount = frameCount;
+        m_fps = fps;
+        m_frameInterval = 1.0f / fps;
+
+        // resizeではなくmake_uniqueで初期化することで
+        // SpriteRenderのコンストラクタが呼ばれる
+        for (int i = 0; i < frameCount; i++)
+        {
+            auto sprite = std::make_unique<SpriteRender>();
+            sprite->Init(filePathList[i].c_str(), w, h, AlphaBlendMode_Trans);
+            m_sprites.push_back(std::move(sprite));
+        }
+    }
+
+    void AnimSpriteRender::PrepareFrameCount(int frameCount, float w, float h, float fps)
+    {
+        m_frameCount = frameCount;
+        m_fps = fps;
+        m_frameInterval = 1.0f / fps;
+        m_width = w;
+        m_height = h;
+        m_currentFrame = 0;
+        m_timer = 0.0f;
+        m_sprites.clear();
+        m_sprites.reserve(frameCount);
+    }
+
+
+    void AnimSpriteRender::AddFrame(const std::string& filePath)
+    {
+        if (static_cast<int>(m_sprites.size()) >= m_frameCount)
+        {
+            return;
+        }
+
+        auto sprite = std::make_unique<SpriteRender>();
+        sprite->Init(filePath.c_str(), m_width, m_height, AlphaBlendMode_Trans);
+
+
+        sprite->SetPosition(m_position);
+        sprite->SetScale(m_scale);
+        sprite->Update();
+        m_sprites.push_back(std::move(sprite));
+    }
+    void AnimSpriteRender::Reset()
+    {
+        m_currentFrame = 0;
+        m_timer = 0.0f;
+        m_isFinished = false;
+    }
+
+
+
+
+
+    void AnimSpriteRender::Update()
+    {
+        /** スプライトが初期化されていない場合は何もしない */
+        if (m_sprites.empty())
+        {
+            return;
+        }
+
+        const int loadedCount = static_cast<int>(m_sprites.size());
+        const bool isFullyLoaded = (loadedCount >= m_frameCount);
+
+        if (!m_isFinished)
+        {
+            m_timer += g_gameTime->GetFrameDeltaTime();
+
+            /** 実際に止めたい対象フレーム(最終フレームより手前) */
+            const int targetStopFrame =
+                (m_frameCount - 1 - m_finishFrameOffset < 0)
+                ? 0
+                : (m_frameCount - 1 - m_finishFrameOffset);
+
+            while (m_timer >= m_frameInterval)
+            {
+                m_timer -= m_frameInterval;
+                m_currentFrame++;
+
+                if (isFullyLoaded && m_currentFrame >= targetStopFrame)
+                {
+                    m_currentFrame = targetStopFrame;
+                    m_isFinished = true;
+                    m_timer = 0.0f;
+                    break;
+                }
+
+                m_currentFrame %= loadedCount;
+            }
+
+
+        }
+
+        /** 現在表示するフレームの座標を必ず反映させる*/
+        if (m_currentFrame < loadedCount)
+        {
+            m_sprites[m_currentFrame]->SetPosition(m_position);
+            m_sprites[m_currentFrame]->SetScale(m_scale);
+            m_sprites[m_currentFrame]->Update();
+        }
+    }
+
+    void AnimSpriteRender::Draw(RenderContext& rc)
+    {
+        if (m_sprites.empty())
+        {
+            return;
+        }
+
+        int drawIndex = m_currentFrame;
+        if (drawIndex >= static_cast<int>(m_sprites.size()))
+        {
+            drawIndex = static_cast<int>(m_sprites.size()) - 1;
+        }
+
+        m_sprites[drawIndex]->Draw(rc);
+    }
+
+    void AnimSpriteRender::SetPosition(const Vector3& pos) { m_position = pos; }
+    void AnimSpriteRender::SetScale(const Vector3& scale) { m_scale = scale; }
+}
+```  
+
+### LoadingScene.cpp
+```c++  
+void LoadingScene::PrepareAnimResources()
 {
-	//ロープが牛に当たっているとき
-	if (m_rope->GetIsHitCow())
+	/** 既に準備されている場合は何もしない */
+	if (!m_foodAnimLoadPaths.empty())
 	{
-        /** 右ボタンを押したら */
-		if (g_pad[0]->IsTrigger(enButtonRB1))
-		{
-			m_isRightButton1 = true;
-			m_isLeftButton1 = false;
-
-			m_isRightButton1_Trigger = true;
-			m_isLeftButton1_Trigger = false;
-		}
-
-        /** 左ボタンを押したら */
-		else if (g_pad[0]->IsTrigger(enButtonLB1))
-		{
-			m_isLeftButton1 = true;
-			m_isRightButton1 = false;
-
-			m_isLeftButton1_Trigger = true;
-			m_isRightButton1_Trigger = false;
-		}
+		return;
 	}
+
+	/** ロープで引っ張るGifのパスリストを準備する */
+	for (int h = 10; h <= 93; h += 2)
+	{
+		char buf[256];
+		sprintf(buf, "Assets/Gif/PullRope/anim_%02d.DDS", h);
+		m_ropeAnimLoadPaths.push_back(buf);
+	}
+	/** 餌のGifのパスリストを準備する */
+	for (int i = 1; i <=74 ; i ++)
+	{
+		char buf[256];
+		sprintf(buf, "Assets/Gif/Food/anim_%02d.DDS", i);
+		m_foodAnimLoadPaths.push_back(buf);
+	}
+
+	/** 歩く牛のローディングアニメーションを常にループ再生する*/
+	for (int i = 1; i <= COWWALK_FREAM_COUNT; i++)
+	{
+		char buf[256];
+		sprintf(buf, COWWALK_FILEPATH, i);
+		m_CowWalkAnimLoadPaths.push_back(buf);
+	}
+
+	/** ロープで引っ張るGifのフレーム数を準備する */
+	m_ropeAnimSpriteRender.PrepareFrameCount(
+		static_cast<int>(m_ropeAnimLoadPaths.size()), 610.0f, 590.0f, 10.0f);
+	m_ropeAnimSpriteRender.SetPosition({ -535.0f, 10.0f, 0.0f });
+
+	/** 餌のGifのフレーム数を準備する */
+	m_foodAnimSpriteRender.PrepareFrameCount(
+		static_cast<int>(m_foodAnimLoadPaths.size()), 610.0f, 590.0f, 10.0f);
+	m_foodAnimSpriteRender.SetPosition({ -535.0f, 10.0f, 0.0f });
+
+	/** 25枚程度なので一括ロードする*/
+	m_cowWalkSpriteRender.Init(
+		m_CowWalkAnimLoadPaths,
+		static_cast<int>(m_CowWalkAnimLoadPaths.size()),
+		COWWALK_WIDTH, COWWALK_HEIGHT, COWWALK_FPS);
+	m_cowWalkSpriteRender.SetPosition(Vector3(800.0f, -400.0f, 0.0f));
 }
 ```  
-
-### 牛の処理  
-※PULL_POWERは定数で、8.0fという値になっています。
-```c++  
-/** プレイヤー側の左右ボタンを押したというフラグがどちらか立っていれば */
-if (m_player->GetIsRightButton1() or m_player->GetIsLeftButton1())
-{
-	/** プレイヤーの位置を取得 */
-	Vector3 playerPos = m_player->GetPosition();
-
-	/** 牛の位置 */
-	Vector3 cowPos = m_transform.GetPosition();
-
-	/** プレイヤーへの方向 */
-	Vector3 dir = playerPos - cowPos;
-
-	/** 正規化 */
-	dir.Normalize();
-
-	/** 牛をプレイヤーのいる位置まで徐々に移動 */
-	cowPos += dir * PULL_POWER;
-
-	m_transform.SetPosition(cowPos);
-
-	m_cowmodelRender.SetPosition(m_transform.GetPosition());
-
-    /** 牛は引っ張られると左右ボタンのフラグを折る */
-	m_player->SetGetLeftButton1(false);
-	m_player->SetGetRightButton1(false);
-}
-```  
-
 [↑目次に戻る](#toc)  
 
 ### ④ロード中にオブジェクトが生成される処理  
-ロード中に重たいオブジェクトをSwitch文で制御し、生成することにより、ゲームが開始した際のカクつきを改善し、ゲームを始めるのが早くなりました。  
-これにより、ゲーム中のFPSが7～10FPS程改善されました。
+>ロード中に重たいオブジェクトをSwitch文で制御し、生成することにより、ゲームが開始した際のカクつきを改善し、ゲームを始めるのが早くなりました。  
+>これにより、ゲーム中のFPSが7～10FPS程改善されました。
 
 ```c++  
 void LoadingScene::LoadGameObjectsStepByStep()
 {
-    switch (m_loadStep)
-    {
-	    /** ロードするゲームオブジェクトをステップバイステップで生成する */
+	switch (m_loadStep)
+	{
+		/** ロードするゲームオブジェクトをステップバイステップで生成する */
+	case 0:
+	{
 
-	    /** プレイヤーを生成 */
-        case 0: NewGO<Player>(0, "player"); break;
 
-	    /** ステージを生成 */
-        case 1: NewGO<Stage>(0, "stage"); break;
+		/** 1フレームでロードに使ってよい時間(ms) */
+		constexpr double ROPE_LOAD_TIME_BUDGET_MS = 2.0;
 
-	    /** 牛を生成(10体分) */
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-        case 9:
-        case 10:
-        case 11:
-	    {
-	        Cow* cow = NewGO<Cow>(0, "cow");
-	        cow->SetPosition(RandomCowPos());
-	        m_tempCows.push_back(cow);
-        } break;
+		/** ロープを最優先でロードし切るまではこのステップに留まる*/
+		if (m_ropeLoadIndex < static_cast<int>(m_ropeAnimLoadPaths.size()))
+		{
+			auto loadStart = std::chrono::high_resolution_clock::now();
 
-	    /** もしUFOが消えていなかったら残っているUFOを消す */
-        case 12:
-        {
-	        auto ufos = FindGOs<UFO>("UFO");
-	        for (auto ufo : ufos)
-	        {
-		        if (ufo && !ufo->IsDead())
-		        {
-			        DeleteGO(ufo);
-		        }
-	        }
-	        break;
-        }
+			/** 予算内に収まる限り、1枚ずつロードを続ける */
+			while (m_ropeLoadIndex < static_cast<int>(m_ropeAnimLoadPaths.size()))
+			{
+				m_ropeAnimSpriteRender.AddFrame(m_ropeAnimLoadPaths[m_ropeLoadIndex]);
+				m_ropeLoadIndex++;
 
-	    /** UFOの生成前にマネージャーを生成*/
-        case 13:
-	    NewGO<UFOLightManager>(0, "ufolightmanager");
-	    break;
+				double elapsedMs = std::chrono::duration<double, std::milli>(
+					std::chrono::high_resolution_clock::now() - loadStart).count();
 
-	    /** UFOを生成(4体分) */
-        case 14:
-        case 15:
-        case 16:
-        case 17:
-        {
+				if (elapsedMs >= ROPE_LOAD_TIME_BUDGET_MS)
+				{
+					break;
+				}
+			}
+			return; // ロープのロードが終わるまで次のステップに進まない
+		}
 
-	        int index = m_loadStep - 14;
-	        if (index >= 0 && index < 4)
-	        {
-		    UFO* ufo = NewGO<UFO>(0, "UFO");
-		    ufo->SetPosition(UFO_INFOMATIONS[index].pos);
-		    m_tempUFOs.push_back(ufo);
-	        }
-        } break;
+		// ロープのロードが完了した時点でこのcaseを抜ける
+		break;
+	}
+	/** プレイヤーを生成 */
+	case 1:NewGO<Player>(0, "player");
+		break;
 
-	    /** ゲームカメラを生成 */
-        case 18: NewGO<GameCamera>(0, "gameCamera"); break;
-	    /** スカイキューブを生成 */
-        case 19:
-        {
+	case 2:/** ステージを生成 */
+	{
+		if (m_stage == nullptr)
+		{
+			m_stage = NewGO<Stage>(0, "stage");
+		}
+		if (!m_stage->LoadStepByStep())
+		{
+			/** ステージのロードが終わるまで次のステップに進まない*/
+			return;
+		}
+		break;
+	}
+	///** 牛を生成(10体分) */
+	case 3:
+	case 4:
+	case 5:
+	case 6:
+	case 7:
+	case 8:
+	case 9:
+	case 10:
+	case 11:
+	case 12:
+	{
+		/** チュートリアル中はLoadingクラスの牛を生成しない */
+		if (!m_isTutorial)
+		{
+			/** 0～9の数字を割り当てる*/
+			int cowIndex = m_loadStep - 2;
+
+			/** 難易度ごとの最大出現数を取得し、それ未満の時だけ生成する */
+			int maxCowCount = GameDifficultyManager::GetParam().maxCowCount;
+
+			if (cowIndex < maxCowCount)
+			{
+				Cow* cow = NewGO<Cow>(0, "cow");
+				cow->SetPosition(RandomCowPos());
+
+				/** 難易度が簡単なら追いかける牛は生成しない */
+				bool isEasy = (GameDifficultyManager::GetDifficulty() == EnDifficulty::en_Easy);
+
+				if (!isEasy && rand() % 100 < INITIAL_CHASE_COW_RATE)
+				{
+					cow->SetCowType(Cow::EnCowType::en_Chase);
+				}
+				else
+				{
+					cow->SetCowType(cowIndex % 2 == 0 ? Cow::EnCowType::en_Light : Cow::EnCowType::en_Random);
+				}
+
+				m_tempCows.push_back(cow);
+			}
+		}
+
+		
+	} break;
+
+	/** もしUFOが消えていなかったら残っているUFOを消す */
+	case 13:
+	{
+		auto ufos = FindGOs<UFO>("UFO");
+		for (auto ufo : ufos)
+		{
+			if (ufo && !ufo->IsDead())
+			{
+				DeleteGO(ufo);
+			}
+		}
+		break;
+	}
+
+	/** UFOLightManagerを生成 */
+	case 14:
+		NewGO<UFOLightManager>(0, "ufolightmanager");
+		break;
+
+		/** UFOを生成(4体分) */
+	case 15:
+	case 16:
+	case 17:
+	case 18:
+	{
+		/** チュートリアル中はLoadingクラスのUFOを生成しない */
+		if (!m_isTutorial)
+		{
+			int index = m_loadStep - 15;
+
+			/** 難易度に応じたUFO数を取得し、その数までしか生成しないようにする */
+			int ufoCount = GameDifficultyManager::GetParam().ufoCount;
+
+			if (index >= 0 && index < 4 && index < ufoCount)
+			{
+				UFO* ufo = NewGO<UFO>(0, "UFO");
+				ufo->SetPosition(UFO_INFOMATIONS[index].pos);
+				ufo->SetUFOMoveState();
+				ufo->SetSlotIndex(index);
+				m_tempUFOs.push_back(ufo);
+			}
+		}
+	} break;
+
+	/** ゲームカメラを生成 */
+
+	case 19: NewGO<GameCamera>(0, "gameCamera");
+		break;
+
+	case 20: NewGO<UIPanels>(0, "uipanels");
+		break;
+
+	case 21:
+	{
+		/** 牛の餌を生成 */
+		NewGO<CowFood>(0, "cowfood");
+
+		NewGO<CowFoodManager>(0, "cowfoodmanager");
+	}
+	break;
+	/** スカイキューブを生成 */
+	case 22:
+	{
+		/** SkyCube を生成 */
+		m_skyCube = NewGO<SkyCube>(0, "skyCube");
+
+		/** タイプ設定 */
+		m_skyCube->SetType(EnSkyCubeType::enSkyCubeType_Day);
+
+		/** スケール設定 */
+		m_skyCube->SetScale(10000.0f);
+	}
+	break;
+
+	/** 方向光・IBL設定（ここが一番重いはず） */
+	case 23:
+	{
+		/** 方向光(ほぼ真上から差し込む光) */
+		Vector3 sunDir(0.0f, -1.0f, 0.0f);
+		sunDir.Normalize();
+		g_renderingEngine->SetDirectionLight(0, sunDir, Vector3(5.0f, 5.0f, 5.0f));
+
+		/** IBL 設定 */
+		g_renderingEngine->SetAmbientByIBLTexture(m_skyCube->GetTextureFilePath(), 0.95f);
+	}
+	break;
+	case 24:
+		/** ブルームを抑制 */
+		g_renderingEngine->SetBloomThreshold(3.0f);
+		break;
+
+	case 25:
+	{
+		if (m_game == nullptr)
+		{
+			m_game = NewGO<Game>(0, "game");
+		}
+		if (!m_game->LoadStepByStep())
+		{
+			/** Gameの初期化が終わるまで次に進まない */
+			return;
+		}
+		for (auto cow : m_tempCows)
+		{
+			m_game->GetAliveCows().push_back(cow);
+		}
+
+		m_game->SetUFOList(m_tempUFOs);
 	
-	        /** SkyCube を生成 */
-	        SkyCube* sky = NewGO<SkyCube>(0, "skyCube");
-
-	        /** タイプ設定 */
-	        sky->SetType(EnSkyCubeType::enSkyCubeType_Night);
-
-	        /** スケール設定 */
-	        sky->SetScale(10000.0f);
-
-	        /** IBL 設定 */
-	        g_renderingEngine->SetAmbientByIBLTexture(sky->GetTextureFilePath(), 0.05f);
-        } break;
-
-	    /** ゲーム本体を生成 */
-        case 20:
-	    Game* game =NewGO<Game>(0, "game");
-
-	    /** ロードした牛をゲームに渡す */
-	    for (auto cow : m_tempCows)
-	    {
-		    game->GetAliveCows().push_back(cow);
-	    }
-	
-	    /** ロードしたUFOをゲームに渡す */
-	    game->SetUFOList(m_tempUFOs);
-
-	    DeleteGO(this);
-	    return;
-    }
-
-m_loadStep++;
+		/** ロード完了フラグを立てる */
+		m_isLoadingEnd = true;
+		return;
+	}
+	}
+	m_loadStep++;
 }
+
 ```  
 
 [↑目次に戻る](#toc)  
 
-### ⑤タイトルからゲーム画面に遷移する際のロードとアウトゲームかやポーズ画面からタイトルに戻る際のロード画面  
-ローディングシーンのヘッダー内でenumを使ったタイプを作り、次のシーンに遷移する際にロード画面のタイプを指定することにより、タイトル画面からゲームに遷移する際はオブジェクトを生成し、そのほかのシーンからタイトルなどに戻る際はオブジェクトを生成しないようにしました。  
+### ⑤チュートリアルの実装について  
 
-###  LoadingScene.h内  
+[↑目次に戻る](#toc)  
+
+### ⑥難易度の実装  
+
+>「はじめて」「かんたん」「ふつう」「むずかしい」  
+>以上の4つの難易度を追加いたしました。  
+>難易度が変わると  
+・救出数のノルマ  
+・UFOの数  
+・各牛ごとの出現率  
+・制限時間  
+・牛の最大出現数  
+の5種類のゲーム要素が変化します。  
+>これにより、初心者から上級者までのプレイヤーが自分に合った難易度を選択し、プレイできるようになりました。  
+
+### DifficultySetting.h  
 ```c++  
-
-/** 次のシーンをセットする関数*/
-void SetNextScene(std::function<void()>next);
-
-/** ロードするシーンのタイプ*/
-enum LoadType
+#pragma once
+namespace
 {
-	/** ゲームシーンに移行するタイプ*/
-	ToGameScene,
-
-	/** タイトルシーンに移行するタイプ*/
-	ToTitleScene,
+	constexpr int DIFFICULTY_GRID_ROWS = 2;
+	constexpr int DIFFICULTY_GRID_COLS = 2;
+}
+enum class EnDifficulty
+{
+	en_Tutorial,
+	en_Easy,
+	en_Normal,
+	en_Hard,
+	en_DifficultyNum
 };
 
-/** ロードするシーンのタイプ*/
-LoadType m_loadType = ToGameScene;
-
-/** ロードするシーンのタイプを設定する関数 */
-void SetLoadType(LoadType loadType)
+struct DifficultyParam
 {
-	m_loadType = loadType;
+	/** クリア条件となる牛の救出ノルマ数 */
+	int normaCount;
+
+	/** 同時に出現させるUFOの数 */
+	int ufoCount;
+
+	/** 追いかけてくる牛の出現確率 */
+	int chaseCowRateOffset;
+
+	/** 制限時間 */
+	int timeLimit;
+
+	/** 牛の最大数 */
+	int maxCowCount;
+
+	/** ボーナス牛の出現率 */
+	int bonusCowRate;
+
+	/** UFOに向かって走る牛の出現確率 */
+	int UFOCowRate;
+};
+
+namespace GameDifficultyManager
+{
+	/** 難易度を設定する */
+	void SetDifficulty(EnDifficulty difficulty);
+
+		/** 現在設定されている難易度を取得する */
+		EnDifficulty GetDifficulty();
+
+	/** 現在の難易度に対応するパラメーターの取得する */
+		const DifficultyParam GetParam();
+
 }
 
-/** タイトルのみをロードする関数 */
-void LoadTitleOnly();
+class DifficultySetting : public  IGameObject
+{
 
-/** ローディング中の処理を行う関数*/
-void InLoading();
+};
 
-//これは、LoadingSceneを呼び出すときに、次のシーンをロードする関数を引数で渡してもらうための変数。
-/** 次のシーンをロードする関数*/
-std::function<void()> m_nextSceneLoading;
+
 ```  
 
-### LoadingScene.cpp内  
-```c++
-void LoadingScene::InLoading()
+### DifficultySetting.cpp  
+```c++  
+#include "stdafx.h"
+#include "DifficultySetting.h"
+
+namespace
 {
-	float deltaTime = g_gameTime->GetFrameDeltaTime();
-
-	m_timer += deltaTime;
-	m_totalTime += deltaTime;
-
-	/** 画像を切り替える処理 */
-	if (m_timer >= m_changeTime)
+	/** 難易度ごとのパラメーターテーブル */
+	const DifficultyParam DIFFICULTY_PARAM_TABLE[static_cast<int>(EnDifficulty::en_DifficultyNum)] =
 	{
-		/** 画像を切り替えるたびにタイマーを初期化する */
-		m_timer = 0.0f;
+		/** ノルマ 　UFO少なめ　追いかける牛の出現確率　 制限時間　牛最大出現数 ボーナス牛の出現確率  UFOに向かって歩く牛の出現確率 */
 
-		/** 画像を順番に切り替える */
-		m_currentImage = (m_currentImage + 1) % 3;
-	}
+		/** ※追いかける牛がマイナス数値の理由は出現確率の定義ですでに20％未満なためそこから引き算方式で出現確率を調整しています。 */
 
-	/** 一定時間で次のシーンへ移行 */
-	if (m_totalTime >= m_loadingTime)
-	{
-		if (m_loadType == LoadType::ToGameScene)
-		{
-			/** ゲームシーンに移行するタイプのロード処理 */
-			LoadGameObjectsStepByStep(); 
-		}
+		/** チュートリアル用のため未使用 */
+		{ 0, 0,    0 ,  0, 0, 0, 0},
+		/** 簡単 */
+		{ 5, 2 , 0 ,120, 6, 0, 50},
 
-		else
-		{
-			/** タイトルシーンに移行するタイプのロード処理 */
-			LoadTitleOnly();
-		}
-	}
+		/** 普通 */
+		{10, 3,   -10, 110, 8, 4,40},
+
+		/** 難しい */
+		{20, 4,  -5 ,100,10, 6,35},
+	};
+
+	EnDifficulty g_currentDifficulty = EnDifficulty::en_Easy;
 }
 
-void LoadingScene::LoadTitleOnly()
+namespace GameDifficultyManager
 {
-	m_nextSceneLoading();
-	DeleteGO(this);
-}
+	/** 難易度の設定 */
+	void SetDifficulty(EnDifficulty difficulty)
+	{
+		g_currentDifficulty = difficulty;
+	}
 
-void LoadingScene::SetNextScene(std::function<void()>next)
-{
-	m_nextSceneLoading = next;
+	/** 現在設定している難易度の取得 */
+	EnDifficulty GetDifficulty()
+	{
+		return g_currentDifficulty;
+	}
+
+	/** 現在の難易度のパラメーターを設定する */
+	const DifficultyParam GetParam()
+	{
+		return DIFFICULTY_PARAM_TABLE[static_cast<int>(g_currentDifficulty)];
+
+	}
 }
 ```
 
-### Title.cpp内  
+### LoadingScene.cpp内  
 ```c++  
-m_loadingScene = NewGO<LoadingScene>(0, "loading");
-m_loadingScene->SetLoadType(LoadingScene::LoadType::ToGameScene);
-DeleteGO(m_titleBGM);
-m_loadingScene->SetNextScene([]()
+/** チュートリアル中はLoadingクラスのUFOを生成しない */
+if (!m_isTutorial)
+{
+	int index = m_loadStep - 15;
+
+	/** 難易度に応じたUFO数を取得し、その数までしか生成しないようにする */
+	int ufoCount = GameDifficultyManager::GetParam().ufoCount;
+
+	if (index >= 0 && index < 4 && index < ufoCount)
 	{
-		NewGO<Game>(0, "game");
-	});
-DeleteGO(this);
+		UFO* ufo = NewGO<UFO>(0, "UFO");
+		ufo->SetPosition(UFO_INFOMATIONS[index].pos);
+		ufo->SetUFOMoveState();
+		ufo->SetSlotIndex(index);
+		m_tempUFOs.push_back(ufo);
+	}
+}
 ```  
-
-### GameClear.cpp内  
-```c++  
-m_loadingScene = NewGO<LoadingScene>(0, "loading");
-m_loadingScene->SetLoadType(LoadingScene::LoadType::ToTitleScene);
-DeleteGO(m_clearBGM);
-m_loadingScene->SetNextScene([]()
-	{
-		/** タイトルの画像を呼び出す*/
-		NewGO<Title>(0, "title");
-	});
-
-DeleteGO(this);
-```  
-
-### GameOver.cpp内  
-```c++  
-m_loadingScene = NewGO<LoadingScene>(0, "loading");
-m_loadingScene->SetLoadType(LoadingScene::LoadType::ToTitleScene);
-DeleteGO(m_deathBGM);
-m_loadingScene->SetNextScene([]()
-	{
-		/** タイトルの画像を呼び出す*/
-		NewGO<Title>(0, "title");
-	});
-DeleteGO(this);
-```  
-
-### Pause.cpp内  
-```c++  
-m_loadingScene = NewGO<LoadingScene>(0, "loading");
-m_loadingScene->SetLoadType(LoadingScene::LoadType::ToTitleScene);
-m_loadingScene->SetNextScene([]()
-	{
-		/** タイトルの画像を呼び出す*/
-		NewGO<Title>(0, "title");
-	});
-
-DeleteGO(m_game);
-DeleteGO(this);
-```  
-
-[↑目次に戻る](#toc)  
-
-### ⑥アニメーションの補完(モーションブレンド)  
-
->アニメーションを再生する際に補完時間を設定することにより、アニメーションのカクつきを無くしました。  
-
-> ### 補完無し  
-> <img width="500" height="300" alt="補完無し" src="https://github.com/user-attachments/assets/d3167b33-bb36-4048-b7c9-bdee8f1e53e4" />
-
-
-> ### 補完あり
-> <img width="500" height="300" alt="補完あり" src="https://github.com/user-attachments/assets/89080d09-525e-4de9-b153-9f70c5a33c4b" />  
-
-
 
 [↑目次に戻る](#toc)  
