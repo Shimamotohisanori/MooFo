@@ -11,7 +11,6 @@ GithubのURL
 https://github.com/Shimamotohisanori/MooFo
 
 YoutubeのURL  
-
 https://www.youtube.com/watch?v=W8kVCd70rKE  
 
 # 目次
@@ -476,7 +475,7 @@ CowFoodManager.cpp / .h
 
 ### ②ゲームスタート時のUI表現について
 >ゲームスタート時のUIに関してはこのようにfmodf関数を使い、カウントダウンからの残りの時間を1で割った余りを取得し、それをα値やスケールの数値の変更に使うことによって、UIが透明で小さい状態から不透明で大きい状態になりを繰り返しながらカウントダウンのUIが表示されているようになっております。  
->　<img width="500" height="300" alt="カウントダウン" src="https://github.com/user-attachments/assets/732dbae1-5e1b-42f0-a42f-a6dc8b7f71c6" />  
+><img width="720" height="395" alt="カウントダウン" src="https://github.com/user-attachments/assets/ba663c4a-b305-4f7e-9a7a-d78e286193ca" />　　
 
 ```c++
 m_countDownTime -=
