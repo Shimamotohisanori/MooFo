@@ -640,7 +640,7 @@ if (abs(m_score - m_displayScore) < 5)
 >ミニマップは「牛」「UFO」「プレイヤー」のアイコンが出ます。  
 牛がUFOに連れ去られていると、危険のマークになり、現在連れ去られている牛の場所を分かりやすくしています。  
 アイコンはミニマップの範囲外に行くと、非表示になります。  
-><img width="500" height="300" alt="MapIcon2" src="https://github.com/user-attachments/assets/437b8163-1e8f-45cd-b45e-3314b3dd8c90" />
+><img width="500" height="300" alt="MapIcon3" src="https://github.com/user-attachments/assets/8bc0896e-6ae5-4080-b66c-b134646ec02b" />  
 
 ミニマップで表示する範囲を「円形の範囲」として定義し、  
 カメラやプレイヤーの位置に基づき、座標を変換します。  
