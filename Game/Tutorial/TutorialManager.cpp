@@ -395,7 +395,7 @@ void TutorialManager::AdvanceStep()
 		CowFood* cowFood = FindGO<CowFood>("cowfood");
 		if (cowFood)
 		{
-			cowFood->SetFoodCount(2);
+			cowFood->SetFoodCount(3);
 		}
 
 		m_setupStep = EnSetupStep::NotStarted;
@@ -427,7 +427,7 @@ void TutorialManager::AdvanceStep()
 		CowFood* cowFood = FindGO<CowFood>("cowfood");
 		if (cowFood)
 		{
-			cowFood->SetFoodCount(2);
+			cowFood->SetFoodCount(3);
 		}
 	}
 		break;
@@ -444,7 +444,7 @@ void TutorialManager::AdvanceStep()
 		CowFood* cowFood = FindGO<CowFood>("cowfood");
 		if (cowFood)
 		{
-			cowFood->SetFoodCount(2);
+			cowFood->SetFoodCount(3);
 		}
 		/** 餌をチュートリアル中に牛舎へ届けられてすでに消滅している場合は
 		GuideToBarn用に牛を再生成する*/
