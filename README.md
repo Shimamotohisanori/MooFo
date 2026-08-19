@@ -453,7 +453,7 @@ CowFoodManager.cpp / .h
 >時間制限が0になる、または牛が3匹UFOに連れ去られるとゲームは終了し、リザルト画面(ゲームオーバー、ゲームクリア)に移ります。
 >救出数がノルマに達していない場合はゲームオーバー、達成していればゲームクリアとなります。  
 
-><img width="500" height="300" alt="矢印" src="https://github.com/user-attachments/assets/f2388424-5b58-424d-8233-2c68581e3b38" />  
+><img width="500" height="300" alt="ゲームの流れ1" src="https://github.com/user-attachments/assets/04e31ef8-2d8b-4dad-a5f2-db17099a1cd2" />  
 
 >牛を助けるとコンボ数×100のスコアが加算されます。  
 
