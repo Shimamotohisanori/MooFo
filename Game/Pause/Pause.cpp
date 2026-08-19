@@ -126,25 +126,10 @@ void Pause::Select()
 		/** 選択している場所の番号が0のときはゲームを終了する */
 		if (m_countNumber == 0)
 		{
-			/** トゥーン輪郭線を有効化 */
-			g_renderingEngine->SetEnableToonOutline(true);
-			/** ゲーム内の牛をすべて削除*/
-			if (m_game)
-			{
-				m_game->m_isSound = false;
-				m_game->KillAllCows();
-			}
-
-			/** ローディングシーンを生成 */
-			m_loadingScene = NewGO<LoadingScene>(0, "loading");
-			m_loadingScene->SetLoadType(LoadingScene::LoadType::ToTitleScene);
-			m_loadingScene->SetNextScene([this]()
-				{
-					/** タイトルの画像を呼び出す*/
-					NewGO<Title>(0, "title");
-				});
-			DeleteGO(m_game);
-			DeleteGO(this);
+			m_isPause = false;
+			Deactivate();
+			m_game->m_isSound = false;
+			
 		}
 
 		/** 選択している場所の番号が1のときはタイトルに戻る */
@@ -166,7 +151,7 @@ void Pause::Select()
 				});
 
 			DeleteGO(m_game);
-			DeleteGO(this);
+			//DeleteGO(this);
 		}
 
 		/** 選択している場所の番号が2のときは音量設定画面に行く */

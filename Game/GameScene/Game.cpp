@@ -29,8 +29,6 @@
 #include "DifficultySetting.h"
 #include"CowLivesUI/CowLivesUI.h"
 #include"Tutorial/TutorialManager.h"
-#include "GameTimer/DecreaseTimerUI.h"
-#include "CowLivesUI/CowLivesUI.h"
 #include "UIPanels/UIPanels.h"
 namespace
 {
@@ -145,7 +143,11 @@ Game::~Game()
 		m_tutorialManager = nullptr;
 	}
 	/** UIのパネルをまとめるクラスの削除 */
-	DeleteGO(m_uipanels);
+	if (m_uipanels && !m_uipanels->IsDead())
+	{
+		DeleteGO(m_uipanels);
+		m_uipanels = nullptr;
+	}
 	/** コンボクラスの削除 */
 	if (m_combo && !m_combo->IsDead())
 	{
