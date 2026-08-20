@@ -227,9 +227,11 @@
     <ClInclude Include="GameScene\Game.h">
       <Filter>GameScene</Filter>
     </ClInclude>
+    <ClInclude Include="resource1.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game.rc" />
+    <ResourceCompile Include="GameIcon.rc" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -301,5 +303,8 @@
     <Filter Include="Tutorial">
       <UniqueIdentifier>{783ddae1-222b-4ea3-8e84-8cc59f11a2ef}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="アイコン.ico" />
   </ItemGroup>
 </Project>
