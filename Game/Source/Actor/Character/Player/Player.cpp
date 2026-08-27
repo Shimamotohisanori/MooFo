@@ -607,6 +607,12 @@ void Player::ManageState()
 	/** 牛を引っ張っている最中は再生しないようにする。 */
 	if (m_rope->GetIsHitCow())
 	{
+		/** まだ引っ張りアニメーション(2 or 3)になっていなければ、
+	* ボタン入力を待たずに即座に引っ張りアニメーションを開始する */
+		if (m_playerState != 2 && m_playerState != 3)
+		{
+			m_playerState = m_isPullAnimation ? 2 : 3;
+		}
 		return;
 	}
 

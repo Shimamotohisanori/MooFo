@@ -309,6 +309,9 @@ void CowLivesUI::DecreaseLife()
 
 void CowLivesUI::Render(RenderContext& rc)
 {
+	/** 毎フレーム確実にGameを取得する*/
+	Game* game = FindGO<Game>("game");
+
 	/**フェード完了までUIの表示を遅らす*/
 	LoadingScene* lodingScene = FindGO<LoadingScene>("loading");
 	if (lodingScene != nullptr && !lodingScene->GetLoadingEnd())
@@ -320,12 +323,12 @@ void CowLivesUI::Render(RenderContext& rc)
 	{
 		return;
 	}
-	/** ゲームが存在しているかつタイムアウトしていたら描画しない*/
-	if (m_game && m_game->GetIsTimeOut())
+
+	/** ゲームが存在していないかタイムアウト時のフェードアウト中は描画しない*/
+	if (!game || game->IsFadeTimeOut())
 	{
 		return;
 	}
-
 	/** フェード(暗転)待ち中は牛の残機UIも文字も表示しない*/
 	if (m_gameOverPhase == GameOverPhase::WaitingFade)
 	{
@@ -338,7 +341,6 @@ void CowLivesUI::Render(RenderContext& rc)
 	}
 
 	/** チュートリアルのステップ遷移中(フェードイン～フェードアウト完了まで)はUIを描画しない */
-	Game* game = FindGO<Game>("game");
 	if (game&&game->GetIsTutorialMode())
 	{
 		TutorialManager* tutorial = FindGO<TutorialManager>("tutorialmanager");
