@@ -134,6 +134,9 @@ public:
 
 	/** 全ての牛を削除する関数 */
 	void KillAllCows();
+
+	/** 全てのUFOを削除する関数*/
+	void KillAllUFOs();
 	/** チュートリアル用の牛をaliveCowリストへ追加する関数*/
 	void AddTutorialCow(Cow* cow);
 
@@ -151,7 +154,11 @@ public:
 		return m_isTutorialMode;
 	}
 
-
+	/** ゲームがアクティブ状態になったかどうかを取得する関数*/
+	bool IsGameActive()const
+	{
+		return m_isGameActive;
+	}
 
 
 	/** チュートリアルが完了するごとにゲームを終了させる(結果画面なし) */
@@ -282,7 +289,7 @@ private:
 	bool m_isfadeStart = false;
 
 	bool m_isFadeOut = false;
-
+	/** アクティブ状態かどうかのフラグ*/
 	bool m_isGameActive = false;
 
 	/** チュートリアルモードかどうかのフラグ(難易度システム実装までは常にfalse)*/

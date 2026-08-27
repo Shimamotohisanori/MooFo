@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "UIPanels.h"
 #include "GameScene/Game.h"
 #include "GameScene/LoadingScene.h"
@@ -71,25 +71,32 @@ bool UIPanels::Start()
 
 void UIPanels::Update()
 {
+
 }
 
 void UIPanels::Render(RenderContext & renderContext)
 {
-	/** ロード中なら描画処理を行わない */
-	LoadingScene* loadingScene = FindGO<LoadingScene>("loading");
-	if (loadingScene && !loadingScene->GetLoadingEnd())
+	/** 明示的にActivate相当の許可が出るまでは絶対に描画しない */
+	if (!m_isVisible)
+	{
+		return;
+	}
+	/** ゲームが存在しない
+	ロード演出が終わっていない
+	フェードアウト中は描画しない*/
+	Game* game = FindGO<Game>("game");
+	if (!game || !game->IsGameActive() || game->IsFadeTimeOut())
+	{
+		return;
+	}
+	
+	LoadingScene* loading = FindGO<LoadingScene>("loading");
+	/** LoadingSceneが存在するかつローディングが終わるまでは待ちの状態にする*/
+	if (loading != nullptr && !loading->GetLoadingEnd())
 	{
 		return;
 	}
 
-	/** ゲームが存在しない
-	 * タイムアウトしている
-	 * フェードアウト中の場合は描画処理を行わない */
-	Game* game = FindGO<Game>("game");
-	if (!game || game->GetIsTimeOut() || game->IsFadeTimeOut())
-	{
-		return;
-	}
 
 	/** ポーズ中の場合は描画処理を行わない */
 	Pause* pause = FindGO<Pause>("pause");

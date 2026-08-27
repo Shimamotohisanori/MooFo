@@ -609,9 +609,20 @@ void LoadingScene::LoadGameObjectsStepByStep()
 	case 19: NewGO<GameCamera>(0, "gameCamera");
 		break;
 
-	case 20: NewGO<UIPanels>(0, "uipanels");
+	case 20:
+	{
+		/** 前回のUIPanelsが残っていたら削除する*/
+		auto oldPanels = FindGOs<UIPanels>("uipanels");
+		for (auto p : oldPanels)
+		{
+			if (p && !p->IsDead())
+			{
+				DeleteGO(p);
+			}
+		}
+		NewGO<UIPanels>(0, "uipanels");
 		break;
-
+	}
 	case 21:
 	{
 		/** 牛の餌を生成 */

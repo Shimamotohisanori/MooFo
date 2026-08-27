@@ -137,25 +137,29 @@ Game::~Game()
 	DeleteGO(m_cowLivesUI);
 
 	/** チュートリアルマネージャーの削除*/
-	if (m_tutorialManager && !m_tutorialManager->IsDead())
+	if (m_tutorialManager && FindGO<TutorialManager>("tutorialmanager") == m_tutorialManager)
 	{
 		DeleteGO(m_tutorialManager);
 		m_tutorialManager = nullptr;
 	}
 	/** UIのパネルをまとめるクラスの削除 */
-	if (m_uipanels && !m_uipanels->IsDead())
+	if (m_uipanels)
 	{
-		DeleteGO(m_uipanels);
+		if (FindGO<UIPanels>("uipanels") ==m_uipanels)
+		{
+			DeleteGO(m_uipanels);
+		}
 		m_uipanels = nullptr;
 	}
+	
 	/** コンボクラスの削除 */
-	if (m_combo && !m_combo->IsDead())
+	if (m_combo && FindGO<Combo>("combo") == m_combo)
 	{
 		DeleteGO(m_combo);
 		m_combo = nullptr;
 	}
 
-	if (m_fadeManager && !m_fadeManager->IsDead())
+	if (m_fadeManager && FindGO<FadeManager>("fadeManager") == m_fadeManager)
 	{
 		DeleteGO(m_fadeManager);
 		m_fadeManager = nullptr;
@@ -301,6 +305,8 @@ void Game::Clear()
 	}
 	m_aliveCows.clear();
 
+	/** ここでUFOとSEを削除する*/
+	KillAllUFOs();
 	/** ゲームクリアの画像を呼び出す */
 	m_gameClear = NewGO<GameClear>(0, "gameClear");
 
@@ -366,6 +372,8 @@ void Game::Death()
 		}
 	}
 	m_aliveCows.clear();
+	/** ここでUFOとそのSEを削除する*/
+	KillAllUFOs();
 
 	/** ゲームオーバーの画像を呼び出す */
 	m_gameOver = NewGO<GameOver>(0, "gameover");
@@ -405,6 +413,20 @@ void Game::KillAllCows()
 	}
 	m_aliveCows.clear();
 }
+
+void Game::KillAllUFOs()
+{
+	for (int i = 0; i < EnUFO_Num; i++)
+	{
+		if (m_UFO[i] && !m_UFO[i]->IsDead())
+		{
+			DeleteGO(m_UFO[i]);
+			m_UFO[i] = nullptr;
+		}
+	}
+	m_ufoRespawnRequests.clear();
+}
+
 
 void Game::RequestUFORespawn(int slotIndex)
 {
@@ -653,7 +675,7 @@ void Game:: ActivateGameBGM()
 	if (m_map)                     m_map->Activate();
 	if (m_cowFood)                 m_cowFood->Activate();
 	if (m_cowFoodManager)          m_cowFoodManager->Activate();
-	
+	if (m_uipanels)                 m_uipanels->SetVisible(true);
 }
 void Game::SpawnCow()
 {

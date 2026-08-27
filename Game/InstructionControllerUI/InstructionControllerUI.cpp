@@ -1,9 +1,9 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "InstructionControllerUI.h"
 #include "Pause/Pause.h"
 #include "GameScene/LoadingScene.h"
 #include"CowLivesUI/CowLivesUI.h"
-#include "CowLivesUI/CowLivesUI.h"
+#include "GameScene/Game.h"
 namespace
 {
 	/** InstructionControllerUIのスプライトのパス */
@@ -56,6 +56,13 @@ void InstructionControllerUI::Render(RenderContext & renderContext)
 	{
 		return;
 	}
+	/** タイムアウト時のフェードアウト中は描画しない*/
+	Game * game = FindGO<Game>("game");
+	if (!game || game->IsFadeTimeOut())
+	{
+		return;
+	}
+	
 
 	m_instructionControllerUI.Draw(renderContext);
 }
